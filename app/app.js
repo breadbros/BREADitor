@@ -18,9 +18,6 @@ console.log(jetpack.read('package.json', 'json'));
 // window.env contains data from config/env_XXX.json file.
 var envName = window.env.name;
 
-var mapfile = jetpack.read('../app/map_assets/map.json', 'json');
-var vspfile = jetpack.read('../app/map_assets/vsp.json', 'json');
-
 (
   function( $ )
   {
@@ -63,17 +60,26 @@ var vspfile = jetpack.read('../app/map_assets/vsp.json', 'json');
   }
 )( $ );
 
-debugger;
-
-function setupMap(mapfile, vspfile) {
+function setupMap(mapfile, mapbulkfile, vspfile) {
 	var x, y, d;
 	var canvas =  $("#map_canvas");
-
+debugger;
 
 	var tile_w = vspfile.tilesize.width;
 	var tile_h = vspfile.tilesize.height;
 	var tile_src = vspfile.source_image;
-	var xMaxMap = mapfile.dimensions.x;
+	var dim_x,dim_y,xMaxMap;
+
+	if( mapfile.dimensions ) {
+		dim_x = mapfile.dimensions.x;
+		dim_y = mapfile.dimensions.y;
+	} else {
+		console.log( "deprecated: do not allow reading mapsize from layer 0.  Make sure it's set in tlo dimensions." );
+		dim_x = mapfile.layers[0].dimensions.X;
+		dim_y = mapfile.layers[0].dimensions.Y;
+	}
+	xMaxMap = dim_x;
+
 	var xMaxVsp = vspfile.tiles_per_row;
 
 	$.styler.insertRule(['#map_canvas .tile'], 
@@ -83,9 +89,13 @@ function setupMap(mapfile, vspfile) {
 		"background-image: url("+tile_src+");" );
 
 
-	
-
 	var set_correct_tile = function ($div, idx, per_row) {
+
+		if( t == 708 ) {
+			var i = 9;
+			i++;
+			debugger;
+		}
 
 		var x = parseInt(idx%per_row);
 		var y = parseInt(idx/per_row);
@@ -103,8 +113,8 @@ function setupMap(mapfile, vspfile) {
 	var layer = 0;
 	var t = null;
 
-	for( x=0; x<mapfile.dimensions.x; x++ ) {
-		for( y=0; y<mapfile.dimensions.y; y++ ) {
+	for( x=0; x<dim_x; x++ ) {
+		for( y=0; y<dim_y; y++ ) {
 			d = $( "<div>" );
 
 
@@ -115,7 +125,8 @@ function setupMap(mapfile, vspfile) {
 
 			d.data('x', x);
 			d.data('y', x);
-			t = mapfile.layer_data[layer][flat_from_xy(x, y, xMaxMap)];
+			//t = mapfile.layer_data[layer][flat_from_xy(x, y, xMaxMap)];
+			t = mapbulkfile.tile_data[layer][flat_from_xy(x, y, xMaxMap)];
 			d.data('tile', t);
 			set_correct_tile( d, t, xMaxVsp );
 
@@ -124,6 +135,10 @@ function setupMap(mapfile, vspfile) {
 	}
 }
 
+var mapfile = jetpack.read('../app/map_assets/farmsville.map.json', 'json');
+var mapbulkfile = jetpack.read('../app/map_assets/farmsville.map.data.json', 'json');
+var vspfile = jetpack.read('../app/map_assets/farmsville.vsp.json', 'json');
+
 document.addEventListener('DOMContentLoaded', function() {
 	/*
     document.getElementById('greet').innerHTML = "BUTTS, elizibutts!";
@@ -131,5 +146,5 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('env-name').innerHTML = envName;
     */
 
-    setupMap(mapfile, vspfile);
+    setupMap(mapfile, mapbulkfile, vspfile);
 });
