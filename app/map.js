@@ -28,19 +28,26 @@ function buildShaderProgram(gl) {
 }
 
 export var Map = function(mapfile, mapdatafile, vspfile) {
-    console.log("Init map...");
+    console.log("Loading map", mapfile);
 
     this.readyPromise = new Promise(function(resolve, reject) {
         this.promiseResolver = resolve;
         this.promiseRejecter = reject;
     }.bind(this));
 
-    this.mapData = mapfile;
+    this.mapPath = mapfile;
+    this.mapData = jetpack.read(mapfile, 'json');;
+    this.tileData = jetpack.read(mapdatafile, 'json');
+    var vspfile = jetpack.read(vspfile, 'json');
+
     this.tileData = mapdatafile.tile_data;
     this.vspData = vspfile;
+
     this.vspImage = new Image();
-    this.vspImage.onload = function() { console.log("onload"); this.promiseResolver(); }.bind(this);
+    this.vspImage.onload = function() { this.promiseResolver(this); }.bind(this);
     this.vspImage.src = this.vspData.source_image;
+
+    // this.tileLayoutCanvas = new Canvas();
 
     this.renderContainer = null;
 };
@@ -51,7 +58,7 @@ Map.prototype = {
     },
 
     setCanvas: function($canvas) {
-        console.log("Setting canvas");
+        console.log("Setting canvas on map");
         if (!!this.renderContainer) this.cleanUpCallbacks();
 
         // set up callbacks

@@ -10,6 +10,7 @@ body {
     // justify-content: center;
     // align-items: center;
     // font-family: sans-serif;
+    overflow: hidden;
 }
 
 a {
@@ -17,7 +18,16 @@ a {
 }
 
 .container {
-    // text-align: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    #map_canvas {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background-color: magenta;
+    }
 }
 
 .subtitle {

@@ -1,47 +1,25 @@
 <!doctype html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Electron Boilerplate</title>
+    <head>
+        <meta charset="utf-8">
+        <title>MAPED 4</title>
 
-    <link href="./stylesheets/main.css" rel="stylesheet" type="text/css">
+        <link href="./stylesheets/main.css" rel="stylesheet" type="text/css">
 
-    <script src="vendor/electron_boilerplate/env_config.js"></script>
-    <script src="vendor/electron_boilerplate/context_menu.js"></script>
-    <script src="vendor/electron_boilerplate/external_links.js"></script>
+        <script src="vendor/electron_boilerplate/env_config.js"></script>
+        <script src="vendor/electron_boilerplate/context_menu.js"></script>
+        <script src="vendor/electron_boilerplate/external_links.js"></script>
 
-    <script>
-      window.jQuery = window.$ = require('jquery');
-    </script>
+        <script>
+          window.jQuery = window.$ = require('jquery');
+        </script>
+    </head>
+    <body>
 
-    <script src="app.js"></script>
+        <div class="container">
+            <canvas id="map_canvas"></canvas>
+        </div>
 
-    <style>
-
-body {
-    overflow: hidden;
-}
-
-.container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-#map_canvas {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background-color: magenta;
-}
-
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <canvas id="map_canvas"></canvas>
-    </div>
-
-</body>
+        <script src="app.js"></script>
+    </body>
 </html>
