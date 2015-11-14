@@ -15,11 +15,32 @@
     </script>
 
     <script src="app.js"></script>
+
+    <style>
+
+body {
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#map_canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: magenta;
+}
+
+    </style>
 </head>
 <body>
 
     <div class="container">
-        <div id="map_canvas" style="position: relative; width: 100%; height: 100%; background-color: magenta;"></div>
+        <canvas id="map_canvas"></canvas>
     </div>
 
 </body>

@@ -10,6 +10,7 @@ import { greet } from './hello_world/hello_world';
 var os = require('os');
 var app = require('remote').require('app');
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
+import { Map } from './map';
 
 // Holy crap! This is browser window with HTML and stuff, but I can read
 // here files like it is node.js! Welcome to Electron world :)
@@ -25,7 +26,7 @@ var envName = window.env.name;
 	  insertRule:function(selector,rules,contxt)
 	  {
 	    var context=contxt||document,stylesheet;
-	    
+
 	    if(typeof context.styleSheets=='object')
 	    {
 	      if(context.styleSheets.length)
@@ -52,88 +53,87 @@ var envName = window.env.name;
 	        }
 	      }
 	      else{
-	        stylesheet.insertRule(selector.join(',') + '{' + rules + '}', stylesheet.cssRules.length);  
+	        stylesheet.insertRule(selector.join(',') + '{' + rules + '}', stylesheet.cssRules.length);
 	      }
 	    }
 	  }
-	}; 
+	};
   }
 )( $ );
 
-function setupMap(mapfile, mapbulkfile, vspfile) {
-	var x, y, d;
-	var canvas =  $("#map_canvas");
-debugger;
-
-	var tile_w = vspfile.tilesize.width;
-	var tile_h = vspfile.tilesize.height;
-	var tile_src = vspfile.source_image;
-	var dim_x,dim_y,xMaxMap;
-
-	if( mapfile.dimensions ) {
-		dim_x = mapfile.dimensions.x;
-		dim_y = mapfile.dimensions.y;
-	} else {
-		console.log( "deprecated: do not allow reading mapsize from layer 0.  Make sure it's set in tlo dimensions." );
-		dim_x = mapfile.layers[0].dimensions.X;
-		dim_y = mapfile.layers[0].dimensions.Y;
-	}
-	xMaxMap = dim_x;
-
-	var xMaxVsp = vspfile.tiles_per_row;
-
-	$.styler.insertRule(['#map_canvas .tile'], 
-		"position: absolute; "+
-		"width: " +tile_w+"px; " +
-		"height: "+tile_h+"px; " +
-		"background-image: url("+tile_src+");" );
-
-
-	var set_correct_tile = function ($div, idx, per_row) {
-
-		if( t == 708 ) {
-			var i = 9;
-			i++;
-			debugger;
-		}
-
-		var x = parseInt(idx%per_row);
-		var y = parseInt(idx/per_row);
-
-		x = x*tile_w;
-		y = y*tile_h;
-
-		$div.css('background-position', '-'+x+'px -'+y+'px');
-	};
-
-	var flat_from_xy = function ( x, y, xMax ) {
-    	return y*xMax + x;
-	};
-
-	var layer = 0;
-	var t = null;
-
-	for( x=0; x<dim_x; x++ ) {
-		for( y=0; y<dim_y; y++ ) {
-			d = $( "<div>" );
-
-
-			d.addClass('tile');
-
-			d.css('top', (y*tile_h)+'px');
-			d.css('left', (x*tile_w)+'px');
-
-			d.data('x', x);
-			d.data('y', x);
-			//t = mapfile.layer_data[layer][flat_from_xy(x, y, xMaxMap)];
-			t = mapbulkfile.tile_data[layer][flat_from_xy(x, y, xMaxMap)];
-			d.data('tile', t);
-			set_correct_tile( d, t, xMaxVsp );
-
-			canvas.append(d);
-		}
-	}
-}
+// function setupMap(mapfile, mapbulkfile, vspfile) {
+// 	var x, y, d;
+// 	var canvas =  $("#map_canvas");
+//
+// 	var tile_w = vspfile.tilesize.width;
+// 	var tile_h = vspfile.tilesize.height;
+// 	var tile_src = vspfile.source_image;
+// 	var dim_x, dim_y, xMaxMap;
+//
+// 	if( mapfile.dimensions ) {
+// 		dim_x = mapfile.dimensions.x;
+// 		dim_y = mapfile.dimensions.y;
+// 	} else {
+// 		console.log( "deprecated: do not allow reading mapsize from layer 0.  Make sure it's set in tlo dimensions." );
+// 		dim_x = mapfile.layers[0].dimensions.X;
+// 		dim_y = mapfile.layers[0].dimensions.Y;
+// 	}
+// 	xMaxMap = dim_x;
+//
+// 	var xMaxVsp = vspfile.tiles_per_row;
+//
+//     $.styler.insertRule(['#map_canvas .tile'],
+// 		"position: absolute; "+
+// 		"width: " +tile_w+"px; " +
+// 		"height: "+tile_h+"px; " +
+// 		"background-image: url("+tile_src+");" );
+//
+//
+// 	var set_correct_tile = function ($div, idx, per_row) {
+//
+// 		if( t == 708 ) {
+// 			var i = 9;
+// 			i++;
+// 			debugger;
+// 		}
+//
+// 		var x = parseInt(idx%per_row);
+// 		var y = parseInt(idx/per_row);
+//
+// 		x = x*tile_w;
+// 		y = y*tile_h;
+//
+// 		$div.css('background-position', '-'+x+'px -'+y+'px');
+// 	};
+//
+// 	var flat_from_xy = function ( x, y, xMax ) {
+//     	return y*xMax + x;
+// 	};
+//
+// 	var layer = 0;
+// 	var t = null;
+//
+// 	for( x=0; x<dim_x; x++ ) {
+// 		for( y=0; y<dim_y; y++ ) {
+// 			d = $( "<div>" );
+//
+// 
+// 			d.addClass('tile');
+//
+// 			d.css('top', (y*tile_h)+'px');
+// 			d.css('left', (x*tile_w)+'px');
+//
+// 			d.data('x', x);
+// 			d.data('y', x);
+// 			//t = mapfile.layer_data[layer][flat_from_xy(x, y, xMaxMap)];
+// 			t = mapbulkfile.tile_data[layer][flat_from_xy(x, y, xMaxMap)];
+// 			d.data('tile', t);
+// 			set_correct_tile( d, t, xMaxVsp );
+//
+// 			canvas.append(d);
+// 		}
+// 	}
+// }
 
 var mapfile = jetpack.read('../app/map_assets/farmsville.map.json', 'json');
 var mapbulkfile = jetpack.read('../app/map_assets/farmsville.map.data.json', 'json');
@@ -146,5 +146,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('env-name').innerHTML = envName;
     */
 
-    setupMap(mapfile, mapbulkfile, vspfile);
+    // setupMap(mapfile, mapbulkfile, vspfile);
+
+    var m = new Map(mapfile, mapbulkfile, vspfile);
+    m.ready()
+        .then(function() {
+            m.render($('#map_canvas'));
+        });
 });
