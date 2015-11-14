@@ -38,15 +38,15 @@ export var Map = function(mapfile, mapdatafile, vspfile) {
     this.mapData = mapfile;
     this.tileData = mapdatafile.tile_data;
     this.vspData = vspfile;
-    this.vspImage = $('<img src="' + this.vspData.source_image  + '">');
-    this.vspImage.on('load', function() { this.promiseResolver(); }.bind(this));
+    this.vspImage = new Image();
+    this.vspImage.onload = function() { console.log("onload"); this.promiseResolver(); }.bind(this);
+    this.vspImage.src = this.vspData.source_image;
 
     this.renderContainer = null;
 };
 
 Map.prototype = {
     ready: function() {
-        console.log("Got ready");
         return this.readyPromise;
     },
 
@@ -74,21 +74,36 @@ Map.prototype = {
              1.0,  1.0
         ]), this.gl.STATIC_DRAW);
 
+        this.tileLibraryTexture = this.gl.createTexture();
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLibraryTexture);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.vspImage);
+
         // make sure the size is right
         this.resize();
     },
 
     render: function() {
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+        var gl = this.gl;
 
-        this.gl.useProgram(this.program);
+        gl.clear(gl.COLOR_BUFFER_BIT);
 
-        var a_position = this.gl.getAttribLocation(this.program, "a_position");
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
-        this.gl.enableVertexAttribArray(a_position);
-        this.gl.vertexAttribPointer(a_position, 2, this.gl.FLOAT, false, 0, 0);
+        gl.useProgram(this.program);
 
-        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+        var a_position = gl.getAttribLocation(this.program, "a_position");
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+        gl.enableVertexAttribArray(a_position);
+        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+        var u_tileLibrary = gl.getUniformLocation(this.program, "u_tileLibrary");
+        gl.uniform1i(u_tileLibrary, 0);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
     },
 
     cleanUpCallbacks: function() {

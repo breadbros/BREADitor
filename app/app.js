@@ -159,9 +159,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // setupMap(mapfile, mapbulkfile, vspfile);
 
     var m = new Map(mapfile, mapbulkfile, vspfile);
-    m.setCanvas($('#map_canvas'));
     m.ready()
         .then(function() {
+            m.setCanvas($('#map_canvas'));
             currentMap = m;
         });
 });
