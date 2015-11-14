@@ -117,7 +117,7 @@ var envName = window.env.name;
 // 		for( y=0; y<dim_y; y++ ) {
 // 			d = $( "<div>" );
 //
-// 
+//
 // 			d.addClass('tile');
 //
 // 			d.css('top', (y*tile_h)+'px');
@@ -135,9 +135,19 @@ var envName = window.env.name;
 // 	}
 // }
 
+var currentMap = null;
+
 var mapfile = jetpack.read('../app/map_assets/farmsville.map.json', 'json');
 var mapbulkfile = jetpack.read('../app/map_assets/farmsville.map.data.json', 'json');
 var vspfile = jetpack.read('../app/map_assets/farmsville.vsp.json', 'json');
+
+var tick = function(timestamp) {
+    if (!!currentMap) {
+        currentMap.render();
+    }
+    window.requestAnimationFrame(tick);
+};
+window.requestAnimationFrame(tick);
 
 document.addEventListener('DOMContentLoaded', function() {
 	/*
@@ -149,8 +159,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // setupMap(mapfile, mapbulkfile, vspfile);
 
     var m = new Map(mapfile, mapbulkfile, vspfile);
+    m.setCanvas($('#map_canvas'));
     m.ready()
         .then(function() {
-            m.render($('#map_canvas'));
+            currentMap = m;
         });
 });
