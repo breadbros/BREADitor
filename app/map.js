@@ -50,6 +50,12 @@ export var Map = function(mapfile, mapdatafile, vspfile) {
     this.mapPath = mapfile;
     this.mapData = jetpack.read(mapfile, 'json');
     this.renderString = this.mapData.renderstring.split(",");
+    this.mapSize = [0,0];
+    for (var i = 0; i < this.mapData.layers.length; i++) {
+        if (this.mapData.layers[i].dimensions.X > this.mapSize[0]) this.mapSize[0] = this.mapData.layers[i].dimensions.X;
+        if (this.mapData.layers[i].dimensions.Y > this.mapSize[1]) this.mapSize[1] = this.mapData.layers[i].dimensions.Y;
+    }
+    this.camera = [0,0];
 
     this.tileData = jetpack.read(mapdatafile, 'json').tile_data;
     this.vspData = jetpack.read(vspfile, 'json');
@@ -57,8 +63,6 @@ export var Map = function(mapfile, mapdatafile, vspfile) {
     this.vspImage = new Image();
     this.vspImage.onload = function() { this.promiseResolver(this); }.bind(this);
     this.vspImage.src = this.vspData.source_image;
-
-    // this.tileLayoutCanvas = new Canvas();
 
     this.renderContainer = null;
 };
@@ -81,17 +85,6 @@ Map.prototype = {
         this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
         this.program = buildShaderProgram(this.gl);
 
-        this.vertexbuffer = this.gl.createBuffer();
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-            -1.0, -1.0,
-             1.0, -1.0,
-            -1.0,  1.0,
-            -1.0,  1.0,
-             1.0, -1.0,
-             1.0,  1.0
-        ]), this.gl.STATIC_DRAW);
-
         this.tileLibraryTexture = this.gl.createTexture();
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLibraryTexture);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
@@ -111,6 +104,19 @@ Map.prototype = {
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
         this.gl.enable(this.gl.BLEND);
 
+
+        this.vertexbuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
+
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
+            0.0, 0.0,
+            this.mapSize[0], 0.0,
+            0.0, -this.mapSize[1],
+            0.0, -this.mapSize[1],
+            this.mapSize[0], 0.0,
+            this.mapSize[0], -this.mapSize[1]
+        ]), this.gl.STATIC_DRAW);
+
         // make sure the size is right
         this.resize();
     },
@@ -125,6 +131,9 @@ Map.prototype = {
         for (var i = 0; i < this.renderString.length; i++) {
             var layer = parseInt(this.renderString[i], 10) - 1;
             if (isNaN(layer)) continue;
+
+            var u_camera = gl.getUniformLocation(this.program, "u_camera");
+            gl.uniform4f(u_camera, 0, 0, this.renderContainer.width() / this.vspData.tilesize.width, this.renderContainer.height() / this.vspData.tilesize.height);
 
             var a_position = gl.getAttribLocation(this.program, "a_position");
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
