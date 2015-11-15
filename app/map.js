@@ -27,6 +27,18 @@ function buildShaderProgram(gl) {
     return program;
 }
 
+function buildTileDataTexture(data) {
+    var out = new Uint8Array(data.length * 4);
+    for (var i = 0; i < data.length; i++) {
+        var t = data[i];
+        out[i * 4 + 0] = t % 256;
+        out[i * 4 + 1] = (t >> 8) % 256;
+        out[i * 4 + 2] = (t >> 16) % 256;
+        out[i * 4 + 3] = (t >> 24) % 256;
+    }
+    return out;
+}
+
 export var Map = function(mapfile, mapdatafile, vspfile) {
     console.log("Loading map", mapfile);
 
@@ -36,12 +48,11 @@ export var Map = function(mapfile, mapdatafile, vspfile) {
     }.bind(this));
 
     this.mapPath = mapfile;
-    this.mapData = jetpack.read(mapfile, 'json');;
-    this.tileData = jetpack.read(mapdatafile, 'json');
-    var vspfile = jetpack.read(vspfile, 'json');
+    this.mapData = jetpack.read(mapfile, 'json');
+    this.renderString = this.mapData.renderstring.split(",");
 
-    this.tileData = mapdatafile.tile_data;
-    this.vspData = vspfile;
+    this.tileData = jetpack.read(mapdatafile, 'json').tile_data;
+    this.vspData = jetpack.read(vspfile, 'json');
 
     this.vspImage = new Image();
     this.vspImage.onload = function() { this.promiseResolver(this); }.bind(this);
@@ -67,7 +78,7 @@ Map.prototype = {
         // set up context
         this.renderContainer = $canvas;
         this.gl = this.renderContainer[0].getContext('webgl'); // we're targeting Electron not the Internet at large so don't worry about failing to get a GL context
-        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
         this.program = buildShaderProgram(this.gl);
 
         this.vertexbuffer = this.gl.createBuffer();
@@ -89,6 +100,14 @@ Map.prototype = {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.vspImage);
 
+        this.tileLayoutTexture = this.gl.createTexture();
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLayoutTexture);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.mapData.layers[0].dimensions.X, this.mapData.layers[0].dimensions.Y, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[0]));
+
         // make sure the size is right
         this.resize();
     },
@@ -98,6 +117,9 @@ Map.prototype = {
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
+        // var layer = parseInt(this.renderString[0], 10) - 1;
+        var layer = 0;
+
         gl.useProgram(this.program);
 
         var a_position = gl.getAttribLocation(this.program, "a_position");
@@ -105,10 +127,19 @@ Map.prototype = {
         gl.enableVertexAttribArray(a_position);
         gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
+        var u_dimensions = gl.getUniformLocation(this.program, "u_dimensions");
+        gl.uniform4f(u_dimensions, this.mapData.layers[layer].dimensions.X, this.mapData.layers[layer].dimensions.Y, this.vspData.tiles_per_row, this.vspImage.height / this.vspData.tilesize.height);
+
         var u_tileLibrary = gl.getUniformLocation(this.program, "u_tileLibrary");
         gl.uniform1i(u_tileLibrary, 0);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
+
+        var u_tileLayout = gl.getUniformLocation(this.program, "u_tileLayout");
+        gl.uniform1i(u_tileLayout, 1);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.mapData.layers[layer].dimensions.X, this.mapData.layers[layer].dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layer]));
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     },
