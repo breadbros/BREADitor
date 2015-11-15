@@ -108,6 +108,9 @@ Map.prototype = {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.mapData.layers[0].dimensions.X, this.mapData.layers[0].dimensions.Y, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[0]));
 
+        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+        this.gl.enable(this.gl.BLEND);
+
         // make sure the size is right
         this.resize();
     },
@@ -117,31 +120,33 @@ Map.prototype = {
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        // var layer = parseInt(this.renderString[0], 10) - 1;
-        var layer = 0;
-
         gl.useProgram(this.program);
 
-        var a_position = gl.getAttribLocation(this.program, "a_position");
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-        gl.enableVertexAttribArray(a_position);
-        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+        for (var i = 0; i < this.renderString.length; i++) {
+            var layer = parseInt(this.renderString[i], 10) - 1;
+            if (isNaN(layer)) continue;
 
-        var u_dimensions = gl.getUniformLocation(this.program, "u_dimensions");
-        gl.uniform4f(u_dimensions, this.mapData.layers[layer].dimensions.X, this.mapData.layers[layer].dimensions.Y, this.vspData.tiles_per_row, this.vspImage.height / this.vspData.tilesize.height);
+            var a_position = gl.getAttribLocation(this.program, "a_position");
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+            gl.enableVertexAttribArray(a_position);
+            gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
-        var u_tileLibrary = gl.getUniformLocation(this.program, "u_tileLibrary");
-        gl.uniform1i(u_tileLibrary, 0);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
+            var u_dimensions = gl.getUniformLocation(this.program, "u_dimensions");
+            gl.uniform4f(u_dimensions, this.mapData.layers[layer].dimensions.X, this.mapData.layers[layer].dimensions.Y, this.vspData.tiles_per_row, this.vspImage.height / this.vspData.tilesize.height);
 
-        var u_tileLayout = gl.getUniformLocation(this.program, "u_tileLayout");
-        gl.uniform1i(u_tileLayout, 1);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.mapData.layers[layer].dimensions.X, this.mapData.layers[layer].dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layer]));
+            var u_tileLibrary = gl.getUniformLocation(this.program, "u_tileLibrary");
+            gl.uniform1i(u_tileLibrary, 0);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
 
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+            var u_tileLayout = gl.getUniformLocation(this.program, "u_tileLayout");
+            gl.uniform1i(u_tileLayout, 1);
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.mapData.layers[layer].dimensions.X, this.mapData.layers[layer].dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layer]));
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+        }
     },
 
     cleanUpCallbacks: function() {

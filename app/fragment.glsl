@@ -19,7 +19,7 @@ void main() {
     if (index >= 0.0) {
         color = texture2D(u_tileLibrary, vec2(
             (mod(index, floor(u_dimensions[2])) + fract(v_position[0] * u_dimensions[0])) / u_dimensions[2],
-            (floor(index / u_dimensions[2]) + (1.0 - fract(v_position[1] * u_dimensions[1]))) / u_dimensions[3]
+            (floor(index / u_dimensions[2]) + (fract(v_position[1] * u_dimensions[1]))) / u_dimensions[3]
         ));
     }
     // color = tileInfo;
