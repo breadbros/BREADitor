@@ -55,7 +55,7 @@ export var Map = function(mapfile, mapdatafile, vspfile) {
         if (this.mapData.layers[i].dimensions.X > this.mapSize[0]) this.mapSize[0] = this.mapData.layers[i].dimensions.X;
         if (this.mapData.layers[i].dimensions.Y > this.mapSize[1]) this.mapSize[1] = this.mapData.layers[i].dimensions.Y;
     }
-    this.camera = [0,0];
+    this.camera = [0, 0, 1];
 
     this.tileData = jetpack.read(mapdatafile, 'json').tile_data;
     this.vspData = jetpack.read(vspfile, 'json');
@@ -101,9 +101,8 @@ Map.prototype = {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.mapData.layers[0].dimensions.X, this.mapData.layers[0].dimensions.Y, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[0]));
 
-        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
         this.gl.enable(this.gl.BLEND);
-
 
         this.vertexbuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
@@ -119,6 +118,35 @@ Map.prototype = {
 
         // make sure the size is right
         this.resize();
+
+        // DEBUG JUNK
+        this.dragging = false;
+        this.lastMouse = [0,0];
+        this.renderContainer.on('mousedown', function(e) {
+            this.dragging = true;
+            this.lastMouse = [ e.clientX, e.clientY ];
+        }.bind(this));
+        this.renderContainer.on('mousemove', function(e) {
+            if (this.dragging) {
+                this.camera[0] += (this.lastMouse[0] - e.clientX) / this.vspData.tilesize.width;
+                this.camera[1] += (this.lastMouse[1] - e.clientY) / this.vspData.tilesize.height;
+                this.lastMouse = [ e.clientX, e.clientY ];
+            }
+        }.bind(this));
+        this.renderContainer.on('mouseup', function() {
+            this.dragging = false;
+        }.bind(this));
+        this.renderContainer.on('mousewheel', function(e) {
+            var camX = this.camera[0] * this.camera[2];
+            var camY = this.camera[1] * this.camera[2];
+            if (e.originalEvent.deltaY < 0) {
+                this.camera[2] = Math.max(this.camera[2] / 2, 0.125);
+            } else {
+                this.camera[2] = Math.min(this.camera[2] * 2, 16);
+            }
+            this.camera[0] = camX / this.camera[2];
+            this.camera[1] = camY / this.camera[2];
+        }.bind(this));
     },
 
     render: function() {
@@ -133,7 +161,12 @@ Map.prototype = {
             if (isNaN(layer)) continue;
 
             var u_camera = gl.getUniformLocation(this.program, "u_camera");
-            gl.uniform4f(u_camera, 0, 0, this.renderContainer.width() / this.vspData.tilesize.width, this.renderContainer.height() / this.vspData.tilesize.height);
+            gl.uniform4f(u_camera,
+                this.mapData.layers[layer].parallax.X * (this.camera[0] / this.vspData.tilesize.width),
+                this.mapData.layers[layer].parallax.Y * (this.camera[1] / this.vspData.tilesize.height),
+                this.camera[2] * this.renderContainer.width() / this.vspData.tilesize.width,
+                this.camera[2] * this.renderContainer.height() / this.vspData.tilesize.height
+            );
 
             var a_position = gl.getAttribLocation(this.program, "a_position");
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);

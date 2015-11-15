@@ -1,7 +1,7 @@
 import { Map } from './map';
 
 (function() {
-    var currentMap = null;
+    window.currentMap = null;
 
     var tick = function(timestamp) {
         if (!!currentMap) {
