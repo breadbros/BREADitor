@@ -128,8 +128,8 @@ Map.prototype = {
         }.bind(this));
         this.renderContainer.on('mousemove', function(e) {
             if (this.dragging) {
-                this.camera[0] += (this.lastMouse[0] - e.clientX) / this.vspData.tilesize.width;
-                this.camera[1] += (this.lastMouse[1] - e.clientY) / this.vspData.tilesize.height;
+                this.camera[0] += (this.lastMouse[0] - e.clientX) * this.camera[2];
+                this.camera[1] += (this.lastMouse[1] - e.clientY) * this.camera[2];
                 this.lastMouse = [ e.clientX, e.clientY ];
             }
         }.bind(this));
@@ -137,15 +137,15 @@ Map.prototype = {
             this.dragging = false;
         }.bind(this));
         this.renderContainer.on('mousewheel', function(e) {
-            var camX = this.camera[0] * this.camera[2];
-            var camY = this.camera[1] * this.camera[2];
+            var mouseX = this.camera[0] + e.clientX * this.camera[2];
+            var mouseY = this.camera[1] + e.clientY * this.camera[2];
             if (e.originalEvent.deltaY < 0) {
                 this.camera[2] = Math.max(this.camera[2] / 2, 0.125);
             } else {
                 this.camera[2] = Math.min(this.camera[2] * 2, 16);
             }
-            this.camera[0] = camX / this.camera[2];
-            this.camera[1] = camY / this.camera[2];
+            this.camera[0] = mouseX - (e.clientX * this.camera[2]);
+            this.camera[1] = mouseY - (e.clientY * this.camera[2]);
         }.bind(this));
     },
 
@@ -162,8 +162,8 @@ Map.prototype = {
 
             var u_camera = gl.getUniformLocation(this.program, "u_camera");
             gl.uniform4f(u_camera,
-                this.mapData.layers[layer].parallax.X * (this.camera[0] / this.vspData.tilesize.width),
-                this.mapData.layers[layer].parallax.Y * (this.camera[1] / this.vspData.tilesize.height),
+                Math.floor(this.mapData.layers[layer].parallax.X * this.camera[0]) / this.vspData.tilesize.width,
+                Math.floor(this.mapData.layers[layer].parallax.Y * this.camera[1]) / this.vspData.tilesize.height,
                 this.camera[2] * this.renderContainer.width() / this.vspData.tilesize.width,
                 this.camera[2] * this.renderContainer.height() / this.vspData.tilesize.height
             );
