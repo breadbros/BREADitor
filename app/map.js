@@ -119,35 +119,71 @@ Map.prototype = {
         // make sure the size is right
         this.resize();
 
+        var zoomFn = function(map, e, zoomout) {
+            var mouseX = map.camera[0] + e.clientX * map.camera[2];
+            var mouseY = map.camera[1] + e.clientY * map.camera[2];
+            if (zoomout) {
+                map.camera[2] = Math.max(map.camera[2] / 2, 0.125);
+            } else {
+                map.camera[2] = Math.min(map.camera[2] * 2, 16);
+            }
+            map.camera[0] = mouseX - (e.clientX * map.camera[2]);
+            map.camera[1] = mouseY - (e.clientY * map.camera[2]);
+        };
+
+        var drag = {
+            "mousedown": function(map, e) {
+                map.dragging = true;
+                window.$MAP_WINDOW.draggable('disable');
+                map.lastMouse = [ e.clientX, e.clientY ];   
+            },
+            "mousemove": function(map, e) {
+                if( map.dragging ) {
+                    map.camera[0] += (map.lastMouse[0] - e.clientX) * map.camera[2];
+                    map.camera[1] += (map.lastMouse[1] - e.clientY) * map.camera[2];
+                    map.lastMouse = [ e.clientX, e.clientY ];
+                }
+            },
+            "mouseup": function(map, e) {
+                map.dragging = false;
+                window.$MAP_WINDOW.draggable('enable');
+                console.log("mouseup!");
+            },
+            "mousewheel": function(map, e) {
+                zoomFn(map, e, e.originalEvent.deltaY < 0);
+            }
+        };
+
+
+        var tools = function( action, map, evt ) {
+            var mode = window.TOOLMODE;
+            if( mode == "DRAG" ) {
+                drag[action](map, evt);
+            } else if( mode == "EYEDROPPER" ) {
+                console.log("eyedropper, lol.");
+            } else {
+                throw "Not implemented, lol?";
+            }
+        };
+
+
+
+
+
         // DEBUG JUNK
         this.dragging = false;
         this.lastMouse = [0,0];
         this.renderContainer.on('mousedown', function(e) {
-            this.dragging = true;
-            window.$MAP_WINDOW.draggable('disable');
-            this.lastMouse = [ e.clientX, e.clientY ];
+            tools( 'mousedown', this, e );
         }.bind(this));
         this.renderContainer.on('mousemove', function(e) {
-            if (this.dragging) {
-                this.camera[0] += (this.lastMouse[0] - e.clientX) * this.camera[2];
-                this.camera[1] += (this.lastMouse[1] - e.clientY) * this.camera[2];
-                this.lastMouse = [ e.clientX, e.clientY ];
-            }
+            tools( 'mousemove', this, e );
         }.bind(this));
-        this.renderContainer.on('mouseup', function() {
-            this.dragging = false;
-            window.$MAP_WINDOW.draggable('enable');
+        this.renderContainer.on('mouseup', function(e) {
+            tools( 'mouseup', this, e );
         }.bind(this));
         this.renderContainer.on('mousewheel', function(e) {
-            var mouseX = this.camera[0] + e.clientX * this.camera[2];
-            var mouseY = this.camera[1] + e.clientY * this.camera[2];
-            if (e.originalEvent.deltaY < 0) {
-                this.camera[2] = Math.max(this.camera[2] / 2, 0.125);
-            } else {
-                this.camera[2] = Math.min(this.camera[2] * 2, 16);
-            }
-            this.camera[0] = mouseX - (e.clientX * this.camera[2]);
-            this.camera[1] = mouseY - (e.clientY * this.camera[2]);
+            tools( 'mousewheel', this, e );
         }.bind(this));
     },
 

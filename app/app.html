@@ -17,10 +17,11 @@
 
             $(function() {
                 $( ".resizable-window" ).resizable();
-                $( ".resizable-window" ).draggable();
+                $( ".draggable-window" ).draggable();
 
                 window.$MAP_WINDOW = $(".map.resizable-window");
-                $(".map .map_canvas").draggable('disable');
+
+                //$(".map .map_canvas").draggable('disable');
             });
 
             var myNotification = new Notification('Maped4', {
@@ -45,6 +46,15 @@
                 height: 500px;
             }
 
+            .tool-palette {
+                width: 100px;
+                height: 400px;   
+
+                position: absolute; 
+                right: 10px;
+                top: 10px;
+            }
+
             /* absolute bullshit for now. */
             .map .map_canvas_container {
                 width: 95%;
@@ -55,14 +65,65 @@
                 width: 100%;
                 height: 100%;
             }
+
+            .tooltip-tile-selector {
+                width: 40px;
+                height: 40px;
+                border: solid black 2px;
+                position: absolute;
+                bottom: 3px;
+            }
+
+            .tooltip-tile-selector:enabled {
+                border: solid red 3px;
+            }
+
+            #left-palette {
+                left: 3px;
+            }
+            #right-palette {
+                right: 3px;
+            }
         </style>
 
-        <div class="map ui-widget-content resizable-window">
+        <div class="map ui-widget-content resizable-window draggable-window">
             <h3 class="ui-widget-header">Map</h3>
             <div class="map_canvas_container">
                 <canvas class="map_canvas"></canvas>
             </div>
         </div>
+
+        <div class="tool-palette ui-widget-content draggable-window">
+            <h3 class="ui-widget-header" id="tool-title">Tool</h3>
+
+            <button id="btn-tool-drag">Drag</button>
+            <button id="btn-tool-eyedropper">Eyedropper</button>
+            <button id="btn-tool-select" disabled="">Select</button>
+            <button id="btn-tool-draw" disabled="">Draw</button>
+            <button id="btn-tool-fill" disabled="">Fill</button>
+
+            <canvas id="left-palette" class="tooltip-tile-selector"></canvas>
+            <canvas id="right-palette" class="tooltip-tile-selector" disabled=""></canvas>
+        </div>
+
+        <script>
+            /*
+            $(".tooltip-tile-selector").click( function(e) {
+                $(".tooltip-tile-selector").attr("selected", "");
+                debugger;
+            } );
+            */
+
+            $("#btn-tool-drag").click( function(e) {
+                $("#tool-title").text("Drag");
+                window.TOOLMODE = "DRAG";
+            } );
+
+            $("#btn-tool-eyedropper").click( function(e) {
+                $("#tool-title").text("Eyedropper");
+                window.TOOLMODE = "EYEDROPPER";
+            } );
+        </script>
 
         <script src="app.js"></script>
     </body>
