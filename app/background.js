@@ -6,14 +6,14 @@
 var app = require('app');
 var BrowserWindow = require('browser-window');
 var env = require('./vendor/electron_boilerplate/env_config');
-var devHelper = require('./vendor/electron_boilerplate/dev_helper');
+//var devHelper = require('./vendor/electron_boilerplate/dev_helper');
 var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
 
 var mainWindow;
 
 // Preserver of the window size and position between app launches.
 var mainWindowState = windowStateKeeper('main', {
-    width: 1000,
+    width: 800,
     height: 600
 });
 
@@ -37,18 +37,48 @@ app.on('ready', function () {
     }
 
     if (env.name !== 'production') {
-        devHelper.setDevMenu();
-        mainWindow.openDevTools();
+        var getDevToolsMenu = function() {
+            var app = require('app');
+            var Menu = require('menu');
+            var BrowserWindow = require('browser-window');
+
+            var template = [{
+                label: 'Development',
+                submenu: [{
+                        label: 'Reload',
+                        accelerator: 'CmdOrCtrl+R',
+                        click: function () {
+                            BrowserWindow.getFocusedWindow().reloadIgnoringCache();
+                        }
+                    },{
+                        label: 'Toggle DevTools',
+                        accelerator: 'Alt+CmdOrCtrl+I',
+                        click: function () {
+                            BrowserWindow.getFocusedWindow().toggleDevTools();
+                        }
+                    },{
+                        label: 'Quit',
+                        accelerator: 'CmdOrCtrl+Q',
+                        click: function () {
+                            app.quit();
+                        }
+                    }]
+                }];
+
+            return template;
+        };
     }
 
     var buildMainMenu = function() {
         var Menu = require("menu");
-        
+
         // Create the Application's main menu
         var template = [{
             label: "Application",
             submenu: [
                 { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
+                { type: "separator" },
+                { label: "Refresh", accelerator: "Command+R", click: function() { app.refresh(); }},
                 { type: "separator" },
                 { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
             ]}, {
@@ -64,10 +94,14 @@ app.on('ready', function () {
             ]}
         ];
 
+        if( getDevToolsMenu ) {
+            template.push.apply( template, getDevToolsMenu() );
+            mainWindow.openDevTools();
+        }
+
         Menu.setApplicationMenu(Menu.buildFromTemplate(template));
     };
     buildMainMenu();
-
 
     mainWindow.on('close', function () {
         mainWindowState.saveState(mainWindow);
