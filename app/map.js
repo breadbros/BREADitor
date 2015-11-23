@@ -1,4 +1,5 @@
 var app = require('remote').require('app');
+var sprintf = require("sprintf-js").sprintf;
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
 function buildShaderProgram(gl) {
@@ -52,6 +53,9 @@ export var Map = function(mapfile, mapdatafile, vspfile) {
     this.renderString = this.mapData.renderstring.split(",");
     this.mapSize = [0,0];
     for (var i = 0; i < this.mapData.layers.length; i++) {
+
+        if (this.mapData.layers[i].MAPED_HIDDEN)  { continue; }
+
         if (this.mapData.layers[i].dimensions.X > this.mapSize[0]) this.mapSize[0] = this.mapData.layers[i].dimensions.X;
         if (this.mapData.layers[i].dimensions.Y > this.mapSize[1]) this.mapSize[1] = this.mapData.layers[i].dimensions.Y;
     }
@@ -131,38 +135,38 @@ Map.prototype = {
             map.camera[1] = mouseY - (e.clientY * map.camera[2]);
         };
 
-        var drag = {
-            "mousedown": function(map, e) {
-                map.dragging = true;
-                window.$MAP_WINDOW.draggable('disable');
-                map.lastMouse = [ e.clientX, e.clientY ];   
-            },
-            "mousemove": function(map, e) {
-                if( map.dragging ) {
-                    map.camera[0] += (map.lastMouse[0] - e.clientX) * map.camera[2];
-                    map.camera[1] += (map.lastMouse[1] - e.clientY) * map.camera[2];
-                    map.lastMouse = [ e.clientX, e.clientY ];
+        var toolLogic = {
+            "DRAG" : {
+                "mousedown": function(map, e) {
+                    map.dragging = true;
+                    window.$MAP_WINDOW.draggable('disable');
+                    map.lastMouse = [ e.clientX, e.clientY ];   
+                },
+                "mousemove": function(map, e) {
+                    if( map.dragging ) {
+                        map.camera[0] += (map.lastMouse[0] - e.clientX) * map.camera[2];
+                        map.camera[1] += (map.lastMouse[1] - e.clientY) * map.camera[2];
+                        map.lastMouse = [ e.clientX, e.clientY ];
+                    }
+                },
+                "mouseup": function(map, e) {
+                    map.dragging = false;
+                    window.$MAP_WINDOW.draggable('enable');
+                },
+                "mousewheel": function(map, e) {
+                    zoomFn(map, e, e.originalEvent.deltaY < 0);
                 }
-            },
-            "mouseup": function(map, e) {
-                map.dragging = false;
-                window.$MAP_WINDOW.draggable('enable');
-                console.log("mouseup!");
-            },
-            "mousewheel": function(map, e) {
-                zoomFn(map, e, e.originalEvent.deltaY < 0);
             }
         };
 
 
         var tools = function( action, map, evt ) {
             var mode = window.TOOLMODE;
-            if( mode == "DRAG" ) {
-                drag[action](map, evt);
-            } else if( mode == "EYEDROPPER" ) {
-                console.log("eyedropper, lol.");
+            
+            if( toolLogic.hasOwnProperty(mode) && toolLogic[mode].hasOwnProperty(action) ) {
+                toolLogic[mode][action](map, evt);    
             } else {
-                throw "Not implemented, lol?";
+                console.log( sprintf("No action '%s' for mode '%s'", action, mode) );
             }
         };
 
