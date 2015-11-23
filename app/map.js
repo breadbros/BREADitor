@@ -124,6 +124,7 @@ Map.prototype = {
         this.lastMouse = [0,0];
         this.renderContainer.on('mousedown', function(e) {
             this.dragging = true;
+            window.$MAP_WINDOW.draggable('disable');
             this.lastMouse = [ e.clientX, e.clientY ];
         }.bind(this));
         this.renderContainer.on('mousemove', function(e) {
@@ -135,6 +136,7 @@ Map.prototype = {
         }.bind(this));
         this.renderContainer.on('mouseup', function() {
             this.dragging = false;
+            window.$MAP_WINDOW.draggable('enable');
         }.bind(this));
         this.renderContainer.on('mousewheel', function(e) {
             var mouseX = this.camera[0] + e.clientX * this.camera[2];

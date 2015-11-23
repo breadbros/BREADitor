@@ -18,6 +18,8 @@
             $(function() {
                 $( ".resizable-window" ).resizable();
                 $( ".resizable-window" ).draggable();
+
+                window.$MAP_WINDOW = $(".map.resizable-window");
                 $(".map .map_canvas").draggable('disable');
             });
 
@@ -34,6 +36,7 @@
 
         <style>
             body {
+                /* le frog*/
                 background-color: rgb(51, 51, 51);             
             }
 
@@ -41,11 +44,24 @@
                 width: 500px;
                 height: 500px;
             }
+
+            /* absolute bullshit for now. */
+            .map .map_canvas_container {
+                width: 95%;
+                height: 84%;
+            }
+
+            .map .map_canvas {
+                width: 100%;
+                height: 100%;
+            }
         </style>
 
         <div class="map ui-widget-content resizable-window">
             <h3 class="ui-widget-header">Map</h3>
-            <canvas class="map_canvas"></canvas>
+            <div class="map_canvas_container">
+                <canvas class="map_canvas"></canvas>
+            </div>
         </div>
 
         <script src="app.js"></script>
