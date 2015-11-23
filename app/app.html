@@ -19,7 +19,7 @@
                 $( ".resizable-window" ).resizable();
                 $( ".draggable-window" ).draggable();
 
-                window.$MAP_WINDOW = $(".map.resizable-window");
+                window.$MAP_WINDOW = $(".map-palette.resizable-window");
 
                 //$(".map .map_canvas").draggable('disable');
             });
@@ -41,7 +41,7 @@
                 background-color: rgb(51, 51, 51);             
             }
 
-            .map {
+            .map-palette {
                 width: 500px;
                 height: 500px;
             }
@@ -55,14 +55,32 @@
                 top: 10px;
             }
 
+            .layers-palette {
+                width: 200px;
+                height: 200px;
+
+                position: absolute; 
+                right: 10px;
+                bottom: 10px;
+            }
+
+            .info-palette {
+                width: 200px;
+                height: 200px;
+
+                position: absolute; 
+                right: 220px;
+                bottom: 10px;
+            }
+
             /* absolute bullshit for now. */
-            .map .map_canvas_container {
+            .map-palette .map_canvas_container {
                 padding-left: 2%;
                 width: 95%;
                 height: 84%;
             }
 
-            .map .map_canvas {
+            .map-palette .map_canvas {
                 width: 100%;
                 height: 100%;
             }
@@ -87,7 +105,7 @@
             }
         </style>
 
-        <div class="map ui-widget-content resizable-window draggable-window">
+        <div class="map-palette ui-widget-content resizable-window draggable-window">
             <h3 class="ui-widget-header">Map</h3>
             <div class="map_canvas_container">
                 <canvas class="map_canvas"></canvas>
@@ -105,6 +123,20 @@
 
             <canvas id="left-palette" class="tooltip-tile-selector"></canvas>
             <canvas id="right-palette" class="tooltip-tile-selector" disabled=""></canvas>
+        </div>
+
+        <div class="layers-palette ui-widget-content draggable-window resizable-window">
+            <h3 class="ui-widget-header">Layers</h3>
+        </div>
+
+        <div class="info-palette ui-widget-content draggable-window resizable-window">
+            <h3 class="ui-widget-header">Info</h3>
+            <ul>
+                <li>map: <span id="info-mapname"></span></li>
+                <li>dims: <span id="info-dims"></span></li>
+                <li>loc: <span id="info-location"></span></li>
+                <li>zoomlevel: <span id="info-zoom"></span></li>
+            </ul>
         </div>
 
         <script>
