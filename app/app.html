@@ -4,20 +4,48 @@
         <meta charset="utf-8">
         <title>MAPED 4</title>
 
-        <link href="./stylesheets/main.css" rel="stylesheet" type="text/css">
+        <link href="stylesheets/main.css" rel="stylesheet" type="text/css">
+        <link href="node_modules/jquery-ui/themes/le-frog/jquery-ui.min.css" rel="stylesheet" type="text/css">
 
         <script src="vendor/electron_boilerplate/env_config.js"></script>
         <script src="vendor/electron_boilerplate/context_menu.js"></script>
         <script src="vendor/electron_boilerplate/external_links.js"></script>
 
         <script>
-          window.jQuery = window.$ = require('jquery');
+            window.jQuery = window.$ = require('jquery');
+            require('jquery-ui');
+
+            $(function() {
+                $( ".resizable-window" ).resizable();
+                $( ".resizable-window" ).draggable();
+                $(".map .map_canvas").draggable('disable');
+            });
+
+            var myNotification = new Notification('Maped4', {
+              body: 'Farmsville map loaded'
+            });
+
+            myNotification.onclick = function () {
+              console.log('Notification clicked');
+            };
         </script>
     </head>
     <body>
 
-        <div class="container">
-            <canvas id="map_canvas"></canvas>
+        <style>
+            body {
+                background-color: rgb(51, 51, 51);             
+            }
+
+            .map {
+                width: 500px;
+                height: 500px;
+            }
+        </style>
+
+        <div class="map ui-widget-content resizable-window">
+            <h3 class="ui-widget-header">Map</h3>
+            <canvas class="map_canvas"></canvas>
         </div>
 
         <script src="app.js"></script>

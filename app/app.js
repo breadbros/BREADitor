@@ -17,11 +17,12 @@ import { Map } from './map';
         '../app/map_assets/farmsville.vsp.json'
     ).ready()
         .then(function(m) {
-            m.setCanvas($('#map_canvas'));
+            m.setCanvas($('.map_canvas'));
             currentMap = m;
         });
 })();
 
+/*
 // ---------------------------------------------------------------------------------------------------------------------
 // everything below here might still be useful to someone but it's not in active use!
 // ---------------------------------------------------------------------------------------------------------------------
@@ -87,3 +88,4 @@ var envName = window.env.name;
 	};
   }
 )( $ );
+*/
