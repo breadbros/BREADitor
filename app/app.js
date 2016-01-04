@@ -1,5 +1,46 @@
 import { Map } from './map';
 
+function initLayersWidget(map) {
+	//map.layers[i].MAPED_HIDDEN
+
+	var layers = map.mapData.layers;
+
+	$(".layers-palette").append( "Rstring: " + map.renderString + "(this should be represented in the layer order above)" );
+
+	var list = $(".layers-palette .layers-list");
+	var newThing = null;
+	var l = null;
+	var line = null;
+
+	function addHandler( $line, i ) {
+    	$line.on( "click", function() {
+    		layers[i].MAPED_HIDDEN = !layers[i].MAPED_HIDDEN;
+
+    		$line.html( generateContent(i, layers[i]) );
+    	} );
+	}
+
+	function generateContent(i, l) {
+    	var newThing = (i+1) + ": " + l.name;
+    	newThing += ", A:" + l.alpha;
+    	newThing += ", " + (l.MAPED_HIDDEN ? "hidden" : "visible" );
+    	return newThing;
+	}
+
+	for (var i = layers.length - 1; i >= 0; i--) {
+		l = layers[i];
+
+    	newThing = "<li>";
+    	newThing += generateContent(i, l);
+    	newThing += "</li>";
+
+    	line = $(newThing);
+    	addHandler(line, i);
+
+    	list.append( line );
+	};
+};
+
 (function() {
     window.currentMap = null;
 
@@ -19,6 +60,8 @@ import { Map } from './map';
         .then(function(m) {
             m.setCanvas($('.map_canvas'));
             currentMap = m;
+
+            initLayersWidget( currentMap );
         });
 })();
 

@@ -159,7 +159,6 @@ Map.prototype = {
             }
         };
 
-
         var tools = function( action, map, evt ) {
             var mode = window.TOOLMODE;
             
@@ -169,10 +168,6 @@ Map.prototype = {
                 console.log( sprintf("No action '%s' for mode '%s'", action, mode) );
             }
         };
-
-
-
-
 
         // DEBUG JUNK
         this.dragging = false;
@@ -201,6 +196,8 @@ Map.prototype = {
         for (var i = 0; i < this.renderString.length; i++) {
             var layer = parseInt(this.renderString[i], 10) - 1;
             if (isNaN(layer)) continue;
+
+            if (this.mapData.layers[layer].MAPED_HIDDEN) continue;
 
             var u_camera = gl.getUniformLocation(this.program, "u_camera");
             gl.uniform4f(u_camera,
@@ -243,5 +240,4 @@ Map.prototype = {
         this.renderContainer.attr('height', this.renderContainer.height());
         this.gl.viewport(0, 0, this.renderContainer.width(), this.renderContainer.height());
     },
-
 };
