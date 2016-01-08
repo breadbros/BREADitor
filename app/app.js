@@ -41,6 +41,15 @@ function initLayersWidget(map) {
 	};
 };
 
+function initInfoWidget(map) {
+	$("#info-mapname").text( map.mapPath );
+	$("#info-dims").text( map.mapSize[0]+"x"+map.mapSize[1] );
+}
+
+function updateLocationFunction(map) {
+	$("#info-location").text( map.camera[0] +","+map.camera[0] );
+}
+
 (function() {
     window.currentMap = null;
 
@@ -55,13 +64,15 @@ function initLayersWidget(map) {
     new Map(
         '../app/map_assets/farmsville.map.json',
         '../app/map_assets/farmsville.map.data.json',
-        '../app/map_assets/farmsville.vsp.json'
+        '../app/map_assets/farmsville.vsp.json',
+        updateLocationFunction
     ).ready()
         .then(function(m) {
             m.setCanvas($('.map_canvas'));
             currentMap = m;
 
             initLayersWidget( currentMap );
+            initInfoWidget( currentMap );
         });
 })();
 

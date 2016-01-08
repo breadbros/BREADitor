@@ -40,8 +40,10 @@ function buildTileDataTexture(data) {
     return out;
 }
 
-export var Map = function(mapfile, mapdatafile, vspfile) {
+export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction) {
     console.log("Loading map", mapfile);
+
+    this.updateLocationFn = updateLocationFunction;
 
     this.readyPromise = new Promise(function(resolve, reject) {
         this.promiseResolver = resolve;
@@ -164,6 +166,7 @@ Map.prototype = {
                 },
                 "mouseup": function(map, e) {
                     map.dragging = false;
+                    map.updateLocationFn(map);
                     window.$MAP_WINDOW.draggable('enable');
                 }
 
@@ -199,6 +202,10 @@ Map.prototype = {
         this.renderContainer.on('mousewheel', function(e) {
             tools( 'mousewheel', this, e );
         }.bind(this));
+
+        if( this.onLoad ) {
+            this.onLoad(this);
+        }
     },
 
     render: function() {
