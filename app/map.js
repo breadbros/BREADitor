@@ -126,7 +126,7 @@ Map.prototype = {
         var zoomFn = function(map, e, zoomout) {
             var mouseX = map.camera[0] + e.clientX * map.camera[2];
             var mouseY = map.camera[1] + e.clientY * map.camera[2];
-            if (zoomout) {
+            if (!zoomout) {
                 map.camera[2] = Math.max(map.camera[2] / 2, 0.125);
             } else {
                 map.camera[2] = Math.min(map.camera[2] * 2, 16);
@@ -134,6 +134,19 @@ Map.prototype = {
             map.camera[0] = mouseX - (e.clientX * map.camera[2]);
             map.camera[1] = mouseY - (e.clientY * map.camera[2]);
         };
+
+        // function to be renamed (and probably changed) later. 
+        this.grue_zoom = function(zoomout, evt) {
+
+            // if no event, fake it and center on current view.
+            if( !evt ) {
+                evt = {};
+                evt.clientX = this.renderContainer.width() / 2;
+                evt.clientY = this.renderContainer.height() / 2; 
+            }
+
+            zoomFn( this, evt, zoomout );
+        }
 
         var toolLogic = {
             "DRAG" : {
@@ -152,10 +165,12 @@ Map.prototype = {
                 "mouseup": function(map, e) {
                     map.dragging = false;
                     window.$MAP_WINDOW.draggable('enable');
-                },
+                }
+
+                /*,
                 "mousewheel": function(map, e) {
                     zoomFn(map, e, e.originalEvent.deltaY < 0);
-                }
+                }*/
             }
         };
 

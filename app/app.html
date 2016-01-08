@@ -120,6 +120,8 @@
             <button id="btn-tool-select" disabled="">Select</button>
             <button id="btn-tool-draw" disabled="">Draw</button>
             <button id="btn-tool-fill" disabled="">Fill</button>
+            <button id="btn-tool-zoomin">Zoom In</button>
+            <button id="btn-tool-zoomout">Zoom Out</button>
 
             <canvas id="left-palette" class="tooltip-tile-selector"></canvas>
             <canvas id="right-palette" class="tooltip-tile-selector" disabled=""></canvas>
@@ -157,6 +159,23 @@
             $("#btn-tool-eyedropper").click( function(e) {
                 $("#tool-title").text("Eyedropper");
                 window.TOOLMODE = "EYEDROPPER";
+            } );
+
+            var updateZoomText = function() {
+
+                var txt = (100 / window.currentMap.camera[2]) + "%";
+
+                $("#info-zoom").text(txt);
+            };
+
+            $("#btn-tool-zoomin").click( function(e) {
+                window.currentMap.grue_zoom(false);
+                updateZoomText();                
+            } );
+
+            $("#btn-tool-zoomout").click( function(e) {
+                window.currentMap.grue_zoom(true);
+                updateZoomText();
             } );
 
             $("#btn-tool-drag").click();
