@@ -174,6 +174,21 @@ Map.prototype = {
                 "mousewheel": function(map, e) {
                     zoomFn(map, e, e.originalEvent.deltaY < 0);
                 }*/
+            },
+
+            "EYEDROPPER" : {
+                "mousedown": function(map, e) {
+                    if( !window.selected_layer ) {
+                        alert("You haven't selected a layer yet.");
+                        return;
+                    }
+
+                    debugger;
+
+                    //map.dragging = true;
+                    //window.$MAP_WINDOW.draggable('disable');
+                    //map.lastMouse = [ e.clientX, e.clientY ];   
+                }                
             }
         };
 

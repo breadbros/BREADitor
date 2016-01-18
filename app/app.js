@@ -28,9 +28,10 @@ function initLayersWidget(map) {
 
 	function addLayerSelectHandler( $layer_container, i ) {
     	$layer_container.on( "click", function(evt) {
+    		
     		var selClass = "selected";
 
-    		if( window.selected_layer ) {
+    		if( window && window.selected_layer ) {
     			window.selected_layer.$container.removeClass(selClass);
     		}
 
