@@ -8,7 +8,7 @@ function initLayersWidget(map) {
 	$(".layers-palette").append( "Rstring: " + map.renderString + "(this should be represented in the layer order above)" );
 
 	var list = $(".layers-palette .layers-list");
-	var newThing = null;
+	var newLayerContainer = null;
 	var l = null;
 	var line = null;
 
@@ -22,18 +22,32 @@ function initLayersWidget(map) {
 
     		$eyeball.text( getEyeballText(layers[i]) );
 
-    		event.stopPropagation()
+    		evt.stopPropagation()
     	} );
 	}
 
+	function addLayerSelectHandler( $layer_container, i ) {
+    	$layer_container.on( "click", function(evt) {
+    		var selClass = "selected";
+
+    		if( window.selected_layer ) {
+    			window.selected_layer.$container.removeClass(selClass);
+    		}
+
+    		window.selected_layer = { 
+    			layer: layers[i], 
+    			$container: $layer_container
+    		};
+    		$layer_container.addClass(selClass);
+
+    		evt.stopPropagation()
+    	} );
+	}
 
 	function reorder_layers_by_rstring_priority($list, map) {
-//debugger;
+
 		var childs = $list.children("li");
 		childs.detach();
-		// for (var i = childs.length - 1; i >= 0; i--) {
-		// 	childs[i].detach();
-		// };
 
 		var rstring_ref = null;
 		var rstring_cur_target = null;
@@ -43,7 +57,7 @@ function initLayersWidget(map) {
 			rstring_cur_target = map.renderString[i];
 	        rstring_ref = parseInt(rstring_cur_target, 10);
 	        if (isNaN(rstring_ref)) {
-	        	continue;	
+	        	continue;
 	        } 
 
 	        for (var j = childs.length - 1; j >= 0; j--) {
@@ -73,13 +87,15 @@ function initLayersWidget(map) {
 	for (var i = layers.length - 1; i >= 0; i--) {
 		l = layers[i];
 
-		newThing = $("<li class='layer'></li>");
-		newThing.data("alpha", l.alpha);
-		newThing.data("rstring_ref", ""+(i+1) );
+		newLayerContainer = $("<li class='layer'></li>");
+		newLayerContainer.data("alpha", l.alpha);
+		newLayerContainer.data("rstring_ref", ""+(i+1) );
 
-		generateContent(i, l, newThing);
+		generateContent( i, l, newLayerContainer );
 
-    	list.append( newThing );
+		addLayerSelectHandler( newLayerContainer, i );
+
+    	list.append( newLayerContainer );
 	};
 
 	reorder_layers_by_rstring_priority(list, map);
