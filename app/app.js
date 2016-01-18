@@ -12,32 +12,43 @@ function initLayersWidget(map) {
 	var l = null;
 	var line = null;
 
-	function addHandler( $line, i ) {
-    	$line.on( "click", function() {
+	function getEyeballText(layer) {
+		return !layer.MAPED_HIDDEN ? "+" : "-";
+	}
+
+	function addEyeballHandler( $eyeball, i ) {
+    	$eyeball.on( "click", function(evt) {
     		layers[i].MAPED_HIDDEN = !layers[i].MAPED_HIDDEN;
 
-    		$line.html( generateContent(i, layers[i]) );
+    		$eyeball.text( getEyeballText(layers[i]) );
+
+    		event.stopPropagation()
     	} );
 	}
 
-	function generateContent(i, l) {
-    	var newThing = (i+1) + ": " + l.name;
-    	newThing += ", A:" + l.alpha;
-    	newThing += ", " + (l.MAPED_HIDDEN ? "hidden" : "visible" );
-    	return newThing;
+	function generateContent(i, l, $parent) {
+		var visible_div = $("<button class='eyeball_button'></button>");
+		var name_div = $("<div class='layer_name'></div>");
+
+		visible_div.text( getEyeballText(l) );
+		name_div.text((i+1)+": "+l.name);
+
+		addEyeballHandler(visible_div, i);
+
+		$parent.append(visible_div);
+		$parent.append(name_div);
 	}
 
 	for (var i = layers.length - 1; i >= 0; i--) {
 		l = layers[i];
 
-    	newThing = "<li>";
-    	newThing += generateContent(i, l);
-    	newThing += "</li>";
+		newThing = $("<li class='layer'></li>");
+		newThing.data("alpha", l.alpha);
+		newThing.data("rstring_ref", ""+(i+1) );
 
-    	line = $(newThing);
-    	addHandler(line, i);
+		generateContent(i, l, newThing);
 
-    	list.append( line );
+    	list.append( newThing );
 	};
 };
 
