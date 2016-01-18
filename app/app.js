@@ -26,6 +26,37 @@ function initLayersWidget(map) {
     	} );
 	}
 
+
+	function reorder_layers_by_rstring_priority($list, map) {
+//debugger;
+		var childs = $list.children("li");
+		childs.detach();
+		// for (var i = childs.length - 1; i >= 0; i--) {
+		// 	childs[i].detach();
+		// };
+
+		var rstring_ref = null;
+		var rstring_cur_target = null;
+		var cur_kid = null;
+
+		for (var i = map.renderString.length - 1; i >= 0; i--) {
+			rstring_cur_target = map.renderString[i];
+	        rstring_ref = parseInt(rstring_cur_target, 10);
+	        if (isNaN(rstring_ref)) {
+	        	continue;	
+	        } 
+
+	        for (var j = childs.length - 1; j >= 0; j--) {
+	        	cur_kid = $(childs[j]);
+	        	if( cur_kid.data("rstring_ref") == rstring_cur_target ) {
+	        		$list.append(cur_kid); // re-add to list
+	        		childs.splice(j, 1); // remove from childs array
+	        		break;
+	        	}
+	        };
+		};
+	}
+
 	function generateContent(i, l, $parent) {
 		var visible_div = $("<button class='eyeball_button'></button>");
 		var name_div = $("<div class='layer_name'></div>");
@@ -50,6 +81,8 @@ function initLayersWidget(map) {
 
     	list.append( newThing );
 	};
+
+	reorder_layers_by_rstring_priority(list, map);
 };
 
 function initInfoWidget(map) {
@@ -61,7 +94,7 @@ function updateLocationFunction(map) {
 	$("#info-location").text( map.camera[0] +","+map.camera[0] );
 }
 
-(function() {
+(function() { 
     window.currentMap = null;
 
     var tick = function(timestamp) {
