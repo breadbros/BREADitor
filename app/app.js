@@ -107,6 +107,10 @@ function initInfoWidget(map) {
 	$("#info-dims").text( map.mapSize[0]+"x"+map.mapSize[1] );
 }
 
+function initZonesWidget(map) {
+	$("#zones-number").text( map.mapData.zones.length );
+}
+
 function updateLocationFunction(map) {
 	$("#info-location").text( map.camera[0] +","+map.camera[0] );
 }
@@ -134,6 +138,7 @@ function updateLocationFunction(map) {
 
             initLayersWidget( currentMap );
             initInfoWidget( currentMap );
+            initZonesWidget( currentMap );
         });
 })();
 
