@@ -1,4 +1,4 @@
-import { Map } from './map';
+import { Map } from './Map.js';
 
 function initLayersWidget(map) {
 	//map.layers[i].MAPED_HIDDEN
@@ -28,15 +28,15 @@ function initLayersWidget(map) {
 
 	function addLayerSelectHandler( $layer_container, i ) {
     	$layer_container.on( "click", function(evt) {
-    		
+
     		var selClass = "selected";
 
     		if( window && window.selected_layer ) {
     			window.selected_layer.$container.removeClass(selClass);
     		}
 
-    		window.selected_layer = { 
-    			layer: layers[i], 
+    		window.selected_layer = {
+    			layer: layers[i],
     			$container: $layer_container
     		};
     		$layer_container.addClass(selClass);
@@ -59,7 +59,7 @@ function initLayersWidget(map) {
 	        rstring_ref = parseInt(rstring_cur_target, 10);
 	        if (isNaN(rstring_ref)) {
 	        	continue;
-	        } 
+	        }
 
 	        for (var j = childs.length - 1; j >= 0; j--) {
 	        	cur_kid = $(childs[j]);
@@ -115,7 +115,7 @@ function updateLocationFunction(map) {
 	$("#info-location").text( map.camera[0] +","+map.camera[0] );
 }
 
-(function() { 
+(function() {
     window.currentMap = null;
 
     var tick = function(timestamp) {
