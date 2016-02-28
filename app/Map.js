@@ -28,13 +28,19 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     this.mapPath = mapfile;
     this.mapData = jetpack.read(mapfile, 'json');
     this.renderString = this.mapData.renderstring.split(",");
+    console.log("Renderstring:", this.renderString);
     this.mapSize = [0,0];
-    for (var i = 0; i < this.mapData.layers.length; i++) {
+    this.layerLookup = {};
 
+    for (var i = 0; i < this.mapData.layers.length; i++) {
         if (this.mapData.layers[i].MAPED_HIDDEN)  { continue; }
 
         if (this.mapData.layers[i].dimensions.X > this.mapSize[0]) this.mapSize[0] = this.mapData.layers[i].dimensions.X;
         if (this.mapData.layers[i].dimensions.Y > this.mapSize[1]) this.mapSize[1] = this.mapData.layers[i].dimensions.Y;
+
+        var layerName = this.uniqueLayerName(this.mapData.layers[i].name);
+        this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
+        this.layerLookup[layerName] = this.mapData.layers[i];
     }
     this.camera = [0, 0, 1];
 
@@ -45,12 +51,37 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     this.vspImage.onload = function() { this.promiseResolver(this); }.bind(this);
     this.vspImage.src = this.vspData.source_image;
 
+    this.entities = {};
+    for (var i = 0; i < this.mapData.entities.length; i++) {
+
+    }
+    console.log("Entities:", this.entities);
+
     this.renderContainer = null;
 };
 
 Map.prototype = {
     ready: function() {
         return this.readyPromise;
+    },
+
+    uniqueLayerName: function(like) {
+        if (like && !this.layerLookup[like]) return like;
+        if (!like) like = "Layer 0"; // will have 1 added to the 0 so unnamed layers will be Layer 1, Layer 2, etc.
+
+        var name = '';
+        var num = parseInt(like.match(/\d*$/)[0], 10) || 1; // || 1 so that two layers named "Foo" become "Foo" and "Foo 2"
+        var stem = like.replace(/\d*$/, "");
+        num++;
+
+        name = stem + num;
+
+        while(this.layerLookup[name]) {
+            num++;
+            name = stem + num;
+        }
+
+        return name;
     },
 
     setCanvas: function($canvas) {
@@ -64,7 +95,7 @@ Map.prototype = {
         this.renderContainer = $canvas;
         this.gl = this.renderContainer[0].getContext('webgl'); // we're targeting Electron not the Internet at large so don't worry about failing to get a GL context
         this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
-        this.tilemapShader = new ShaderProgram(this.gl, jetpack.read("../app/vertex.glsl"), jetpack.read("../app/fragment.glsl"));
+        this.tilemapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemap-frag.glsl"));
 
         this.tileLibraryTexture = this.gl.createTexture();
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLibraryTexture);
@@ -114,7 +145,6 @@ Map.prototype = {
 
         // function to be renamed (and probably changed) later.
         this.grue_zoom = function(zoomout, evt) {
-
             // if no event, fake it and center on current view.
             if( !evt ) {
                 evt = {};
@@ -203,45 +233,50 @@ Map.prototype = {
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        this.tilemapShader.use();
-
         for (var i = 0; i < this.renderString.length; i++) {
             var layer = parseInt(this.renderString[i], 10) - 1;
-            if (isNaN(layer)) continue;
 
-            if (this.mapData.layers[layer].MAPED_HIDDEN) continue;
+            if (layer === 'E') {
+                for (e = 0; e < this.entities.length; e++) {
 
-            gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-                Math.floor(this.mapData.layers[layer].parallax.X * this.camera[0]) / this.vspData.tilesize.width,
-                Math.floor(this.mapData.layers[layer].parallax.Y * this.camera[1]) / this.vspData.tilesize.height,
-                this.camera[2] * this.renderContainer.width() / this.vspData.tilesize.width,
-                this.camera[2] * this.renderContainer.height() / this.vspData.tilesize.height
-            );
+                }
+            } else if (!isNaN(layer)) {
+                if (this.mapData.layers[layer].MAPED_HIDDEN) continue;
 
-            gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
-                this.mapData.layers[layer].dimensions.X,
-                this.mapData.layers[layer].dimensions.Y,
-                this.vspData.tiles_per_row,
-                this.vspImage.height / this.vspData.tilesize.height
-            );
+                this.tilemapShader.use();
 
-            var u_tileLibrary = gl.getUniformLocation(this.tilemapShader.program, "u_tileLibrary");
-            gl.uniform1i(u_tileLibrary, 0);
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
+                gl.uniform4f(this.tilemapShader.uniform('u_camera'),
+                    Math.floor(this.mapData.layers[layer].parallax.X * this.camera[0]) / this.vspData.tilesize.width,
+                    Math.floor(this.mapData.layers[layer].parallax.Y * this.camera[1]) / this.vspData.tilesize.height,
+                    this.camera[2] * this.renderContainer.width() / this.vspData.tilesize.width,
+                    this.camera[2] * this.renderContainer.height() / this.vspData.tilesize.height
+                );
 
-            var u_tileLayout = gl.getUniformLocation(this.tilemapShader.program, "u_tileLayout");
-            gl.uniform1i(u_tileLayout, 1);
-            gl.activeTexture(gl.TEXTURE1);
-            gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.mapData.layers[layer].dimensions.X, this.mapData.layers[layer].dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layer]));
+                gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
+                    this.mapData.layers[layer].dimensions.X,
+                    this.mapData.layers[layer].dimensions.Y,
+                    this.vspData.tiles_per_row,
+                    this.vspImage.height / this.vspData.tilesize.height
+                );
 
-            var a_position = gl.getAttribLocation(this.tilemapShader.program, "a_position");
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-            gl.enableVertexAttribArray(a_position);
-            gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+                var u_tileLibrary = gl.getUniformLocation(this.tilemapShader.program, "u_tileLibrary");
+                gl.uniform1i(u_tileLibrary, 0);
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
 
-            gl.drawArrays(gl.TRIANGLES, 0, 6);
+                var u_tileLayout = gl.getUniformLocation(this.tilemapShader.program, "u_tileLayout");
+                gl.uniform1i(u_tileLayout, 1);
+                gl.activeTexture(gl.TEXTURE1);
+                gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.mapData.layers[layer].dimensions.X, this.mapData.layers[layer].dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layer]));
+
+                var a_position = gl.getAttribLocation(this.tilemapShader.program, "a_position");
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+                gl.enableVertexAttribArray(a_position);
+                gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+            }
         }
     },
 
