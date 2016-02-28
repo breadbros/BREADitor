@@ -16,6 +16,7 @@ function buildTileDataTexture(data) {
 }
 
 export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction) {
+    var i;
     console.log("Loading map", mapfile);
 
     this.updateLocationFn = updateLocationFunction;
@@ -32,7 +33,7 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     this.mapSize = [0,0];
     this.layerLookup = {};
 
-    for (var i = 0; i < this.mapData.layers.length; i++) {
+    for (i = 0; i < this.mapData.layers.length; i++) {
         if (this.mapData.layers[i].MAPED_HIDDEN)  { continue; }
 
         if (this.mapData.layers[i].dimensions.X > this.mapSize[0]) this.mapSize[0] = this.mapData.layers[i].dimensions.X;
@@ -51,9 +52,26 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     this.vspImage.onload = function() { this.promiseResolver(this); }.bind(this);
     this.vspImage.src = this.vspData.source_image;
 
-    this.entities = {};
-    for (var i = 0; i < this.mapData.entities.length; i++) {
+    var lastLayer = "";
+    var defaultEntityLayer = "";
+    for (i = 0; i < this.renderString.length; i++) {
+        if (this.renderString[i] === 'E') {
+            defaultEntityLayer = this.mapData.layers[lastLayer].name;
+        }
+        lastLayer = parseInt(this.renderString[i], 10);
+    }
+    if (!defaultEntityLayer) {
+        defaultEntityLayer = this.mapData.layers[0].name;
+    }
 
+    this.entities = {};
+    for (i = 0; i < this.mapData.entities.length; i++) {
+        var entity = this.mapData.entities[i];
+        var layer = entity.location.layer || defaultEntityLayer;
+        if (!this.entities[layer]) {
+            this.entities[layer] = [];
+        }
+        this.entities[layer].push(entity);
     }
     console.log("Entities:", this.entities);
 
