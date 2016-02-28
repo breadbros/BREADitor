@@ -114,6 +114,7 @@ Map.prototype = {
         this.gl = this.renderContainer[0].getContext('webgl'); // we're targeting Electron not the Internet at large so don't worry about failing to get a GL context
         this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
         this.tilemapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemap-frag.glsl"));
+        this.spriteShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/sprite-vert.glsl"), jetpack.read("../app/shaders/sprite-frag.glsl"));
 
         this.tileLibraryTexture = this.gl.createTexture();
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLibraryTexture);
@@ -252,48 +253,77 @@ Map.prototype = {
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         for (var i = 0; i < this.renderString.length; i++) {
-            var layer = parseInt(this.renderString[i], 10) - 1;
+            var layerIndex = parseInt(this.renderString[i], 10) - 1;
+            var layer = this.mapData.layers[layerIndex];
 
-            if (layer === 'E') {
-                for (e = 0; e < this.entities.length; e++) {
+            if (isNaN(layerIndex)) continue;
+            if (layer.MAPED_HIDDEN) continue;
 
+            this.tilemapShader.use();
+
+            gl.uniform4f(this.tilemapShader.uniform('u_camera'),
+                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData.tilesize.width,
+                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData.tilesize.height,
+                this.camera[2] * this.renderContainer.width() / this.vspData.tilesize.width,
+                this.camera[2] * this.renderContainer.height() / this.vspData.tilesize.height
+            );
+
+            gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
+                layer.dimensions.X,
+                layer.dimensions.Y,
+                this.vspData.tiles_per_row,
+                this.vspImage.height / this.vspData.tilesize.height
+            );
+
+            var u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
+            gl.uniform1i(u_tileLibrary, 0);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
+
+            var u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
+            gl.uniform1i(u_tileLayout, 1);
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex]));
+
+            var a_position = this.tilemapShader.attribute('a_position');
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+            gl.enableVertexAttribArray(a_position);
+            gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+            if (this.entities[layer.name]) {
+                this.spriteShader.use();
+
+                for (var e = 0; e < this.entities[layer.name].length; e++) {
+                    var entity = this.entities[layer.name][e];
+
+                    var vertexBuffer = this.gl.createBuffer();
+
+                    var a_vertices = this.spriteShader.attribute('a_vertices');
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                    gl.enableVertexAttribArray(a_vertices);
+                    gl.vertexAttribPointer(a_vertices, 2, gl.FLOAT, false, 0, 0);
+
+                    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
+                        entity.location.tx, -entity.location.ty,
+                        entity.location.tx + 1, -entity.location.ty,
+                        entity.location.tx, -entity.location.ty - 1,
+                        entity.location.tx + 1, -entity.location.ty - 1,
+                        entity.location.tx, -entity.location.ty - 1,
+                        entity.location.tx + 1, -entity.location.ty
+                    ]), this.gl.STATIC_DRAW);
+
+                    gl.uniform4f(this.spriteShader.uniform('u_camera'),
+                        Math.floor(layer.parallax.X * this.camera[0]) / this.vspData.tilesize.width,
+                        Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData.tilesize.height,
+                        this.camera[2] * this.renderContainer.width() / this.vspData.tilesize.width,
+                        this.camera[2] * this.renderContainer.height() / this.vspData.tilesize.height
+                    );
+
+                    gl.drawArrays(gl.TRIANGLES, 0, 6);
                 }
-            } else if (!isNaN(layer)) {
-                if (this.mapData.layers[layer].MAPED_HIDDEN) continue;
-
-                this.tilemapShader.use();
-
-                gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-                    Math.floor(this.mapData.layers[layer].parallax.X * this.camera[0]) / this.vspData.tilesize.width,
-                    Math.floor(this.mapData.layers[layer].parallax.Y * this.camera[1]) / this.vspData.tilesize.height,
-                    this.camera[2] * this.renderContainer.width() / this.vspData.tilesize.width,
-                    this.camera[2] * this.renderContainer.height() / this.vspData.tilesize.height
-                );
-
-                gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
-                    this.mapData.layers[layer].dimensions.X,
-                    this.mapData.layers[layer].dimensions.Y,
-                    this.vspData.tiles_per_row,
-                    this.vspImage.height / this.vspData.tilesize.height
-                );
-
-                var u_tileLibrary = gl.getUniformLocation(this.tilemapShader.program, "u_tileLibrary");
-                gl.uniform1i(u_tileLibrary, 0);
-                gl.activeTexture(gl.TEXTURE0);
-                gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
-
-                var u_tileLayout = gl.getUniformLocation(this.tilemapShader.program, "u_tileLayout");
-                gl.uniform1i(u_tileLayout, 1);
-                gl.activeTexture(gl.TEXTURE1);
-                gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.mapData.layers[layer].dimensions.X, this.mapData.layers[layer].dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layer]));
-
-                var a_position = gl.getAttribLocation(this.tilemapShader.program, "a_position");
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-                gl.enableVertexAttribArray(a_position);
-                gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
-
-                gl.drawArrays(gl.TRIANGLES, 0, 6);
             }
         }
     },

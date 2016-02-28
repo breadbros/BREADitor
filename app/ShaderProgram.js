@@ -31,5 +31,9 @@ ShaderProgram.prototype = {
 
     uniform: function(u_name) {
         return this.gl.getUniformLocation(this.program, u_name);
+    },
+
+    attribute: function(a_name) {
+        return this.gl.getAttribLocation(this.program, a_name);
     }
 };
