@@ -48,9 +48,21 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     this.tileData = jetpack.read(mapdatafile, 'json').tile_data;
     this.vspData = jetpack.read(vspfile, 'json');
 
+    var toLoad = 1;
+    function doneLoading() {
+        toLoad--;
+        if (toLoad === 0) this.promiseResolver(this);
+    }.bind(this)
+
     this.vspImage = new Image();
-    this.vspImage.onload = function() { this.promiseResolver(this); }.bind(this);
+    this.vspImage.onload = doneLoading;
     this.vspImage.src = this.vspData.source_image;
+    toLoad++;
+
+    this.defaultSpriteImage = new Image()
+    this.defaultSpriteImage.onload = doneLoading;
+    this.defaultSpriteImage.src = "../app/images/defaultsprite.png";
+    toLoad++;
 
     var lastLayer = "";
     var defaultEntityLayer = "";
@@ -73,9 +85,12 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
         }
         this.entities[layer].push(entity);
     }
+    // TODO sort sprites by location.ty
     console.log("Entities:", this.entities);
 
     this.renderContainer = null;
+
+    doneLoading();
 };
 
 Map.prototype = {
@@ -123,6 +138,7 @@ Map.prototype = {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.vspImage);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, 0);
 
         this.tileLayoutTexture = this.gl.createTexture();
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLayoutTexture);
@@ -131,12 +147,22 @@ Map.prototype = {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.mapData.layers[0].dimensions.X, this.mapData.layers[0].dimensions.Y, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[0]));
+        this.gl.bindTexture(this.gl.TEXTURE_2D, 0);
 
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
         this.gl.enable(this.gl.BLEND);
 
         this.vertexbuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
+
+        this.defaultSpriteTexture = this.gl.createTexture();
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.defaultSpriteTexture);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.defaultSpriteImage);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, 0);
 
         this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
             0.0, 0.0,
@@ -279,12 +305,14 @@ Map.prototype = {
             gl.uniform1i(u_tileLibrary, 0);
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
+            gl.bindTexture(this.gl.TEXTURE_2D, 0);
 
             var u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
             gl.uniform1i(u_tileLayout, 1);
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex]));
+            gl.bindTexture(this.gl.TEXTURE_2D, 0);
 
             var a_position = this.tilemapShader.attribute('a_position');
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
@@ -293,6 +321,7 @@ Map.prototype = {
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
 
+            // TODO replace with a spritebatch type thing?
             if (this.entities[layer.name]) {
                 this.spriteShader.use();
 
@@ -307,12 +336,12 @@ Map.prototype = {
                     gl.vertexAttribPointer(a_vertices, 2, gl.FLOAT, false, 0, 0);
 
                     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-                        entity.location.tx, -entity.location.ty,
-                        entity.location.tx + 1, -entity.location.ty,
-                        entity.location.tx, -entity.location.ty - 1,
-                        entity.location.tx + 1, -entity.location.ty - 1,
-                        entity.location.tx, -entity.location.ty - 1,
-                        entity.location.tx + 1, -entity.location.ty
+                        entity.location.tx,     -entity.location.ty,     0, 0,
+                        entity.location.tx + 1, -entity.location.ty,     1, 0,
+                        entity.location.tx,     -entity.location.ty - 1, 0, 1,
+                        entity.location.tx + 1, -entity.location.ty - 1, 1, 1,
+                        entity.location.tx,     -entity.location.ty - 1, 0, 1,
+                        entity.location.tx + 1, -entity.location.ty,     1, 0
                     ]), this.gl.STATIC_DRAW);
 
                     gl.uniform4f(this.spriteShader.uniform('u_camera'),
@@ -321,6 +350,12 @@ Map.prototype = {
                         this.camera[2] * this.renderContainer.width() / this.vspData.tilesize.width,
                         this.camera[2] * this.renderContainer.height() / this.vspData.tilesize.height
                     );
+
+                    var u_texture = this.tilemapShader.uniform('u_spriteAtlas');
+                    gl.uniform1i(u_texture, 0);
+                    gl.activeTexture(gl.TEXTURE0);
+                    gl.bindTexture(gl.TEXTURE_2D, this.defaultSpriteTexture);
+                    gl.bindTexture(this.gl.TEXTURE_2D, 0);
 
                     gl.drawArrays(gl.TRIANGLES, 0, 6);
                 }

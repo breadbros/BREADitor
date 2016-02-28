@@ -1,5 +1,6 @@
 precision mediump float;
-attribute vec2 a_vertices;
+attribute vec4 a_vertices;
+varying vec2 v_texcoords;
 uniform vec4 u_camera; // camera offset x, camera offset y, camera scale x, camera scale y
 
 void main() {
@@ -9,4 +10,5 @@ void main() {
         0,
         1
     );
+    v_texcoords = vec2(a_vertices[2], a_vertices[3]);
 }
