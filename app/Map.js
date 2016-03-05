@@ -49,10 +49,10 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     this.vspData = jetpack.read(vspfile, 'json');
 
     var toLoad = 1;
-    function doneLoading() {
+    var doneLoading = function() {
         toLoad--;
         if (toLoad === 0) this.promiseResolver(this);
-    }.bind(this)
+    }.bind(this);
 
     this.vspImage = new Image();
     this.vspImage.onload = doneLoading;
