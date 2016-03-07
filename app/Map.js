@@ -78,6 +78,10 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     if (!defaultEntityLayer) {
         defaultEntityLayer = this.mapData.layers[0].name;
     }
+    console.log("LAYERS:");
+    for(i in this.mapData.layers) {
+        console.log("   ", this.mapData.layers[i].name);
+    }
 
     this.entityData = {
         '__default__': {
@@ -131,11 +135,17 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
                 entity.filename = '__default__';
             }
         }
-
-
     }
 
-    // TODO sort sprites by location.ty
+    for (var i in this.entities) {
+        if (this.entities[i]) {
+            console.log("Sorting entities on layer", i, ", ", this.entities[i].length, "entities to sort");
+            this.entities[i].sort(function(a, b) {
+                return a.location.ty - b.location.ty;
+            });
+        }
+    }
+
     this.renderContainer = null;
 
     doneLoading();
