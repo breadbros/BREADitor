@@ -82,8 +82,8 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     this.entityData = {
         '__default__': {
             animations: {},
-            dims: [ 16, 16 ],
-            hitbox: [ 0, 0, 16, 16 ],
+            dims: [ 16, 32 ],
+            hitbox: [ 0, 16, 16, 16 ],
             regions: {},
             frames: 1,
             image: '__default__',
@@ -383,13 +383,23 @@ Map.prototype = {
                     gl.enableVertexAttribArray(a_vertices);
                     gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
 
+                    var tx = entity.location.tx - (entityData.hitbox[0] / this.vspData.tilesize.width);
+                    var ty = entity.location.ty - (entityData.hitbox[1] / this.vspData.tilesize.height);
+                    var tw = entityData.dims[0] / this.vspData.tilesize.width;
+                    var th = entityData.dims[1] / this.vspData.tilesize.height;
+
+                    var fx = 0;
+                    var fy = 0;
+                    var fw = 1;
+                    var fh = 1;
+
                     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-                        entity.location.tx,     -entity.location.ty,     0, 0,
-                        entity.location.tx + 1, -entity.location.ty,     1, 0,
-                        entity.location.tx,     -entity.location.ty - 1, 0, 1,
-                        entity.location.tx + 1, -entity.location.ty - 1, 1, 1,
-                        entity.location.tx,     -entity.location.ty - 1, 0, 1,
-                        entity.location.tx + 1, -entity.location.ty,     1, 0
+                        tx, -ty, fx, fy,
+                        tx + tw, -ty, fx + fw, fy,
+                        tx, -ty - th, fx, fy + fh,
+                        tx + tw, -ty - th, fx + fw, fy + fh,
+                        tx, -ty - th, fx, fy + fh,
+                        tx + tw, -ty, fx + fw, fy
                     ]), this.gl.STATIC_DRAW);
 
                     gl.uniform4f(this.spriteShader.uniform('u_camera'),
