@@ -85,7 +85,8 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
 
     this.entityData = {
         '__default__': {
-            animations: {},
+            animations: { "Idle Down": [ [ [ 0, 100 ] ], "Looping" ] },
+            animation: "Idle Down",
             dims: [ 16, 32 ],
             hitbox: [ 0, 16, 16, 16 ],
             regions: {},
@@ -114,6 +115,19 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
             if (data) {
                 this.entityData[entity.filename] = data;
 
+                for (var name in data.animations) {
+                    // convert short-hand to useful-hand
+                    if (typeof data.animations[name][0] === "string") {
+                        var chunks = data.animations[name][0].split(" ");
+                        var t = parseInt(chunks.shift().substring(1), 10);
+
+                        data.animations[name][0] = [];
+                        for (var f = 0; f < chunks.length; f++) {
+                            data.animations[name][0].push([parseInt(chunks[f], 10), t]);
+                        }
+                    }
+                }
+
                 if (!this.entityTextures[data.image]) {
                     var imagePath = jetpack.path(path.dirname(mapdatafile), data.image);
                     if (!jetpack.inspect(imagePath)) {
@@ -135,6 +149,8 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
                 entity.filename = '__default__';
             }
         }
+
+        entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
     }
 
     for (var i in this.entities) {
@@ -210,6 +226,8 @@ Map.prototype = {
 
         this.vertexbuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
+
+        this.entityVertexBuffer = this.gl.createBuffer();
 
         for (var k in this.entityTextures) {
             var texture = this.entityTextures[k];
@@ -386,10 +404,8 @@ Map.prototype = {
                     var entityData = this.entityData[entity.filename];
                     var entityTexture = this.entityTextures[entityData.image]
 
-                    var vertexBuffer = this.gl.createBuffer();
-
                     var a_vertices = this.spriteShader.attribute('a_vertices');
-                    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
                     gl.enableVertexAttribArray(a_vertices);
                     gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
 
@@ -398,10 +414,14 @@ Map.prototype = {
                     var tw = entityData.dims[0] / this.vspData.tilesize.width;
                     var th = entityData.dims[1] / this.vspData.tilesize.height;
 
-                    var fx = 0;
-                    var fy = 0;
-                    var fw = 1;
-                    var fh = 1;
+                    var fx = entityData.outer_pad / entityTexture.img.width;
+                    var fy = entityData.outer_pad / entityTexture.img.height;
+                    var fw = entityData.dims[0] / entityTexture.img.width;
+                    var fh = entityData.dims[1] / entityTexture.img.height;
+
+                    var f = entityData.animations[entity.animation][0][0][0];
+                    fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
+                    fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
 
                     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
                         tx, -ty, fx, fy,

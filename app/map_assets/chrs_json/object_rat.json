@@ -1,0 +1,22 @@
+{
+    "animations": {
+        "Idle Down": [ [ [0, 30], [1, 30] ], "Looping" ],
+        "Idle Up": [ [ [2, 30], [3, 30] ], "Looping" ],
+        "Idle Left": [ [ [10, 30], [11, 30] ], "Looping" ],
+        "Idle Right": [ [ [8, 30], [9, 30] ], "Looping" ],
+        "Walk Down": [ [ [0, 30], [1, 30] ], "Looping" ],
+        "Walk Up": [ [ [2, 30], [3, 30] ], "Looping" ],
+        "Walk Left": [ [ [6, 30], [7, 30] ], "Looping" ],
+        "Walk Right": [ [ [4, 30], [5, 30] ], "Looping" ]
+    },
+    "dims": [
+        32, 
+        16
+    ], 
+    "hitbox": [8,0,24,16],
+    "frames": 12, 
+    "image": "chrs_json/object_rat_src", 
+    "inner_pad": 1, 
+    "outer_pad": 1, 
+    "per_row": 8
+}
