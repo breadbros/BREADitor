@@ -227,6 +227,8 @@ Map.prototype = {
         this.vertexbuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
 
+        this.entityVertexBuffer = this.gl.createBuffer();
+
         for (var k in this.entityTextures) {
             var texture = this.entityTextures[k];
 
@@ -402,10 +404,8 @@ Map.prototype = {
                     var entityData = this.entityData[entity.filename];
                     var entityTexture = this.entityTextures[entityData.image]
 
-                    var vertexBuffer = this.gl.createBuffer();
-
                     var a_vertices = this.spriteShader.attribute('a_vertices');
-                    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
                     gl.enableVertexAttribArray(a_vertices);
                     gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
 
