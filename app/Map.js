@@ -146,6 +146,7 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
                     this.entityTextures[data.image].img.src = imagePath;
                 }
             } else {
+                console.log("Could not find '"+entity.filename+"', using the default.");
                 entity.filename = '__default__';
             }
         }
