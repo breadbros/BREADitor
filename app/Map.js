@@ -1,5 +1,6 @@
 var app = require('remote').require('app');
 var sprintf = require("sprintf-js").sprintf;
+var path = require('path');
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 import { ShaderProgram } from "./ShaderProgram.js";
 
@@ -54,15 +55,17 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
         if (toLoad === 0) this.promiseResolver(this);
     }.bind(this);
 
+    toLoad++;
     this.vspImage = new Image();
     this.vspImage.onload = doneLoading;
     this.vspImage.src = this.vspData.source_image;
-    toLoad++;
 
-    this.defaultSpriteImage = new Image()
-    this.defaultSpriteImage.onload = doneLoading;
-    this.defaultSpriteImage.src = "../app/images/defaultsprite.png";
     toLoad++;
+    this.entityTextures = {
+        '__default__': { img: new Image() }
+    };
+    this.entityTextures['__default__'].img.onload = doneLoading;
+    this.entityTextures['__default__'].img.src = "../app/images/defaultsprite.png";
 
     var lastLayer = "";
     var defaultEntityLayer = "";
@@ -76,18 +79,63 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
         defaultEntityLayer = this.mapData.layers[0].name;
     }
 
+    this.entityData = {
+        '__default__': {
+            animations: {},
+            dims: [ 16, 16 ],
+            hitbox: [ 0, 0, 16, 16 ],
+            regions: {},
+            frames: 1,
+            image: '__default__',
+            inner_pad: 0,
+            outer_pad: 0,
+            per_row: 1
+        }
+    };
+
     this.entities = {};
     for (i = 0; i < this.mapData.entities.length; i++) {
         var entity = this.mapData.entities[i];
+        // console.log(entity);
+
         var layer = entity.location.layer || defaultEntityLayer;
         if (!this.entities[layer]) {
             this.entities[layer] = [];
         }
         this.entities[layer].push(entity);
-    }
-    // TODO sort sprites by location.ty
-    console.log("Entities:", this.entities);
 
+        if (!this.entityData[entity.filename]) {
+            var datafile = jetpack.path(path.dirname(mapdatafile), entity.filename);
+            var data = jetpack.read(datafile, 'json');
+            if (data) {
+                this.entityData[entity.filename] = data;
+
+                if (!this.entityTextures[data.image]) {
+                    var imagePath = jetpack.path(path.dirname(mapdatafile), data.image);
+                    if (!jetpack.inspect(imagePath)) {
+                        imagePath += ".png";
+                    }
+                    if (!jetpack.inspect(imagePath)) {
+                        console.log("Couldn't load image", data.image, "for entity", entity.filename, "; falling back.");
+                        this.entityData[entity.filename].image = '__default__';
+                        continue;
+                    }
+
+                    toLoad++;
+                    this.entityTextures[data.image] = {};
+                    this.entityTextures[data.image].img = new Image();
+                    this.entityTextures[data.image].img.onload = doneLoading;
+                    this.entityTextures[data.image].img.src = imagePath;
+                }
+            } else {
+                entity.filename = '__default__';
+            }
+        }
+
+
+    }
+
+    // TODO sort sprites by location.ty
     this.renderContainer = null;
 
     doneLoading();
@@ -138,7 +186,6 @@ Map.prototype = {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.vspImage);
-        this.gl.bindTexture(this.gl.TEXTURE_2D, 0);
 
         this.tileLayoutTexture = this.gl.createTexture();
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLayoutTexture);
@@ -147,7 +194,6 @@ Map.prototype = {
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.mapData.layers[0].dimensions.X, this.mapData.layers[0].dimensions.Y, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[0]));
-        this.gl.bindTexture(this.gl.TEXTURE_2D, 0);
 
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
         this.gl.enable(this.gl.BLEND);
@@ -155,14 +201,17 @@ Map.prototype = {
         this.vertexbuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
 
-        this.defaultSpriteTexture = this.gl.createTexture();
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.defaultSpriteTexture);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
-        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.defaultSpriteImage);
-        this.gl.bindTexture(this.gl.TEXTURE_2D, 0);
+        for (var k in this.entityTextures) {
+            var texture = this.entityTextures[k];
+
+            texture.tex = this.gl.createTexture();
+            this.gl.bindTexture(this.gl.TEXTURE_2D, texture.tex);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, texture.img);
+        }
 
         this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
             0.0, 0.0,
@@ -305,14 +354,12 @@ Map.prototype = {
             gl.uniform1i(u_tileLibrary, 0);
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
-            gl.bindTexture(this.gl.TEXTURE_2D, 0);
 
             var u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
             gl.uniform1i(u_tileLayout, 1);
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex]));
-            gl.bindTexture(this.gl.TEXTURE_2D, 0);
 
             var a_position = this.tilemapShader.attribute('a_position');
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
@@ -321,19 +368,20 @@ Map.prototype = {
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-            // TODO replace with a spritebatch type thing?
             if (this.entities[layer.name]) {
                 this.spriteShader.use();
 
                 for (var e = 0; e < this.entities[layer.name].length; e++) {
                     var entity = this.entities[layer.name][e];
+                    var entityData = this.entityData[entity.filename];
+                    var entityTexture = this.entityTextures[entityData.image]
 
                     var vertexBuffer = this.gl.createBuffer();
 
                     var a_vertices = this.spriteShader.attribute('a_vertices');
                     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
                     gl.enableVertexAttribArray(a_vertices);
-                    gl.vertexAttribPointer(a_vertices, 2, gl.FLOAT, false, 0, 0);
+                    gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
 
                     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
                         entity.location.tx,     -entity.location.ty,     0, 0,
@@ -354,8 +402,7 @@ Map.prototype = {
                     var u_texture = this.tilemapShader.uniform('u_spriteAtlas');
                     gl.uniform1i(u_texture, 0);
                     gl.activeTexture(gl.TEXTURE0);
-                    gl.bindTexture(gl.TEXTURE_2D, this.defaultSpriteTexture);
-                    gl.bindTexture(this.gl.TEXTURE_2D, 0);
+                    gl.bindTexture(gl.TEXTURE_2D, entityTexture.tex);
 
                     gl.drawArrays(gl.TRIANGLES, 0, 6);
                 }

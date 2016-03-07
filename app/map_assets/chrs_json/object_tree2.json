@@ -1,0 +1,25 @@
+{
+    "animations": {
+        "Idle Down": [ [ [0, 100] ], "Looping" ],
+        "Idle Up": [ [ [0, 100] ], "Looping" ],
+        "Idle Left": [ [ [0, 100] ], "Looping" ],
+        "Idle Right": [ [ [0, 100] ], "Looping" ],
+        "Walk Down": [ [ [0, 100] ], "Looping" ],
+        "Walk Up": [ [ [0, 100] ], "Looping" ],
+        "Walk Left": [ [ [0, 100] ], "Looping" ],
+        "Walk Right": [ [ [0, 100] ], "Looping" ]
+    },
+    "dims": [
+        156,
+        180
+    ],
+    "hitbox": [63,142,93,38],
+	"regions": {
+		"Tall_Redraw": [0, 0, 156, 138]
+	},
+    "frames": 1,
+    "image": "chrs_json/object_tree2_src",
+    "inner_pad": 1,
+    "outer_pad": 1,
+    "per_row": 1
+}
