@@ -170,6 +170,35 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
 
 Map.prototype = {
     ready: function() {
+
+/*
+            $('.map-palette').mouseup( function() {
+
+                var key = 'map-'+ window.currentMap.mapData.name;
+                var $m = $(this);
+
+                if( !localStorage[key] ) {
+                    localStorage[key] = {};
+                }
+
+                localStorage[key]['width'] = $m.width();
+                localStorage[key]['height'] = $m.height();
+                localStorage[key]['top'] = $m.css('top');
+                localStorage[key]['left'] = $m.css('left');
+            } );
+*/
+
+        var key = 'map-'+ this.mapData.name;
+        var $cont = $('.map-palette'); 
+debugger;
+        //butts
+        if( localStorage[key] ) {
+            if( localStorage[key+'-width'] )  { $cont.width(localStorage[key+'-width']); }
+            if( localStorage[key+'-height'] ) { $cont.height(localStorage[key+'-height']); }
+            if( localStorage[key+'-top'] )    { $cont.css( 'top', localStorage[key+'-top']); }
+            if( localStorage[key+'-left'] )   { $cont.css( 'left', localStorage[key+'-left']);  }
+        }
+
         return this.readyPromise;
     },
 
