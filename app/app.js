@@ -112,7 +112,14 @@ function initZonesWidget(map) {
 }
 
 function updateLocationFunction(map) {
-	$("#info-location").text( map.camera[0] +","+map.camera[0] );
+  var x = map.camera[0];
+  var y = map.camera[1];
+  var key = 'map-'+ map.mapData.name;
+
+	$("#info-location").text( x +","+y );
+
+  localStorage[key+'-mapx'] = x;
+  localStorage[key+'-mapy'] = y;
 }
 
 (function() {
