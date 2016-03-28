@@ -320,7 +320,7 @@ Map.prototype = {
             "EYEDROPPER" : {
                 "mousedown": function(map, e) {
                     if( !window.selected_layer ) {
-                        alert("You haven't selected a layer yet.");
+                        console.log("You havent selected a layer yet.");
                         return;
                     }
 
@@ -329,6 +329,12 @@ Map.prototype = {
                     //map.dragging = true;
                     //window.$MAP_WINDOW.draggable('disable');
                     //map.lastMouse = [ e.clientX, e.clientY ];
+                },
+                "mouseup": function(map, e) {
+                    console.log("EYEDROPPER->mouseup: NOTHING");
+                },
+                "mousemove": function(map, e) {
+                    console.log("EYEDROPPER->mousemove: NOTHING");
                 }
             }
         };

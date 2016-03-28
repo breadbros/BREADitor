@@ -17,11 +17,17 @@
 
             $(function() {
                 $( ".resizable-window" ).resizable();
-                $( ".draggable-window" ).draggable();
+                $( ".draggable-window" ).draggable({
+                    handle: "h3",
+                    stop: function(event, ui) {
+                        console.log("draggable STOP");
+                        console.log(event);
+                    }
+                });
 
                 window.$MAP_WINDOW = $(".map-palette.resizable-window");
 
-                //$(".map .map_canvas").draggable('disable');
+                $(".map .map_canvas").draggable('disable');
             });
 
             var myNotification = new Notification('Maped4', {
@@ -44,6 +50,12 @@
             .map-palette {
                 width: 500px;
                 height: 500px;
+            }
+
+            .ui-widget-header {
+                margin-top: 0px;
+                cursor: hand;
+                cursor: pointer;   
             }
 
             .tool-palette {
@@ -175,7 +187,7 @@
             <ul>
                 <li>map: <span id="info-mapname"></span></li>
                 <li>dims: <span id="info-dims"></span></li>
-                <li>loc: <span id="info-location"></span></li>
+                <li>screen loc: <span id="info-location"></span></li>
                 <li>zoomlevel: <span id="info-zoom"></span></li>
             </ul>
         </div>
