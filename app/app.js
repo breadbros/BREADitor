@@ -36,6 +36,7 @@ function initLayersWidget(map) {
     		}
 
     		window.selected_layer = {
+          map_tileData_idx: i,
     			layer: layers[i],
     			$container: $layer_container
     		};

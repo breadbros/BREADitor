@@ -31,14 +31,14 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     this.mapData = jetpack.read(mapfile, 'json');
     this.renderString = this.mapData.renderstring.split(",");
     console.log("Renderstring:", this.renderString);
-    this.mapSize = [0,0];
+    this.mapSizeInTiles = [0,0];
     this.layerLookup = {};
 
     for (i = 0; i < this.mapData.layers.length; i++) {
         if (this.mapData.layers[i].MAPED_HIDDEN)  { continue; }
 
-        if (this.mapData.layers[i].dimensions.X > this.mapSize[0]) this.mapSize[0] = this.mapData.layers[i].dimensions.X;
-        if (this.mapData.layers[i].dimensions.Y > this.mapSize[1]) this.mapSize[1] = this.mapData.layers[i].dimensions.Y;
+        if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
+        if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
 
         var layerName = this.uniqueLayerName(this.mapData.layers[i].name);
         this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
@@ -46,6 +46,9 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     }
     this.camera = [0, 0, 1];
 
+    //this.RAWDATA = jetpack.read(mapdatafile, 'json');
+
+    this.legacyObsData = jetpack.read(mapdatafile, 'json').legacy_obstruction_data;
     this.tileData = jetpack.read(mapdatafile, 'json').tile_data;
     this.vspData = jetpack.read(vspfile, 'json');
 
@@ -169,6 +172,18 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
 };
 
 Map.prototype = {
+
+    getTile: function( tileX, tileY, layerIdx ) {
+
+        var idx = parseInt(this.mapSizeInTiles[1]*tileX) + parseInt(tileY);
+
+
+
+        debugger;
+
+        return this.tileData[layerIdx][idx]
+    },
+
     ready: function() {
 
         var key = 'map-'+ this.mapData.name;
@@ -257,11 +272,11 @@ Map.prototype = {
 
         this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
             0.0, 0.0,
-            this.mapSize[0], 0.0,
-            0.0, -this.mapSize[1],
-            0.0, -this.mapSize[1],
-            this.mapSize[0], 0.0,
-            this.mapSize[0], -this.mapSize[1]
+            this.mapSizeInTiles[0], 0.0,
+            0.0, -this.mapSizeInTiles[1],
+            0.0, -this.mapSizeInTiles[1],
+            this.mapSizeInTiles[0], 0.0,
+            this.mapSizeInTiles[0], -this.mapSizeInTiles[1]
         ]), this.gl.STATIC_DRAW);
 
         // make sure the size is right
@@ -324,7 +339,26 @@ Map.prototype = {
                         return;
                     }
 
+                    e.offsetX, e.offsetY
+
+                    var mapOffsetX = map.camera[0];
+                    var mapOffsetY= map.camera[1];
+                    var mouseOffsetX = e.offsetX;
+                    var mouseOffsetY = e.offsetY;
+
+                    var oX, oY, tX, tY, tIdx;
+
+                    oX = mapOffsetX + mouseOffsetX;
+                    oY = mapOffsetY + mouseOffsetY;
+
+                    tX = parseInt(oX/16);
+                    tY = parseInt(oY/16);
+
                     debugger;
+
+                    tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
+
+
 
                     //map.dragging = true;
                     //window.$MAP_WINDOW.draggable('disable');
