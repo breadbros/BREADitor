@@ -13,6 +13,8 @@
 
         <script>
             window.jQuery = window.$ = require('jquery');
+            window.$CURRENT_SELECTED_TILES = [0,0,0];
+
             require('jquery-ui');
 
             $(function() {
@@ -41,7 +43,7 @@
     </head>
     <body>
 
-        <style>
+        <style title="app.html-inline-3">
             body {
                 /* le frog*/
                 background-color: rgb(51, 51, 51);             
@@ -59,7 +61,7 @@
             }
 
             .tool-palette {
-                width: 100px;
+                width: 90px;
                 height: 400px;   
 
                 position: absolute; 
@@ -107,11 +109,13 @@
             }
 
             .tooltip-tile-selector {
-                width: 40px;
-                height: 40px;
+                width: 32px;
+                height: 32px;
                 border: solid black 2px;
                 position: absolute;
-                bottom: 3px;
+                bottom: 6px;
+                background-color: #FF00FF;
+                image-rendering: pixelated;
             }
 
             .tooltip-tile-selector:enabled {
@@ -119,10 +123,11 @@
             }
 
             #left-palette {
-                left: 3px;
+                left: 6px;
+                
             }
             #right-palette {
-                right: 3px;
+                right: 6px;
             }
 
             .map-palette.ui-state-disabled {
@@ -141,8 +146,6 @@
             .layer.selected {
                 background-color: red;
             }
-
-    
         </style>
 
         <div class="map-palette ui-widget-content resizable-window draggable-window">
@@ -163,8 +166,8 @@
             <button id="btn-tool-zoomin">Zoom In</button>
             <button id="btn-tool-zoomout">Zoom Out</button>
 
-            <canvas id="left-palette" class="tooltip-tile-selector"></canvas>
-            <canvas id="right-palette" class="tooltip-tile-selector" disabled=""></canvas>
+            <div id="left-palette" class="tooltip-tile-selector"></div>
+            <div id="right-palette" class="tooltip-tile-selector" disabled=""></div>
         </div>
 
         <div class="layers-palette ui-widget-content draggable-window resizable-window">
@@ -189,6 +192,7 @@
                 <li>dims: <span id="info-dims"></span></li>
                 <li>screen loc: <span id="info-location"></span></li>
                 <li>zoomlevel: <span id="info-zoom"></span></li>
+                <li>selected tiles: <span id=info-selected-tiles></span></li>
             </ul>
         </div>
 

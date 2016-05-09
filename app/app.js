@@ -105,7 +105,7 @@ function initLayersWidget(map) {
 
 function initInfoWidget(map) {
 	$("#info-mapname").text( map.mapPath );
-	$("#info-dims").text( map.mapSize[0]+"x"+map.mapSize[1] );
+	$("#info-dims").text( map.mapSizeInTiles[0]+"x"+map.mapSizeInTiles[1] );
 }
 
 function initZonesWidget(map) {

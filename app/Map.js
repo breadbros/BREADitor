@@ -16,6 +16,36 @@ function buildTileDataTexture(data) {
     return out;
 }
 
+/// FROM https://www.w3.org/wiki/Dynamic_style_-_manipulating_CSS_with_JavaScript
+/// TODO move to a more general location?
+function getStyleSheet(unique_title) {
+  for(var i=0; i<document.styleSheets.length; i++) {
+    var sheet = document.styleSheets[i];
+    if(sheet.title == unique_title) {
+      return sheet;
+    }
+  }
+}
+
+function initializeTileSelectorsForMap(imageFile) {
+    $("#left-palette").removeAttr('style');
+    $("#right-palette").removeAttr('style');
+
+    $('#left-palette').css('background-image', 'url(' + imageFile + ')');
+    $('#right-palette').css('background-image', 'url(' + imageFile + ')');
+
+    $('#left-palette').css('background-position', '-32px 0px'); //(offset *2)
+    $('#right-palette').css('background-position', '0px -'+(48*2)+'px');
+
+    $('#left-palette').css('background-size', '2000%');
+    $('#right-palette').css('background-size', '2000%');
+}
+
+function setTileSelectorUI( whichOne, vspIDX, map ) {
+    var loc = map.getVSPTileLocation(vspIDX);
+    $(whichOne).css('background-position', '-'+(loc.x*2)+'px -'+(loc.y*2)+'px'); //(offset *2)
+}
+
 export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction) {
     var i;
     console.log("Loading map", mapfile);
@@ -52,6 +82,11 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     this.tileData = jetpack.read(mapdatafile, 'json').tile_data;
     this.vspData = jetpack.read(vspfile, 'json');
 
+    /// TODO move this somewhere else...
+    initializeTileSelectorsForMap(this.vspData.source_image);
+    setTileSelectorUI( "#left-palette", 971, this );
+    setTileSelectorUI( "#right-palette", 1122, this );
+    
     var toLoad = 1;
     var doneLoading = function() {
         toLoad--;
@@ -173,13 +208,25 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
 
 Map.prototype = {
 
+    getVSPTileLocation: function(idx) {
+
+        var x, y;
+
+        y = parseInt(idx / this.vspData.tiles_per_row); 
+        x = idx - y*this.vspData.tiles_per_row;
+
+        y *= this.vspData.tilesize.height;
+        x *= this.vspData.tilesize.width;
+    
+        return {
+            x: x,
+            y: y
+        };
+    },
+
     getTile: function( tileX, tileY, layerIdx ) {
 
-        var idx = parseInt(this.mapSizeInTiles[1]*tileX) + parseInt(tileY);
-
-
-
-        debugger;
+        var idx = parseInt(this.mapSizeInTiles[0]*tileY) + parseInt(tileX);
 
         return this.tileData[layerIdx][idx]
     },
@@ -339,14 +386,16 @@ Map.prototype = {
                         return;
                     }
 
-                    e.offsetX, e.offsetY
+                    if( !(e.button === 0 || e.button === 2) ) {
+                        console.log("Unknown eyedropper button: we know left/right (0/2), got: '"+e.button+"'.");
+                        return;
+                    }
 
+                    var oX, oY, tX, tY, tIdx, selector;
                     var mapOffsetX = map.camera[0];
                     var mapOffsetY= map.camera[1];
                     var mouseOffsetX = e.offsetX;
                     var mouseOffsetY = e.offsetY;
-
-                    var oX, oY, tX, tY, tIdx;
 
                     oX = mapOffsetX + mouseOffsetX;
                     oY = mapOffsetY + mouseOffsetY;
@@ -354,11 +403,22 @@ Map.prototype = {
                     tX = parseInt(oX/16);
                     tY = parseInt(oY/16);
 
-                    debugger;
-
                     tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
 
+                    window.$CURRENT_SELECTED_TILES[e.button] = tIdx;
+                    $("#info-selected-tiles").text( 
+                        window.$CURRENT_SELECTED_TILES[0] +
+                        ","+
+                        window.$CURRENT_SELECTED_TILES[2] 
+                    );
 
+                    if( e.button === 2 ) {
+                        selector = "#right-palette";
+                    } else {
+                        selector = "#left-palette";
+                    }
+
+                    setTileSelectorUI( selector, tIdx, map );
 
                     //map.dragging = true;
                     //window.$MAP_WINDOW.draggable('disable');
