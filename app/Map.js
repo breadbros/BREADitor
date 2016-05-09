@@ -206,6 +206,10 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     doneLoading();
 };
 
+function getFlatIdx( x, y, width ) {
+    return parseInt(width*y) + parseInt(x);
+}
+
 Map.prototype = {
 
     getVSPTileLocation: function(idx) {
@@ -225,10 +229,15 @@ Map.prototype = {
     },
 
     getTile: function( tileX, tileY, layerIdx ) {
-
-        var idx = parseInt(this.mapSizeInTiles[0]*tileY) + parseInt(tileX);
+        var idx = getFlatIdx(tileX, tileY,this.mapSizeInTiles[0]);
 
         return this.tileData[layerIdx][idx]
+    },
+
+    setTile: function( tileX, tileY, layerIdx, tileIdx ) {
+        var idx = getFlatIdx(tileX, tileY,this.mapSizeInTiles[0]);
+        
+        this.tileData[layerIdx][idx] = tileIdx;
     },
 
     ready: function() {
@@ -423,6 +432,44 @@ Map.prototype = {
                     //map.dragging = true;
                     //window.$MAP_WINDOW.draggable('disable');
                     //map.lastMouse = [ e.clientX, e.clientY ];
+                },
+                "mouseup": function(map, e) {
+                    console.log("EYEDROPPER->mouseup: NOTHING");
+                },
+                "mousemove": function(map, e) {
+                    console.log("EYEDROPPER->mousemove: NOTHING");
+                }
+            },
+
+            "DRAW" : {
+                "mousedown": function(map, e) {
+                    if( !window.selected_layer ) {
+                        console.log("You havent selected a layer yet.");
+                        return;
+                    }
+
+                    if( !(e.button === 0 || e.button === 2) ) {
+                        console.log("Unknown draw button: we know left/right (0/2), got: '"+e.button+"'.");
+                        return;
+                    }
+
+                    var oX, oY, tX, tY, tIdx, selector;
+                    var mapOffsetX = map.camera[0];
+                    var mapOffsetY= map.camera[1];
+                    var mouseOffsetX = e.offsetX;
+                    var mouseOffsetY = e.offsetY;
+
+                    oX = mapOffsetX + mouseOffsetX;
+                    oY = mapOffsetY + mouseOffsetY;
+
+                    tX = parseInt(oX/16);
+                    tY = parseInt(oY/16);
+
+                    map.setTile(
+                        tX,tY,
+                        window.selected_layer.map_tileData_idx,
+                        window.$CURRENT_SELECTED_TILES[e.button] 
+                    );
                 },
                 "mouseup": function(map, e) {
                     console.log("EYEDROPPER->mouseup: NOTHING");
