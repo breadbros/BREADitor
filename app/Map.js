@@ -453,6 +453,8 @@ Map.prototype = {
                         return;
                     }
 
+                    window.foo = true;
+
                     var oX, oY, tX, tY, tIdx, selector;
                     var mapOffsetX = map.camera[0];
                     var mapOffsetY= map.camera[1];
@@ -474,8 +476,17 @@ Map.prototype = {
                 "mouseup": function(map, e) {
                     console.log("EYEDROPPER->mouseup: NOTHING");
                 },
+
+                /// todo this doesn't seem to drag correctly for rightmouse...
+                /// todo this doesn't perform correctly if you move the mouse too quickly.  Should keep track of position-1, draw a line between points, and change all those on this layer?
                 "mousemove": function(map, e) {
-                    console.log("EYEDROPPER->mousemove: NOTHING");
+
+                    /// if there's one button pressed and it's the left or right button...
+                    if( e.buttons === 1 && (e.button===0 || e.button===2) ) {
+
+                        // TODO this duplicates work. if it's costly, check before everything.  I doubt it'll matter.
+                        toolLogic["DRAW"]["mousedown"](map, e); // let's be lazy.
+                    }
                 }
             }
         };
