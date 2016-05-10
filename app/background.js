@@ -76,6 +76,10 @@ app.on('ready', function () {
         var template = [{
             label: "Application",
             submenu: [
+                { label: "Save", selector: "CmdOrCtrl+S", click: function() { 
+                    mainWindow.webContents.executeJavaScript('window.$$$save();');
+                } },
+                { type: "separator" },
                 { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
                 { type: "separator" },
                 { label: "Refresh", accelerator: "Command+R", click: function() { app.refresh(); }},
@@ -84,6 +88,7 @@ app.on('ready', function () {
             ]}, {
             label: "Edit",
             submenu: [
+                /*
                 { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
                 { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
                 { type: "separator" },
@@ -91,6 +96,7 @@ app.on('ready', function () {
                 { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
                 { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
                 { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+                */
             ]}
         ];
 

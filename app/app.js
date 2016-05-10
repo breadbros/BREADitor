@@ -134,6 +134,11 @@ function updateLocationFunction(map) {
     };
     window.requestAnimationFrame(tick);
 
+    console.log("$$$save should be initialized...");
+    window.$$$save = function() {
+        console.log('HELLO I AM $$$SAVE');
+    };
+
     new Map(
         '../app/map_assets/farmsville.map.json',
         '../app/map_assets/farmsville.map.data.json',

@@ -34,8 +34,8 @@ function initializeTileSelectorsForMap(imageFile) {
     $('#left-palette').css('background-image', 'url(' + imageFile + ')');
     $('#right-palette').css('background-image', 'url(' + imageFile + ')');
 
-    $('#left-palette').css('background-position', '-32px 0px'); //(offset *2)
-    $('#right-palette').css('background-position', '0px -'+(48*2)+'px');
+    $('#left-palette').css('background-position', '0px 0px');
+    $('#right-palette').css('background-position', '0px 0px');
 
     $('#left-palette').css('background-size', '2000%');
     $('#right-palette').css('background-size', '2000%');

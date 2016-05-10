@@ -40,6 +40,13 @@
               console.log('Notification clicked');
             };
         </script>
+
+        <script>
+            require('electron').ipcRenderer.on('$$$save', (event, message) => {
+                console.log("spooky action at a distance! SAVE")
+                console.log(message);  // Prints "whoooooooh!"
+            });
+        </script>
     </head>
     <body>
 
