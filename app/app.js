@@ -136,7 +136,15 @@ function updateLocationFunction(map) {
 
     console.log("$$$save should be initialized...");
     window.$$$save = function() {
-        console.log('HELLO I AM $$$SAVE');
+      var app = require('remote').require('app');
+      var jetpack = require('fs-jetpack').cwd(app.getAppPath());
+
+      var map = window.currentMap;
+
+      jetpack.write(map.filenames.mapfile, map.mapData);
+      jetpack.write(map.filenames.mapdatafile, map.mapRawTileData);
+
+      console.log('HELLO I AM $$$SAVE');
     };
 
     new Map(
@@ -152,6 +160,8 @@ function updateLocationFunction(map) {
             initLayersWidget( currentMap );
             initInfoWidget( currentMap );
             initZonesWidget( currentMap );
+
+            window.currentMap = currentMap;
         });
 })();
 

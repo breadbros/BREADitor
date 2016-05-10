@@ -50,6 +50,12 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     var i;
     console.log("Loading map", mapfile);
 
+    this.filenames = {
+        'mapfile' : mapfile, 
+        'mapdatafile': mapdatafile, 
+        'vspfile' : vspfile
+    };
+
     this.updateLocationFn = updateLocationFunction;
 
     this.readyPromise = new Promise(function(resolve, reject) {
@@ -59,6 +65,7 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
 
     this.mapPath = mapfile;
     this.mapData = jetpack.read(mapfile, 'json');
+    
     this.renderString = this.mapData.renderstring.split(",");
     console.log("Renderstring:", this.renderString);
     this.mapSizeInTiles = [0,0];
@@ -78,8 +85,10 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
 
     //this.RAWDATA = jetpack.read(mapdatafile, 'json');
 
-    this.legacyObsData = jetpack.read(mapdatafile, 'json').legacy_obstruction_data;
-    this.tileData = jetpack.read(mapdatafile, 'json').tile_data;
+    this.mapRawTileData = jetpack.read(mapdatafile, 'json')
+    this.legacyObsData = this.mapRawTileData.legacy_obstruction_data;
+    this.tileData = this.mapRawTileData.tile_data;
+
     this.vspData = jetpack.read(vspfile, 'json');
 
     /// TODO move this somewhere else...
