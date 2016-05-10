@@ -123,6 +123,23 @@ function updateLocationFunction(map) {
   localStorage[key+'-mapy'] = y;
 }
 
+function bootstrapMap( mapFile, tiledataFile, vspFile ) {
+    new Map(
+        mapFile, tiledataFile, vspFile,
+        updateLocationFunction
+    ).ready()
+        .then(function(m) {
+            m.setCanvas($('.map_canvas'));
+            currentMap = m;
+
+            initLayersWidget( currentMap );
+            initInfoWidget( currentMap );
+            initZonesWidget( currentMap );
+
+            window.currentMap = currentMap;
+        });
+}
+
 (function() {
     window.currentMap = null;
 
@@ -147,22 +164,33 @@ function updateLocationFunction(map) {
       console.log('HELLO I AM $$$SAVE');
     };
 
-    new Map(
-        '../app/map_assets/farmsville.map.json',
-        '../app/map_assets/farmsville.map.data.json',
-        '../app/map_assets/farmsville.vsp.json',
-        updateLocationFunction
-    ).ready()
-        .then(function(m) {
-            m.setCanvas($('.map_canvas'));
-            currentMap = m;
+    window.$$$load = function() {
+     var remote = require('remote'); 
+     var dialog = remote.require('dialog');
 
-            initLayersWidget( currentMap );
-            initInfoWidget( currentMap );
-            initZonesWidget( currentMap );
+     dialog.showOpenDialog({ filters: [
+       { name: 'text', extensions: ['map.json'] }
+      ]}, function (fileNames) {
+      if (fileNames === undefined) return;
+      var fileName = fileNames[0];
+      var dataName, vspName;
+      
+      dataName = fileName.replace('.map.json', '.map.data.json');
+      vspName = fileName.replace('.map.json', '.vsp.json');
 
-            window.currentMap = currentMap;
-        });
+      /// todo: verify that all three of these files, you know... exist?
+      bootstrapMap(fileName, dataName, vspName)
+
+     }); 
+    }
+
+    /// INITIAL LOAD
+    /// TODO: special case this with a null map for new-saving?
+    bootstrapMap( 
+      '../app/map_assets/farmsville.map.json',
+      '../app/map_assets/farmsville.map.data.json',
+      '../app/map_assets/farmsville.vsp.json'
+    );
 })();
 
 /*

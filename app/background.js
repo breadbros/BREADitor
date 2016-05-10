@@ -79,6 +79,9 @@ app.on('ready', function () {
                 { label: "Save", selector: "CmdOrCtrl+S", click: function() { 
                     mainWindow.webContents.executeJavaScript('window.$$$save();');
                 } },
+                { label: "Load", selector: "CmdOrCtrl+L", click: function() { 
+                    mainWindow.webContents.executeJavaScript('window.$$$load();');
+                } },
                 { type: "separator" },
                 { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
                 { type: "separator" },
