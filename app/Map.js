@@ -552,6 +552,35 @@ Map.prototype = {
             tools( 'mousewheel', this, e );
         }.bind(this));
 
+        this.entityPreview = null;
+        $('#btn-add-tree').on('click', (e) => {
+            window.TOOLMODE = 'TREE';
+            this.entityPreview = {
+                location: { tx: 0, ty: 0 },
+                animation: "Idle Down",
+                filename: "chrs_json/object_tree2.json"
+            };
+
+            toolLogic.TREE = {
+                mousemove: (map, evt) => {
+                    var mapOffsetX = map.camera[0];
+                    var mapOffsetY= map.camera[1];
+                    var mouseOffsetX = evt.offsetX;
+                    var mouseOffsetY = evt.offsetY;
+                    var tilesize = map.vspData[window.selected_layer.layer.vsp].tilesize;
+
+                    map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX * map.camera[2])) / tilesize.width);
+                    map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY * map.camera[2])) / tilesize.height);
+                },
+                mouseup: (map, evt) => {
+                    map.entityPreview = null;
+                    window.TOOLMODE = 'DRAG';
+                },
+                mousedown: () => {},
+                moousewheel: () => {}
+            }
+        });
+
         if( this.onLoad ) {
             this.onLoad(this);
         }
@@ -608,52 +637,15 @@ Map.prototype = {
             if (this.entities[layer.name]) {
                 this.spriteShader.use();
 
+                // if (this.entities[layer.name].length > 1 && this.entities[layer.name][0].location.ty > )
                 for (var e = 0; e < this.entities[layer.name].length; e++) {
-                    var entity = this.entities[layer.name][e];
-                    var entityData = this.entityData[entity.filename];
-                    var entityTexture = this.entityTextures[entityData.image]
-
-                    var a_vertices = this.spriteShader.attribute('a_vertices');
-                    gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
-                    gl.enableVertexAttribArray(a_vertices);
-                    gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
-
-                    var tx = entity.location.tx - (entityData.hitbox[0] / this.vspData[vsp].tilesize.width);
-                    var ty = entity.location.ty - (entityData.hitbox[1] / this.vspData[vsp].tilesize.height);
-                    var tw = entityData.dims[0] / this.vspData[vsp].tilesize.width;
-                    var th = entityData.dims[1] / this.vspData[vsp].tilesize.height;
-
-                    var fx = entityData.outer_pad / entityTexture.img.width;
-                    var fy = entityData.outer_pad / entityTexture.img.height;
-                    var fw = entityData.dims[0] / entityTexture.img.width;
-                    var fh = entityData.dims[1] / entityTexture.img.height;
-
-                    var f = entityData.animations[entity.animation][0][0][0];
-                    fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
-                    fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
-
-                    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-                        tx, -ty, fx, fy,
-                        tx + tw, -ty, fx + fw, fy,
-                        tx, -ty - th, fx, fy + fh,
-                        tx + tw, -ty - th, fx + fw, fy + fh,
-                        tx, -ty - th, fx, fy + fh,
-                        tx + tw, -ty, fx + fw, fy
-                    ]), this.gl.STATIC_DRAW);
-
-                    gl.uniform4f(this.spriteShader.uniform('u_camera'),
-                        Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-                        Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-                        this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-                        this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
-                    );
-
-                    var u_texture = this.tilemapShader.uniform('u_spriteAtlas');
-                    gl.uniform1i(u_texture, 0);
-                    gl.activeTexture(gl.TEXTURE0);
-                    gl.bindTexture(gl.TEXTURE_2D, entityTexture.tex);
-
-                    gl.drawArrays(gl.TRIANGLES, 0, 6);
+                    this.renderEntity(this.entities[layer.name][e], layer, [1,1,1,1]);
+                    // if (layer === window.selected_layer.layer && this.entities[layer.name][e].location.ty ) {
+                    //     this.renderEntity(layer, );
+                    // }
+                }
+                if (this.entityPreview) {
+                    this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
                 }
             }
         }
@@ -701,6 +693,58 @@ Map.prototype = {
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
+    },
+
+    renderEntity: function(entity, layer, tint) {
+        var gl = this.gl;
+        var tilesize = this.vspData[layer.vsp].tilesize;
+
+        var entityData = this.entityData[entity.filename];
+        var entityTexture = this.entityTextures[entityData.image]
+
+        var a_vertices = this.spriteShader.attribute('a_vertices');
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
+        gl.enableVertexAttribArray(a_vertices);
+        gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
+
+        var tx = entity.location.tx - (entityData.hitbox[0] / tilesize.width);
+        var ty = entity.location.ty - (entityData.hitbox[1] / tilesize.height);
+        var tw = entityData.dims[0] / tilesize.width;
+        var th = entityData.dims[1] / tilesize.height;
+
+        var fx = entityData.outer_pad / entityTexture.img.width;
+        var fy = entityData.outer_pad / entityTexture.img.height;
+        var fw = entityData.dims[0] / entityTexture.img.width;
+        var fh = entityData.dims[1] / entityTexture.img.height;
+
+        var f = entityData.animations[entity.animation][0][0][0];
+        fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
+        fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
+
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
+            tx, -ty, fx, fy,
+            tx + tw, -ty, fx + fw, fy,
+            tx, -ty - th, fx, fy + fh,
+            tx + tw, -ty - th, fx + fw, fy + fh,
+            tx, -ty - th, fx, fy + fh,
+            tx + tw, -ty, fx + fw, fy
+        ]), this.gl.STATIC_DRAW);
+
+        gl.uniform4f(this.spriteShader.uniform('u_camera'),
+            Math.floor(layer.parallax.X * this.camera[0]) / tilesize.width,
+            Math.floor(layer.parallax.Y * this.camera[1]) / tilesize.height,
+            this.camera[2] * this.renderContainer.width() / tilesize.width,
+            this.camera[2] * this.renderContainer.height() / tilesize.height
+        );
+
+        gl.uniform4f(this.spriteShader.uniform('u_tint'), tint[0], tint[1], tint[2], tint[3]);
+
+        var u_texture = this.tilemapShader.uniform('u_spriteAtlas');
+        gl.uniform1i(u_texture, 0);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, entityTexture.tex);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
     },
 
     cleanUpCallbacks: function() {
