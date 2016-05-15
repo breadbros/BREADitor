@@ -634,18 +634,16 @@ Map.prototype = {
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-            if (this.entities[layer.name]) {
+            if (this.entities[layer.name] && this.entities[layer.name].length > 0) {
+                var entities = this.entities[layer.name];
+                var showEntityPreview = (window.selected_layer && layer === window.selected_layer.layer && this.entityPreview);
                 this.spriteShader.use();
 
-                // if (this.entities[layer.name].length > 1 && this.entities[layer.name][0].location.ty > )
-                for (var e = 0; e < this.entities[layer.name].length; e++) {
-                    this.renderEntity(this.entities[layer.name][e], layer, [1,1,1,1]);
-                    // if (layer === window.selected_layer.layer && this.entities[layer.name][e].location.ty ) {
-                    //     this.renderEntity(layer, );
-                    // }
-                }
-                if (this.entityPreview) {
-                    this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
+                for (var e = 0; e < entities.length; e++) {
+                    if (showEntityPreview && this.entityPreview.location.ty < entities[e].location.ty && (e === 0 || this.entityPreview.location.ty >= entities[e - 1].location.ty)) {
+                        this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
+                    }
+                    this.renderEntity(entities[e], layer, [1,1,1,1]);
                 }
             }
         }
