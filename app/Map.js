@@ -221,6 +221,10 @@ Map.prototype = {
             }
         }
 
+        if (this.entityData[entity.filename].regions && this.entityData[entity.filename].regions['Tall_Redraw'] && !this.mapData.tallentitylayer) {
+            alert("ERROR: Loading tall entity " + entity.filename + " with no tallentitylayer in map!");
+        }
+
         entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
     },
 
@@ -372,6 +376,8 @@ Map.prototype = {
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
+        var tallEntities = [];
+
         for (var i = 0; i < this.renderString.length; i++) {
             var layerIndex = parseInt(this.renderString[i], 10) - 1;
             var layer = this.mapData.layers[layerIndex];
@@ -425,10 +431,21 @@ Map.prototype = {
                         this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
                     }
                     this.renderEntity(entities[e], layer, [1,1,1,1]);
+                    if (this.entityData[entities[e].filename].regions && this.entityData[entities[e].filename].regions['Tall_Redraw']) {
+                        tallEntities.push(entities[e]);
+                    }
                 }
             } else if (this.entityPreview) {
                 this.spriteShader.use();
                 this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
+            }
+
+            if (this.mapData.tallentitylayer === i) {
+                this.spriteShader.use();
+                for (var e in tallEntities) {
+                    var entity = tallEntities[e];
+                    this.renderEntity(entity, layer, [1, 0.5, 0.5, 1]);
+                }
             }
         }
 
