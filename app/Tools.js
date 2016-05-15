@@ -47,6 +47,16 @@ var toolLogic = {
             toolLogic.DRAG.dragging = false;
             map.updateLocationFn(map);
             window.$MAP_WINDOW.draggable('enable');
+        },
+
+        "button_element": "#btn-tool-drag",
+        "human_name": "drag",
+
+        "init": function() {
+            $("#btn-tool-drag").click( function(e) {
+                $("#tool-title").text("Drag");
+                window.TOOLMODE = "DRAG";
+            } );
         }
 
         /*,
@@ -105,6 +115,16 @@ var toolLogic = {
         },
         "mousemove": function(map, e) {
             console.log("EYEDROPPER->mousemove: NOTHING");
+        },
+
+        "button_element": "#btn-tool-eyedropper",
+        "human_name": "Eyedropper",
+
+        "init": function() {
+            $("#btn-tool-eyedropper").click( function(e) {
+                $("#tool-title").text("Eyedropper");
+                window.TOOLMODE = "EYEDROPPER";
+            } );
         }
     },
 
@@ -154,9 +174,58 @@ var toolLogic = {
                 // TODO this duplicates work. if it's costly, check before everything.  I doubt it'll matter.
                 toolLogic["DRAW"]["mousedown"](map, e); // let's be lazy.
             }
+        },
+
+        "button_element": "#btn-tool-draw",
+        "human_name": "Draw",
+
+        "extra_setup_fn": function(e, name, obj) {
+            console.log(name,"had an extra setup function", obj);
+        },
+
+        "init": function() {
+            $("#btn-tool-draw").click( function(e) {
+                $("#tool-title").text("Draw");
+                window.TOOLMODE = "DRAW";
+            } );
         }
     }
 };
+
+function setupToolClick( toolObj, toolName ) {
+    $(toolObj.button_element).click( function(e) {
+        $("#tool-title").text(toolObj.human_name);
+        window.TOOLMODE = toolName;
+
+        if(toolObj.extra_setup_fn) {
+            toolObj.extra_setup_fn(e, toolName, toolObj);
+        }
+    } );
+}
+
+function setupTools() {
+    for (var prop in toolLogic) {
+      if (toolLogic.hasOwnProperty(prop)) { 
+
+      // or if (Object.prototype.hasOwnProperty.call(obj,prop)) for safety...
+        console.log("Initializing tool: ", prop, "...");
+
+        setupToolClick(toolLogic[prop], prop);
+
+        /*
+        $(toolLogic[prop].button_element).click( function(e) {
+            $("#tool-title").text(toolLogic[prop].human_name);
+            window.TOOLMODE = prop;
+
+            if(toolLogic[prop].extra_setup_fn) {
+                toolLogic[prop].extra_setup_fn(e, prop, toolLogic[prop]);
+            }
+        } );
+        */
+      }
+    }
+}
+setupTools();
 
 var tools = function( action, map, evt ) {
     var mode = window.TOOLMODE;
@@ -186,23 +255,7 @@ function initToolsToMapContainer( renderContainer ) {
 
 initToolsToMapContainer( $('.map_canvas') );
 
-$("#btn-tool-drag").click( function(e) {
-    $("#tool-title").text("Drag");
-    window.TOOLMODE = "DRAG";
-} );
-
-$("#btn-tool-eyedropper").click( function(e) {
-    $("#tool-title").text("Eyedropper");
-    window.TOOLMODE = "EYEDROPPER";
-} );
-
-$("#btn-tool-draw").click( function(e) {
-    $("#tool-title").text("Draw");
-    window.TOOLMODE = "DRAW";
-} );
-
 var updateZoomText = function() {
-
     var txt = (100 / window.$$$currentMap.camera[2]) + "%";
 
     $("#info-zoom").text(txt);
@@ -233,7 +286,8 @@ $('.map-palette').mouseup( function() {
     localStorage[key+'-left'] = $m.css('left');
 } );
 
-
+/// todo: currently this isn't allowing the multiple-vsp thing to really be "right".
+/// we need to have virtual palletes per vsp, and switch between them when you switch to a layer with a different palette.
 function initializeTileSelectorsForMap(imageFile) {
     $("#left-palette").removeAttr('style');
     $("#right-palette").removeAttr('style');
@@ -251,11 +305,11 @@ function initializeTileSelectorsForMap(imageFile) {
 var _last_map = null;
 function setTileSelectorUI( whichOne, vspIDX, map ) {
   if( _last_map != map ) {
-    initializeTileSelectorsForMap(map.vspData.source_image);
+    initializeTileSelectorsForMap(map.vspData["default"].source_image);
     _last_map = map;
   }
 
-  var loc = map.getVSPTileLocation(vspIDX);
+  var loc = map.getVSPTileLocation(window.selected_layer.layer.vsp, vspIDX);
   $(whichOne).css('background-position', '-'+(loc.x*2)+'px -'+(loc.y*2)+'px'); //(offset *2)
 }
 
