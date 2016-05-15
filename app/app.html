@@ -53,7 +53,7 @@
         <style title="app.html-inline-3">
             body {
                 /* le frog*/
-                background-color: rgb(51, 51, 51);             
+                background-color: rgb(51, 51, 51);
             }
 
             .map-palette {
@@ -64,14 +64,14 @@
             .ui-widget-header {
                 margin-top: 0px;
                 cursor: hand;
-                cursor: pointer;   
+                cursor: pointer;
             }
 
             .tool-palette {
                 width: 90px;
-                height: 400px;   
+                height: 400px;
 
-                position: absolute; 
+                position: absolute;
                 right: 10px;
                 top: 10px;
             }
@@ -80,7 +80,7 @@
                 width: 200px;
                 height: 200px;
 
-                position: absolute; 
+                position: absolute;
                 right: 10px;
                 bottom: 10px;
             }
@@ -89,7 +89,7 @@
                 width: 200px;
                 height: 200px;
 
-                position: absolute; 
+                position: absolute;
                 right: 10px;
                 bottom: 220px;
             }
@@ -98,7 +98,7 @@
                 width: 200px;
                 height: 200px;
 
-                position: absolute; 
+                position: absolute;
                 right: 220px;
                 bottom: 10px;
             }
@@ -131,7 +131,7 @@
 
             #left-palette {
                 left: 6px;
-                
+
             }
             #right-palette {
                 right: 6px;
@@ -139,7 +139,7 @@
 
             .map-palette.ui-state-disabled {
                 opacity: 1;
-                filter:Alpha(Opacity=1);                
+                filter:Alpha(Opacity=1);
             }
 
             .layer {
@@ -172,6 +172,7 @@
             <button id="btn-tool-fill" disabled="">Fill</button>
             <button id="btn-tool-zoomin">Zoom In</button>
             <button id="btn-tool-zoomout">Zoom Out</button>
+            <button id="btn-add-tree">+ Tree</button>
 
             <div id="left-palette" class="tooltip-tile-selector"></div>
             <div id="right-palette" class="tooltip-tile-selector" disabled=""></div>
@@ -237,7 +238,7 @@
 
             $("#btn-tool-zoomin").click( function(e) {
                 window.currentMap.grue_zoom(false);
-                updateZoomText();                
+                updateZoomText();
             } );
 
             $("#btn-tool-zoomout").click( function(e) {
