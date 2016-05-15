@@ -52,13 +52,6 @@ var toolLogic = {
         "button_element": "#btn-tool-drag",
         "human_name": "drag",
 
-        "init": function() {
-            $("#btn-tool-drag").click( function(e) {
-                $("#tool-title").text("Drag");
-                window.TOOLMODE = "DRAG";
-            } );
-        }
-
         /*,
         "mousewheel": function(map, e) {
             zoomFn(map, e, e.originalEvent.deltaY < 0);
@@ -119,13 +112,6 @@ var toolLogic = {
 
         "button_element": "#btn-tool-eyedropper",
         "human_name": "Eyedropper",
-
-        "init": function() {
-            $("#btn-tool-eyedropper").click( function(e) {
-                $("#tool-title").text("Eyedropper");
-                window.TOOLMODE = "EYEDROPPER";
-            } );
-        }
     },
 
     "DRAW" : {
@@ -182,13 +168,6 @@ var toolLogic = {
         "extra_setup_fn": function(e, name, obj) {
             console.log(name,"had an extra setup function", obj);
         },
-
-        "init": function() {
-            $("#btn-tool-draw").click( function(e) {
-                $("#tool-title").text("Draw");
-                window.TOOLMODE = "DRAW";
-            } );
-        }
     }
 };
 
