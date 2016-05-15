@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var sprintf = require("sprintf-js").sprintf;
 
 var zoomFn = function(map, e, zoomout) {
     var mouseX = map.camera[0] + e.clientX * map.camera[2];
@@ -81,10 +82,10 @@ var toolLogic = {
             tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
 
             window.$CURRENT_SELECTED_TILES[e.button] = tIdx;
-            $("#info-selected-tiles").text( 
+            $("#info-selected-tiles").text(
                 window.$CURRENT_SELECTED_TILES[0] +
                 ","+
-                window.$CURRENT_SELECTED_TILES[2] 
+                window.$CURRENT_SELECTED_TILES[2]
             );
 
             if( e.button === 2 ) {
@@ -136,7 +137,7 @@ var toolLogic = {
             map.setTile(
                 tX,tY,
                 window.selected_layer.map_tileData_idx,
-                window.$CURRENT_SELECTED_TILES[e.button] 
+                window.$CURRENT_SELECTED_TILES[e.button]
             );
         },
         "mouseup": function(map, e) {
@@ -209,7 +210,7 @@ var updateZoomText = function() {
 
 $("#btn-tool-zoomin").click( function(e) {
     grue_zoom(false);
-    updateZoomText();                
+    updateZoomText();
 } );
 
 $("#btn-tool-zoomout").click( function(e) {
@@ -257,5 +258,33 @@ function setTileSelectorUI( whichOne, vspIDX, map ) {
   var loc = map.getVSPTileLocation(vspIDX);
   $(whichOne).css('background-position', '-'+(loc.x*2)+'px -'+(loc.y*2)+'px'); //(offset *2)
 }
+
+$('#btn-add-tree').on('click', (e) => {
+    window.TOOLMODE = 'TREE';
+    window.$$$currentMap.entityPreview = {
+        location: { tx: 0, ty: 0 },
+        animation: "Idle Down",
+        filename: "chrs_json/object_tree2.json"
+    };
+
+    toolLogic.TREE = {
+        mousemove: (map, evt) => {
+            var mapOffsetX = map.camera[0];
+            var mapOffsetY= map.camera[1];
+            var mouseOffsetX = evt.offsetX;
+            var mouseOffsetY = evt.offsetY;
+            var tilesize = map.vspData[window.selected_layer.layer.vsp].tilesize;
+
+            map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX * map.camera[2])) / tilesize.width);
+            map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY * map.camera[2])) / tilesize.height);
+        },
+        mouseup: (map, evt) => {
+            map.entityPreview = null;
+            window.TOOLMODE = 'DRAG';
+        },
+        mousedown: () => {},
+        moousewheel: () => {}
+    }
+});
 
 export var Tools = {};

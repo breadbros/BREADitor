@@ -166,7 +166,7 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
     };
 
     window.$$$load = function() {
-     var remote = require('remote'); 
+     var remote = require('remote');
      var dialog = remote.require('dialog');
 
      dialog.showOpenDialog({ filters: [
@@ -175,21 +175,24 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
       if (fileNames === undefined) return;
       var fileName = fileNames[0];
       var dataName, vspName;
-      
+
       dataName = fileName.replace('.map.json', '.map.data.json');
       vspName = fileName.replace('.map.json', '.vsp.json');
 
       /// todo: verify that all three of these files, you know... exist?
       bootstrapMap(fileName, dataName, vspName);
-     }); 
+     });
     }
 
     /// INITIAL LOAD
     /// TODO: special case this with a null map for new-saving?
-    bootstrapMap( 
-      '../app/map_assets/farmsville.map.json',
-      '../app/map_assets/farmsville.map.data.json',
-      '../app/map_assets/farmsville.vsp.json'
+    bootstrapMap(
+    	'../app/map_assets/farmsville.map.json',
+        '../app/map_assets/farmsville.map.data.json',
+        {
+			'default':      '../app/map_assets/farmsville.vsp.json',
+			'obstructions': '../app/map_assets/farmsville.obsvsp.json'
+	    }
     );
 })();
 

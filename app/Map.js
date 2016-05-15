@@ -1,8 +1,8 @@
 var app = require('remote').require('app');
-var sprintf = require("sprintf-js").sprintf;
 var path = require('path');
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 import { ShaderProgram } from "./ShaderProgram.js";
+import { Tools } from "./Tools.js";
 
 function buildTileDataTexture(data) {
     var out = new Uint8Array(data.length * 4);
@@ -27,14 +27,19 @@ function getStyleSheet(unique_title) {
   }
 }
 
-export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction) {
+var __obsColor = [1, 1, 1, 0.5];
+function setColor(r,g,b,a) {
+    __obsColor = [r,g,b,a];
+}
+
+export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction) {
     var i;
     console.log("Loading map", mapfile);
 
     this.filenames = {
-        'mapfile' : mapfile, 
-        'mapdatafile': mapdatafile, 
-        'vspfile' : vspfile
+        'mapfile' : mapfile,
+        'mapdatafile': mapdatafile,
+        'vspfiles' : vspfiles
     };
 
     this.updateLocationFn = updateLocationFunction;
@@ -46,7 +51,11 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
 
     this.mapPath = mapfile;
     this.mapData = jetpack.read(mapfile, 'json');
-    
+    // TEMPORARY -- should come from the mapdata itself
+    this.mapData.layers.forEach((layer) => {
+        layer.vsp = "default";
+    });
+
     this.renderString = this.mapData.renderstring.split(",");
     this.mapSizeInTiles = [0,0];
     this.layerLookup = {};
@@ -69,7 +78,11 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
     this.legacyObsData = this.mapRawTileData.legacy_obstruction_data;
     this.tileData = this.mapRawTileData.tile_data;
 
-    this.vspData = jetpack.read(vspfile, 'json');
+    this.vspData = {};
+    for (var k in vspfiles) {
+        this.vspData[k] = jetpack.read(vspfiles[k], 'json');
+        console.log(k, "->", this.vspData[k]);
+    }
 
     var toLoad = 1;
     var doneLoading = function() {
@@ -77,10 +90,18 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
         if (toLoad === 0) this.promiseResolver(this);
     }.bind(this);
 
-    toLoad++;
-    this.vspImage = new Image();
-    this.vspImage.onload = doneLoading;
-    this.vspImage.src = this.vspData.source_image;
+    this.vspImages = {};
+    for (k in this.vspData) {
+        var vsp = this.vspData[k];
+        if (!vsp) continue;
+        // TODO probably actually want to fail the load or do something other than
+        // just silently carry on when the image can't be loaded
+
+        toLoad++;
+        this.vspImages[k] = new Image();
+        this.vspImages[k].onload = doneLoading;
+        this.vspImages[k].src = this.vspData[k].source_image;
+    }
 
     toLoad++;
     this.entityTextures = {
@@ -198,16 +219,16 @@ function getFlatIdx( x, y, width ) {
 
 Map.prototype = {
 
-    getVSPTileLocation: function(idx) {
+    getVSPTileLocation: function(vsp, idx) {
 
         var x, y;
 
-        y = parseInt(idx / this.vspData.tiles_per_row); 
-        x = idx - y*this.vspData.tiles_per_row;
+        y = parseInt(idx / this.vspData[vsp].tiles_per_row);
+        x = idx - y*this.vspData[vsp].tiles_per_row;
 
-        y *= this.vspData.tilesize.height;
-        x *= this.vspData.tilesize.width;
-    
+        y *= this.vspData[vsp].tilesize.height;
+        x *= this.vspData[vsp].tilesize.width;
+
         return {
             x: x,
             y: y
@@ -222,14 +243,14 @@ Map.prototype = {
 
     setTile: function( tileX, tileY, layerIdx, tileIdx ) {
         var idx = getFlatIdx(tileX, tileY,this.mapSizeInTiles[0]);
-        
+
         this.tileData[layerIdx][idx] = tileIdx;
     },
 
     ready: function() {
 
         var key = 'map-'+ this.mapData.name;
-        var $cont = $('.map-palette'); 
+        var $cont = $('.map-palette');
 
         if( localStorage[key] ) {
             if( localStorage[key+'-width'] )  { $cont.width(localStorage[key+'-width']); }
@@ -237,7 +258,7 @@ Map.prototype = {
             if( localStorage[key+'-top'] )    { $cont.css( 'top', localStorage[key+'-top']); }
             if( localStorage[key+'-left'] )   { $cont.css( 'left', localStorage[key+'-left']);  }
             if( localStorage[key+'-mapx'] )   { this.camera[0] = parseInt(localStorage[key+'-mapx']); }
-            if( localStorage[key+'-mapy'] )   { this.camera[1] = parseInt(localStorage[key+'-mapy']); }            
+            if( localStorage[key+'-mapy'] )   { this.camera[1] = parseInt(localStorage[key+'-mapy']); }
         }
 
         return this.readyPromise;
@@ -275,14 +296,19 @@ Map.prototype = {
         this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
         this.tilemapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemap-frag.glsl"));
         this.spriteShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/sprite-vert.glsl"), jetpack.read("../app/shaders/sprite-frag.glsl"));
+        this.obstructionmapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemapObs-frag.glsl"));
 
-        this.tileLibraryTexture = this.gl.createTexture();
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLibraryTexture);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
-        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.vspImage);
+        this.tileLibraryTextures = {};
+        for (var k in this.vspImages) {
+            if (!this.vspImages[k]) return;
+            this.tileLibraryTextures[k] = this.gl.createTexture();
+            this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLibraryTextures[k]);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.vspImages[k]);
+        }
 
         this.tileLayoutTexture = this.gl.createTexture();
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLayoutTexture);
@@ -324,6 +350,7 @@ Map.prototype = {
         // make sure the size is right
         this.resize();
 
+
         if( this.onLoad ) {
             this.onLoad(this);
         }
@@ -341,26 +368,28 @@ Map.prototype = {
             if (isNaN(layerIndex)) continue;
             if (layer.MAPED_HIDDEN) continue;
 
+            var vsp = layer.vsp;
+
             this.tilemapShader.use();
 
             gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData.tilesize.width,
-                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData.tilesize.height,
-                this.camera[2] * this.renderContainer.width() / this.vspData.tilesize.width,
-                this.camera[2] * this.renderContainer.height() / this.vspData.tilesize.height
+                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
             );
 
             gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
                 layer.dimensions.X,
                 layer.dimensions.Y,
-                this.vspData.tiles_per_row,
-                this.vspImage.height / this.vspData.tilesize.height
+                this.vspData[vsp].tiles_per_row,
+                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
             );
 
             var u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
             gl.uniform1i(u_tileLibrary, 0);
             gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTexture);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
 
             var u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
             gl.uniform1i(u_tileLayout, 1);
@@ -375,58 +404,115 @@ Map.prototype = {
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-            if (this.entities[layer.name]) {
+            if (this.entities[layer.name] && this.entities[layer.name].length > 0) {
+                var entities = this.entities[layer.name];
+                var showEntityPreview = (window.selected_layer && layer === window.selected_layer.layer && this.entityPreview);
                 this.spriteShader.use();
 
-                for (var e = 0; e < this.entities[layer.name].length; e++) {
-                    var entity = this.entities[layer.name][e];
-                    var entityData = this.entityData[entity.filename];
-                    var entityTexture = this.entityTextures[entityData.image]
-
-                    var a_vertices = this.spriteShader.attribute('a_vertices');
-                    gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
-                    gl.enableVertexAttribArray(a_vertices);
-                    gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
-
-                    var tx = entity.location.tx - (entityData.hitbox[0] / this.vspData.tilesize.width);
-                    var ty = entity.location.ty - (entityData.hitbox[1] / this.vspData.tilesize.height);
-                    var tw = entityData.dims[0] / this.vspData.tilesize.width;
-                    var th = entityData.dims[1] / this.vspData.tilesize.height;
-
-                    var fx = entityData.outer_pad / entityTexture.img.width;
-                    var fy = entityData.outer_pad / entityTexture.img.height;
-                    var fw = entityData.dims[0] / entityTexture.img.width;
-                    var fh = entityData.dims[1] / entityTexture.img.height;
-
-                    var f = entityData.animations[entity.animation][0][0][0];
-                    fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
-                    fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
-
-                    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-                        tx, -ty, fx, fy,
-                        tx + tw, -ty, fx + fw, fy,
-                        tx, -ty - th, fx, fy + fh,
-                        tx + tw, -ty - th, fx + fw, fy + fh,
-                        tx, -ty - th, fx, fy + fh,
-                        tx + tw, -ty, fx + fw, fy
-                    ]), this.gl.STATIC_DRAW);
-
-                    gl.uniform4f(this.spriteShader.uniform('u_camera'),
-                        Math.floor(layer.parallax.X * this.camera[0]) / this.vspData.tilesize.width,
-                        Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData.tilesize.height,
-                        this.camera[2] * this.renderContainer.width() / this.vspData.tilesize.width,
-                        this.camera[2] * this.renderContainer.height() / this.vspData.tilesize.height
-                    );
-
-                    var u_texture = this.tilemapShader.uniform('u_spriteAtlas');
-                    gl.uniform1i(u_texture, 0);
-                    gl.activeTexture(gl.TEXTURE0);
-                    gl.bindTexture(gl.TEXTURE_2D, entityTexture.tex);
-
-                    gl.drawArrays(gl.TRIANGLES, 0, 6);
+                for (var e = 0; e < entities.length; e++) {
+                    if (showEntityPreview && this.entityPreview.location.ty < entities[e].location.ty && (e === 0 || this.entityPreview.location.ty >= entities[e - 1].location.ty)) {
+                        this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
+                    }
+                    this.renderEntity(entities[e], layer, [1,1,1,1]);
                 }
             }
         }
+
+        var vsp = 'obstructions';
+        // TODO obstruction layer shouldn't just default like this
+        var layer = {
+            parallax: { X: 1, Y: 1 },
+            dimensions: this.mapData.layers[0].dimensions
+        }
+
+        this.obstructionmapShader.use();
+
+        gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
+            Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+            Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+            this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+            this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+        );
+
+        gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
+            layer.dimensions.X,
+            layer.dimensions.Y,
+            this.vspData[vsp].tiles_per_row,
+            this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+        );
+
+        gl.uniform4f(this.obstructionmapShader.uniform('u_color'), __obsColor[0], __obsColor[1], __obsColor[2], __obsColor[3]);
+
+        var u_tileLibrary = this.obstructionmapShader.uniform('u_tileLibrary');
+        gl.uniform1i(u_tileLibrary, 0);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
+
+        var u_tileLayout = this.obstructionmapShader.uniform('u_tileLayout');
+        gl.uniform1i(u_tileLayout, 1);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData));
+
+        var a_position = this.obstructionmapShader.attribute('a_position');
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+        gl.enableVertexAttribArray(a_position);
+        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    },
+
+    renderEntity: function(entity, layer, tint) {
+        var gl = this.gl;
+        var tilesize = this.vspData[layer.vsp].tilesize;
+
+        var entityData = this.entityData[entity.filename];
+        var entityTexture = this.entityTextures[entityData.image]
+
+        var a_vertices = this.spriteShader.attribute('a_vertices');
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
+        gl.enableVertexAttribArray(a_vertices);
+        gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
+
+        var tx = entity.location.tx - (entityData.hitbox[0] / tilesize.width);
+        var ty = entity.location.ty - (entityData.hitbox[1] / tilesize.height);
+        var tw = entityData.dims[0] / tilesize.width;
+        var th = entityData.dims[1] / tilesize.height;
+
+        var fx = entityData.outer_pad / entityTexture.img.width;
+        var fy = entityData.outer_pad / entityTexture.img.height;
+        var fw = entityData.dims[0] / entityTexture.img.width;
+        var fh = entityData.dims[1] / entityTexture.img.height;
+
+        var f = entityData.animations[entity.animation][0][0][0];
+        fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
+        fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
+
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
+            tx, -ty, fx, fy,
+            tx + tw, -ty, fx + fw, fy,
+            tx, -ty - th, fx, fy + fh,
+            tx + tw, -ty - th, fx + fw, fy + fh,
+            tx, -ty - th, fx, fy + fh,
+            tx + tw, -ty, fx + fw, fy
+        ]), this.gl.STATIC_DRAW);
+
+        gl.uniform4f(this.spriteShader.uniform('u_camera'),
+            Math.floor(layer.parallax.X * this.camera[0]) / tilesize.width,
+            Math.floor(layer.parallax.Y * this.camera[1]) / tilesize.height,
+            this.camera[2] * this.renderContainer.width() / tilesize.width,
+            this.camera[2] * this.renderContainer.height() / tilesize.height
+        );
+
+        gl.uniform4f(this.spriteShader.uniform('u_tint'), tint[0], tint[1], tint[2], tint[3]);
+
+        var u_texture = this.tilemapShader.uniform('u_spriteAtlas');
+        gl.uniform1i(u_texture, 0);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, entityTexture.tex);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
     },
 
     cleanUpCallbacks: function() {
