@@ -279,6 +279,8 @@ $('#btn-add-tree').on('click', (e) => {
             map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY * map.camera[2])) / tilesize.height);
         },
         mouseup: (map, evt) => {
+            map.entityPreview.location.layer = window.selected_layer.layer.name;
+            map.addEntity(map.entityPreview, map.entityPreview.location);
             map.entityPreview = null;
             window.TOOLMODE = 'DRAG';
         },

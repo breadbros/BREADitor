@@ -41,6 +41,7 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         'mapdatafile': mapdatafile,
         'vspfiles' : vspfiles
     };
+    this.dataPath = path.dirname(mapdatafile);
 
     this.updateLocationFn = updateLocationFunction;
 
@@ -84,10 +85,10 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         console.log(k, "->", this.vspData[k]);
     }
 
-    var toLoad = 1;
-    var doneLoading = function() {
-        toLoad--;
-        if (toLoad === 0) this.promiseResolver(this);
+    this.toLoad = 1;
+    this.doneLoading = function() {
+        this.toLoad--;
+        if (this.toLoad === 0) this.promiseResolver(this);
     }.bind(this);
 
     this.vspImages = {};
@@ -97,17 +98,17 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         // TODO probably actually want to fail the load or do something other than
         // just silently carry on when the image can't be loaded
 
-        toLoad++;
+        this.toLoad++;
         this.vspImages[k] = new Image();
-        this.vspImages[k].onload = doneLoading;
+        this.vspImages[k].onload = this.doneLoading;
         this.vspImages[k].src = this.vspData[k].source_image;
     }
 
-    toLoad++;
+    this.toLoad++;
     this.entityTextures = {
         '__default__': { img: new Image() }
     };
-    this.entityTextures['__default__'].img.onload = doneLoading;
+    this.entityTextures['__default__'].img.onload = this.doneLoading;
     this.entityTextures['__default__'].img.src = "../app/images/defaultsprite.png";
 
     var lastLayer = "";
@@ -121,6 +122,7 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     if (!defaultEntityLayer) {
         defaultEntityLayer = this.mapData.layers[0].name;
     }
+
     /*
     console.log("LAYERS:");
     for(i in this.mapData.layers) {
@@ -148,14 +150,37 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         var entity = this.mapData.entities[i];
         // console.log(entity);
 
-        var layer = entity.location.layer || defaultEntityLayer;
-        if (!this.entities[layer]) {
-            this.entities[layer] = [];
+        entity.location.layer = entity.location.layer || defaultEntityLayer;
+        this.addEntityWithoutSort(entity, entity.location, false);
+    }
+
+    for (var i in this.entities) {
+        if (this.entities[i]) {
+            console.log("Sorting entities on layer", i, ", ", this.entities[i].length, "entities to sort");
+            this.entities[i].sort(function(a, b) {
+                return a.location.ty - b.location.ty;
+            });
         }
-        this.entities[layer].push(entity);
+    }
+
+    this.renderContainer = null;
+
+    this.doneLoading();
+};
+
+function getFlatIdx( x, y, width ) {
+    return parseInt(width*y) + parseInt(x);
+}
+
+Map.prototype = {
+    addEntityWithoutSort(entity, location) {
+        if (!this.entities[location.layer]) {
+            this.entities[location.layer] = [];
+        }
+        this.entities[location.layer].push(entity);
 
         if (!this.entityData[entity.filename]) {
-            var datafile = jetpack.path(path.dirname(mapdatafile), entity.filename);
+            var datafile = jetpack.path(this.dataPath, entity.filename);
             var data = jetpack.read(datafile, 'json');
             if (data) {
                 this.entityData[entity.filename] = data;
@@ -174,20 +199,20 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
                 }
 
                 if (!this.entityTextures[data.image]) {
-                    var imagePath = jetpack.path(path.dirname(mapdatafile), data.image);
+                    var imagePath = jetpack.path(this.dataPath, data.image);
                     if (!jetpack.inspect(imagePath)) {
                         imagePath += ".png";
                     }
                     if (!jetpack.inspect(imagePath)) {
                         console.log("Couldn't load image", data.image, "for entity", entity.filename, "; falling back.");
                         this.entityData[entity.filename].image = '__default__';
-                        continue;
+                        return;
                     }
 
-                    toLoad++;
+                    this.toLoad++;
                     this.entityTextures[data.image] = {};
                     this.entityTextures[data.image].img = new Image();
-                    this.entityTextures[data.image].img.onload = doneLoading;
+                    this.entityTextures[data.image].img.onload = this.doneLoading;
                     this.entityTextures[data.image].img.src = imagePath;
                 }
             } else {
@@ -197,30 +222,16 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         }
 
         entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
-    }
+    },
 
-    for (var i in this.entities) {
-        if (this.entities[i]) {
-            console.log("Sorting entities on layer", i, ", ", this.entities[i].length, "entities to sort");
-            this.entities[i].sort(function(a, b) {
-                return a.location.ty - b.location.ty;
-            });
-        }
-    }
-
-    this.renderContainer = null;
-
-    doneLoading();
-};
-
-function getFlatIdx( x, y, width ) {
-    return parseInt(width*y) + parseInt(x);
-}
-
-Map.prototype = {
+    addEntity: function(filename, location) {
+        this.addEntityWithoutSort(filename, location);
+        this.entities[location.layer].sort(function(a, b) {
+            return a.location.ty - b.location.ty;
+        });
+    },
 
     getVSPTileLocation: function(vsp, idx) {
-
         var x, y;
 
         y = parseInt(idx / this.vspData[vsp].tiles_per_row);
@@ -415,6 +426,9 @@ Map.prototype = {
                     }
                     this.renderEntity(entities[e], layer, [1,1,1,1]);
                 }
+            } else if (this.entityPreview) {
+                this.spriteShader.use();
+                this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
             }
         }
 
