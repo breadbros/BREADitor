@@ -444,7 +444,7 @@ Map.prototype = {
                 this.spriteShader.use();
                 for (var e in tallEntities) {
                     var entity = tallEntities[e];
-                    this.renderEntity(entity, layer, [1, 0.5, 0.5, 1]);
+                    this.renderEntity(entity, layer, [1, 1, 1, 1], this.entityData[entity.filename].regions['Tall_Redraw']);
                 }
             }
         }
@@ -494,12 +494,14 @@ Map.prototype = {
 
     },
 
-    renderEntity: function(entity, layer, tint) {
+    renderEntity: function(entity, layer, tint, clip) {
         var gl = this.gl;
         var tilesize = this.vspData[layer.vsp].tilesize;
 
         var entityData = this.entityData[entity.filename];
         var entityTexture = this.entityTextures[entityData.image]
+
+        clip = (clip === undefined ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
 
         var a_vertices = this.spriteShader.attribute('a_vertices');
         gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
@@ -508,13 +510,13 @@ Map.prototype = {
 
         var tx = entity.location.tx - (entityData.hitbox[0] / tilesize.width);
         var ty = entity.location.ty - (entityData.hitbox[1] / tilesize.height);
-        var tw = entityData.dims[0] / tilesize.width;
-        var th = entityData.dims[1] / tilesize.height;
+        var tw = clip[2] / tilesize.width;
+        var th = clip[3] / tilesize.height;
 
-        var fx = entityData.outer_pad / entityTexture.img.width;
-        var fy = entityData.outer_pad / entityTexture.img.height;
-        var fw = entityData.dims[0] / entityTexture.img.width;
-        var fh = entityData.dims[1] / entityTexture.img.height;
+        var fx = (entityData.outer_pad + clip[0]) / entityTexture.img.width;
+        var fy = (entityData.outer_pad + clip[1]) / entityTexture.img.height;
+        var fw = clip[2] / entityTexture.img.width;
+        var fh = clip[3] / entityTexture.img.height;
 
         var f = entityData.animations[entity.animation][0][0][0];
         fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
