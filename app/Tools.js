@@ -17,8 +17,8 @@ var grue_zoom = function(zoomout, evt) {
     // if no event, fake it and center on current view.
     if( !evt ) {
         evt = {};
-        evt.clientX = this.renderContainer.width() / 2;
-        evt.clientY = this.renderContainer.height() / 2;
+        evt.clientX = window.$$$currentMap.renderContainer.width() / 2;
+        evt.clientY = window.$$$currentMap.renderContainer.height() / 2;
     }
 
     zoomFn( window.$$$currentMap, evt, zoomout );
@@ -185,6 +185,77 @@ function initToolsToMapContainer( renderContainer ) {
 
 initToolsToMapContainer( $('.map_canvas') );
 
-export var Tools = {
-  grue_zoom: grue_zoom
+$("#btn-tool-drag").click( function(e) {
+    $("#tool-title").text("Drag");
+    window.TOOLMODE = "DRAG";
+} );
+
+$("#btn-tool-eyedropper").click( function(e) {
+    $("#tool-title").text("Eyedropper");
+    window.TOOLMODE = "EYEDROPPER";
+} );
+
+$("#btn-tool-draw").click( function(e) {
+    $("#tool-title").text("Draw");
+    window.TOOLMODE = "DRAW";
+} );
+
+var updateZoomText = function() {
+
+    var txt = (100 / window.$$$currentMap.camera[2]) + "%";
+
+    $("#info-zoom").text(txt);
 };
+
+$("#btn-tool-zoomin").click( function(e) {
+    grue_zoom(false);
+    updateZoomText();                
+} );
+
+$("#btn-tool-zoomout").click( function(e) {
+    grue_zoom(true);
+    updateZoomText();
+} );
+
+$("#btn-tool-drag").click();
+
+$('.map-palette').mouseup( function() {
+
+    var key = 'map-'+ window.$$$currentMap.mapData.name;
+    var $m = $(this);
+
+    localStorage[key] = 'yes';
+
+    localStorage[key+'-width'] = $m.width();
+    localStorage[key+'-height'] = $m.height();
+    localStorage[key+'-top'] = $m.css('top');
+    localStorage[key+'-left'] = $m.css('left');
+} );
+
+
+function initializeTileSelectorsForMap(imageFile) {
+    $("#left-palette").removeAttr('style');
+    $("#right-palette").removeAttr('style');
+
+    $('#left-palette').css('background-image', 'url(' + imageFile + ')');
+    $('#right-palette').css('background-image', 'url(' + imageFile + ')');
+
+    $('#left-palette').css('background-position', '0px 0px');
+    $('#right-palette').css('background-position', '0px 0px');
+
+    $('#left-palette').css('background-size', '2000%');
+    $('#right-palette').css('background-size', '2000%');
+}
+
+var _last_map = null;
+function setTileSelectorUI( whichOne, vspIDX, map ) {
+  if( _last_map != map ) {
+    initializeTileSelectorsForMap(map.vspData.source_image);
+    _last_map = map;
+  }
+
+  var loc = map.getVSPTileLocation(vspIDX);
+  $(whichOne).css('background-position', '-'+(loc.x*2)+'px -'+(loc.y*2)+'px'); //(offset *2)
+}
+
+export var Tools = {};

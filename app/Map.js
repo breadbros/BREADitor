@@ -27,25 +27,6 @@ function getStyleSheet(unique_title) {
   }
 }
 
-function initializeTileSelectorsForMap(imageFile) {
-    $("#left-palette").removeAttr('style');
-    $("#right-palette").removeAttr('style');
-
-    $('#left-palette').css('background-image', 'url(' + imageFile + ')');
-    $('#right-palette').css('background-image', 'url(' + imageFile + ')');
-
-    $('#left-palette').css('background-position', '0px 0px');
-    $('#right-palette').css('background-position', '0px 0px');
-
-    $('#left-palette').css('background-size', '2000%');
-    $('#right-palette').css('background-size', '2000%');
-}
-
-function setTileSelectorUI( whichOne, vspIDX, map ) {
-    var loc = map.getVSPTileLocation(vspIDX);
-    $(whichOne).css('background-position', '-'+(loc.x*2)+'px -'+(loc.y*2)+'px'); //(offset *2)
-}
-
 export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction) {
     var i;
     console.log("Loading map", mapfile);
@@ -90,11 +71,6 @@ export var Map = function(mapfile, mapdatafile, vspfile, updateLocationFunction)
 
     this.vspData = jetpack.read(vspfile, 'json');
 
-    /// TODO move this somewhere else...
-    initializeTileSelectorsForMap(this.vspData.source_image);
-    setTileSelectorUI( "#left-palette", 971, this );
-    setTileSelectorUI( "#right-palette", 1122, this );
-    
     var toLoad = 1;
     var doneLoading = function() {
         toLoad--;
