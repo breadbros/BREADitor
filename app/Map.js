@@ -221,6 +221,10 @@ Map.prototype = {
             }
         }
 
+        if (this.entityData[entity.filename].regions && this.entityData[entity.filename].regions['Tall_Redraw'] && !this.mapData.tallentitylayer) {
+            alert("ERROR: Loading tall entity " + entity.filename + " with no tallentitylayer in map!");
+        }
+
         entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
     },
 
@@ -372,6 +376,8 @@ Map.prototype = {
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
+        var tallEntities = [];
+
         for (var i = 0; i < this.renderString.length; i++) {
             var layerIndex = parseInt(this.renderString[i], 10) - 1;
             var layer = this.mapData.layers[layerIndex];
@@ -425,64 +431,78 @@ Map.prototype = {
                         this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
                     }
                     this.renderEntity(entities[e], layer, [1,1,1,1]);
+                    if (this.entityData[entities[e].filename].regions && this.entityData[entities[e].filename].regions['Tall_Redraw']) {
+                        tallEntities.push(entities[e]);
+                    }
                 }
             } else if (this.entityPreview) {
                 this.spriteShader.use();
                 this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
             }
+
+            if (this.mapData.tallentitylayer === i) {
+                this.spriteShader.use();
+                for (var e in tallEntities) {
+                    var entity = tallEntities[e];
+                    this.renderEntity(entity, layer, [1, 1, 1, 1], this.entityData[entity.filename].regions['Tall_Redraw']);
+                }
+            }
         }
 
-        var vsp = 'obstructions';
-        // TODO obstruction layer shouldn't just default like this
-        var layer = {
-            parallax: { X: 1, Y: 1 },
-            dimensions: this.mapData.layers[0].dimensions
+        if (Tools.shouldShowObstructions()) {
+            var vsp = 'obstructions';
+            // TODO obstruction layer shouldn't just default like this
+            var layer = {
+                parallax: { X: 1, Y: 1 },
+                dimensions: this.mapData.layers[0].dimensions
+            }
+
+            this.obstructionmapShader.use();
+
+            gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
+                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+            );
+
+            gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
+                layer.dimensions.X,
+                layer.dimensions.Y,
+                this.vspData[vsp].tiles_per_row,
+                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+            );
+
+            gl.uniform4f(this.obstructionmapShader.uniform('u_color'), __obsColor[0], __obsColor[1], __obsColor[2], __obsColor[3]);
+
+            var u_tileLibrary = this.obstructionmapShader.uniform('u_tileLibrary');
+            gl.uniform1i(u_tileLibrary, 0);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
+
+            var u_tileLayout = this.obstructionmapShader.uniform('u_tileLayout');
+            gl.uniform1i(u_tileLayout, 1);
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData));
+
+            var a_position = this.obstructionmapShader.attribute('a_position');
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+            gl.enableVertexAttribArray(a_position);
+            gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
-
-        this.obstructionmapShader.use();
-
-        gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
-            Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-            Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-            this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-            this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
-        );
-
-        gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
-            layer.dimensions.X,
-            layer.dimensions.Y,
-            this.vspData[vsp].tiles_per_row,
-            this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
-        );
-
-        gl.uniform4f(this.obstructionmapShader.uniform('u_color'), __obsColor[0], __obsColor[1], __obsColor[2], __obsColor[3]);
-
-        var u_tileLibrary = this.obstructionmapShader.uniform('u_tileLibrary');
-        gl.uniform1i(u_tileLibrary, 0);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
-
-        var u_tileLayout = this.obstructionmapShader.uniform('u_tileLayout');
-        gl.uniform1i(u_tileLayout, 1);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData));
-
-        var a_position = this.obstructionmapShader.attribute('a_position');
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-        gl.enableVertexAttribArray(a_position);
-        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
-
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-
     },
 
-    renderEntity: function(entity, layer, tint) {
+    renderEntity: function(entity, layer, tint, clip) {
         var gl = this.gl;
         var tilesize = this.vspData[layer.vsp].tilesize;
 
         var entityData = this.entityData[entity.filename];
         var entityTexture = this.entityTextures[entityData.image]
+
+        clip = (clip === undefined ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
 
         var a_vertices = this.spriteShader.attribute('a_vertices');
         gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
@@ -491,13 +511,13 @@ Map.prototype = {
 
         var tx = entity.location.tx - (entityData.hitbox[0] / tilesize.width);
         var ty = entity.location.ty - (entityData.hitbox[1] / tilesize.height);
-        var tw = entityData.dims[0] / tilesize.width;
-        var th = entityData.dims[1] / tilesize.height;
+        var tw = clip[2] / tilesize.width;
+        var th = clip[3] / tilesize.height;
 
-        var fx = entityData.outer_pad / entityTexture.img.width;
-        var fy = entityData.outer_pad / entityTexture.img.height;
-        var fw = entityData.dims[0] / entityTexture.img.width;
-        var fh = entityData.dims[1] / entityTexture.img.height;
+        var fx = (entityData.outer_pad + clip[0]) / entityTexture.img.width;
+        var fy = (entityData.outer_pad + clip[1]) / entityTexture.img.height;
+        var fw = clip[2] / entityTexture.img.width;
+        var fh = clip[3] / entityTexture.img.height;
 
         var f = entityData.animations[entity.animation][0][0][0];
         fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);

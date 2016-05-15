@@ -289,4 +289,19 @@ $('#btn-add-tree').on('click', (e) => {
     }
 });
 
-export var Tools = {};
+var obstructionsVisible = true;
+function setObstructionsVisible(visible) {
+    obstructionsVisible = visible;
+}
+
+function shouldShowObstructions() {
+    return obstructionsVisible;
+}
+$('#btn-toggle-obs').on('click', (e) => {
+    setObstructionsVisible(!obstructionsVisible);
+});
+
+export var Tools = {
+    setObstructionsVisible: setObstructionsVisible,
+    shouldShowObstructions: shouldShowObstructions
+};

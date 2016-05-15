@@ -56,6 +56,7 @@
   "music": "",
   "renderstring": "2,1,3,8,7,E,6,4,5,9,R",
   "initscript": "start",
+  "tallentitylayer": 7,
   "starting_coordinates": [
     0,
     0
