@@ -41,6 +41,7 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         'mapdatafile': mapdatafile,
         'vspfiles' : vspfiles
     };
+    this.dataPath = path.dirname(mapdatafile);
 
     this.updateLocationFn = updateLocationFunction;
 
@@ -84,10 +85,10 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         console.log(k, "->", this.vspData[k]);
     }
 
-    var toLoad = 1;
-    var doneLoading = function() {
-        toLoad--;
-        if (toLoad === 0) this.promiseResolver(this);
+    this.toLoad = 1;
+    this.doneLoading = function() {
+        this.toLoad--;
+        if (this.toLoad === 0) this.promiseResolver(this);
     }.bind(this);
 
     this.vspImages = {};
@@ -97,17 +98,17 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         // TODO probably actually want to fail the load or do something other than
         // just silently carry on when the image can't be loaded
 
-        toLoad++;
+        this.toLoad++;
         this.vspImages[k] = new Image();
-        this.vspImages[k].onload = doneLoading;
+        this.vspImages[k].onload = this.doneLoading;
         this.vspImages[k].src = this.vspData[k].source_image;
     }
 
-    toLoad++;
+    this.toLoad++;
     this.entityTextures = {
         '__default__': { img: new Image() }
     };
-    this.entityTextures['__default__'].img.onload = doneLoading;
+    this.entityTextures['__default__'].img.onload = this.doneLoading;
     this.entityTextures['__default__'].img.src = "../app/images/defaultsprite.png";
 
     var lastLayer = "";
@@ -121,6 +122,7 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     if (!defaultEntityLayer) {
         defaultEntityLayer = this.mapData.layers[0].name;
     }
+
     /*
     console.log("LAYERS:");
     for(i in this.mapData.layers) {
@@ -148,14 +150,37 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         var entity = this.mapData.entities[i];
         // console.log(entity);
 
-        var layer = entity.location.layer || defaultEntityLayer;
-        if (!this.entities[layer]) {
-            this.entities[layer] = [];
+        entity.location.layer = entity.location.layer || defaultEntityLayer;
+        this.addEntityWithoutSort(entity, entity.location, false);
+    }
+
+    for (var i in this.entities) {
+        if (this.entities[i]) {
+            console.log("Sorting entities on layer", i, ", ", this.entities[i].length, "entities to sort");
+            this.entities[i].sort(function(a, b) {
+                return a.location.ty - b.location.ty;
+            });
         }
-        this.entities[layer].push(entity);
+    }
+
+    this.renderContainer = null;
+
+    this.doneLoading();
+};
+
+function getFlatIdx( x, y, width ) {
+    return parseInt(width*y) + parseInt(x);
+}
+
+Map.prototype = {
+    addEntityWithoutSort(entity, location) {
+        if (!this.entities[location.layer]) {
+            this.entities[location.layer] = [];
+        }
+        this.entities[location.layer].push(entity);
 
         if (!this.entityData[entity.filename]) {
-            var datafile = jetpack.path(path.dirname(mapdatafile), entity.filename);
+            var datafile = jetpack.path(this.dataPath, entity.filename);
             var data = jetpack.read(datafile, 'json');
             if (data) {
                 this.entityData[entity.filename] = data;
@@ -174,20 +199,20 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
                 }
 
                 if (!this.entityTextures[data.image]) {
-                    var imagePath = jetpack.path(path.dirname(mapdatafile), data.image);
+                    var imagePath = jetpack.path(this.dataPath, data.image);
                     if (!jetpack.inspect(imagePath)) {
                         imagePath += ".png";
                     }
                     if (!jetpack.inspect(imagePath)) {
                         console.log("Couldn't load image", data.image, "for entity", entity.filename, "; falling back.");
                         this.entityData[entity.filename].image = '__default__';
-                        continue;
+                        return;
                     }
 
-                    toLoad++;
+                    this.toLoad++;
                     this.entityTextures[data.image] = {};
                     this.entityTextures[data.image].img = new Image();
-                    this.entityTextures[data.image].img.onload = doneLoading;
+                    this.entityTextures[data.image].img.onload = this.doneLoading;
                     this.entityTextures[data.image].img.src = imagePath;
                 }
             } else {
@@ -196,31 +221,21 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
             }
         }
 
-        entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
-    }
-
-    for (var i in this.entities) {
-        if (this.entities[i]) {
-            console.log("Sorting entities on layer", i, ", ", this.entities[i].length, "entities to sort");
-            this.entities[i].sort(function(a, b) {
-                return a.location.ty - b.location.ty;
-            });
+        if (this.entityData[entity.filename].regions && this.entityData[entity.filename].regions['Tall_Redraw'] && !this.mapData.tallentitylayer) {
+            alert("ERROR: Loading tall entity " + entity.filename + " with no tallentitylayer in map!");
         }
-    }
 
-    this.renderContainer = null;
+        entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
+    },
 
-    doneLoading();
-};
-
-function getFlatIdx( x, y, width ) {
-    return parseInt(width*y) + parseInt(x);
-}
-
-Map.prototype = {
+    addEntity: function(filename, location) {
+        this.addEntityWithoutSort(filename, location);
+        this.entities[location.layer].sort(function(a, b) {
+            return a.location.ty - b.location.ty;
+        });
+    },
 
     getVSPTileLocation: function(vsp, idx) {
-
         var x, y;
 
         y = parseInt(idx / this.vspData[vsp].tiles_per_row);
@@ -361,6 +376,8 @@ Map.prototype = {
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
+        var tallEntities = [];
+
         for (var i = 0; i < this.renderString.length; i++) {
             var layerIndex = parseInt(this.renderString[i], 10) - 1;
             var layer = this.mapData.layers[layerIndex];
@@ -414,61 +431,78 @@ Map.prototype = {
                         this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
                     }
                     this.renderEntity(entities[e], layer, [1,1,1,1]);
+                    if (this.entityData[entities[e].filename].regions && this.entityData[entities[e].filename].regions['Tall_Redraw']) {
+                        tallEntities.push(entities[e]);
+                    }
+                }
+            } else if (this.entityPreview) {
+                this.spriteShader.use();
+                this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
+            }
+
+            if (this.mapData.tallentitylayer === i) {
+                this.spriteShader.use();
+                for (var e in tallEntities) {
+                    var entity = tallEntities[e];
+                    this.renderEntity(entity, layer, [1, 1, 1, 1], this.entityData[entity.filename].regions['Tall_Redraw']);
                 }
             }
         }
 
-        var vsp = 'obstructions';
-        // TODO obstruction layer shouldn't just default like this
-        var layer = {
-            parallax: { X: 1, Y: 1 },
-            dimensions: this.mapData.layers[0].dimensions
+        if (Tools.shouldShowObstructions()) {
+            var vsp = 'obstructions';
+            // TODO obstruction layer shouldn't just default like this
+            var layer = {
+                parallax: { X: 1, Y: 1 },
+                dimensions: this.mapData.layers[0].dimensions
+            }
+
+            this.obstructionmapShader.use();
+
+            gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
+                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+            );
+
+            gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
+                layer.dimensions.X,
+                layer.dimensions.Y,
+                this.vspData[vsp].tiles_per_row,
+                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+            );
+
+            gl.uniform4f(this.obstructionmapShader.uniform('u_color'), __obsColor[0], __obsColor[1], __obsColor[2], __obsColor[3]);
+
+            var u_tileLibrary = this.obstructionmapShader.uniform('u_tileLibrary');
+            gl.uniform1i(u_tileLibrary, 0);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
+
+            var u_tileLayout = this.obstructionmapShader.uniform('u_tileLayout');
+            gl.uniform1i(u_tileLayout, 1);
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData));
+
+            var a_position = this.obstructionmapShader.attribute('a_position');
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+            gl.enableVertexAttribArray(a_position);
+            gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
-
-        this.obstructionmapShader.use();
-
-        gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
-            Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-            Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-            this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-            this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
-        );
-
-        gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
-            layer.dimensions.X,
-            layer.dimensions.Y,
-            this.vspData[vsp].tiles_per_row,
-            this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
-        );
-
-        gl.uniform4f(this.obstructionmapShader.uniform('u_color'), __obsColor[0], __obsColor[1], __obsColor[2], __obsColor[3]);
-
-        var u_tileLibrary = this.obstructionmapShader.uniform('u_tileLibrary');
-        gl.uniform1i(u_tileLibrary, 0);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
-
-        var u_tileLayout = this.obstructionmapShader.uniform('u_tileLayout');
-        gl.uniform1i(u_tileLayout, 1);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData));
-
-        var a_position = this.obstructionmapShader.attribute('a_position');
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-        gl.enableVertexAttribArray(a_position);
-        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
-
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-
     },
 
-    renderEntity: function(entity, layer, tint) {
+    renderEntity: function(entity, layer, tint, clip) {
         var gl = this.gl;
         var tilesize = this.vspData[layer.vsp].tilesize;
 
         var entityData = this.entityData[entity.filename];
         var entityTexture = this.entityTextures[entityData.image]
+
+        clip = (clip === undefined ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
 
         var a_vertices = this.spriteShader.attribute('a_vertices');
         gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
@@ -477,13 +511,13 @@ Map.prototype = {
 
         var tx = entity.location.tx - (entityData.hitbox[0] / tilesize.width);
         var ty = entity.location.ty - (entityData.hitbox[1] / tilesize.height);
-        var tw = entityData.dims[0] / tilesize.width;
-        var th = entityData.dims[1] / tilesize.height;
+        var tw = clip[2] / tilesize.width;
+        var th = clip[3] / tilesize.height;
 
-        var fx = entityData.outer_pad / entityTexture.img.width;
-        var fy = entityData.outer_pad / entityTexture.img.height;
-        var fw = entityData.dims[0] / entityTexture.img.width;
-        var fh = entityData.dims[1] / entityTexture.img.height;
+        var fx = (entityData.outer_pad + clip[0]) / entityTexture.img.width;
+        var fy = (entityData.outer_pad + clip[1]) / entityTexture.img.height;
+        var fw = clip[2] / entityTexture.img.width;
+        var fh = clip[3] / entityTexture.img.height;
 
         var f = entityData.animations[entity.animation][0][0][0];
         fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);

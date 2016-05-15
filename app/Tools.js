@@ -312,6 +312,8 @@ $('#btn-add-tree').on('click', (e) => {
             map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY * map.camera[2])) / tilesize.height);
         },
         mouseup: (map, evt) => {
+            map.entityPreview.location.layer = window.selected_layer.layer.name;
+            map.addEntity(map.entityPreview, map.entityPreview.location);
             map.entityPreview = null;
             window.TOOLMODE = 'DRAG';
         },
@@ -320,4 +322,19 @@ $('#btn-add-tree').on('click', (e) => {
     }
 });
 
-export var Tools = {};
+var obstructionsVisible = true;
+function setObstructionsVisible(visible) {
+    obstructionsVisible = visible;
+}
+
+function shouldShowObstructions() {
+    return obstructionsVisible;
+}
+$('#btn-toggle-obs').on('click', (e) => {
+    setObstructionsVisible(!obstructionsVisible);
+});
+
+export var Tools = {
+    setObstructionsVisible: setObstructionsVisible,
+    shouldShowObstructions: shouldShowObstructions
+};
