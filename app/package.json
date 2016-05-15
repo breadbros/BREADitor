@@ -12,6 +12,7 @@
   "dependencies": {
     "fs-jetpack": "^0.7.0",
     "jquery": "^2.1.4",
-    "jquery-ui": "^1.10.5"
+    "jquery-ui": "^1.10.5",
+    "keymaster": "^1.6.2"
   }
 }

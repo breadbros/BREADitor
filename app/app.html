@@ -11,6 +11,13 @@
         <script src="vendor/electron_boilerplate/context_menu.js"></script>
         <script src="vendor/electron_boilerplate/external_links.js"></script>
 
+        <script src="node_modules/keymaster/keymaster.js"></script>
+        <script>
+            window.$KEYMASTER = key;
+
+            key('⌘+d, ctrl+d', function(){ alert("BUTTS!")  });
+        </script>
+
         <script>
             window.jQuery = window.$ = require('jquery');
             window.$CURRENT_SELECTED_TILES = [0,0,0];
@@ -203,65 +210,6 @@
                 <li>selected tiles: <span id=info-selected-tiles></span></li>
             </ul>
         </div>
-
-        <script>
-            /*
-            $(".tooltip-tile-selector").click( function(e) {
-                $(".tooltip-tile-selector").attr("selected", "");
-                debugger;
-            } );
-            */
-
-            //localStorage
-
-            $("#btn-tool-drag").click( function(e) {
-                $("#tool-title").text("Drag");
-                window.TOOLMODE = "DRAG";
-            } );
-
-            $("#btn-tool-eyedropper").click( function(e) {
-                $("#tool-title").text("Eyedropper");
-                window.TOOLMODE = "EYEDROPPER";
-            } );
-
-            $("#btn-tool-draw").click( function(e) {
-                $("#tool-title").text("Draw");
-                window.TOOLMODE = "DRAW";
-            } );
-
-            var updateZoomText = function() {
-
-                var txt = (100 / window.currentMap.camera[2]) + "%";
-
-                $("#info-zoom").text(txt);
-            };
-
-            $("#btn-tool-zoomin").click( function(e) {
-                window.currentMap.grue_zoom(false);
-                updateZoomText();
-            } );
-
-            $("#btn-tool-zoomout").click( function(e) {
-                window.currentMap.grue_zoom(true);
-                updateZoomText();
-            } );
-
-            $("#btn-tool-drag").click();
-
-            $('.map-palette').mouseup( function() {
-
-                var key = 'map-'+ window.currentMap.mapData.name;
-                var $m = $(this);
-
-                localStorage[key] = 'yes';
-
-                localStorage[key+'-width'] = $m.width();
-                localStorage[key+'-height'] = $m.height();
-                localStorage[key+'-top'] = $m.css('top');
-                localStorage[key+'-left'] = $m.css('left');
-            } );
-        </script>
-
         <script src="app.js"></script>
     </body>
 </html>

@@ -1,8 +1,8 @@
 var app = require('remote').require('app');
-var sprintf = require("sprintf-js").sprintf;
 var path = require('path');
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 import { ShaderProgram } from "./ShaderProgram.js";
+import { Tools } from "./Tools.js";
 
 function buildTileDataTexture(data) {
     var out = new Uint8Array(data.length * 4);
@@ -32,25 +32,6 @@ function setColor(r,g,b,a) {
     __obsColor = [r,g,b,a];
 }
 
-function initializeTileSelectorsForMap(imageFile) {
-    $("#left-palette").removeAttr('style');
-    $("#right-palette").removeAttr('style');
-
-    $('#left-palette').css('background-image', 'url(' + imageFile + ')');
-    $('#right-palette').css('background-image', 'url(' + imageFile + ')');
-
-    $('#left-palette').css('background-position', '0px 0px');
-    $('#right-palette').css('background-position', '0px 0px');
-
-    $('#left-palette').css('background-size', '2000%');
-    $('#right-palette').css('background-size', '2000%');
-}
-
-function setTileSelectorUI( whichOne, vspIDX, map ) {
-    var loc = map.getVSPTileLocation("default", vspIDX);
-    $(whichOne).css('background-position', '-'+(loc.x*2)+'px -'+(loc.y*2)+'px'); //(offset *2)
-}
-
 export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction) {
     var i;
     console.log("Loading map", mapfile);
@@ -76,7 +57,6 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     });
 
     this.renderString = this.mapData.renderstring.split(",");
-    console.log("Renderstring:", this.renderString);
     this.mapSizeInTiles = [0,0];
     this.layerLookup = {};
 
@@ -103,11 +83,6 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         this.vspData[k] = jetpack.read(vspfiles[k], 'json');
         console.log(k, "->", this.vspData[k]);
     }
-
-    /// TODO move this somewhere else...
-    initializeTileSelectorsForMap(this.vspData['default'].source_image);
-    setTileSelectorUI( "#left-palette", 971, this );
-    setTileSelectorUI( "#right-palette", 1122, this );
 
     var toLoad = 1;
     var doneLoading = function() {
@@ -146,10 +121,12 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     if (!defaultEntityLayer) {
         defaultEntityLayer = this.mapData.layers[0].name;
     }
+    /*
     console.log("LAYERS:");
     for(i in this.mapData.layers) {
         console.log("   ", this.mapData.layers[i].name);
     }
+    */
 
     this.entityData = {
         '__default__': {
@@ -373,213 +350,6 @@ Map.prototype = {
         // make sure the size is right
         this.resize();
 
-        var zoomFn = function(map, e, zoomout) {
-            var mouseX = map.camera[0] + e.clientX * map.camera[2];
-            var mouseY = map.camera[1] + e.clientY * map.camera[2];
-            if (!zoomout) {
-                map.camera[2] = Math.max(map.camera[2] / 2, 0.125);
-            } else {
-                map.camera[2] = Math.min(map.camera[2] * 2, 16);
-            }
-            map.camera[0] = mouseX - (e.clientX * map.camera[2]);
-            map.camera[1] = mouseY - (e.clientY * map.camera[2]);
-        };
-
-        // function to be renamed (and probably changed) later.
-        this.grue_zoom = function(zoomout, evt) {
-            // if no event, fake it and center on current view.
-            if( !evt ) {
-                evt = {};
-                evt.clientX = this.renderContainer.width() / 2;
-                evt.clientY = this.renderContainer.height() / 2;
-            }
-
-            zoomFn( this, evt, zoomout );
-        }
-
-        var toolLogic = {
-            "DRAG" : {
-                "mousedown": function(map, e) {
-                    map.dragging = true;
-                    window.$MAP_WINDOW.draggable('disable');
-                    map.lastMouse = [ e.clientX, e.clientY ];
-                },
-                "mousemove": function(map, e) {
-                    if( map.dragging ) {
-                        map.camera[0] += (map.lastMouse[0] - e.clientX) * map.camera[2];
-                        map.camera[1] += (map.lastMouse[1] - e.clientY) * map.camera[2];
-                        map.lastMouse = [ e.clientX, e.clientY ];
-                    }
-                },
-                "mouseup": function(map, e) {
-                    map.dragging = false;
-                    map.updateLocationFn(map);
-                    window.$MAP_WINDOW.draggable('enable');
-                }
-
-                /*,
-                "mousewheel": function(map, e) {
-                    zoomFn(map, e, e.originalEvent.deltaY < 0);
-                }*/
-            },
-
-            "EYEDROPPER" : {
-                "mousedown": function(map, e) {
-                    if( !window.selected_layer ) {
-                        console.log("You havent selected a layer yet.");
-                        return;
-                    }
-
-                    if( !(e.button === 0 || e.button === 2) ) {
-                        console.log("Unknown eyedropper button: we know left/right (0/2), got: '"+e.button+"'.");
-                        return;
-                    }
-
-                    var oX, oY, tX, tY, tIdx, selector;
-                    var mapOffsetX = map.camera[0];
-                    var mapOffsetY= map.camera[1];
-                    var mouseOffsetX = e.offsetX;
-                    var mouseOffsetY = e.offsetY;
-
-                    oX = mapOffsetX + mouseOffsetX;
-                    oY = mapOffsetY + mouseOffsetY;
-
-                    tX = parseInt(oX/16);
-                    tY = parseInt(oY/16);
-
-                    tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
-
-                    window.$CURRENT_SELECTED_TILES[e.button] = tIdx;
-                    $("#info-selected-tiles").text(
-                        window.$CURRENT_SELECTED_TILES[0] +
-                        ","+
-                        window.$CURRENT_SELECTED_TILES[2]
-                    );
-
-                    if( e.button === 2 ) {
-                        selector = "#right-palette";
-                    } else {
-                        selector = "#left-palette";
-                    }
-
-                    setTileSelectorUI( selector, tIdx, map );
-
-                    //map.dragging = true;
-                    //window.$MAP_WINDOW.draggable('disable');
-                    //map.lastMouse = [ e.clientX, e.clientY ];
-                },
-                "mouseup": function(map, e) {
-                    console.log("EYEDROPPER->mouseup: NOTHING");
-                },
-                "mousemove": function(map, e) {
-                    console.log("EYEDROPPER->mousemove: NOTHING");
-                }
-            },
-
-            "DRAW" : {
-                "mousedown": function(map, e) {
-                    if( !window.selected_layer ) {
-                        console.log("You havent selected a layer yet.");
-                        return;
-                    }
-
-                    if( !(e.button === 0 || e.button === 2) ) {
-                        console.log("Unknown draw button: we know left/right (0/2), got: '"+e.button+"'.");
-                        return;
-                    }
-
-                    window.foo = true;
-
-                    var oX, oY, tX, tY, tIdx, selector;
-                    var mapOffsetX = map.camera[0];
-                    var mapOffsetY= map.camera[1];
-                    var mouseOffsetX = e.offsetX;
-                    var mouseOffsetY = e.offsetY;
-
-                    oX = mapOffsetX + mouseOffsetX;
-                    oY = mapOffsetY + mouseOffsetY;
-
-                    tX = parseInt(oX/16);
-                    tY = parseInt(oY/16);
-
-                    map.setTile(
-                        tX,tY,
-                        window.selected_layer.map_tileData_idx,
-                        window.$CURRENT_SELECTED_TILES[e.button]
-                    );
-                },
-                "mouseup": function(map, e) {
-                    console.log("EYEDROPPER->mouseup: NOTHING");
-                },
-
-                /// todo this doesn't seem to drag correctly for rightmouse...
-                /// todo this doesn't perform correctly if you move the mouse too quickly.  Should keep track of position-1, draw a line between points, and change all those on this layer?
-                "mousemove": function(map, e) {
-
-                    /// if there's one button pressed and it's the left or right button...
-                    if( e.buttons === 1 && (e.button===0 || e.button===2) ) {
-
-                        // TODO this duplicates work. if it's costly, check before everything.  I doubt it'll matter.
-                        toolLogic["DRAW"]["mousedown"](map, e); // let's be lazy.
-                    }
-                }
-            }
-        };
-
-        var tools = function( action, map, evt ) {
-            var mode = window.TOOLMODE;
-
-            if( toolLogic.hasOwnProperty(mode) && toolLogic[mode].hasOwnProperty(action) ) {
-                toolLogic[mode][action](map, evt);
-            } else {
-                console.log( sprintf("No action '%s' for mode '%s'", action, mode) );
-            }
-        };
-
-        // DEBUG JUNK
-        this.dragging = false;
-        this.lastMouse = [0,0];
-        this.renderContainer.on('mousedown', function(e) {
-            tools( 'mousedown', this, e );
-        }.bind(this));
-        this.renderContainer.on('mousemove', function(e) {
-            tools( 'mousemove', this, e );
-        }.bind(this));
-        this.renderContainer.on('mouseup', function(e) {
-            tools( 'mouseup', this, e );
-        }.bind(this));
-        this.renderContainer.on('mousewheel', function(e) {
-            tools( 'mousewheel', this, e );
-        }.bind(this));
-
-        this.entityPreview = null;
-        $('#btn-add-tree').on('click', (e) => {
-            window.TOOLMODE = 'TREE';
-            this.entityPreview = {
-                location: { tx: 0, ty: 0 },
-                animation: "Idle Down",
-                filename: "chrs_json/object_tree2.json"
-            };
-
-            toolLogic.TREE = {
-                mousemove: (map, evt) => {
-                    var mapOffsetX = map.camera[0];
-                    var mapOffsetY= map.camera[1];
-                    var mouseOffsetX = evt.offsetX;
-                    var mouseOffsetY = evt.offsetY;
-                    var tilesize = map.vspData[window.selected_layer.layer.vsp].tilesize;
-
-                    map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX * map.camera[2])) / tilesize.width);
-                    map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY * map.camera[2])) / tilesize.height);
-                },
-                mouseup: (map, evt) => {
-                    map.entityPreview = null;
-                    window.TOOLMODE = 'DRAG';
-                },
-                mousedown: () => {},
-                moousewheel: () => {}
-            }
-        });
 
         if( this.onLoad ) {
             this.onLoad(this);
