@@ -449,49 +449,50 @@ Map.prototype = {
             }
         }
 
-        var vsp = 'obstructions';
-        // TODO obstruction layer shouldn't just default like this
-        var layer = {
-            parallax: { X: 1, Y: 1 },
-            dimensions: this.mapData.layers[0].dimensions
+        if (Tools.shouldShowObstructions()) {
+            var vsp = 'obstructions';
+            // TODO obstruction layer shouldn't just default like this
+            var layer = {
+                parallax: { X: 1, Y: 1 },
+                dimensions: this.mapData.layers[0].dimensions
+            }
+
+            this.obstructionmapShader.use();
+
+            gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
+                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+            );
+
+            gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
+                layer.dimensions.X,
+                layer.dimensions.Y,
+                this.vspData[vsp].tiles_per_row,
+                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+            );
+
+            gl.uniform4f(this.obstructionmapShader.uniform('u_color'), __obsColor[0], __obsColor[1], __obsColor[2], __obsColor[3]);
+
+            var u_tileLibrary = this.obstructionmapShader.uniform('u_tileLibrary');
+            gl.uniform1i(u_tileLibrary, 0);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
+
+            var u_tileLayout = this.obstructionmapShader.uniform('u_tileLayout');
+            gl.uniform1i(u_tileLayout, 1);
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData));
+
+            var a_position = this.obstructionmapShader.attribute('a_position');
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+            gl.enableVertexAttribArray(a_position);
+            gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
-
-        this.obstructionmapShader.use();
-
-        gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
-            Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-            Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-            this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-            this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
-        );
-
-        gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
-            layer.dimensions.X,
-            layer.dimensions.Y,
-            this.vspData[vsp].tiles_per_row,
-            this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
-        );
-
-        gl.uniform4f(this.obstructionmapShader.uniform('u_color'), __obsColor[0], __obsColor[1], __obsColor[2], __obsColor[3]);
-
-        var u_tileLibrary = this.obstructionmapShader.uniform('u_tileLibrary');
-        gl.uniform1i(u_tileLibrary, 0);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
-
-        var u_tileLayout = this.obstructionmapShader.uniform('u_tileLayout');
-        gl.uniform1i(u_tileLayout, 1);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData));
-
-        var a_position = this.obstructionmapShader.attribute('a_position');
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-        gl.enableVertexAttribArray(a_position);
-        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
-
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-
     },
 
     renderEntity: function(entity, layer, tint, clip) {
