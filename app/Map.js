@@ -415,7 +415,10 @@ Map.prototype = {
                     }
                     this.renderEntity(entities[e], layer, [1,1,1,1]);
                 }
-            }
+            } else if (this.entityPreview) {
+                this.spriteShader.use();
+                this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
+
         }
 
         var vsp = 'obstructions';
