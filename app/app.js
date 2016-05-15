@@ -1,4 +1,5 @@
 import { Map } from './Map.js';
+import { Tools } from './Tools.js';
 
 function initLayersWidget(map) {
 	//map.layers[i].MAPED_HIDDEN
@@ -129,23 +130,23 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
         updateLocationFunction
     ).ready()
         .then(function(m) {
+            var currentMap = m;
             m.setCanvas($('.map_canvas'));
-            currentMap = m;
 
             initLayersWidget( currentMap );
             initInfoWidget( currentMap );
             initZonesWidget( currentMap );
 
-            window.currentMap = currentMap;
+            window.$$$currentMap = currentMap;
         });
 }
 
 (function() {
-    window.currentMap = null;
+    window.$$$currentMap = null;
 
     var tick = function(timestamp) {
-        if (!!currentMap) {
-            currentMap.render();
+        if (!!window.$$$currentMap) {
+            window.$$$currentMap.render();
         }
         window.requestAnimationFrame(tick);
     };
@@ -156,7 +157,7 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
       var app = require('remote').require('app');
       var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
-      var map = window.currentMap;
+      var map = window.$$$currentMap;
 
       jetpack.write(map.filenames.mapfile, map.mapData);
       jetpack.write(map.filenames.mapdatafile, map.mapRawTileData);
@@ -179,8 +180,7 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
       vspName = fileName.replace('.map.json', '.vsp.json');
 
       /// todo: verify that all three of these files, you know... exist?
-      bootstrapMap(fileName, dataName, vspName)
-
+      bootstrapMap(fileName, dataName, vspName);
      }); 
     }
 

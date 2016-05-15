@@ -11,6 +11,13 @@
         <script src="vendor/electron_boilerplate/context_menu.js"></script>
         <script src="vendor/electron_boilerplate/external_links.js"></script>
 
+        <script src="node_modules/keymaster/keymaster.js"></script>
+        <script>
+            window.$KEYMASTER = key;
+
+            key('⌘+d, ctrl+d', function(){ alert("BUTTS!")  });
+        </script>
+
         <script>
             window.jQuery = window.$ = require('jquery');
             window.$CURRENT_SELECTED_TILES = [0,0,0];
@@ -230,18 +237,18 @@
 
             var updateZoomText = function() {
 
-                var txt = (100 / window.currentMap.camera[2]) + "%";
+                var txt = (100 / window.$$$currentMap.camera[2]) + "%";
 
                 $("#info-zoom").text(txt);
             };
 
             $("#btn-tool-zoomin").click( function(e) {
-                window.currentMap.grue_zoom(false);
+                tools.grue_zoom(false);
                 updateZoomText();                
             } );
 
             $("#btn-tool-zoomout").click( function(e) {
-                window.currentMap.grue_zoom(true);
+                tools.grue_zoom(true);
                 updateZoomText();
             } );
 
@@ -249,7 +256,7 @@
 
             $('.map-palette').mouseup( function() {
 
-                var key = 'map-'+ window.currentMap.mapData.name;
+                var key = 'map-'+ window.$$$currentMap.mapData.name;
                 var $m = $(this);
 
                 localStorage[key] = 'yes';

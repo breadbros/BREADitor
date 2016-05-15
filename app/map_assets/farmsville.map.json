@@ -1,1 +1,2649 @@
-{"notes":[{"x":"933","y":"1365","text":"Farmsville community college"},{"x":"736","y":"1377","text":"Church of Vecna ???"},{"x":"1056","y":"948","text":"Veggiesmith"},{"x":"1348","y":"1315","text":"Item Store"},{"x":"1762","y":"1397","text":"Inn"},{"x":"1799","y":"1143","text":"Weapons"},{"x":"1680","y":"989","text":"Dexter's Home"},{"x":"1595","y":"758","text":"Fashion Studio"},{"x":"1679","y":"382","text":"Lookout Point"},{"x":"924","y":"433","text":"VECNA"}],"name":"Bumsville: City of Bums","vsp":"grue0030.vsp","music":"","renderstring":"2,1,3,8,7,E,6,4,5,9,R","initscript":"start","starting_coordinates":[0,0],"layers":[{"name":"Background","parallax":{"X":1,"Y":1},"dimensions":{"X":150,"Y":250},"alpha":1},{"name":"Back Parallax","parallax":{"X":0.5,"Y":0.8},"dimensions":{"X":150,"Y":250},"alpha":1},{"name":"Background Extra","parallax":{"X":1,"Y":1},"dimensions":{"X":150,"Y":250},"alpha":1},{"name":"Foreground","parallax":{"X":1,"Y":1},"dimensions":{"X":150,"Y":250},"alpha":1},{"name":"Foreground Extra","parallax":{"X":1,"Y":1},"dimensions":{"X":150,"Y":250},"alpha":1},{"name":"Switch Layer","parallax":{"X":1,"Y":1},"dimensions":{"X":150,"Y":250},"alpha":1},{"name":"Background Extra 2","parallax":{"X":1,"Y":1},"dimensions":{"X":150,"Y":250},"alpha":1},{"name":"Water","parallax":{"X":1,"Y":1},"dimensions":{"X":150,"Y":250},"alpha":0.58823529411764708},{"name":"Fishing","parallax":{"X":1,"Y":1},"dimensions":{"X":150,"Y":250},"alpha":1}],"zones":[{"name":"NULL_ZONE","activation_script":"","activation_chance":0,"can_by_adjacent_activated":false},{"name":"Bridge Switch -- Under Entities","activation_script":"bridgeswitch_under","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Bridge Switch -- Over Entities","activation_script":"bridgeswitch_over","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Into Pharmacy","activation_script":"ItemEnter","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Warp - Out of Pharmacy","activation_script":"ItemExit","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Into Weapon","activation_script":"WeaponEnter","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Warp - Out of Weapon","activation_script":"WeaponExit","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Into Smith","activation_script":"SmithEnter","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Warp - Out of Smith","activation_script":"SmithExit","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Into Dexter's House","activation_script":"HouseEnter","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Warp - Out of Dexter's House","activation_script":"HouseExit","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Into Inn","activation_script":"InnEnter","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Warp - Out of Inn","activation_script":"InnExit","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - To Inn Upstairs","activation_script":"InnUpstair","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - To Inn Downstairs","activation_script":"InnDownstair","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Into University","activation_script":"SchoolEnter","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Warp - Out of University","activation_script":"SchoolExit","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Into Church","activation_script":"ChurchEnter","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Warp - Out of Church","activation_script":"ChurchExit","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Into Studio","activation_script":"StudioEnter","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Warp - Out of Studio","activation_script":"StudioExit","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Map Change - To Overworld","activation_script":"east_entrance","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Check - Vecna Statue","activation_script":"Idol","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Check - Well","activation_script":"well","activation_chance":0,"can_by_adjacent_activated":true},{"name":"Check - Jukebox Left","activation_script":"Jukebox_Left","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Check - Jukebox Right","activation_script":"Jukebox_Right","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Check - Little Daddy Bruce","activation_script":"little_daddy_bruce","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Check - Item Shop","activation_script":"item_shop","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Check - Weapon Shop","activation_script":"weapon_shop","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Check - Principal","activation_script":"principal","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Priest Talk","activation_script":"priest","activation_chance":0,"can_by_adjacent_activated":true},{"name":"Church Stairs","activation_script":"ChurchStairs","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Uni Basement","activation_script":"UniBasementEnter","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Uni Top Floor","activation_script":"UniUpstairsEnter","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Uni, from Basement","activation_script":"UniBasementExit","activation_chance":1,"can_by_adjacent_activated":false},{"name":"Warp - Uni from Top Floor","activation_script":"UniUpstairsExit","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Check - Teacher","activation_script":"teacher","activation_chance":0,"can_by_adjacent_activated":true},{"name":"Check - White Magic Shop","activation_script":"white_magic_shop","activation_chance":0,"can_by_adjacent_activated":true},{"name":"Check - Black Magic Shop","activation_script":"black_magic_shop","activation_chance":0,"can_by_adjacent_activated":true},{"name":"Check - Innkeeper","activation_script":"innkeeper","activation_chance":0,"can_by_adjacent_activated":true},{"name":"Check - Sleeping Dexter","activation_script":"sleeping_dexter","activation_chance":0,"can_by_adjacent_activated":true},{"name":"secret_chest_thing_under","activation_script":"secret_chest_thing_under","activation_chance":1,"can_by_adjacent_activated":true},{"name":"secret_chest_thing_up","activation_script":"secret_chest_thing_up","activation_chance":1,"can_by_adjacent_activated":true},{"name":"secret_chest_thing_down","activation_script":"secret_chest_thing_down","activation_chance":1,"can_by_adjacent_activated":true},{"name":"canal_shields_down","activation_script":"canal_shields_down","activation_chance":1,"can_by_adjacent_activated":true},{"name":"canal_shields_up","activation_script":"canal_shields_up","activation_chance":1,"can_by_adjacent_activated":true},{"name":"switch_above_entities","activation_script":"switch_above_entities","activation_chance":1,"can_by_adjacent_activated":true},{"name":"switch_below_entities","activation_script":"switch_below_entities","activation_chance":1,"can_by_adjacent_activated":true},{"name":"invisible","activation_script":"invisible","activation_chance":1,"can_by_adjacent_activated":true},{"name":"revisible","activation_script":"revisible","activation_chance":1,"can_by_adjacent_activated":true},{"name":"canal_chest_a","activation_script":"canal_chest_a","activation_chance":1,"can_by_adjacent_activated":true},{"name":"canal_chest_b","activation_script":"canal_chest_b","activation_chance":1,"can_by_adjacent_activated":true},{"name":"canal_chest_green","activation_script":"canal_chest_green","activation_chance":1,"can_by_adjacent_activated":true},{"name":"secret_chest_front","activation_script":"secret_chest_front","activation_chance":1,"can_by_adjacent_activated":true},{"name":"meet Dex","activation_script":"meetDex","activation_chance":1,"can_by_adjacent_activated":true},{"name":"stan-d","activation_script":"stan_d","activation_chance":1,"can_by_adjacent_activated":true},{"name":"lookout_point_sign","activation_script":"lookout_point_sign","activation_chance":1,"can_by_adjacent_activated":true},{"name":"east entrance sign","activation_script":"east_entrance_sign","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Thaco_Bell","activation_script":"thaco_bell","activation_chance":1,"can_by_adjacent_activated":true},{"name":"West Entrance Sign","activation_script":"west_entrance_sign","activation_chance":1,"can_by_adjacent_activated":true},{"name":"west_exit","activation_script":"west_entrance","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Thaco Bell","activation_script":"thaco_bell","activation_chance":1,"can_by_adjacent_activated":true},{"name":"farmsville_intro","activation_script":"farmsville_intro","activation_chance":1,"can_by_adjacent_activated":true},{"name":"Gelatin Ranch","activation_script":"gelatin_farm","activation_chance":1,"can_by_adjacent_activated":true},{"name":"chest_whatever","activation_script":"chest_whatever","activation_chance":1,"can_by_adjacent_activated":true},{"name":"chest_c","activation_script":"chest_c","activation_chance":1,"can_by_adjacent_activated":true},{"name":"lookout_point","activation_script":"lookout_point","activation_chance":1,"can_by_adjacent_activated":true},{"name":"lookout_point_reset","activation_script":"lookout_point_reset","activation_chance":1,"can_by_adjacent_activated":true},{"name":"no_freebies","activation_script":"no_freebies","activation_chance":1,"can_by_adjacent_activated":true},{"name":"red_chest_university_1","activation_script":"red_chest_university_1","activation_chance":1,"can_by_adjacent_activated":true},{"name":"learning_1","activation_script":"Learn_1","activation_chance":1,"can_by_adjacent_activated":true},{"name":"learning_2","activation_script":"Learn_2","activation_chance":1,"can_by_adjacent_activated":true},{"name":"learning_3","activation_script":"Learn_3","activation_chance":1,"can_by_adjacent_activated":true},{"name":"learning_4","activation_script":"Learn_4","activation_chance":1,"can_by_adjacent_activated":true},{"name":"learning_5","activation_script":"Learn_5","activation_chance":1,"can_by_adjacent_activated":true},{"name":"learning_6","activation_script":"Learn_6","activation_chance":1,"can_by_adjacent_activated":true},{"name":"learning_7","activation_script":"Learn_7","activation_chance":1,"can_by_adjacent_activated":true},{"name":"NO_WALK_HERE_WANDERERS","activation_script":"","activation_chance":0,"can_by_adjacent_activated":true},{"name":"blue_chest_behind_blacksmith","activation_script":"blue_chest_behind_blacksmith","activation_chance":1,"can_by_adjacent_activated":true},{"name":"red_chest_behind_thaco_bell","activation_script":"red_chest_behind_thaco_bell","activation_chance":1,"can_by_adjacent_activated":true},{"name":"secret_tunnel_east","activation_script":"secret_tunnel_east","activation_chance":1,"can_by_adjacent_activated":true},{"name":"secret_tunnel_west","activation_script":"secret_tunnel_west","activation_chance":1,"can_by_adjacent_activated":true},{"name":"secret_tunnel_chest","activation_script":"secret_tunnel_chest","activation_chance":1,"can_by_adjacent_activated":true},{"name":"dorkupine_intro","activation_script":"dorkupine_intro","activation_chance":1,"can_by_adjacent_activated":true}],"entities":[{"name":"Villager A (Vorn)","filename":"chrs_json/object_orphan_machine.json","location":{"tx":104,"ty":36},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"Ent0"},{"name":"Villager B","filename":"chrs_json/object_rat.json","location":{"tx":80,"ty":87},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Zone","delay":75},"activation_script":"Ent1"},{"name":"Z Villager C","filename":"chrs/walker_05.chr","location":{"tx":58,"ty":24},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":true,"autofaces":false,"speed":40,"wander":{"mode":"Scripted","delay":0,"initial_movestring":"L1R1D1U2D1R1L1B"},"activation_script":"Zealot1"},{"name":"Villager D","filename":"chrs/walker_01.chr","location":{"tx":47,"ty":92},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Zone","delay":50},"activation_script":"Ent3"},{"name":"Villager E","filename":"chrs/walker_03.chr","location":{"tx":87,"ty":64},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"Ent4"},{"name":"Villager F","filename":"chrs/kadan.chr","location":{"tx":109,"ty":78},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Zone","delay":80},"activation_script":"Ent5"},{"name":"Villager G","filename":"chrs/walker_06.chr","location":{"tx":63,"ty":44},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Zone","delay":115},"activation_script":"Ent6"},{"name":"Villager H","filename":"chrs/walker_03.chr","location":{"tx":98,"ty":52},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":175,"wander":{"mode":"Scripted","delay":0,"initial_movestring":"L4U9R14D9L10B"},"activation_script":"Ent7"},{"name":"Villager I","filename":"chrs/walker_01.chr","location":{"tx":108,"ty":95},"facing":"Right","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Rectangle","delay":125,"bounds":{"upper_left":{"X":92,"Y":85},"lower_right":{"X":118,"Y":98}}},"activation_script":"ent8"},{"name":"Villager J","filename":"chrs/walker_02.chr","location":{"tx":53,"ty":69},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Zone","delay":50},"activation_script":"Ent9"},{"name":"Villager K","filename":"chrs/walker_03.chr","location":{"tx":96,"ty":53},"facing":"Right","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"Ent27"},{"name":"Z Villager L","filename":"chrs/vorn.chr","location":{"tx":60,"ty":26},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":true,"autofaces":false,"speed":40,"wander":{"mode":"Scripted","delay":0,"initial_movestring":"U1D1L1R2L1D1U1B"},"activation_script":"Zealot2"},{"name":"Z Villager M","filename":"chrs/walker_01.chr","location":{"tx":58,"ty":28},"facing":"Down","pays_attention_to_obstructions":true,"is_an_obstruction":true,"autofaces":false,"speed":40,"wander":{"mode":"Scripted","delay":0,"initial_movestring":"R1L1U1D2U1L1R1B"},"activation_script":"Zealot3"},{"name":"Z Villager N","filename":"chrs/walker_03.chr","location":{"tx":56,"ty":26},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":true,"autofaces":false,"speed":40,"wander":{"mode":"Scripted","delay":0,"initial_movestring":"D1U1R1L2R1U1D1B"},"activation_script":"Zealot4"},{"name":"Person A","filename":"chrs/walker_01.chr","location":{"tx":59,"ty":196},"facing":"Right","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"person_a"},{"name":"Person B","filename":"chrs/walker_03.chr","location":{"tx":60,"ty":196},"facing":"Left","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"person_b"},{"name":"Person C","filename":"chrs/kadan.chr","location":{"tx":15,"ty":200},"facing":"Right","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"person_c"},{"name":"Person D","filename":"chrs/walker_07.chr","location":{"tx":51,"ty":166},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"Dexters_Dad"},{"name":"Person E","filename":"chrs/walker_02.chr","location":{"tx":49,"ty":165},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"Dexters_Mom"},{"name":"Student A","filename":"chrs/kadan.chr","location":{"tx":125,"ty":171},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"student_a"},{"name":"Student B","filename":"chrs/walker_02.chr","location":{"tx":130,"ty":169},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"student_b"},{"name":"Student C","filename":"chrs/walker_01.chr","location":{"tx":122,"ty":171},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"student_c"},{"name":"Student D","filename":"chrs/kadan.chr","location":{"tx":117,"ty":169},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"student_d"},{"name":"Student E","filename":"chrs/walker_02.chr","location":{"tx":133,"ty":173},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"student_e"},{"name":"Student F","filename":"chrs/walker_03.chr","location":{"tx":137,"ty":173},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"student_f"},{"name":"Little Daddy Bruce","filename":"chrs/walker_01.chr","location":{"tx":97,"ty":160},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"Fashion Babe","filename":"chrs/walker_03.chr","location":{"tx":98,"ty":164},"facing":"Left","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"fashion_babe"},{"name":"Hair Guy","filename":"chrs/kadan.chr","location":{"tx":89,"ty":159},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"hair_stylist"},{"name":"Hair Colorist","filename":"chrs/walker_02.chr","location":{"tx":92,"ty":159},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"hair_colorist"},{"name":"Clothes Guy","filename":"chrs/vorn.chr","location":{"tx":85,"ty":159},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"clothes_guy"},{"name":"Music Man","filename":"chrs/walker_02.chr","location":{"tx":84,"ty":166},"facing":"Right","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"music_man"},{"name":"Archivist","filename":"chrs/vorn.chr","location":{"tx":127,"ty":223},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Rectangle","delay":100,"bounds":{"upper_left":{"X":119,"Y":217},"lower_right":{"X":137,"Y":225}}},"activation_script":"Archivist"},{"name":"Churchy A","filename":"chrs/walker_01.chr","location":{"tx":12,"ty":227},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"ChurchA"},{"name":"Churchy B","filename":"chrs/vorn.chr","location":{"tx":19,"ty":223},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"ChurchB"},{"name":"Churchy C","filename":"chrs/walker_02.chr","location":{"tx":13,"ty":221},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"ChurchC"},{"name":"Churchy D","filename":"chrs/walker_05.chr","location":{"tx":16,"ty":230},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"ChurchD"},{"name":"Churchy E","filename":"chrs/kadan.chr","location":{"tx":19,"ty":233},"facing":"Left","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"ChurchE"},{"name":"Student G","filename":"chrs/walker_03.chr","location":{"tx":86,"ty":217},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"student_g"},{"name":"Student H","filename":"chrs/walker_02.chr","location":{"tx":96,"ty":220},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"student_h"},{"name":"Student I","filename":"chrs/walker_06.chr","location":{"tx":125,"ty":211},"facing":"Up","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"student_i"},{"name":"Student J","filename":"chrs/walker_02.chr","location":{"tx":131,"ty":206},"facing":"Left","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"student_j"},{"name":"Tank","filename":"chrs/kadan.chr","location":{"tx":127,"ty":165},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"tank"},{"name":"Geek","filename":"chrs/walker_01.chr","location":{"tx":119,"ty":165},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"geek"},{"name":"wimp","filename":"chrs/vorn.chr","location":{"tx":135,"ty":169},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"wimp"},{"name":"Veggiesmith","filename":"chrs/kadan.chr","location":{"tx":113,"ty":136},"facing":"Left","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":50,"wander":{"mode":"Zone","delay":200},"activation_script":"veggiesmith"},{"name":"d1","filename":"chrs/single_door_left.chr","location":{"tx":108,"ty":89},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"d2","filename":"chrs/single_door_left.chr","location":{"tx":113,"ty":74},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"d3","filename":"chrs/single_door_left.chr","location":{"tx":106,"ty":64},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"d4","filename":"chrs/single_door_left.chr","location":{"tx":85,"ty":84},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"d5","filename":"chrs/single_door_left.chr","location":{"tx":101,"ty":49},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"d6","filename":"chrs/single_door_left.chr","location":{"tx":67,"ty":61},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"d7","filename":"chrs/single_door_left.chr","location":{"tx":61,"ty":87},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"d8","filename":"chrs/single_door_left.chr","location":{"tx":48,"ty":88},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"d9","filename":"chrs/single_door_right.chr","location":{"tx":109,"ty":89},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"d10","filename":"chrs/single_door_right.chr","location":{"tx":62,"ty":87},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":120,"ty":75},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":111,"ty":48},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":120,"ty":90},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":87,"ty":44},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":66,"ty":39},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":49,"ty":31},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":92,"ty":94},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":41,"ty":63},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":111,"ty":60},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":94,"ty":34},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":70,"ty":43},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":56,"ty":61},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":43,"ty":51},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":32,"ty":75},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":72,"ty":58},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"stan-d","filename":"chrs_json/object_stand.json","location":{"tx":92,"ty":73},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"dexter","filename":"pc_dexter.chr","location":{"tx":0,"ty":0},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":65,"ty":29},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"Thaco Bell","filename":"chrs_json/object_thacobell.json","location":{"tx":32,"ty":85},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":26,"ty":85},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":72,"ty":58},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":31,"ty":81},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":22,"ty":86},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":24,"ty":81},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":18,"ty":85},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"West Greeter","filename":"chrs/walker_01.chr","location":{"tx":35,"ty":89},"facing":"Left","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"west_greeter"},{"name":"Jelly (Ranched)","filename":"monster_jelly","location":{"tx":110,"ty":62},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":"Z0W100Z1W100B"},"activation_script":""},{"name":"Jelly (Ranched)","filename":"monster_jelly","location":{"tx":112,"ty":62},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":"Z1W100Z0W100B"},"activation_script":""},{"name":"Jelly (Ranched)","filename":"monster_jelly","location":{"tx":111,"ty":63},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":"Z0W100Z1W100B"},"activation_script":""},{"name":"","filename":"seafood_sully","location":{"tx":0,"ty":0},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"","filename":"seafood_crab","location":{"tx":0,"ty":0},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"","filename":"seafood_crab","location":{"tx":0,"ty":0},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"","filename":"seafood_crab","location":{"tx":0,"ty":0},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":126,"ty":90},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"tree","filename":"chrs_json/object_tree2.json","location":{"tx":132,"ty":91},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":""},{"name":"Sugar Ray","filename":"chrs/sugar_ray","location":{"tx":88,"ty":160},"facing":"Right","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":true,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"sugar_ray"},{"name":"","filename":"chrs/walker_07","location":{"tx":121,"ty":219},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":40,"wander":{"mode":"Zone","delay":100},"activation_script":"Learn_8"},{"name":"","filename":"chrs/walker_03","location":{"tx":137,"ty":219},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":40,"wander":{"mode":"Zone","delay":100},"activation_script":"Learn_9"},{"name":"","filename":"chrs/sailor","location":{"tx":132,"ty":219},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":40,"wander":{"mode":"Zone","delay":100},"activation_script":"Learn_10"},{"name":"","filename":"chrs/npc_redwizard","location":{"tx":131,"ty":224},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":40,"wander":{"mode":"Zone","delay":100},"activation_script":"Learn_11"},{"name":"","filename":"monster_labdorkupine","location":{"tx":0,"ty":0},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"labrat_1"},{"name":"","filename":"monster_labdorkupine","location":{"tx":0,"ty":0},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"labrat_2"},{"name":"","filename":"monster_labdorkupine","location":{"tx":0,"ty":0},"facing":"Down","pays_attention_to_obstructions":false,"is_an_obstruction":false,"autofaces":false,"speed":100,"wander":{"mode":"Scripted","delay":0,"initial_movestring":""},"activation_script":"labrat_3"}]}
+{
+  "notes": [
+    {
+      "x": "933",
+      "y": "1365",
+      "text": "Farmsville community college"
+    },
+    {
+      "x": "736",
+      "y": "1377",
+      "text": "Church of Vecna ???"
+    },
+    {
+      "x": "1056",
+      "y": "948",
+      "text": "Veggiesmith"
+    },
+    {
+      "x": "1348",
+      "y": "1315",
+      "text": "Item Store"
+    },
+    {
+      "x": "1762",
+      "y": "1397",
+      "text": "Inn"
+    },
+    {
+      "x": "1799",
+      "y": "1143",
+      "text": "Weapons"
+    },
+    {
+      "x": "1680",
+      "y": "989",
+      "text": "Dexter's Home"
+    },
+    {
+      "x": "1595",
+      "y": "758",
+      "text": "Fashion Studio"
+    },
+    {
+      "x": "1679",
+      "y": "382",
+      "text": "Lookout Point"
+    },
+    {
+      "x": "924",
+      "y": "433",
+      "text": "VECNA"
+    }
+  ],
+  "name": "Bumsville: City of Bums",
+  "vsp": "grue0030.vsp",
+  "music": "",
+  "renderstring": "2,1,3,8,7,E,6,4,5,9,R",
+  "initscript": "start",
+  "starting_coordinates": [
+    0,
+    0
+  ],
+  "layers": [
+    {
+      "name": "Background",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1
+    },
+    {
+      "name": "Back Parallax",
+      "parallax": {
+        "X": 0.5,
+        "Y": 0.8
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1
+    },
+    {
+      "name": "Background Extra",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1
+    },
+    {
+      "name": "Foreground",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1
+    },
+    {
+      "name": "Foreground Extra",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1
+    },
+    {
+      "name": "Switch Layer",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1
+    },
+    {
+      "name": "Background Extra 2",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1
+    },
+    {
+      "name": "Water",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 0.5882352941176471
+    },
+    {
+      "name": "Fishing",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1
+    }
+  ],
+  "zones": [
+    {
+      "name": "NULL_ZONE",
+      "activation_script": "",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Bridge Switch -- Under Entities",
+      "activation_script": "bridgeswitch_under",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Bridge Switch -- Over Entities",
+      "activation_script": "bridgeswitch_over",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Pharmacy",
+      "activation_script": "ItemEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Pharmacy",
+      "activation_script": "ItemExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Weapon",
+      "activation_script": "WeaponEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Weapon",
+      "activation_script": "WeaponExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Smith",
+      "activation_script": "SmithEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Smith",
+      "activation_script": "SmithExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Dexter's House",
+      "activation_script": "HouseEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Dexter's House",
+      "activation_script": "HouseExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Inn",
+      "activation_script": "InnEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Inn",
+      "activation_script": "InnExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - To Inn Upstairs",
+      "activation_script": "InnUpstair",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - To Inn Downstairs",
+      "activation_script": "InnDownstair",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into University",
+      "activation_script": "SchoolEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of University",
+      "activation_script": "SchoolExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Church",
+      "activation_script": "ChurchEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Church",
+      "activation_script": "ChurchExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Studio",
+      "activation_script": "StudioEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Studio",
+      "activation_script": "StudioExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Map Change - To Overworld",
+      "activation_script": "east_entrance",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Check - Vecna Statue",
+      "activation_script": "Idol",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Well",
+      "activation_script": "well",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Jukebox Left",
+      "activation_script": "Jukebox_Left",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Jukebox Right",
+      "activation_script": "Jukebox_Right",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Little Daddy Bruce",
+      "activation_script": "little_daddy_bruce",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Item Shop",
+      "activation_script": "item_shop",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Weapon Shop",
+      "activation_script": "weapon_shop",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Principal",
+      "activation_script": "principal",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Priest Talk",
+      "activation_script": "priest",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Church Stairs",
+      "activation_script": "ChurchStairs",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Uni Basement",
+      "activation_script": "UniBasementEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Uni Top Floor",
+      "activation_script": "UniUpstairsEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Uni, from Basement",
+      "activation_script": "UniBasementExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Uni from Top Floor",
+      "activation_script": "UniUpstairsExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Teacher",
+      "activation_script": "teacher",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - White Magic Shop",
+      "activation_script": "white_magic_shop",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Black Magic Shop",
+      "activation_script": "black_magic_shop",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Innkeeper",
+      "activation_script": "innkeeper",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Sleeping Dexter",
+      "activation_script": "sleeping_dexter",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_chest_thing_under",
+      "activation_script": "secret_chest_thing_under",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_chest_thing_up",
+      "activation_script": "secret_chest_thing_up",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_chest_thing_down",
+      "activation_script": "secret_chest_thing_down",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "canal_shields_down",
+      "activation_script": "canal_shields_down",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "canal_shields_up",
+      "activation_script": "canal_shields_up",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "switch_above_entities",
+      "activation_script": "switch_above_entities",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "switch_below_entities",
+      "activation_script": "switch_below_entities",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "invisible",
+      "activation_script": "invisible",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "revisible",
+      "activation_script": "revisible",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "canal_chest_a",
+      "activation_script": "canal_chest_a",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "canal_chest_b",
+      "activation_script": "canal_chest_b",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "canal_chest_green",
+      "activation_script": "canal_chest_green",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_chest_front",
+      "activation_script": "secret_chest_front",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "meet Dex",
+      "activation_script": "meetDex",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "stan-d",
+      "activation_script": "stan_d",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "lookout_point_sign",
+      "activation_script": "lookout_point_sign",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "east entrance sign",
+      "activation_script": "east_entrance_sign",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Thaco_Bell",
+      "activation_script": "thaco_bell",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "West Entrance Sign",
+      "activation_script": "west_entrance_sign",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "west_exit",
+      "activation_script": "west_entrance",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Thaco Bell",
+      "activation_script": "thaco_bell",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "farmsville_intro",
+      "activation_script": "farmsville_intro",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Gelatin Ranch",
+      "activation_script": "gelatin_farm",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "chest_whatever",
+      "activation_script": "chest_whatever",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "chest_c",
+      "activation_script": "chest_c",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "lookout_point",
+      "activation_script": "lookout_point",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "lookout_point_reset",
+      "activation_script": "lookout_point_reset",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "no_freebies",
+      "activation_script": "no_freebies",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "red_chest_university_1",
+      "activation_script": "red_chest_university_1",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_1",
+      "activation_script": "Learn_1",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_2",
+      "activation_script": "Learn_2",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_3",
+      "activation_script": "Learn_3",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_4",
+      "activation_script": "Learn_4",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_5",
+      "activation_script": "Learn_5",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_6",
+      "activation_script": "Learn_6",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_7",
+      "activation_script": "Learn_7",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "NO_WALK_HERE_WANDERERS",
+      "activation_script": "",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "blue_chest_behind_blacksmith",
+      "activation_script": "blue_chest_behind_blacksmith",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "red_chest_behind_thaco_bell",
+      "activation_script": "red_chest_behind_thaco_bell",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_tunnel_east",
+      "activation_script": "secret_tunnel_east",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_tunnel_west",
+      "activation_script": "secret_tunnel_west",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_tunnel_chest",
+      "activation_script": "secret_tunnel_chest",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "dorkupine_intro",
+      "activation_script": "dorkupine_intro",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    }
+  ],
+  "entities": [
+    {
+      "name": "Villager A (Vorn)",
+      "filename": "chrs_json/object_orphan_machine.json",
+      "location": {
+        "tx": 104,
+        "ty": 36
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "Ent0",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Villager B",
+      "filename": "chrs_json/object_rat.json",
+      "location": {
+        "tx": 80,
+        "ty": 87
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 75
+      },
+      "activation_script": "Ent1",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Z Villager C",
+      "filename": "__default__",
+      "location": {
+        "tx": 58,
+        "ty": 24
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": true,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "L1R1D1U2D1R1L1B"
+      },
+      "activation_script": "Zealot1",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Villager D",
+      "filename": "__default__",
+      "location": {
+        "tx": 47,
+        "ty": 92
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 50
+      },
+      "activation_script": "Ent3",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Villager E",
+      "filename": "__default__",
+      "location": {
+        "tx": 87,
+        "ty": 64
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "Ent4",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Villager F",
+      "filename": "__default__",
+      "location": {
+        "tx": 109,
+        "ty": 78
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 80
+      },
+      "activation_script": "Ent5",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Villager G",
+      "filename": "__default__",
+      "location": {
+        "tx": 63,
+        "ty": 44
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 115
+      },
+      "activation_script": "Ent6",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Villager H",
+      "filename": "__default__",
+      "location": {
+        "tx": 98,
+        "ty": 52
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 175,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "L4U9R14D9L10B"
+      },
+      "activation_script": "Ent7",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Villager I",
+      "filename": "__default__",
+      "location": {
+        "tx": 108,
+        "ty": 95
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Rectangle",
+        "delay": 125,
+        "bounds": {
+          "upper_left": {
+            "X": 92,
+            "Y": 85
+          },
+          "lower_right": {
+            "X": 118,
+            "Y": 98
+          }
+        }
+      },
+      "activation_script": "ent8",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Villager J",
+      "filename": "__default__",
+      "location": {
+        "tx": 53,
+        "ty": 69
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 50
+      },
+      "activation_script": "Ent9",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Villager K",
+      "filename": "__default__",
+      "location": {
+        "tx": 96,
+        "ty": 53
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "Ent27",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Z Villager L",
+      "filename": "__default__",
+      "location": {
+        "tx": 60,
+        "ty": 26
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": true,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "U1D1L1R2L1D1U1B"
+      },
+      "activation_script": "Zealot2",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Z Villager M",
+      "filename": "__default__",
+      "location": {
+        "tx": 58,
+        "ty": 28
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": true,
+      "is_an_obstruction": true,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "R1L1U1D2U1L1R1B"
+      },
+      "activation_script": "Zealot3",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Z Villager N",
+      "filename": "__default__",
+      "location": {
+        "tx": 56,
+        "ty": 26
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": true,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "D1U1R1L2R1U1D1B"
+      },
+      "activation_script": "Zealot4",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Person A",
+      "filename": "__default__",
+      "location": {
+        "tx": 59,
+        "ty": 196
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "person_a",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Person B",
+      "filename": "__default__",
+      "location": {
+        "tx": 60,
+        "ty": 196
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "person_b",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Person C",
+      "filename": "__default__",
+      "location": {
+        "tx": 15,
+        "ty": 200
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "person_c",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Person D",
+      "filename": "__default__",
+      "location": {
+        "tx": 51,
+        "ty": 166
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "Dexters_Dad",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Person E",
+      "filename": "__default__",
+      "location": {
+        "tx": 49,
+        "ty": 165
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "Dexters_Mom",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Student A",
+      "filename": "__default__",
+      "location": {
+        "tx": 125,
+        "ty": 171
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_a",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Student B",
+      "filename": "__default__",
+      "location": {
+        "tx": 130,
+        "ty": 169
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_b",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Student C",
+      "filename": "__default__",
+      "location": {
+        "tx": 122,
+        "ty": 171
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_c",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Student D",
+      "filename": "__default__",
+      "location": {
+        "tx": 117,
+        "ty": 169
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_d",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Student E",
+      "filename": "__default__",
+      "location": {
+        "tx": 133,
+        "ty": 173
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_e",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Student F",
+      "filename": "__default__",
+      "location": {
+        "tx": 137,
+        "ty": 173
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_f",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Little Daddy Bruce",
+      "filename": "__default__",
+      "location": {
+        "tx": 97,
+        "ty": 160
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Fashion Babe",
+      "filename": "__default__",
+      "location": {
+        "tx": 98,
+        "ty": 164
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "fashion_babe",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Hair Guy",
+      "filename": "__default__",
+      "location": {
+        "tx": 89,
+        "ty": 159
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "hair_stylist",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Hair Colorist",
+      "filename": "__default__",
+      "location": {
+        "tx": 92,
+        "ty": 159
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "hair_colorist",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Clothes Guy",
+      "filename": "__default__",
+      "location": {
+        "tx": 85,
+        "ty": 159
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "clothes_guy",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Music Man",
+      "filename": "__default__",
+      "location": {
+        "tx": 84,
+        "ty": 166
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "music_man",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Archivist",
+      "filename": "__default__",
+      "location": {
+        "tx": 127,
+        "ty": 223
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Rectangle",
+        "delay": 100,
+        "bounds": {
+          "upper_left": {
+            "X": 119,
+            "Y": 217
+          },
+          "lower_right": {
+            "X": 137,
+            "Y": 225
+          }
+        }
+      },
+      "activation_script": "Archivist",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Churchy A",
+      "filename": "__default__",
+      "location": {
+        "tx": 12,
+        "ty": 227
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "ChurchA",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Churchy B",
+      "filename": "__default__",
+      "location": {
+        "tx": 19,
+        "ty": 223
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "ChurchB",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Churchy C",
+      "filename": "__default__",
+      "location": {
+        "tx": 13,
+        "ty": 221
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "ChurchC",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Churchy D",
+      "filename": "__default__",
+      "location": {
+        "tx": 16,
+        "ty": 230
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "ChurchD",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Churchy E",
+      "filename": "__default__",
+      "location": {
+        "tx": 19,
+        "ty": 233
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "ChurchE",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Student G",
+      "filename": "__default__",
+      "location": {
+        "tx": 86,
+        "ty": 217
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_g",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Student H",
+      "filename": "__default__",
+      "location": {
+        "tx": 96,
+        "ty": 220
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_h",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Student I",
+      "filename": "__default__",
+      "location": {
+        "tx": 125,
+        "ty": 211
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_i",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Student J",
+      "filename": "__default__",
+      "location": {
+        "tx": 131,
+        "ty": 206
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_j",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Tank",
+      "filename": "__default__",
+      "location": {
+        "tx": 127,
+        "ty": 165
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "tank",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Geek",
+      "filename": "__default__",
+      "location": {
+        "tx": 119,
+        "ty": 165
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "geek",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "wimp",
+      "filename": "__default__",
+      "location": {
+        "tx": 135,
+        "ty": 169
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "wimp",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Veggiesmith",
+      "filename": "__default__",
+      "location": {
+        "tx": 113,
+        "ty": 136
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 50,
+      "wander": {
+        "mode": "Zone",
+        "delay": 200
+      },
+      "activation_script": "veggiesmith",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "d1",
+      "filename": "__default__",
+      "location": {
+        "tx": 108,
+        "ty": 89
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "d2",
+      "filename": "__default__",
+      "location": {
+        "tx": 113,
+        "ty": 74
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "d3",
+      "filename": "__default__",
+      "location": {
+        "tx": 106,
+        "ty": 64
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "d4",
+      "filename": "__default__",
+      "location": {
+        "tx": 85,
+        "ty": 84
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "d5",
+      "filename": "__default__",
+      "location": {
+        "tx": 101,
+        "ty": 49
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "d6",
+      "filename": "__default__",
+      "location": {
+        "tx": 67,
+        "ty": 61
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "d7",
+      "filename": "__default__",
+      "location": {
+        "tx": 61,
+        "ty": 87
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "d8",
+      "filename": "__default__",
+      "location": {
+        "tx": 48,
+        "ty": 88
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "d9",
+      "filename": "__default__",
+      "location": {
+        "tx": 109,
+        "ty": 89
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "d10",
+      "filename": "__default__",
+      "location": {
+        "tx": 62,
+        "ty": 87
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 120,
+        "ty": 75
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 111,
+        "ty": 48
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 120,
+        "ty": 90
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 87,
+        "ty": 44
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 66,
+        "ty": 39
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 49,
+        "ty": 31
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 92,
+        "ty": 94
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 41,
+        "ty": 63
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 111,
+        "ty": 60
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 94,
+        "ty": 34
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 70,
+        "ty": 43
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 56,
+        "ty": 61
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 43,
+        "ty": 51
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 32,
+        "ty": 75
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 72,
+        "ty": 58
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "stan-d",
+      "filename": "__default__",
+      "location": {
+        "tx": 92,
+        "ty": 73
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "dexter",
+      "filename": "__default__",
+      "location": {
+        "tx": 0,
+        "ty": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 65,
+        "ty": 29
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Thaco Bell",
+      "filename": "__default__",
+      "location": {
+        "tx": 32,
+        "ty": 85
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 26,
+        "ty": 85
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 72,
+        "ty": 58
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 31,
+        "ty": 81
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 22,
+        "ty": 86
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 24,
+        "ty": 81
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 18,
+        "ty": 85
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "West Greeter",
+      "filename": "__default__",
+      "location": {
+        "tx": 35,
+        "ty": 89
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "west_greeter",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Jelly (Ranched)",
+      "filename": "__default__",
+      "location": {
+        "tx": 110,
+        "ty": 62
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "Z0W100Z1W100B"
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Jelly (Ranched)",
+      "filename": "__default__",
+      "location": {
+        "tx": 112,
+        "ty": 62
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "Z1W100Z0W100B"
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Jelly (Ranched)",
+      "filename": "__default__",
+      "location": {
+        "tx": 111,
+        "ty": 63
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "Z0W100Z1W100B"
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 0,
+        "ty": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 0,
+        "ty": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 0,
+        "ty": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 0,
+        "ty": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 126,
+        "ty": 90
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 132,
+        "ty": 91
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Sugar Ray",
+      "filename": "__default__",
+      "location": {
+        "tx": 88,
+        "ty": 160
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": true,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "sugar_ray",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 121,
+        "ty": 219
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Zone",
+        "delay": 100
+      },
+      "activation_script": "Learn_8",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 137,
+        "ty": 219
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Zone",
+        "delay": 100
+      },
+      "activation_script": "Learn_9",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 132,
+        "ty": 219
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Zone",
+        "delay": 100
+      },
+      "activation_script": "Learn_10",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 131,
+        "ty": 224
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Zone",
+        "delay": 100
+      },
+      "activation_script": "Learn_11",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 0,
+        "ty": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "labrat_1",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 0,
+        "ty": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "labrat_2",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "__default__",
+      "location": {
+        "tx": 0,
+        "ty": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "labrat_3",
+      "animation": "Idle Down"
+    }
+  ]
+}
