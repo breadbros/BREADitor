@@ -176,7 +176,17 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
             this.recalculateLines();
         },
         remove: function(x, y, w, h) {
+            // TODO update hull -- it's much harder to recalc the hull on subtraction
 
+            var ix, iy, i;
+            for (iy = 0; iy < h; iy++) {
+                for (ix = 0; ix < w; ix++) {
+                    i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+                    this.tiles[i] = false;
+                }
+            }
+
+            this.recalculateLines();
         },
         deselect: function() {
             hull.x = null;
@@ -210,16 +220,12 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
 
         hull: { x:null, y:null, w:0, h:0 },
         tiles: [],
-        lines: [ // DEBUG
-            // 40, 35, 45, 35,
-            // 45, 35, 45, 46,
-            // 45, 46, 48, 46
-        ]
+        lines: []
     };
     this.selection.map = this;
 
-    this.selection.add(40, 35, 2, 1);
-    this.selection.add(41, 36, 1, 1);
+    this.selection.add(40, 35, 6, 5);
+    this.selection.remove(41, 36, 1, 2);
 
     this.doneLoading();
 };
