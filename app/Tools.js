@@ -50,12 +50,20 @@ var toolLogic = {
         },
 
         "button_element": "#btn-tool-drag",
-        "human_name": "drag",
+        "human_name": "Drag",
 
         /*,
         "mousewheel": function(map, e) {
             zoomFn(map, e, e.originalEvent.deltaY < 0);
         }*/
+    },
+
+    "SELECT" : {
+        "mousedown": function(map, e) {},
+        "mousemove": function(map, e) {},
+        "mouseup": function(map, e) {},
+        "button_element": "#btn-tool-select",
+        "human_name": "Select"
     },
 
     "EYEDROPPER" : {
@@ -205,7 +213,7 @@ function setupToolClick( toolObj, toolName ) {
 
 function setupTools() {
     for (var prop in toolLogic) {
-      if (toolLogic.hasOwnProperty(prop)) { 
+      if (toolLogic.hasOwnProperty(prop)) {
 
       // or if (Object.prototype.hasOwnProperty.call(obj,prop)) for safety...
         console.log("Initializing tool: ", prop, "...");
