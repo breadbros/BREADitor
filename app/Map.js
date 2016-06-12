@@ -123,13 +123,6 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         defaultEntityLayer = this.mapData.layers[0].name;
     }
 
-    /*
-    console.log("LAYERS:");
-    for(i in this.mapData.layers) {
-        console.log("   ", this.mapData.layers[i].name);
-    }
-    */
-
     this.entityData = {
         '__default__': {
             animations: { "Idle Down": [ [ [ 0, 100 ] ], "Looping" ] },
@@ -165,11 +158,74 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
 
     this.renderContainer = null;
 
+    this.selection = {
+        add: function(x, y, w, h) {
+            if (x < this.hull.x || this.hull.x === null) this.hull.x = x;
+            if (y < this.hull.y || this.hull.y === null) this.hull.y = y;
+            if (x + w > this.hull.x + this.hull.w) this.hull.w = x + w;
+            if (y + h > this.hull.y + this.hull.h) this.hull.h = y + h;
+
+            var ix, iy, i;
+            for (iy = 0; iy < h; iy++) {
+                for (ix = 0; ix < w; ix++) {
+                    i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+                    this.tiles[i] = true;
+                }
+            }
+
+            this.recalculateLines();
+        },
+        remove: function(x, y, w, h) {
+
+        },
+        deselect: function() {
+            hull.x = null;
+            hull.y = null;
+            hull.w = 0;
+            hull.h = 0;
+
+            tiles = [];
+            lines = [];
+        },
+
+        // "private"
+        recalculateLines: function() {
+            this.lines = [];
+
+            var mapWidth = this.map.mapSizeInTiles[0];
+            var x, y, i;
+            for (y = this.hull.y; y < this.hull.y + this.hull.h; y++) {
+                for (x = this.hull.x; x < this.hull.x + this.hull.w; x++) {
+                    i = getFlatIdx(x, y, mapWidth);
+                    if (this.tiles[i] != this.tiles[i - 1]) this.lines.push(x, y, x, y + 1);
+                    if (this.tiles[i] != this.tiles[i - mapWidth]) this.lines.push(x, y, x + 1, y);
+                }
+            }
+
+            console.log("Recalculated lines:");
+            console.log(this.hull);
+            console.log(this.tiles);
+            console.log(this.lines);
+        },
+
+        hull: { x:null, y:null, w:0, h:0 },
+        tiles: [],
+        lines: [ // DEBUG
+            // 40, 35, 45, 35,
+            // 45, 35, 45, 46,
+            // 45, 46, 48, 46
+        ]
+    };
+    this.selection.map = this;
+
+    this.selection.add(40, 35, 2, 1);
+    this.selection.add(41, 36, 1, 1);
+
     this.doneLoading();
 };
 
 function getFlatIdx( x, y, width ) {
-    return parseInt(width*y) + parseInt(x);
+    return parseInt(width, 10) * parseInt(y, 10) + parseInt(x, 10);
 }
 
 Map.prototype = {
@@ -497,14 +553,7 @@ Map.prototype = {
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
 
-        // draw selection overlay
-        var selectionLines = [
-            40, 35, 45, 35,
-            45, 35, 45, 46,
-            45, 46, 48, 46
-        ];
-
-        if (selectionLines.length > 0) {
+        if (this.selection.lines.length > 0) {
             var layer = window.selected_layer ? window.selected_layer.layer : {
                 parallax: { X: 1, Y: 1 },
                 dimensions: this.mapData.layers[0].dimensions
@@ -529,9 +578,9 @@ Map.prototype = {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.selectionVertexBuffer);
             gl.enableVertexAttribArray(a_position);
             gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
-            this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(selectionLines), this.gl.STATIC_DRAW);
+            this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.selection.lines), this.gl.STATIC_DRAW);
 
-            gl.drawArrays(gl.LINES, 0, selectionLines.length / 2);
+            gl.drawArrays(gl.LINES, 0, this.selection.lines.length / 2);
         }
     },
 
