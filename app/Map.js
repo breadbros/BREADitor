@@ -352,6 +352,7 @@ Map.prototype = {
         this.tilemapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemap-frag.glsl"));
         this.spriteShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/sprite-vert.glsl"), jetpack.read("../app/shaders/sprite-frag.glsl"));
         this.obstructionmapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemapObs-frag.glsl"));
+        this.selectionShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/selection-vert.glsl"), jetpack.read("../app/shaders/selection-frag.glsl"));
 
         this.tileLibraryTextures = {};
         for (var k in this.vspImages) {
@@ -380,6 +381,7 @@ Map.prototype = {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
 
         this.entityVertexBuffer = this.gl.createBuffer();
+        this.selectionVertexBuffer = this.gl.createBuffer();
 
         for (var k in this.entityTextures) {
             var texture = this.entityTextures[k];
@@ -413,12 +415,13 @@ Map.prototype = {
 
     render: function() {
         var gl = this.gl;
+        var i = 0;
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         var tallEntities = [];
 
-        for (var i = 0; i < this.renderString.length; i++) {
+        for (i = 0; i < this.renderString.length; i++) {
             var layerIndex = parseInt(this.renderString[i], 10) - 1;
             var layer = this.mapData.layers[layerIndex];
 
@@ -532,6 +535,43 @@ Map.prototype = {
             gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
+        }
+
+        // draw selection overlay
+        var selectionLines = [
+            40, 35, 45, 35,
+            45, 35, 45, 46,
+            45, 46, 48, 46
+        ];
+
+        if (selectionLines.length > 0) {
+            var layer = window.selected_layer ? window.selected_layer.layer : {
+                parallax: { X: 1, Y: 1 },
+                dimensions: this.mapData.layers[0].dimensions
+            };
+
+            this.selectionShader.use();
+            gl.uniform4f(this.selectionShader.uniform('u_camera'),
+                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+            );
+            gl.uniform4f(this.selectionShader.uniform('u_dimensions'),
+                layer.dimensions.X,
+                layer.dimensions.Y,
+                this.vspData[vsp].tiles_per_row,
+                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+            );
+            gl.uniform1i(this.selectionShader.uniform('u_time'), Date.now());
+
+            var a_position = this.selectionShader.attribute('a_position');
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.selectionVertexBuffer);
+            gl.enableVertexAttribArray(a_position);
+            gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+            this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(selectionLines), this.gl.STATIC_DRAW);
+
+            gl.drawArrays(gl.LINES, 0, selectionLines.length / 2);
         }
     },
 
