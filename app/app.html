@@ -63,6 +63,11 @@
                 background-color: rgb(51, 51, 51);
             }
 
+            h3.ui-widget-header {
+                margin-bottom: 0;
+                height: 1.3em;
+            }
+
             .map-palette {
                 width: 500px;
                 height: 500px;
@@ -112,9 +117,11 @@
 
             /* absolute bullshit for now. */
             .map-palette .map_canvas_container {
-                padding-left: 2%;
-                width: 95%;
-                height: 84%;
+                position: absolute;
+                top: calc(1.3em + 5px);
+                left: 0;
+                right: 0;
+                bottom: 0;
             }
 
             .map-palette .map_canvas {
