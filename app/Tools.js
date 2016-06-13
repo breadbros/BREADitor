@@ -252,7 +252,7 @@ $("#btn-tool-zoomout").click( function(e) {
 
 $("#btn-tool-drag").click();
 
-$('.layers-palette').mouseup( function() {
+function capturePaletteMovementForRestore() {
     var $pal = $(this);
     var classes = $pal.attr("class").split(' ');
 
@@ -291,7 +291,10 @@ $('.layers-palette').mouseup( function() {
     obj['y'] = $pal.css('top');
 
     localStorage[key+' settings'] = JSON.stringify(obj);
-} );
+};
+
+$('.layers-palette').mouseup(capturePaletteMovementForRestore);
+
 
 /// todo: currently this isn't allowing the multiple-vsp thing to really be "right".
 /// we need to have virtual palletes per vsp, and switch between them when you switch to a layer with a different palette.

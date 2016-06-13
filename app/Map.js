@@ -172,6 +172,7 @@ function getFlatIdx( x, y, width ) {
     return parseInt(width*y) + parseInt(x);
 }
 
+
 Map.prototype = {
     addEntityWithoutSort(entity, location) {
         if (!this.entities[location.layer]) {
@@ -267,6 +268,36 @@ Map.prototype = {
         var key = 'map-'+ this.mapData.name;
         var $cont = $('.map-palette');
 
+        var setPaletteLocations = function(paletteDict) {
+            var $pal = null;
+            var configVar = null;
+            var obj = null;
+            var k = null;
+
+            for( k in paletteDict ) {
+                console.log( 'paletteDict.' + k );
+                configVar = k + ' settings'; // this should be CONST'd somewhere and referenced in both places
+                $pal = $('.' + k);
+
+                console.log( 'configVar: ' + configVar );
+                console.log( '$pal: ' + $pal );
+                console.log( 'localStorage[configVar]: ' + localStorage[configVar] )
+
+                if( localStorage[configVar] && $pal ) {
+                    obj = JSON.parse(localStorage[configVar]);
+
+                    console.log('oh yeah: ' + obj);
+
+                    if( obj.w ) { $pal.width(obj.w); }
+                    if( obj.h ) { $pal.height(obj.h); }
+                    if( obj.x ) { $pal.css('left', obj.x); }
+                    if( obj.y ) { $pal.css('top', obj.y); }
+                } else {
+                    console.log('lol, no');
+                }
+            }   
+        }
+
         if( localStorage[key] ) {
             if( localStorage[key+'-width'] )  { $cont.width(localStorage[key+'-width']); }
             if( localStorage[key+'-height'] ) { $cont.height(localStorage[key+'-height']); }
@@ -274,6 +305,15 @@ Map.prototype = {
             if( localStorage[key+'-left'] )   { $cont.css( 'left', localStorage[key+'-left']);  }
             if( localStorage[key+'-mapx'] )   { this.camera[0] = parseInt(localStorage[key+'-mapx']); }
             if( localStorage[key+'-mapy'] )   { this.camera[1] = parseInt(localStorage[key+'-mapy']); }
+
+            if( localStorage[key+'-layerspallete'] )   { this.camera[1] = parseInt(localStorage[key+'-mapy']); }
+
+            if( localStorage['palettes'] ) {
+                console.log('palletes found...');
+                setPaletteLocations( JSON.parse(localStorage['palettes']) );
+            } else {
+                console.log('no palettes registered.');
+            }
         }
 
         return this.readyPromise;
