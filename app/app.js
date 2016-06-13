@@ -55,11 +55,26 @@ function initLayersWidget(map) {
 		var rstring_ref = null;
 		var rstring_cur_target = null;
 		var cur_kid = null;
+    var node = null;
 
 		for (var i = map.renderString.length - 1; i >= 0; i--) {
 			rstring_cur_target = map.renderString[i];
 	        rstring_ref = parseInt(rstring_cur_target, 10);
 	        if (isNaN(rstring_ref)) {
+
+            /// TODO this is certainly the wrong place to populate "R" and "E" visually.
+            if( rstring_cur_target == "E" ) {
+              node = $("<li class='layer ui-state-default'><button class='eyeball_button question_mark'>?</button>Entities (default)</li>");
+              node.data("rstring_ref", "E");
+              $list.append(node); 
+            } else if( rstring_cur_target == "R" ) {
+              node = $("<li class='layer ui-state-default'><button class='eyeball_button question_mark'>?</button>'Render'</li>");
+              node.data("rstring_ref", "R");
+              $list.append(node); 
+            } else {
+              console.log( "UNKNOWN RSTRING PARTICLE '"+rstring_cur_target+"'" );
+            }
+
 	        	continue;
 	        }
 
@@ -71,6 +86,10 @@ function initLayersWidget(map) {
 	        		break;
 	        	}
 	        };
+
+          $(".eyeball_button.question_mark").click( function() {
+            console.log("unimplemented, weirdo.");
+          } )
 		};
 	}
 
@@ -122,9 +141,40 @@ function initLayersWidget(map) {
     list.append( newLayerContainer );
 	};
 
+  /// RSTRING is weird and needs to die.
 	reorder_layers_by_rstring_priority(list, map);
-
   resizeWindow();
+
+  /// make the layers sortable
+  $( ".layers-list" ).sortable({
+    revert: true
+  });
+  $( "ul, li" ).disableSelection();
+  $( ".layers-list" ).on( "sortupdate", function( event, ui ) {
+    var kids = $( ".layers-list" ).children();
+    var i, val;
+
+    var rstring = [];
+
+    try {
+      for( i in kids ) {
+        if( kids.hasOwnProperty(i) ) {
+          val = $(kids[i]).data("rstring_ref");
+          if(val) {
+            rstring.unshift($(kids[i]).data("rstring_ref"));  
+          }
+        }
+      }
+    } catch(e) {
+      console.log("error")
+      console.log(e)
+      throw e;
+    }
+
+    window.$$$currentMap.renderString = rstring;
+
+    //debugger;
+  } );
 };
 
 function initInfoWidget(map) {

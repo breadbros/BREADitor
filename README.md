@@ -13,6 +13,13 @@ How to install:
 
 TODO
 ====
+* make sure map.renderString saves/loads properly 
+* show lucency in layers palette.
+* allow lucency to be changed via layers palette.
+* show parallax in layers palette.
+* allow parallax to be changed via layers palette.
+* verify load/save of layer parallax values.
+* verify load/save of layer lucency values.
 * restore Map palette dimensions like other palettes
 * Need a menu item for gathering all windows within the given area, if they are offscreen.
 * reorder layers
@@ -21,5 +28,11 @@ TODO
 * entity palette
 * VSP selector
 * entity selector
-*
+* continuous drawing (draw everything in a line from prevLoc to curLoc per frame.  BREZINGHAMZ J0)
+* eyeball icons
+* eyeball icons for entity layer should hide the "normal" entities
+* we should change the entity layer paradigm since they can be ANYWHERE now
+* eyeball icon for RENDER layer should do ????
+* do we even NEED a render layer?
+* all layers should have unique string names and that should be enforced.
 * This list is not exhaustive
