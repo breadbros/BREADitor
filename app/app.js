@@ -78,6 +78,7 @@ function initLayersWidget(map) {
     var h = 0;
     var w = 0;
 
+    /// hackery of the worst calibur; probably a flaming trashbin.  do not trust.
     $(".layers-palette").children().each( function(idx, kid) {
       console.log( idx + " -> " +  $(kid).outerHeight(true) )
 
@@ -110,7 +111,7 @@ function initLayersWidget(map) {
 	for (var i = layers.length - 1; i >= 0; i--) {
 		l = layers[i];
 
-		newLayerContainer = $("<li class='layer'></li>");
+		newLayerContainer = $("<li class='layer ui-state-default'></li>");
 		newLayerContainer.data("alpha", l.alpha);
 		newLayerContainer.data("rstring_ref", ""+(i+1) );
 
