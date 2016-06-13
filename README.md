@@ -13,6 +13,7 @@ How to install:
 
 TODO
 ====
+* restore Map palette dimensions like other palettes
 * Need a menu item for gathering all windows within the given area, if they are offscreen.
 * reorder layers
 * tool icons
