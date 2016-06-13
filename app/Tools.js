@@ -252,17 +252,45 @@ $("#btn-tool-zoomout").click( function(e) {
 
 $("#btn-tool-drag").click();
 
-$('.map-palette').mouseup( function() {
+$('.layers-palette').mouseup( function() {
+    var $pal = $(this);
+    var classes = $pal.attr("class").split(' ');
 
-    var key = 'map-'+ window.$$$currentMap.mapData.name;
-    var $m = $(this);
+    var key = null;
 
-    localStorage[key] = 'yes';
+    classes.map( function(currentValue,index,arr) {
+        if( currentValue.endsWith("-palette") ) {
+            if( key === null ) {
+                key = currentValue;
+            } else {
+                console.log("Why the hell does this element have two palette classes?");
+                console.log("What's going on?  Let's explode!");
+                throw "Fuk, two paletes zomg"; // remember, friends dont let friends code error message drunk
+            }
+        }
+    } );
 
-    localStorage[key+'-width'] = $m.width();
-    localStorage[key+'-height'] = $m.height();
-    localStorage[key+'-top'] = $m.css('top');
-    localStorage[key+'-left'] = $m.css('left');
+    if( !key ) {
+        console.log("NO ACTUAL PALETTE CLASS.  SEEMS WRONG BUT NOT FATAL.  EXITING FUNCTION.");
+        return;
+    }
+
+    /// add us into the custom palette registry
+    var pals = localStorage['palettes'] || "{}";
+    if( pals ) {
+        pals = JSON.parse(pals);
+        pals[key] = true; // todo make this a cache-key so we can invalidate the settings?
+        localStorage['palettes'] = JSON.stringify(pals);
+    }
+
+    /// save our specific settings
+    var obj = {};
+    obj['w'] = $pal.width();
+    obj['h'] = $pal.height();
+    obj['x'] = $pal.css('left');
+    obj['y'] = $pal.css('top');
+
+    localStorage[key+' settings'] = JSON.stringify(obj);
 } );
 
 /// todo: currently this isn't allowing the multiple-vsp thing to really be "right".
