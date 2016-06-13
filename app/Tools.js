@@ -294,7 +294,9 @@ function capturePaletteMovementForRestore() {
 };
 
 $('.layers-palette').mouseup(capturePaletteMovementForRestore);
-
+$('.zones-palette').mouseup(capturePaletteMovementForRestore);
+$('.info-palette').mouseup(capturePaletteMovementForRestore);
+$('.tool-palette').mouseup(capturePaletteMovementForRestore);
 
 /// todo: currently this isn't allowing the multiple-vsp thing to really be "right".
 /// we need to have virtual palletes per vsp, and switch between them when you switch to a layer with a different palette.
