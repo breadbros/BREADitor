@@ -6,7 +6,7 @@ function initLayersWidget(map) {
 
 	var layers = map.mapData.layers;
 
-	$(".layers-palette").append( "Rstring: " + map.renderString + "(this should be represented in the layer order above)" );
+	$(".layers-palette .window-container").append( "Rstring: " + map.renderString + "(this should be represented in the layer order above)" );
 
 	var list = $(".layers-palette .layers-list");
 	var newLayerContainer = null;
@@ -74,6 +74,26 @@ function initLayersWidget(map) {
 		};
 	}
 
+  function resizeWindow() {
+    var h = 0;
+    var w = 0;
+
+    $(".layers-palette").children().each( function(idx, kid) {
+      console.log( idx + " -> " +  $(kid).outerHeight(true) )
+
+      if( idx >= $(".layers-palette").children().length-3 ) {
+        return; /// the last three are chrome for resizable windows.
+      }
+
+      h +=  $(kid).outerHeight(true);
+    })
+
+    w += $(".layers-palette .window-container").outerWidth(true);
+
+    $(".layers-palette").width(w);
+    $(".layers-palette").height(h);  
+  }
+
 	function generateContent(i, l, $parent) {
 		var visible_div = $("<button class='eyeball_button'></button>");
 		var name_div = $("<div class='layer_name'></div>");
@@ -98,10 +118,12 @@ function initLayersWidget(map) {
 
 		addLayerSelectHandler( newLayerContainer, i );
 
-    	list.append( newLayerContainer );
+    list.append( newLayerContainer );
 	};
 
 	reorder_layers_by_rstring_priority(list, map);
+
+  resizeWindow();
 };
 
 function initInfoWidget(map) {

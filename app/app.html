@@ -74,6 +74,12 @@
                 cursor: pointer;
             }
 
+            .window-container {
+                margin-bottom: 18px;
+                margin-left: 18px;
+                margin-right: 18px;
+            }
+
             .tool-palette {
                 width: 90px;
                 height: 400px;
@@ -90,6 +96,12 @@
                 position: absolute;
                 right: 10px;
                 bottom: 10px;
+            }
+
+            .layers-list {
+                list-style-type: none;
+                list-style:none;
+                padding-left:0;
             }
 
             .zones-palette {
@@ -188,8 +200,11 @@
 
         <div class="layers-palette ui-widget-content draggable-window resizable-window">
             <h3 class="ui-widget-header">Layers</h3>
-            <ul class="layers-list">
-            </ul>
+
+            <div class="window-container">
+                <ul class="layers-list">
+                </ul>
+            </div>
         </div>
 
         <div class="zones-palette ui-widget-content draggable-window resizable-window">
