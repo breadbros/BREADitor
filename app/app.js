@@ -13,15 +13,21 @@ function initLayersWidget(map) {
 	var l = null;
 	var line = null;
 
-	function getEyeballText(layer) {
-		return !layer.MAPED_HIDDEN ? "+" : "-";
-	}
+  function handleEyeball(layerDiv, layer) {
+    layerDiv.removeClass('eye-open');
+    layerDiv.removeClass('eye-closed');
+    if( !layer.MAPED_HIDDEN ) {
+      layerDiv.addClass('eye-open');
+    } else {
+      layerDiv.addClass('eye-closed');
+    }
+  }
 
 	function addEyeballHandler( $eyeball, i ) {
     	$eyeball.on( "click", function(evt) {
     		layers[i].MAPED_HIDDEN = !layers[i].MAPED_HIDDEN;
 
-    		$eyeball.text( getEyeballText(layers[i]) );
+        handleEyeball($eyeball, layers[i]);
 
     		evt.stopPropagation()
     	} );
@@ -118,7 +124,8 @@ function initLayersWidget(map) {
 		var visible_div = $("<button class='eyeball_button'></button>");
 		var name_div = $("<div class='layer_name'></div>");
 
-		visible_div.text( getEyeballText(l) );
+    handleEyeball(visible_div, l);
+
 		name_div.text((i+1)+": "+l.name);
 
 		addEyeballHandler(visible_div, i);
