@@ -116,18 +116,120 @@ function initLayersWidget(map) {
     $(".layers-palette").height(h);  
   }
 
+  function modal_error(errormsg) {
+    alert(errormsg); // for now...
+  }
+
+  function update_lucency(layer, dialog) {
+    var val = $("#new_layer_lucent").val().trim();
+
+    if( !$.isNumeric(val) ) {
+      modal_error("Invalid input: not numeric.");
+      return;
+    }
+
+    if( val.indexOf(".") === -1 ) {
+      val = parseInt(val);
+
+      if(val <0 || val > 100) {
+        modal_error("INVALID PERCENTAGE VALUE, range: [0...100]");
+        return;
+      } else {
+        val = val/100;
+      }
+    } else { // parse fraction
+      val = parseFloat(val);
+      if( val < 0 || val > 1 ) {
+        modal_error("INVALID FLOAT VALUE, range:  [0...1]");
+        return;
+      } 
+    }
+
+    layer.alpha = val;
+
+    redrawAllLucent();
+
+    dialog.dialog( "close" );
+  }
+
+  function lucent_click(evt) {
+    var idx = parseInt($(this).parent().data("rstring_ref"))-1;
+    var layer = window.$$$currentMap.mapData.layers[idx];
+
+    //var newLucent = dialog
+    var dialog;
+
+    $(function() {
+
+      var template = "<div>Layer: " + layer.name + "</div>";
+      template += "<div>Current: " + formatAlphaAsPercentage(layer.alpha) + "</div>"; 
+      template += "<div>New: <input id='new_layer_lucent'>%</div>"; 
+
+      $( "#modal-dialog" ).attr("title", "Set layer Opacity");
+      $( "#modal-dialog" ).html(template)
+
+      $( "#modal-dialog" ).show();
+      dialog = $( "#modal-dialog" ).dialog({
+        modal: true,
+        buttons: {
+          Save: () => { update_lucency(layer, dialog) },
+          "Cancel": function() {
+            dialog.dialog( "close" );
+          }
+        },
+        close: function() {
+          $( "#modal-dialog" ).html("");
+        }
+      });
+    });
+  }
+
+  function formatAlphaAsPercentage(alpha) {
+    return (alpha.toFixed(2) * 100);
+  }
+
+  function redrawAllLucent() {
+    $(".layer ").each( function(idx,layer) {
+      var nodeLayer = $(layer);
+      var rstring = nodeLayer.data("rstring_ref");
+      var lucentDomNode = null;
+
+      var mapLayer = null 
+
+      if( !$.isNumeric(rstring) ) {
+        return;
+      } else {
+        mapLayer = window.$$$currentMap.mapData.layers[parseInt(rstring)-1]; //todo: seperate human-indx from 0-based.
+        lucentDomNode = nodeLayer.find(".layer_lucency");
+        lucentDomNode.text(formatAlphaAsPercentage(mapLayer.alpha)+"%")
+
+        if(!mapLayer.alpha) {
+          debugger;
+        }
+
+        nodeLayer.data("alpha", mapLayer.alpha) // TODO: remove this, only one source of truth: the data.
+      }
+
+    }); 
+  }
+
 	function generateContent(i, l, $parent) {
 		var visible_div = $("<button class='eyeball_button'></button>");
-		var name_div = $("<div class='layer_name'></div>");
+    var name_div = $("<div class='layer_name'></div>");
+    var lucent_div = $("<div class='layer_lucency'></div>");
 
     handleEyeball(visible_div, l);
 
 		name_div.text((i+1)+": "+l.name);
+    lucent_div.text(formatAlphaAsPercentage(l.alpha)+"%")
 
 		addEyeballHandler(visible_div, i);
 
+    lucent_div.click(lucent_click);
+
 		$parent.append(visible_div);
 		$parent.append(name_div);
+    $parent.append(lucent_div);
 	}
 
 	for (var i = layers.length - 1; i >= 0; i--) {

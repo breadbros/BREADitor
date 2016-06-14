@@ -244,6 +244,25 @@
                 background-image: url("../app/images/icons/svg/eye-closed.svg")
             }
 
+            .layer {
+                position: relative;
+            }
+
+            .layer_lucency {
+                position: absolute;
+                right: 2px;
+                font-size: 10px;
+                color: #444;
+            }
+
+            #modal-dialog {
+                display: none; /* by default */
+            }
+
+            .ui-widget-overlay {
+                opacity: .8;
+            }
+
         </style>
 
         <div class="map-palette ui-widget-content resizable-window draggable-window">
@@ -301,6 +320,11 @@
                 <li>rstring: <span id=info-rstring></span></li>
             </ul>
         </div>
+
+        <div id="modal-dialog" title="BUTTS, LOL">
+          <p>This is the default dialog. Someone didn't put content into it.</p>
+        </div>
+
         <script src="app.js"></script>
     </body>
 </html>
