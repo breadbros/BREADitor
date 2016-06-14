@@ -6,8 +6,6 @@ function initLayersWidget(map) {
 
 	var layers = map.mapData.layers;
 
-	$(".layers-palette .window-container").append( "Rstring: " + map.renderString + "(this should be represented in the layer order above)" );
-
 	var list = $(".layers-palette .layers-list");
 	var newLayerContainer = null;
 	var l = null;
@@ -105,8 +103,6 @@ function initLayersWidget(map) {
 
     /// hackery of the worst calibur; probably a flaming trashbin.  do not trust.
     $(".layers-palette").children().each( function(idx, kid) {
-      console.log( idx + " -> " +  $(kid).outerHeight(true) )
-
       if( idx >= $(".layers-palette").children().length-3 ) {
         return; /// the last three are chrome for resizable windows.
       }
@@ -178,9 +174,6 @@ function initLayersWidget(map) {
       throw e;
     }
 
-    window.$$$currentMap.renderString = rstring;
-
-    //debugger;
   } );
 };
 
@@ -218,6 +211,7 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
             initZonesWidget( currentMap );
 
             window.$$$currentMap = currentMap;
+            Tools.updateRstringInfo();
         });
 }
 

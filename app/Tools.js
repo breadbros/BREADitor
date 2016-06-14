@@ -171,6 +171,22 @@ var toolLogic = {
     }
 };
 
+function updateRstringInfo( newRstring ) {
+
+    if( !window.$$$currentMap ) {
+        console.log("lol, no window.$$$currentMap yet.");
+        return;
+    }
+
+    if( typeof newRstring === "string" ) {
+        console.log("Setting new rstring: '"+newRstring+"'");
+        window.$$$currentMap.renderString = newRstring;
+    }
+
+    $("#info-rstring").text( newRstring );
+}
+
+
 function setupToolClick( toolObj, toolName ) {
     $(toolObj.button_element).click( function(e) {
         $("#tool-title").text(toolObj.human_name);
@@ -374,5 +390,6 @@ $('#btn-toggle-obs').on('click', (e) => {
 
 export var Tools = {
     setObstructionsVisible: setObstructionsVisible,
-    shouldShowObstructions: shouldShowObstructions
+    shouldShowObstructions: shouldShowObstructions,
+    updateRstringInfo: updateRstringInfo
 };

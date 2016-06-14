@@ -16,6 +16,7 @@ TODO
 * make sure map.renderString saves/loads properly 
 * show lucency in layers palette.
 * allow lucency to be changed via layers palette.
+* add last eye-open/eye-closed state to savefile (seperate dict from 'game' data. editor-specific state.)
 * show parallax in layers palette.
 * allow parallax to be changed via layers palette.
 * verify load/save of layer parallax values.
@@ -35,6 +36,7 @@ TODO
 * eyeball icon for RENDER layer should do ????
 * do we even NEED a render layer?
 * all layers should have unique string names and that should be enforced.
+* properly initialize infoWindow upon load
 * This list is not exhaustive
 
 Credits
