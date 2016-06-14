@@ -174,6 +174,11 @@ var toolLogic = {
 function setupToolClick( toolObj, toolName ) {
     $(toolObj.button_element).click( function(e) {
         $("#tool-title").text(toolObj.human_name);
+
+        $(".tool-palette button").removeClass('selected');
+
+        $(this).addClass('selected');
+
         window.TOOLMODE = toolName;
 
         if(toolObj.extra_setup_fn) {

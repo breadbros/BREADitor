@@ -36,3 +36,7 @@ TODO
 * do we even NEED a render layer?
 * all layers should have unique string names and that should be enforced.
 * This list is not exhaustive
+
+Credits
+=======
+Icons designed by Freepik and distributed by Flaticon

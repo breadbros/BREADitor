@@ -184,6 +184,48 @@
             .layer.selected {
                 background-color: red;
             }
+
+            .tool-palette button {
+                margin-left: 3px;
+                margin-bottom: 2px;
+                width: 38px;
+                height: 38px;
+
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 28px 28px;
+
+                background-color: #CCC;
+            }
+
+            .tool-palette button.selected {
+                background-color: #999;
+            }
+
+            #btn-tool-drag {
+                background-image: url("../app/images/icons/svg/drag.svg");
+            }
+
+            #btn-tool-eyedropper {
+                background-image: url("../app/images/icons/svg/eyedropper.svg")
+            }
+
+            #btn-tool-draw {
+                background-image: url("../app/images/icons/svg/draw.svg")
+            }
+
+            #btn-tool-zoomin {
+                background-image: url("../app/images/icons/svg/zoom-in.svg")
+            }
+
+            #btn-tool-zoomout {
+                background-image: url("../app/images/icons/svg/zoom-out.svg")
+            }
+
+            #btn-toggle-obs {
+                background-image: url("../app/images/icons/svg/obstructions.svg")
+            }
+
         </style>
 
         <div class="map-palette ui-widget-content resizable-window draggable-window">
@@ -196,15 +238,17 @@
         <div class="tool-palette ui-widget-content draggable-window">
             <h3 class="ui-widget-header" id="tool-title">Tool</h3>
 
-            <button id="btn-tool-drag">Drag</button>
-            <button id="btn-tool-eyedropper">Eyedropper</button>
-            <button id="btn-tool-select" disabled="">Select</button>
-            <button id="btn-tool-draw"="">Draw</button>
-            <button id="btn-tool-fill" disabled="">Fill</button>
-            <button id="btn-tool-zoomin">Zoom In</button>
-            <button id="btn-tool-zoomout">Zoom Out</button>
+            <button id="btn-tool-drag"></button>
+            <button id="btn-tool-eyedropper"></button>
+            <button id="btn-tool-draw"></button>
+            <button id="btn-toggle-obs"></button>
+            <button id="btn-tool-zoomin"></button>
+            <button id="btn-tool-zoomout"></button>
             <button id="btn-add-tree">+ Tree</button>
-            <button id="btn-toggle-obs">Obstructions</button>
+            
+
+            <button id="btn-tool-select" disabled="">Select</button>
+            <button id="btn-tool-fill" disabled="">Fill</button>
 
             <div id="left-palette" class="tooltip-tile-selector"></div>
             <div id="right-palette" class="tooltip-tile-selector" disabled=""></div>
