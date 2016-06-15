@@ -64,6 +64,16 @@
                 font-family: sans-serif;;
             }
 
+            h3.ui-widget-header {
+                margin-bottom: 0;
+                height: 1.3em;
+            }
+
+            h3.ui-widget-header {
+                margin-bottom: 0;
+                height: 1.3em;
+            }
+
             .map-palette {
                 width: 500px;
                 height: 500px;
@@ -136,9 +146,11 @@
 
             /* absolute bullshit for now. */
             .map-palette .map_canvas_container {
-                padding-left: 2%;
-                width: 95%;
-                height: 84%;
+                position: absolute;
+                top: calc(1.3em + 5px);
+                left: 0;
+                right: 0;
+                bottom: 0;
             }
 
             .map-palette .map_canvas {
@@ -236,11 +248,11 @@
                 background-size: 16px 16px;
             }
 
-            .eyeball_button.eye-open { 
-                background-image: url("../app/images/icons/svg/eye-open.svg") 
+            .eyeball_button.eye-open {
+                background-image: url("../app/images/icons/svg/eye-open.svg")
             }
 
-            .eyeball_button.eye-closed { 
+            .eyeball_button.eye-closed {
                 background-image: url("../app/images/icons/svg/eye-closed.svg")
             }
 
@@ -282,9 +294,7 @@
             <button id="btn-tool-zoomin"></button>
             <button id="btn-tool-zoomout"></button>
             <button id="btn-add-tree">+ Tree</button>
-            
-
-            <button id="btn-tool-select" disabled="">Select</button>
+            <button id="btn-tool-select">Select</button>
             <button id="btn-tool-fill" disabled="">Fill</button>
 
             <div id="left-palette" class="tooltip-tile-selector"></div>

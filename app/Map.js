@@ -123,13 +123,6 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         defaultEntityLayer = this.mapData.layers[0].name;
     }
 
-    /*
-    console.log("LAYERS:");
-    for(i in this.mapData.layers) {
-        console.log("   ", this.mapData.layers[i].name);
-    }
-    */
-
     this.entityData = {
         '__default__': {
             animations: { "Idle Down": [ [ [ 0, 100 ] ], "Looping" ] },
@@ -165,11 +158,81 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
 
     this.renderContainer = null;
 
+    this.selection = {
+        add: function(x, y, w, h) {
+            if (x < this.hull.x || this.hull.x === null) this.hull.x = x;
+            if (y < this.hull.y || this.hull.y === null) this.hull.y = y;
+            if (x + w > this.hull.x + this.hull.w) this.hull.w = x + w;
+            if (y + h > this.hull.y + this.hull.h) this.hull.h = y + h;
+
+            var ix, iy, i;
+            for (iy = 0; iy < h; iy++) {
+                for (ix = 0; ix < w; ix++) {
+                    i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+                    this.tiles[i] = true;
+                }
+            }
+
+            this.recalculateLines();
+        },
+        remove: function(x, y, w, h) {
+            // TODO update hull -- it's much harder to recalc the hull on subtraction
+
+            var ix, iy, i;
+            for (iy = 0; iy < h; iy++) {
+                for (ix = 0; ix < w; ix++) {
+                    i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+                    this.tiles[i] = false;
+                }
+            }
+
+            this.recalculateLines();
+        },
+        deselect: function() {
+            hull.x = null;
+            hull.y = null;
+            hull.w = 0;
+            hull.h = 0;
+
+            tiles = [];
+            lines = [];
+        },
+
+        // "private"
+        recalculateLines: function() {
+            this.lines = [];
+
+            var mapWidth = this.map.mapSizeInTiles[0];
+            var x, y, i;
+            for (y = this.hull.y; y < this.hull.y + this.hull.h; y++) {
+                for (x = this.hull.x; x < this.hull.x + this.hull.w; x++) {
+                    i = getFlatIdx(x, y, mapWidth);
+                    if (this.tiles[i] != this.tiles[i - 1]) this.lines.push(x, y, x, y + 1);
+                    if (this.tiles[i] != this.tiles[i - mapWidth]) this.lines.push(x, y, x + 1, y);
+                }
+            }
+
+            console.log("Recalculated lines:");
+            console.log(this.hull);
+            console.log(this.tiles);
+            console.log(this.lines);
+        },
+
+        hull: { x:null, y:null, w:0, h:0 },
+        tiles: [],
+        lines: []
+    };
+    this.selection.map = this;
+
+    //// Test selection drawing!
+    // this.selection.add(40, 35, 6, 5);
+    // this.selection.remove(41, 36, 1, 2);
+
     this.doneLoading();
 };
 
 function getFlatIdx( x, y, width ) {
-    return parseInt(width*y) + parseInt(x);
+    return parseInt(width, 10) * parseInt(y, 10) + parseInt(x, 10);
 }
 
 
@@ -352,6 +415,7 @@ Map.prototype = {
         this.tilemapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemap-frag.glsl"));
         this.spriteShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/sprite-vert.glsl"), jetpack.read("../app/shaders/sprite-frag.glsl"));
         this.obstructionmapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemapObs-frag.glsl"));
+        this.selectionShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/selection-vert.glsl"), jetpack.read("../app/shaders/selection-frag.glsl"));
 
         this.tileLibraryTextures = {};
         for (var k in this.vspImages) {
@@ -380,6 +444,7 @@ Map.prototype = {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
 
         this.entityVertexBuffer = this.gl.createBuffer();
+        this.selectionVertexBuffer = this.gl.createBuffer();
 
         for (var k in this.entityTextures) {
             var texture = this.entityTextures[k];
@@ -413,12 +478,13 @@ Map.prototype = {
 
     render: function() {
         var gl = this.gl;
+        var i = 0;
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         var tallEntities = [];
 
-        for (var i = 0; i < this.renderString.length; i++) {
+        for (i = 0; i < this.renderString.length; i++) {
             var layerIndex = parseInt(this.renderString[i], 10) - 1;
             var layer = this.mapData.layers[layerIndex];
 
@@ -442,6 +508,8 @@ Map.prototype = {
                 this.vspData[vsp].tiles_per_row,
                 this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
             );
+
+            gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
 
             var u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
             gl.uniform1i(u_tileLibrary, 0);
@@ -532,6 +600,36 @@ Map.prototype = {
             gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
+        }
+
+        if (this.selection.lines.length > 0) {
+            var layer = window.selected_layer ? window.selected_layer.layer : {
+                parallax: { X: 1, Y: 1 },
+                dimensions: this.mapData.layers[0].dimensions
+            };
+
+            this.selectionShader.use();
+            gl.uniform4f(this.selectionShader.uniform('u_camera'),
+                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+            );
+            gl.uniform4f(this.selectionShader.uniform('u_dimensions'),
+                layer.dimensions.X,
+                layer.dimensions.Y,
+                this.vspData[vsp].tiles_per_row,
+                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+            );
+            gl.uniform1i(this.selectionShader.uniform('u_time'), Date.now());
+
+            var a_position = this.selectionShader.attribute('a_position');
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.selectionVertexBuffer);
+            gl.enableVertexAttribArray(a_position);
+            gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+            this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.selection.lines), this.gl.STATIC_DRAW);
+
+            gl.drawArrays(gl.LINES, 0, this.selection.lines.length / 2);
         }
     },
 
