@@ -17,8 +17,6 @@ TODO
   * enter should attempt to submit a dialog, no matter what.
 * OMG, kill all caught exceptions from the framework. We should be able to "Pause On Caught Exceptions" in peace
 * make sure map.renderString saves/loads properly 
-* show lucency in layers palette.
-* allow lucency to be changed via layers palette.
 * add last eye-open/eye-closed state to savefile (seperate dict from 'game' data. editor-specific state.)
 * show parallax in layers palette.
 * allow parallax to be changed via layers palette.
