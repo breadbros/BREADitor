@@ -3,6 +3,7 @@ varying vec2 v_position;
 uniform vec4 u_dimensions;
 uniform sampler2D u_tileLibrary;
 uniform sampler2D u_tileLayout;
+uniform float u_opacity;
 
 void main() {
     vec4 color = vec4(0, 0, 0, 0);
@@ -19,6 +20,7 @@ void main() {
     if (color[0] == 1.0 && color[1] == 0.0 && color[2] == 1.0) { // invisible pink
         gl_FragColor = vec4(0, 0, 0, 0);
     } else {
+        color[3] *= u_opacity;
         gl_FragColor = color;
     }
 }
