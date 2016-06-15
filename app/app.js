@@ -147,7 +147,7 @@ function initLayersWidget(map) {
 
     layer.alpha = val;
 
-    redrawAllLucent();
+    redrawAllLucentAndParallax();
 
     dialog.dialog( "close" );
   }
@@ -186,24 +186,95 @@ function initLayersWidget(map) {
     });
   }
 
+  function parallax_click(evt) {
+    var idx = parseInt($(this).parent().parent().data("rstring_ref"))-1;
+    var layer = window.$$$currentMap.mapData.layers[idx];
+
+    evt.stopPropagation();
+
+    //var newLucent = dialog
+    var dialog;
+
+    $(function() {
+
+      var template = "<div>Layer: " + layer.name + "</div>";
+      template += "<div>Current (X:Y): " + layer.parallax.X + ":"+layer.parallax.Y+"</div>"; 
+      template += "<div>New: <input id='new_layer_parallax_x' size=3>&nbsp;:&nbsp;<input id='new_layer_parallax_y' size=3></div>"; 
+
+      $( "#modal-dialog" ).attr("title", "Set layer Parallax");
+      $( "#modal-dialog" ).html(template)
+
+      $( "#modal-dialog" ).show();
+      dialog = $( "#modal-dialog" ).dialog({
+        modal: true,
+        buttons: {
+          Save: () => { update_parallax(layer, dialog) },
+          "Cancel": function() {
+            dialog.dialog( "close" );
+          }
+        },
+        close: function() {
+          $( "#modal-dialog" ).html("");
+        }
+      });
+    });
+  }
+
+  function update_parallax(layer, dialog) {
+    var x = $("#new_layer_parallax_x").val().trim();
+    var y = $("#new_layer_parallax_y").val().trim();
+    var newParallax = {};
+
+    if( !$.isNumeric(x) ) {
+      modal_error("Invalid input: x not numeric.");
+      return;
+    }
+    if( !$.isNumeric(y) ) {
+      modal_error("Invalid input: y not numeric.");
+      return;
+    }
+
+    x = parseFloat(x);
+    y = parseFloat(y);
+
+    newParallax.X = x;
+    newParallax.Y = y;
+
+    layer.parallax = newParallax;
+
+    redrawAllLucentAndParallax();
+
+    dialog.dialog( "close" );
+  }
+
   function formatAlphaAsPercentage(alpha) {
     return (alpha.toFixed(2) * 100);
   }
 
-  function redrawAllLucent() {
+  function redrawAllLucentAndParallax(map) {
+
+    if(!map) {
+      debugger;
+      map = window.$$$currentMap;
+    }
+
     $(".layer ").each( function(idx,layer) {
       var nodeLayer = $(layer);
       var rstring = nodeLayer.data("rstring_ref");
       var lucentDomNode = null;
+      var parallaxDomNode = null;
 
       var mapLayer = null 
 
       if( !$.isNumeric(rstring) ) {
         return;
       } else {
-        mapLayer = window.$$$currentMap.mapData.layers[parseInt(rstring)-1]; //todo: seperate human-indx from 0-based.
+        mapLayer = map.mapData.layers[parseInt(rstring)-1]; //todo: seperate human-indx from 0-based.
         lucentDomNode = nodeLayer.find(".layer_lucency");
         lucentDomNode.text(formatAlphaAsPercentage(mapLayer.alpha)+"%")
+
+        parallaxDomNode = nodeLayer.find(".layer_parallax");
+        parallaxDomNode.text(mapLayer.parallax.X+":"+mapLayer.parallax.Y);
 
         if(!mapLayer.alpha) {
           debugger;
@@ -222,7 +293,7 @@ function initLayersWidget(map) {
     var right_div = $("<div class='rightmost_div'></div>")
 
     var lucent_div   = $("<div class='layer_lucency'></div>");
-    var parallax_div = $("<div class='layer_parallax'>1:1</div>");
+    var parallax_div = $("<div class='layer_parallax'>?:?</div>");
 
     handleEyeball(visible_div, l);
 
@@ -232,6 +303,7 @@ function initLayersWidget(map) {
 		addEyeballHandler(visible_div, i);
 
     lucent_div.click(lucent_click);
+    parallax_div.click(parallax_click);
 
 		$parent.append(visible_div);
 		$parent.append(name_div);
@@ -240,7 +312,6 @@ function initLayersWidget(map) {
     right_div.append(lucent_div);
     right_div.append(parallax_div);
     
-
     $parent.append(right_div);
 	}
 
@@ -294,6 +365,8 @@ function initLayersWidget(map) {
 function initInfoWidget(map) {
 	$("#info-mapname").text( map.mapPath );
 	$("#info-dims").text( map.mapSizeInTiles[0]+"x"+map.mapSizeInTiles[1] );
+
+  redrawAllLucentAndParallax(map);
 }
 
 function initZonesWidget(map) {

@@ -16,6 +16,7 @@ TODO
 * dialogs should live in a module
   * enter should attempt to submit a dialog, no matter what.
 * OMG, kill all caught exceptions from the framework. We should be able to "Pause On Caught Exceptions" in peace
+* Map palette needs to remember dimensions.
 * make sure map.renderString saves/loads properly 
 * add last eye-open/eye-closed state to savefile (seperate dict from 'game' data. editor-specific state.)
 * show parallax in layers palette.
