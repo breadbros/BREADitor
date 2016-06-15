@@ -469,6 +469,8 @@ Map.prototype = {
                 this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
             );
 
+            gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
+
             var u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
             gl.uniform1i(u_tileLibrary, 0);
             gl.activeTexture(gl.TEXTURE0);
