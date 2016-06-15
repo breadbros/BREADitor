@@ -153,8 +153,10 @@ function initLayersWidget(map) {
   }
 
   function lucent_click(evt) {
-    var idx = parseInt($(this).parent().data("rstring_ref"))-1;
+    var idx = parseInt($(this).parent().parent().data("rstring_ref"))-1;
     var layer = window.$$$currentMap.mapData.layers[idx];
+
+    evt.stopPropagation();
 
     //var newLucent = dialog
     var dialog;
@@ -216,7 +218,11 @@ function initLayersWidget(map) {
 	function generateContent(i, l, $parent) {
 		var visible_div = $("<button class='eyeball_button'></button>");
     var name_div = $("<div class='layer_name'></div>");
-    var lucent_div = $("<div class='layer_lucency'></div>");
+
+    var right_div = $("<div class='rightmost_div'></div>")
+
+    var lucent_div   = $("<div class='layer_lucency'></div>");
+    var parallax_div = $("<div class='layer_parallax'>1:1</div>");
 
     handleEyeball(visible_div, l);
 
@@ -229,7 +235,13 @@ function initLayersWidget(map) {
 
 		$parent.append(visible_div);
 		$parent.append(name_div);
-    $parent.append(lucent_div);
+
+    // right div
+    right_div.append(lucent_div);
+    right_div.append(parallax_div);
+    
+
+    $parent.append(right_div);
 	}
 
 	for (var i = layers.length - 1; i >= 0; i--) {
