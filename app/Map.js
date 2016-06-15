@@ -224,8 +224,9 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     };
     this.selection.map = this;
 
-    this.selection.add(40, 35, 6, 5);
-    this.selection.remove(41, 36, 1, 2);
+    //// Test selection drawing!
+    // this.selection.add(40, 35, 6, 5);
+    // this.selection.remove(41, 36, 1, 2);
 
     this.doneLoading();
 };
