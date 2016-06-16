@@ -19,20 +19,16 @@ TODO
 * Map palette needs to remember dimensions.
 * make sure map.renderString saves/loads properly 
 * add last eye-open/eye-closed state to savefile (seperate dict from 'game' data. editor-specific state.)
-* show parallax in layers palette.
-* allow parallax to be changed via layers palette.
 * verify load/save of layer parallax values.
 * verify load/save of layer lucency values.
 * restore Map palette dimensions like other palettes
 * Need a menu item for gathering all windows within the given area, if they are offscreen.
 * reorder layers
-* tool icons
 * edit zones
 * entity palette
 * VSP selector
 * entity selector
 * continuous drawing (draw everything in a line from prevLoc to curLoc per frame.  BREZINGHAMZ J0)
-* eyeball icons
 * eyeball icons for entity layer should hide the "normal" entities
 * we should change the entity layer paradigm since they can be ANYWHERE now
 * eyeball icon for RENDER layer should do ????
