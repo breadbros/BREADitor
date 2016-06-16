@@ -1,14 +1,11 @@
 import { Map } from './Map.js';
 import { Tools } from './Tools.js';
 import { LayersWidget } from './js/ui/LayersPalette.js';
+import { ZonesWidget } from './js/ui/ZonesPalette.js';
 
 function initInfoWidget(map) {
 	$("#info-mapname").text( map.mapPath );
 	$("#info-dims").text( map.mapSizeInTiles[0]+"x"+map.mapSizeInTiles[1] );
-}
-
-function initZonesWidget(map) {
-	$("#zones-number").text( map.mapData.zones.length );
 }
 
 function updateLocationFunction(map) {
@@ -35,7 +32,7 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
 
             LayersWidget.initLayersWidget( currentMap );
             initInfoWidget( currentMap );
-            initZonesWidget( currentMap );
+            ZonesWidget.initZonesWidget( currentMap );
 
             Tools.updateRstringInfo();
         });
