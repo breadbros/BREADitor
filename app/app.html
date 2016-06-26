@@ -9,26 +9,24 @@
 
         <script>
             window.jQuery = window.$ = require('jquery');
+            require('jquery-ui');
         </script>
-        <script src="vendor/jquery.event.drag-2.2/jquery.event.drag-2.2.js"></script>
 
+
+        <script src="vendor/jquery.event.drag-2.2/jquery.event.drag-2.2.js"></script>
+<!--
         <script>
             debugger;
         </script>
-
+-->
         <script src="vendor/electron_boilerplate/env_config.js"></script>
         <script src="vendor/electron_boilerplate/context_menu.js"></script>
         <script src="vendor/electron_boilerplate/external_links.js"></script>
+<!--
 
 <script src="vendor/SlickGrid-master/slick.core.js"></script>
 <script src="vendor/SlickGrid-master/slick.grid.js"></script>
 
-<!--
-<script src="../lib/jquery-1.11.2.min.js"></script>
-
-
-<script src="../slick.core.js"></script>
-<script src="../slick.grid.js"></script>
 -->
         <script src="node_modules/keymaster/keymaster.js"></script>
         <script>
@@ -40,7 +38,7 @@
         <script>
             window.$CURRENT_SELECTED_TILES = [0,0,0];
 
-            require('jquery-ui');
+            
 
             $(function() {
                 $( ".resizable-window" ).resizable();
