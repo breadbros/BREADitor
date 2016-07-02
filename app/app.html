@@ -321,6 +321,31 @@
                 overflow: scroll;
             }
 
+            .zones-list {
+                margin: 0px;
+                padding: 0px;
+            }
+
+            .zones-list li {
+                list-style-type: none;
+                cursor: pointer;
+            }
+
+            .zones-list li:hover {
+                background-color: #880;
+            }
+
+            .zones-list .zone-row {
+                padding: 4px;
+            }
+
+            .zone-index {
+                background-color: #030;
+                padding: 4px;
+                border-radius: 4px;
+                margin-right: 4px;
+            }
+
         </style>
 
         <div class="map-palette ui-widget-content resizable-window draggable-window">
@@ -360,12 +385,14 @@
             <h3 class="ui-widget-header">Zones</h3>
 
             <div class="window-container">
+                <div id="zone-count">zones: <span id="zones-number"></span></div>
                 <ul class="zones-list">
-                    <li>zones: <span id="zones-number"></span></li>
+                    
                 </ul>
             </div>
 
             <button id="zones-new">New</button>
+            <button id="zones-spreadsheet">Spreadsheet Mode</button>
         </div>
 
         <div class="info-palette ui-widget-content draggable-window resizable-window">

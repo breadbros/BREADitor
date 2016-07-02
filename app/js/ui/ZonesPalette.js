@@ -20,7 +20,6 @@ function initZonesWidget(map) {
   }
 
   fixContainerSize();
-
 }
 
 var fixContainerSize = function() {
@@ -34,6 +33,15 @@ var fixContainerSize = function() {
 $(".zones-palette").resize( function() {
   fixContainerSize();
 } );
+
+$(".zones-palette #zones-new").click( function() {
+  alert("NEW ZONE BAAAY");
+});
+
+$(".zones-palette #zones-spreadsheet").click( function() {
+  alert("SPREAD THAT SHEET ZONE SHEIT");
+});
+
 
 export var ZonesWidget = {
     initZonesWidget: initZonesWidget,
