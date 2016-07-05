@@ -2,11 +2,23 @@ import { modal_error } from './Util.js';
 
 var currentZones = null;
 
+var selectedZoneIdx = null;
+
 function initZonesWidget(map) {
   
   currentZones = map.mapData.zones;
 
   redraw_palette();
+}
+
+function select_zone_from_pallete(evt) {
+  var $it_me = $(evt.target).closest(".zone-row");
+  selectedZoneIdx = $it_me.data("index");
+
+  $(".zone-row").removeClass("highlighted");
+  $it_me.addClass("highlighted");
+
+  return $it_me; 
 }
 
 function redraw_palette() {
@@ -22,9 +34,16 @@ function redraw_palette() {
     $tmp.find(".zone-name").text( currentZones[i].name );
 
     $tmp.click( (evt) => {
-      var $it_me = $(evt.target).closest(".zone-row");
+      select_zone_from_pallete(evt);
+    } );
+
+    $tmp.dblclick( (evt) => { 
+      var $it_me = select_zone_from_pallete(evt);
+      debugger;
       edit_zone_click(evt,  $it_me.data("index"));
-    } )
+    } );
+
+
 
 
     $list.append($tmp);
