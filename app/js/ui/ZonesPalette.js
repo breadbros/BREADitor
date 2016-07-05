@@ -21,30 +21,36 @@ function select_zone_from_pallete(evt) {
   return $it_me; 
 }
 
+function select_and_edit_zone_from_pallete(evt) {
+  var $it_me = select_zone_from_pallete(evt);
+  edit_zone_click(evt,  $it_me.data("index"));
+}
+
 function redraw_palette() {
   var $list = $(".zones-list");
   $list.html("");
   var $tmp;
   $("#zones-number").text( currentZones.length );
+
+  var singleclick_handler = (evt) => {
+    select_zone_from_pallete(evt);
+  };
+
+  var doubleclick_handler = (evt) => { 
+    var $it_me = select_zone_from_pallete(evt);
+    edit_zone_click(evt,  $it_me.data("index"));
+  };
    
   for (let i = 0; i < currentZones.length; i++) {
 
     $tmp = $("<li class='zone-row' data-index='"+i+"'><span class='zone-index'></span><span class='zone-name'></span></li>");
     $tmp.find(".zone-index").text( i );
     $tmp.find(".zone-name").text( currentZones[i].name );
-
-    $tmp.click( (evt) => {
-      select_zone_from_pallete(evt);
-    } );
-
-    $tmp.dblclick( (evt) => { 
-      var $it_me = select_zone_from_pallete(evt);
-      debugger;
-      edit_zone_click(evt,  $it_me.data("index"));
-    } );
-
-
-
+    
+    $tmp.click( singleclick_handler );
+    
+    $tmp.dblclick( doubleclick_handler );
+    $tmp.contextmenu( doubleclick_handler );
 
     $list.append($tmp);
   }

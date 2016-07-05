@@ -94,6 +94,7 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         this.vspData[k] = jetpack.read(vspfiles[k], 'json');
         console.log(k, "->", this.vspData[k]);
     }
+    
     // todo: stop being evil
     // todo: that probably won't happen. MWAHAHAHAHHA.
     this.vspData["zones"] = $.extend(true, {}, this.vspData["obstructions"]);
