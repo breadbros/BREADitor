@@ -1,5 +1,6 @@
 //import { Map } from '../../Map.js';
 import { Tools } from '../../Tools.js';
+import { modal_error } from './Util.js';
 
 function initLayersWidget(map) {
   //map.layers[i].MAPED_HIDDEN
@@ -116,10 +117,6 @@ function initLayersWidget(map) {
     $(".layers-palette").height(h);  
   }
 
-  function modal_error(errormsg) {
-    alert(errormsg); // for now...
-  }
-
   function update_lucency(layer, dialog) {
     var val = $("#new_layer_lucent").val().trim();
 
@@ -161,7 +158,7 @@ function initLayersWidget(map) {
     //var newLucent = dialog
     var dialog;
 
-    $(function() {
+    $(() => {
 
       var template = "<div>Layer: " + layer.name + "</div>";
       template += "<div>Current: " + formatAlphaAsPercentage(layer.alpha) + "</div>"; 
@@ -195,7 +192,7 @@ function initLayersWidget(map) {
     //var newLucent = dialog
     var dialog;
 
-    $(function() {
+    $(() => {
 
       var template = "<div>Layer: " + layer.name + "</div>";
       template += "<div>Current (X:Y): " + layer.parallax.X + ":"+layer.parallax.Y+"</div>"; 
