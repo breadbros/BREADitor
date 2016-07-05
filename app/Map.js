@@ -79,6 +79,15 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     this.legacyObsData = this.mapRawTileData.legacy_obstruction_data;
     this.tileData = this.mapRawTileData.tile_data;
 
+    var tmpZones
+    tmpZones = this.mapRawTileData.zone_data;
+    this.zoneData = new Array(this.tileData[0].length);
+
+    $.each(tmpZones, (idx) => {
+        // todo verify this is right
+        this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y,this.mapSizeInTiles[0])] = tmpZones[idx].z;
+     } );
+
     this.vspData = {};
     for (var k in vspfiles) {
         this.vspData[k] = jetpack.read(vspfiles[k], 'json');
@@ -556,6 +565,8 @@ Map.prototype = {
                 }
             }
         }
+
+debugger; //zone_data
 
         if (Tools.shouldShowObstructions()) {
             var vsp = 'obstructions';
