@@ -23,7 +23,7 @@ function redraw_palette() {
 
     $tmp.click( (evt) => {
       var $it_me = $(evt.target).closest(".zone-row");
-      alert("BUTTSU: " + $it_me.data("index"));
+      edit_zone_click(evt,  $it_me.data("index"));
     } )
 
 
@@ -74,23 +74,50 @@ function setup_template() {
 }
 
 function new_zone_click(evt) {
+  _zone_click(evt);
+}
+
+function edit_zone_click(evt, id) {
+  _zone_click(evt, id);
+}
+
+function _zone_click(evt, id) {
   evt.stopPropagation();
 
   var dialog;
+
+  var zone = currentZones[id];
 
   $(() => {
 
     var $template = setup_template();
 
-    $( "#modal-dialog" ).attr("title", "Add New Zone (id: "+(currentZones.length-1)+")");
+    if(zone) {
+      $( "#modal-dialog" ).attr("title", "Edit Zone "+id+")");
+    } else {
+      $( "#modal-dialog" ).attr("title", "Add New Zone (id: "+(currentZones.length-1)+")");
+    }
     $( "#modal-dialog" ).html("");
     $( "#modal-dialog" ).append($template);
+
+    if(zone) {
+      console.log("Editing: " + zone.name);
+
+      $template.find("#zone_name").val(zone.name);
+      $template.find("#zone_activation_script").val(zone.activation_script);
+      $template.find("#zone_activation_chance").val(zone.activation_chance);
+      $template.find("#zone_can_by_adjacent_activated").prop( "checked", zone.can_by_adjacent_activated );
+    }
 
     $( "#modal-dialog" ).show();
     dialog = $( "#modal-dialog" ).dialog({
       modal: true,
       buttons: {
-        Save: () => { update_zone(dialog, currentZones.length) },
+        Save: () => { 
+          var _id = ($.isNumeric(id) && zone) ? id : currentZones.length;
+
+          update_zone(dialog, _id);
+        },
         "Cancel": function() {
           dialog.dialog( "close" );
         }

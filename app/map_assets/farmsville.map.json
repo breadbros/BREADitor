@@ -72,7 +72,8 @@
         "X": 150,
         "Y": 250
       },
-      "alpha": 1
+      "alpha": 1,
+      "vsp": "default"
     },
     {
       "name": "Back Parallax",
@@ -84,7 +85,8 @@
         "X": 150,
         "Y": 250
       },
-      "alpha": 1
+      "alpha": 1,
+      "vsp": "default"
     },
     {
       "name": "Background Extra",
@@ -96,7 +98,8 @@
         "X": 150,
         "Y": 250
       },
-      "alpha": 1
+      "alpha": 1,
+      "vsp": "default"
     },
     {
       "name": "Foreground",
@@ -108,7 +111,8 @@
         "X": 150,
         "Y": 250
       },
-      "alpha": 1
+      "alpha": 1,
+      "vsp": "default"
     },
     {
       "name": "Foreground Extra",
@@ -120,7 +124,8 @@
         "X": 150,
         "Y": 250
       },
-      "alpha": 1
+      "alpha": 1,
+      "vsp": "default"
     },
     {
       "name": "Switch Layer",
@@ -132,7 +137,8 @@
         "X": 150,
         "Y": 250
       },
-      "alpha": 1
+      "alpha": 1,
+      "vsp": "default"
     },
     {
       "name": "Background Extra 2",
@@ -144,7 +150,8 @@
         "X": 150,
         "Y": 250
       },
-      "alpha": 1
+      "alpha": 1,
+      "vsp": "default"
     },
     {
       "name": "Water",
@@ -156,7 +163,8 @@
         "X": 150,
         "Y": 250
       },
-      "alpha": 0.5882352941176471
+      "alpha": 0.5882352941176471,
+      "vsp": "default"
     },
     {
       "name": "Fishing",
@@ -168,7 +176,8 @@
         "X": 150,
         "Y": 250
       },
-      "alpha": 1
+      "alpha": 1,
+      "vsp": "default"
     }
   ],
   "zones": [
@@ -675,6 +684,12 @@
       "activation_script": "dorkupine_intro",
       "activation_chance": 1,
       "can_by_adjacent_activated": true
+    },
+    {
+      "name": "BUTTS",
+      "activation_script": "123",
+      "activation_chance": "4",
+      "can_by_adjacent_activated": true
     }
   ],
   "entities": [
@@ -683,7 +698,8 @@
       "filename": "chrs_json/object_orphan_machine.json",
       "location": {
         "tx": 104,
-        "ty": 36
+        "ty": 36,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -703,7 +719,8 @@
       "filename": "chrs_json/object_rat.json",
       "location": {
         "tx": 80,
-        "ty": 87
+        "ty": 87,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -722,7 +739,8 @@
       "filename": "__default__",
       "location": {
         "tx": 58,
-        "ty": 24
+        "ty": 24,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -742,7 +760,8 @@
       "filename": "__default__",
       "location": {
         "tx": 47,
-        "ty": 92
+        "ty": 92,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -761,7 +780,8 @@
       "filename": "__default__",
       "location": {
         "tx": 87,
-        "ty": 64
+        "ty": 64,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -781,7 +801,8 @@
       "filename": "__default__",
       "location": {
         "tx": 109,
-        "ty": 78
+        "ty": 78,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -800,7 +821,8 @@
       "filename": "__default__",
       "location": {
         "tx": 63,
-        "ty": 44
+        "ty": 44,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -819,7 +841,8 @@
       "filename": "__default__",
       "location": {
         "tx": 98,
-        "ty": 52
+        "ty": 52,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -839,7 +862,8 @@
       "filename": "__default__",
       "location": {
         "tx": 108,
-        "ty": 95
+        "ty": 95,
+        "layer": "Water"
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -868,7 +892,8 @@
       "filename": "__default__",
       "location": {
         "tx": 53,
-        "ty": 69
+        "ty": 69,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -887,7 +912,8 @@
       "filename": "__default__",
       "location": {
         "tx": 96,
-        "ty": 53
+        "ty": 53,
+        "layer": "Water"
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -907,7 +933,8 @@
       "filename": "__default__",
       "location": {
         "tx": 60,
-        "ty": 26
+        "ty": 26,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -927,7 +954,8 @@
       "filename": "__default__",
       "location": {
         "tx": 58,
-        "ty": 28
+        "ty": 28,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": true,
@@ -947,7 +975,8 @@
       "filename": "__default__",
       "location": {
         "tx": 56,
-        "ty": 26
+        "ty": 26,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -967,7 +996,8 @@
       "filename": "__default__",
       "location": {
         "tx": 59,
-        "ty": 196
+        "ty": 196,
+        "layer": "Water"
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -987,7 +1017,8 @@
       "filename": "__default__",
       "location": {
         "tx": 60,
-        "ty": 196
+        "ty": 196,
+        "layer": "Water"
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -1007,7 +1038,8 @@
       "filename": "__default__",
       "location": {
         "tx": 15,
-        "ty": 200
+        "ty": 200,
+        "layer": "Water"
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -1027,7 +1059,8 @@
       "filename": "__default__",
       "location": {
         "tx": 51,
-        "ty": 166
+        "ty": 166,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1047,7 +1080,8 @@
       "filename": "__default__",
       "location": {
         "tx": 49,
-        "ty": 165
+        "ty": 165,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1067,7 +1101,8 @@
       "filename": "__default__",
       "location": {
         "tx": 125,
-        "ty": 171
+        "ty": 171,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1087,7 +1122,8 @@
       "filename": "__default__",
       "location": {
         "tx": 130,
-        "ty": 169
+        "ty": 169,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1107,7 +1143,8 @@
       "filename": "__default__",
       "location": {
         "tx": 122,
-        "ty": 171
+        "ty": 171,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1127,7 +1164,8 @@
       "filename": "__default__",
       "location": {
         "tx": 117,
-        "ty": 169
+        "ty": 169,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1147,7 +1185,8 @@
       "filename": "__default__",
       "location": {
         "tx": 133,
-        "ty": 173
+        "ty": 173,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1167,7 +1206,8 @@
       "filename": "__default__",
       "location": {
         "tx": 137,
-        "ty": 173
+        "ty": 173,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1187,7 +1227,8 @@
       "filename": "__default__",
       "location": {
         "tx": 97,
-        "ty": 160
+        "ty": 160,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1207,7 +1248,8 @@
       "filename": "__default__",
       "location": {
         "tx": 98,
-        "ty": 164
+        "ty": 164,
+        "layer": "Water"
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -1227,7 +1269,8 @@
       "filename": "__default__",
       "location": {
         "tx": 89,
-        "ty": 159
+        "ty": 159,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1247,7 +1290,8 @@
       "filename": "__default__",
       "location": {
         "tx": 92,
-        "ty": 159
+        "ty": 159,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1267,7 +1311,8 @@
       "filename": "__default__",
       "location": {
         "tx": 85,
-        "ty": 159
+        "ty": 159,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1287,7 +1332,8 @@
       "filename": "__default__",
       "location": {
         "tx": 84,
-        "ty": 166
+        "ty": 166,
+        "layer": "Water"
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -1307,7 +1353,8 @@
       "filename": "__default__",
       "location": {
         "tx": 127,
-        "ty": 223
+        "ty": 223,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1336,7 +1383,8 @@
       "filename": "__default__",
       "location": {
         "tx": 12,
-        "ty": 227
+        "ty": 227,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1356,7 +1404,8 @@
       "filename": "__default__",
       "location": {
         "tx": 19,
-        "ty": 223
+        "ty": 223,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1376,7 +1425,8 @@
       "filename": "__default__",
       "location": {
         "tx": 13,
-        "ty": 221
+        "ty": 221,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1396,7 +1446,8 @@
       "filename": "__default__",
       "location": {
         "tx": 16,
-        "ty": 230
+        "ty": 230,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1416,7 +1467,8 @@
       "filename": "__default__",
       "location": {
         "tx": 19,
-        "ty": 233
+        "ty": 233,
+        "layer": "Water"
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -1436,7 +1488,8 @@
       "filename": "__default__",
       "location": {
         "tx": 86,
-        "ty": 217
+        "ty": 217,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1456,7 +1509,8 @@
       "filename": "__default__",
       "location": {
         "tx": 96,
-        "ty": 220
+        "ty": 220,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1476,7 +1530,8 @@
       "filename": "__default__",
       "location": {
         "tx": 125,
-        "ty": 211
+        "ty": 211,
+        "layer": "Water"
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1496,7 +1551,8 @@
       "filename": "__default__",
       "location": {
         "tx": 131,
-        "ty": 206
+        "ty": 206,
+        "layer": "Water"
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -1516,7 +1572,8 @@
       "filename": "__default__",
       "location": {
         "tx": 127,
-        "ty": 165
+        "ty": 165,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1536,7 +1593,8 @@
       "filename": "__default__",
       "location": {
         "tx": 119,
-        "ty": 165
+        "ty": 165,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1556,7 +1614,8 @@
       "filename": "__default__",
       "location": {
         "tx": 135,
-        "ty": 169
+        "ty": 169,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1576,7 +1635,8 @@
       "filename": "__default__",
       "location": {
         "tx": 113,
-        "ty": 136
+        "ty": 136,
+        "layer": "Water"
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -1595,7 +1655,8 @@
       "filename": "__default__",
       "location": {
         "tx": 108,
-        "ty": 89
+        "ty": 89,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1615,7 +1676,8 @@
       "filename": "__default__",
       "location": {
         "tx": 113,
-        "ty": 74
+        "ty": 74,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1635,7 +1697,8 @@
       "filename": "__default__",
       "location": {
         "tx": 106,
-        "ty": 64
+        "ty": 64,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1655,7 +1718,8 @@
       "filename": "__default__",
       "location": {
         "tx": 85,
-        "ty": 84
+        "ty": 84,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1675,7 +1739,8 @@
       "filename": "__default__",
       "location": {
         "tx": 101,
-        "ty": 49
+        "ty": 49,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1695,7 +1760,8 @@
       "filename": "__default__",
       "location": {
         "tx": 67,
-        "ty": 61
+        "ty": 61,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1715,7 +1781,8 @@
       "filename": "__default__",
       "location": {
         "tx": 61,
-        "ty": 87
+        "ty": 87,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1735,7 +1802,8 @@
       "filename": "__default__",
       "location": {
         "tx": 48,
-        "ty": 88
+        "ty": 88,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1755,7 +1823,8 @@
       "filename": "__default__",
       "location": {
         "tx": 109,
-        "ty": 89
+        "ty": 89,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1775,7 +1844,8 @@
       "filename": "__default__",
       "location": {
         "tx": 62,
-        "ty": 87
+        "ty": 87,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1795,7 +1865,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 120,
-        "ty": 75
+        "ty": 75,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1815,7 +1886,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 111,
-        "ty": 48
+        "ty": 48,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1835,7 +1907,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 120,
-        "ty": 90
+        "ty": 90,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1855,7 +1928,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 87,
-        "ty": 44
+        "ty": 44,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1875,7 +1949,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 66,
-        "ty": 39
+        "ty": 39,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1895,7 +1970,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 49,
-        "ty": 31
+        "ty": 31,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1915,7 +1991,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 92,
-        "ty": 94
+        "ty": 94,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1935,7 +2012,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 41,
-        "ty": 63
+        "ty": 63,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1955,7 +2033,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 111,
-        "ty": 60
+        "ty": 60,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1975,7 +2054,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 94,
-        "ty": 34
+        "ty": 34,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1995,7 +2075,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 70,
-        "ty": 43
+        "ty": 43,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2015,7 +2096,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 56,
-        "ty": 61
+        "ty": 61,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2035,7 +2117,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 43,
-        "ty": 51
+        "ty": 51,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2055,7 +2138,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 32,
-        "ty": 75
+        "ty": 75,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2075,7 +2159,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 72,
-        "ty": 58
+        "ty": 58,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2095,7 +2180,8 @@
       "filename": "__default__",
       "location": {
         "tx": 92,
-        "ty": 73
+        "ty": 73,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2115,7 +2201,8 @@
       "filename": "__default__",
       "location": {
         "tx": 0,
-        "ty": 0
+        "ty": 0,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2135,7 +2222,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 65,
-        "ty": 29
+        "ty": 29,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2155,7 +2243,8 @@
       "filename": "__default__",
       "location": {
         "tx": 32,
-        "ty": 85
+        "ty": 85,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2175,7 +2264,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 26,
-        "ty": 85
+        "ty": 85,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2195,7 +2285,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 72,
-        "ty": 58
+        "ty": 58,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2215,7 +2306,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 31,
-        "ty": 81
+        "ty": 81,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2235,7 +2327,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 22,
-        "ty": 86
+        "ty": 86,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2255,7 +2348,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 24,
-        "ty": 81
+        "ty": 81,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2275,7 +2369,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 18,
-        "ty": 85
+        "ty": 85,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2295,7 +2390,8 @@
       "filename": "__default__",
       "location": {
         "tx": 35,
-        "ty": 89
+        "ty": 89,
+        "layer": "Water"
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -2315,7 +2411,8 @@
       "filename": "__default__",
       "location": {
         "tx": 110,
-        "ty": 62
+        "ty": 62,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2335,7 +2432,8 @@
       "filename": "__default__",
       "location": {
         "tx": 112,
-        "ty": 62
+        "ty": 62,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2355,7 +2453,8 @@
       "filename": "__default__",
       "location": {
         "tx": 111,
-        "ty": 63
+        "ty": 63,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2375,7 +2474,8 @@
       "filename": "__default__",
       "location": {
         "tx": 0,
-        "ty": 0
+        "ty": 0,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2395,7 +2495,8 @@
       "filename": "__default__",
       "location": {
         "tx": 0,
-        "ty": 0
+        "ty": 0,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2415,7 +2516,8 @@
       "filename": "__default__",
       "location": {
         "tx": 0,
-        "ty": 0
+        "ty": 0,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2435,7 +2537,8 @@
       "filename": "__default__",
       "location": {
         "tx": 0,
-        "ty": 0
+        "ty": 0,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2455,7 +2558,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 126,
-        "ty": 90
+        "ty": 90,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2475,7 +2579,8 @@
       "filename": "chrs_json/object_tree2.json",
       "location": {
         "tx": 132,
-        "ty": 91
+        "ty": 91,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2495,7 +2600,8 @@
       "filename": "__default__",
       "location": {
         "tx": 88,
-        "ty": 160
+        "ty": 160,
+        "layer": "Water"
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -2515,7 +2621,8 @@
       "filename": "__default__",
       "location": {
         "tx": 121,
-        "ty": 219
+        "ty": 219,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2534,7 +2641,8 @@
       "filename": "__default__",
       "location": {
         "tx": 137,
-        "ty": 219
+        "ty": 219,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2553,7 +2661,8 @@
       "filename": "__default__",
       "location": {
         "tx": 132,
-        "ty": 219
+        "ty": 219,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2572,7 +2681,8 @@
       "filename": "__default__",
       "location": {
         "tx": 131,
-        "ty": 224
+        "ty": 224,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2591,7 +2701,8 @@
       "filename": "__default__",
       "location": {
         "tx": 0,
-        "ty": 0
+        "ty": 0,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2611,7 +2722,8 @@
       "filename": "__default__",
       "location": {
         "tx": 0,
-        "ty": 0
+        "ty": 0,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2631,7 +2743,8 @@
       "filename": "__default__",
       "location": {
         "tx": 0,
-        "ty": 0
+        "ty": 0,
+        "layer": "Water"
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
