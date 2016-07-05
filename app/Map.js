@@ -87,6 +87,7 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         // todo verify this is right
         this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y,this.mapSizeInTiles[0])] = tmpZones[idx].z;
      } );
+     console.log("zones ->", this.zoneData);
 
     this.vspData = {};
     for (var k in vspfiles) {
@@ -97,7 +98,7 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     // todo: that probably won't happen. MWAHAHAHAHHA.
     this.vspData["zones"] = $.extend(true, {}, this.vspData["obstructions"]);
     this.vspData["zones"].source_image = "../app/images/zones.png";
- 
+
     this.toLoad = 1;
     this.doneLoading = function() {
         this.toLoad--;
@@ -371,7 +372,7 @@ Map.prototype = {
                 } else {
                     console.log('lol, no');
                 }
-            }   
+            }
         }
 
         if( localStorage[key] ) {
@@ -429,7 +430,7 @@ Map.prototype = {
         this.spriteShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/sprite-vert.glsl"), jetpack.read("../app/shaders/sprite-frag.glsl"));
         this.obstructionmapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemapObs-frag.glsl"));
         this.zonemapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemap-frag.glsl"));
-        
+
         this.selectionShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/selection-vert.glsl"), jetpack.read("../app/shaders/selection-frag.glsl"));
 
         this.tileLibraryTextures = {};
@@ -624,6 +625,7 @@ Map.prototype = {
             // TODO zones layer shouldn't just default like this
             var layer = {
                 parallax: { X: 1, Y: 1 },
+                alpha: 0.5,
                 dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
             }
 
@@ -654,7 +656,7 @@ Map.prototype = {
             gl.uniform1i(u_tileLayout, 1);
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex]));
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.zoneData));
 
             var a_position = this.tilemapShader.attribute('a_position');
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
