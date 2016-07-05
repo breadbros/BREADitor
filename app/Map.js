@@ -93,7 +93,11 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         this.vspData[k] = jetpack.read(vspfiles[k], 'json');
         console.log(k, "->", this.vspData[k]);
     }
-
+    // todo: stop being evil
+    // todo: that probably won't happen. MWAHAHAHAHHA.
+    this.vspData["zones"] = $.extend(true, {}, this.vspData["obstructions"]);
+    this.vspData["zones"].source_image = "../app/images/zones.png";
+ 
     this.toLoad = 1;
     this.doneLoading = function() {
         this.toLoad--;
@@ -424,6 +428,8 @@ Map.prototype = {
         this.tilemapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemap-frag.glsl"));
         this.spriteShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/sprite-vert.glsl"), jetpack.read("../app/shaders/sprite-frag.glsl"));
         this.obstructionmapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemapObs-frag.glsl"));
+        this.zonemapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemap-frag.glsl"));
+        
         this.selectionShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/selection-vert.glsl"), jetpack.read("../app/shaders/selection-frag.glsl"));
 
         this.tileLibraryTextures = {};
@@ -479,7 +485,6 @@ Map.prototype = {
         // make sure the size is right
         this.resize();
 
-
         if( this.onLoad ) {
             this.onLoad(this);
         }
@@ -493,9 +498,12 @@ Map.prototype = {
 
         var tallEntities = [];
 
-        for (i = 0; i < this.renderString.length; i++) {
-            var layerIndex = parseInt(this.renderString[i], 10) - 1;
-            var layer = this.mapData.layers[layerIndex];
+        for (i = 0; i < (this.renderString.length); i++) {
+            var layerIndex;
+            var layer;
+
+            layerIndex = parseInt(this.renderString[i], 10) - 1;
+            layer = this.mapData.layers[layerIndex];
 
             if (isNaN(layerIndex)) continue;
             if (layer.MAPED_HIDDEN) continue;
@@ -566,14 +574,12 @@ Map.prototype = {
             }
         }
 
-debugger; //zone_data
-
         if (Tools.shouldShowObstructions()) {
             var vsp = 'obstructions';
             // TODO obstruction layer shouldn't just default like this
             var layer = {
                 parallax: { X: 1, Y: 1 },
-                dimensions: this.mapData.layers[0].dimensions
+                dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
             }
 
             this.obstructionmapShader.use();
@@ -606,6 +612,51 @@ debugger; //zone_data
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData));
 
             var a_position = this.obstructionmapShader.attribute('a_position');
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+            gl.enableVertexAttribArray(a_position);
+            gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+        }
+
+        if (Tools.shouldShowZones()) {
+            var vsp = 'zones';
+            // TODO zones layer shouldn't just default like this
+            var layer = {
+                parallax: { X: 1, Y: 1 },
+                dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
+            }
+
+            this.tilemapShader.use();
+
+            gl.uniform4f(this.tilemapShader.uniform('u_camera'),
+                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+            );
+
+            gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
+                layer.dimensions.X,
+                layer.dimensions.Y,
+                this.vspData[vsp].tiles_per_row,
+                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+            );
+
+            gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
+
+            var u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
+            gl.uniform1i(u_tileLibrary, 0);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
+
+            var u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
+            gl.uniform1i(u_tileLayout, 1);
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex]));
+
+            var a_position = this.tilemapShader.attribute('a_position');
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
             gl.enableVertexAttribArray(a_position);
             gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);

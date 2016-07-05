@@ -392,6 +392,11 @@ function setObstructionsVisible(visible) {
 function shouldShowObstructions() {
     return obstructionsVisible;
 }
+
+var shouldShowZones = () => {
+    return true;
+};
+
 $('#btn-toggle-obs').on('click', (e) => {
     setObstructionsVisible(!obstructionsVisible);
 });
@@ -399,5 +404,6 @@ $('#btn-toggle-obs').on('click', (e) => {
 export var Tools = {
     setObstructionsVisible: setObstructionsVisible,
     shouldShowObstructions: shouldShowObstructions,
+    shouldShowZones: shouldShowZones,
     updateRstringInfo: updateRstringInfo
 };
