@@ -154,8 +154,6 @@ var toolLogic = {
                 return;
             }
 
-            window.foo = true;
-
             var oX, oY, tX, tY, tIdx, selector;
             var mapOffsetX = map.camera[0];
             var mapOffsetY= map.camera[1];
