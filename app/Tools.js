@@ -27,6 +27,8 @@ var grue_zoom = function(zoomout, evt) {
     zoomFn( window.$$$currentMap, evt, zoomout );
 }
 
+varMostActive
+
 var toolLogic = {
 
     "DRAG" : {
@@ -154,6 +156,7 @@ var toolLogic = {
                 return;
             }
 
+
             var oX, oY, tX, tY, tIdx, selector;
             var mapOffsetX = map.camera[0];
             var mapOffsetY= map.camera[1];
@@ -166,11 +169,29 @@ var toolLogic = {
             tX = parseInt(oX/16);
             tY = parseInt(oY/16);
 
-            map.setTile(
-                tX,tY,
-                window.selected_layer.map_tileData_idx,
-                window.$CURRENT_SELECTED_TILES[e.button]
-            );
+
+            /// TODO: Again, this is dumb.  LALALA.
+            if( window.selected_layer.map_tileData_idx > 900 ) {
+
+                switch(window.selected_layer.map_tileData_idx) {
+                    case 999:
+                        map.setZone(
+                            tX,tY, getActiveZone()
+                        );
+                        return;
+                    default:
+                        throw "WHAT ARE YOU EVEN DOING, MAN? " + window.selected_layer
+                        return;
+
+                }
+                
+            } else {
+                map.setTile(
+                    tX,tY,
+                    window.selected_layer.map_tileData_idx,
+                    window.$CURRENT_SELECTED_TILES[e.button]
+                );
+            }
         },
         "mouseup": function(map, e) {
             console.log("EYEDROPPER->mouseup: NOTHING");
