@@ -411,6 +411,15 @@ function initLayersWidget(map) {
     cancel: '.nosort',
   });
   $( "ul, li" ).disableSelection();
+
+  var skipWeirdThings = (rstring_val) => {
+    if(rstring_val === "ZZZ") {
+      return true;
+    }
+
+    return false;
+  };
+
   $( ".layers-list" ).on( "sortupdate", function( event, ui ) {
     var kids = $( ".layers-list" ).children();
     var i, val;
@@ -421,7 +430,7 @@ function initLayersWidget(map) {
       for( i in kids ) {
         if( kids.hasOwnProperty(i) ) {
           val = $(kids[i]).data("rstring_ref");
-          if(val) {
+          if(val && !skipWeirdThings(val)) {
             rstring.unshift($(kids[i]).data("rstring_ref"));  
           }
         }
@@ -431,7 +440,11 @@ function initLayersWidget(map) {
       console.log(e)
       throw e;
     }
+
+    Tools.updateRstringInfo( rstring.join(",") );
   } );
+
+  
 
   redrawAllLucentAndParallax(map);
 };
