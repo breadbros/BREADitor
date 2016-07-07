@@ -11,13 +11,20 @@ function initZonesWidget(map) {
   redraw_palette();
 }
 
+function _select_zone_ui_inner($node) {
+  $(".zone-row").removeClass("highlighted");
+  $node.addClass("highlighted");
+}
+
+function select_zone_by_index(idx) {
+  var $it_me = $(".zone-row[data-index="+idx+"]");
+  _select_zone_ui_inner($it_me);
+  return $it_me;
+}
+
 function select_zone_from_pallete(evt) {
   var $it_me = $(evt.target).closest(".zone-row");
-  selectedZoneIdx = $it_me.data("index");
-
-  $(".zone-row").removeClass("highlighted");
-  $it_me.addClass("highlighted");
-
+  _select_zone_ui_inner($it_me);
   return $it_me; 
 }
 
@@ -216,6 +223,16 @@ export var getZoneAlpha = () => {
   return _zoneAlpha;
 };
 
+var _activeZone = 0;
+
+export var getActiveZone = () => {
+  return _activeZone;
+};
+
+export var setActiveZone = (newZone) => {
+  select_zone_by_index(newZone);
+  _activeZone = newZone;
+};
 
 export var ZonesWidget = {
   initZonesWidget: initZonesWidget

@@ -1,6 +1,6 @@
 var $ = require('jquery');
 var sprintf = require("sprintf-js").sprintf;
-import { getZoneVisibility, getZoneAlpha } from "./js/ui/ZonesPalette.js";
+import { getZoneVisibility, getZoneAlpha, getActiveZone, setActiveZone } from "./js/ui/ZonesPalette.js";
 
 
 var zoomFn = function(map, e, zoomout) {
@@ -72,6 +72,7 @@ var toolLogic = {
         "mousedown": function(map, e) {
             if( !window.selected_layer ) {
                 console.log("You havent selected a layer yet.");
+                alert("You havent selected a layer yet.");
                 return;
             }
 
@@ -80,7 +81,7 @@ var toolLogic = {
                 return;
             }
 
-            var oX, oY, tX, tY, tIdx, selector;
+            var oX, oY, tX, tY, tIdx, zIdx, selector;
             var mapOffsetX = map.camera[0];
             var mapOffsetY= map.camera[1];
             var mouseOffsetX = e.offsetX;
@@ -92,7 +93,23 @@ var toolLogic = {
             tX = parseInt(oX/16);
             tY = parseInt(oY/16);
 
-            tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
+            /// todo: using a valid integer as a sentinel is stupid. using sentinels is stupid. you're stupid, grue.
+            if( window.selected_layer.map_tileData_idx > 900 ) {
+
+                switch(window.selected_layer.map_tileData_idx) {
+                    case 999:
+                        console.log("ZONES!");
+                        zIdx = map.getZone(tX,tY);
+                        console.log("ZONES: " + zIdx);
+                        setActiveZone(zIdx);
+                        return;
+                    default:
+                        throw "SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN";
+                }
+                
+            } else {
+                tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
+            }
 
             window.$CURRENT_SELECTED_TILES[e.button] = tIdx;
             $("#info-selected-tiles").text(
@@ -128,6 +145,7 @@ var toolLogic = {
         "mousedown": function(map, e) {
             if( !window.selected_layer ) {
                 console.log("You havent selected a layer yet.");
+                alert("You havent selected a layer yet.");
                 return;
             }
 

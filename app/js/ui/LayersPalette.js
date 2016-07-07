@@ -1,4 +1,3 @@
-//import { Map } from '../../Map.js';
 import { Tools } from '../../Tools.js';
 import { modal_error } from './Util.js';
 import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js'
@@ -32,14 +31,37 @@ function initLayersWidget(map) {
     } );
   }
 
+  function removeAllSelectedLayers() {
+      if( window && window.selected_layer ) {
+        window.selected_layer.$container.removeClass(selClass);
+      }
+  }
+
+  function addZoneSelectHandler($zone_container) {
+      $zone_container.on( "click", function(evt) {
+
+        var selClass = "selected";
+
+        removeAllSelectedLayers();
+
+        window.selected_layer = {
+          map_tileData_idx: 999,
+          layer: window.$$$currentMap.zoneData,
+          $container: $zone_container
+        };
+
+        $zone_container.addClass( selClass );
+
+        evt.stopPropagation()
+      } );
+  }
+
   function addLayerSelectHandler( $layer_container, i ) {
       $layer_container.on( "click", function(evt) {
 
         var selClass = "selected";
 
-        if( window && window.selected_layer ) {
-          window.selected_layer.$container.removeClass(selClass);
-        }
+        removeAllSelectedLayers();
 
         window.selected_layer = {
           map_tileData_idx: i,
@@ -69,6 +91,7 @@ function initLayersWidget(map) {
 
     newLayerContainer.find(".layer_parallax").remove();
 
+    addZoneSelectHandler( newLayerContainer );
     $eyeball.on( "click", function(evt) {
       setZoneVisibility( !getZoneVisibility() );
 
@@ -443,8 +466,6 @@ function initLayersWidget(map) {
 
     Tools.updateRstringInfo( rstring.join(",") );
   } );
-
-  
 
   redrawAllLucentAndParallax(map);
 };

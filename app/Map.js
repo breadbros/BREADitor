@@ -329,6 +329,19 @@ Map.prototype = {
         };
     },
 
+
+    getZone: function( tileX, tileY ) {
+        var idx = getFlatIdx(tileX, tileY,this.mapSizeInTiles[0]);
+
+        return this.zoneData[idx]
+    },
+
+    setZone: function( tileX, tileY, zoneIdx ) {
+        var idx = getFlatIdx(tileX, tileY,this.mapSizeInTiles[0]);
+
+        this.zoneData[idx] = zoneIdx;
+    },
+
     getTile: function( tileX, tileY, layerIdx ) {
         var idx = getFlatIdx(tileX, tileY,this.mapSizeInTiles[0]);
 
