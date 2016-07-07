@@ -31,7 +31,7 @@ function initLayersWidget(map) {
     } );
   }
 
-  function removeAllSelectedLayers() {
+  function removeAllSelectedLayers(selClass) {
       if( window && window.selected_layer ) {
         window.selected_layer.$container.removeClass(selClass);
       }
@@ -42,7 +42,7 @@ function initLayersWidget(map) {
 
         var selClass = "selected";
 
-        removeAllSelectedLayers();
+        removeAllSelectedLayers(selClass);
 
         window.selected_layer = {
           map_tileData_idx: 999,
@@ -61,7 +61,7 @@ function initLayersWidget(map) {
 
         var selClass = "selected";
 
-        removeAllSelectedLayers();
+        removeAllSelectedLayers(selClass);
 
         window.selected_layer = {
           map_tileData_idx: i,
