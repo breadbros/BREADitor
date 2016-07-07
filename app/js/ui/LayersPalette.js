@@ -1,10 +1,9 @@
 //import { Map } from '../../Map.js';
 import { Tools } from '../../Tools.js';
 import { modal_error } from './Util.js';
+import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js'
 
 function initLayersWidget(map) {
-  //map.layers[i].MAPED_HIDDEN
-
   var layers = map.mapData.layers;
 
   var list = $(".layers-palette .layers-list");
@@ -15,6 +14,7 @@ function initLayersWidget(map) {
   function handleEyeball(layerDiv, layer) {
     layerDiv.removeClass('eye-open');
     layerDiv.removeClass('eye-closed');
+
     if( !layer.MAPED_HIDDEN ) {
       layerDiv.addClass('eye-open');
     } else {
@@ -22,14 +22,14 @@ function initLayersWidget(map) {
     }
   }
 
-  function addEyeballHandler( $eyeball, i ) {
-      $eyeball.on( "click", function(evt) {
-        layers[i].MAPED_HIDDEN = !layers[i].MAPED_HIDDEN;
+  function addLayerEyeballHandler( $eyeball, i ) {
+    $eyeball.on( "click", function(evt) {
+      layers[i].MAPED_HIDDEN = !layers[i].MAPED_HIDDEN;
 
-        handleEyeball($eyeball, layers[i]);
+      handleEyeball($eyeball, layers[i]);
 
-        evt.stopPropagation()
-      } );
+      evt.stopPropagation()
+    } );
   }
 
   function addLayerSelectHandler( $layer_container, i ) {
@@ -52,6 +52,36 @@ function initLayersWidget(map) {
       } );
   }
 
+  function setup_shitty_zone_layer($list) {
+
+    var tmpLayer = { 
+      MAPED_HIDDEN : !getZoneVisibility(),
+      alpha: getZoneAlpha()
+    }; 
+    var $eyeball;
+
+    var newLayerContainer = generateLayerContainer( l,i );
+    $eyeball = generateContent(999, tmpLayer, newLayerContainer);
+    newLayerContainer.find(".layer_name").text("Zones");
+    newLayerContainer.addClass("nosort");
+    newLayerContainer.data("alpha", getZoneAlpha()); 
+    newLayerContainer.data("rstring_ref", "ZZZ"); 
+
+    newLayerContainer.find(".layer_parallax").remove();
+
+    $eyeball.on( "click", function(evt) {
+      setZoneVisibility( !getZoneVisibility() );
+
+      tmpLayer.MAPED_HIDDEN = !getZoneVisibility();
+
+      handleEyeball($eyeball, tmpLayer);
+
+      evt.stopPropagation()
+    } );
+
+    $list.append(newLayerContainer);
+  }
+
   function reorder_layers_by_rstring_priority($list, map) {
 
     var childs = $list.children("li");
@@ -61,6 +91,14 @@ function initLayersWidget(map) {
     var rstring_cur_target = null;
     var cur_kid = null;
     var node = null;
+
+    setup_shitty_zone_layer($list);
+
+    /// ZONES
+
+    // node = $("<li class='layer ui-state-default'><button class='eyeball_button'>?</button>Entities (default)</li>");
+    // node.data("rstring_ref", "E");
+    // $list.append(node);
 
     for (var i = map.renderString.length - 1; i >= 0; i--) {
       rstring_cur_target = map.renderString[i];
@@ -117,7 +155,7 @@ function initLayersWidget(map) {
     $(".layers-palette").height(h);  
   }
 
-  function update_lucency(layer, dialog) {
+  function update_lucency(layer, dialog, special_case) {
     var val = $("#new_layer_lucent").val().trim();
 
     if( !$.isNumeric(val) ) {
@@ -142,7 +180,14 @@ function initLayersWidget(map) {
       } 
     }
 
-    layer.alpha = val;
+    switch(special_case){
+      case "zone":
+        setZoneAlpha(val);
+        break;
+      default:
+        layer.alpha = val;
+        break;
+    }
 
     redrawAllLucentAndParallax();
 
@@ -150,13 +195,26 @@ function initLayersWidget(map) {
   }
 
   function lucent_click(evt) {
-    var idx = parseInt($(this).parent().parent().data("rstring_ref"))-1;
-    var layer = window.$$$currentMap.mapData.layers[idx];
+    var idx, layer, dialog;
+    var $me = $(evt.target).parent().parent();
+    var special = "";
+
+    /// TODO: this is special-case and evil.  make more better.
+    if( $me.data("rstring_ref") === "ZZZ" ) {
+      layer = {
+        name: "Zones",
+        alpha: getZoneAlpha()
+      }
+
+      special = "zone";
+
+    } else {
+      idx = parseInt($me.data("rstring_ref"))-1;
+      layer = window.$$$currentMap.mapData.layers[idx];
+    }
+
 
     evt.stopPropagation();
-
-    //var newLucent = dialog
-    var dialog;
 
     $(() => {
 
@@ -171,7 +229,7 @@ function initLayersWidget(map) {
       dialog = $( "#modal-dialog" ).dialog({
         modal: true,
         buttons: {
-          Save: () => { update_lucency(layer, dialog) },
+          Save: () => { update_lucency(layer, dialog, special) },
           "Cancel": function() {
             dialog.dialog( "close" );
           }
@@ -254,13 +312,23 @@ function initLayersWidget(map) {
       map = window.$$$currentMap;
     }
 
-    $(".layer ").each( function(idx,layer) {
+    $(".layer").each( function(idx,layer) {
       var nodeLayer = $(layer);
       var rstring = nodeLayer.data("rstring_ref");
       var lucentDomNode = null;
       var parallaxDomNode = null;
 
       var mapLayer = null 
+
+      if(nodeLayer.hasClass("nosort")) {
+
+        if( nodeLayer.data("rstring_ref") === "ZZZ" ) {
+          lucentDomNode = nodeLayer.find(".layer_lucency");
+          lucentDomNode.text(formatAlphaAsPercentage(getZoneAlpha())+"%")
+        }
+
+        return;
+      }
 
       if( !$.isNumeric(rstring) ) {
         return;
@@ -296,8 +364,6 @@ function initLayersWidget(map) {
     name_div.text((i+1)+": "+l.name);
     lucent_div.text(formatAlphaAsPercentage(l.alpha)+"%")
 
-    addEyeballHandler(visible_div, i);
-
     lucent_div.click(lucent_click);
     parallax_div.click(parallax_click);
 
@@ -309,16 +375,26 @@ function initLayersWidget(map) {
     right_div.append(parallax_div);
     
     $parent.append(right_div);
+
+    return visible_div; 
   }
+
+  function generateLayerContainer(layer, layer_index) {
+    var newLayerContainer = $("<li class='layer ui-state-default'></li>");
+    newLayerContainer.data("alpha", layer.alpha);
+    newLayerContainer.data("rstring_ref", ""+(layer_index+1) );
+
+    return newLayerContainer;
+  }
+
+  var eyeballButton;
 
   for (var i = layers.length - 1; i >= 0; i--) {
     l = layers[i];
 
-    newLayerContainer = $("<li class='layer ui-state-default'></li>");
-    newLayerContainer.data("alpha", l.alpha);
-    newLayerContainer.data("rstring_ref", ""+(i+1) );
-
-    generateContent( i, l, newLayerContainer );
+    newLayerContainer = generateLayerContainer( l,i );
+    eyeballButton = generateContent( i, l, newLayerContainer );
+    addLayerEyeballHandler(eyeballButton, i);
 
     addLayerSelectHandler( newLayerContainer, i );
 
@@ -331,7 +407,8 @@ function initLayersWidget(map) {
 
   /// make the layers sortable
   $( ".layers-list" ).sortable({
-    revert: true
+    revert: true,
+    cancel: '.nosort',
   });
   $( "ul, li" ).disableSelection();
   $( ".layers-list" ).on( "sortupdate", function( event, ui ) {

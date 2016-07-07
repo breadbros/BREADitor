@@ -48,7 +48,7 @@ function redraw_palette() {
     $tmp.find(".zone-name").text( currentZones[i].name );
     
     $tmp.click( singleclick_handler );
-    
+
     $tmp.dblclick( doubleclick_handler );
     $tmp.contextmenu( doubleclick_handler );
 
@@ -197,7 +197,28 @@ function write_zone( id, zone ) {
   window.$$$currentMap.mapData.zones[id] = zone
 }
 
+var _zoneVisibility = true;
+var _zoneAlpha = 1;
+
+export var setZoneVisibility = (val) => {
+  _zoneVisibility = !!val;
+};
+
+export var getZoneVisibility = () => {
+  return _zoneVisibility;
+};
+
+export var setZoneAlpha = (val) => {
+  _zoneAlpha = val;
+};
+
+export var getZoneAlpha = () => {
+  return _zoneAlpha;
+};
+
 
 export var ZonesWidget = {
-    initZonesWidget: initZonesWidget,
+  initZonesWidget: initZonesWidget
 };
+
+//export { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha }; 

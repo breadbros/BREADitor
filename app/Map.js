@@ -79,7 +79,7 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     this.legacyObsData = this.mapRawTileData.legacy_obstruction_data;
     this.tileData = this.mapRawTileData.tile_data;
 
-    var tmpZones
+    var tmpZones;
     tmpZones = this.mapRawTileData.zone_data;
     this.zoneData = new Array(this.tileData[0].length);
 
@@ -626,7 +626,7 @@ Map.prototype = {
             // TODO zones layer shouldn't just default like this
             var layer = {
                 parallax: { X: 1, Y: 1 },
-                alpha: 0.5,
+                alpha: Tools.getZonesAlpha(),
                 dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
             }
 

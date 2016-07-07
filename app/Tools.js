@@ -1,5 +1,7 @@
 var $ = require('jquery');
 var sprintf = require("sprintf-js").sprintf;
+import { getZoneVisibility, getZoneAlpha } from "./js/ui/ZonesPalette.js";
+
 
 var zoomFn = function(map, e, zoomout) {
     var mouseX = map.camera[0] + e.clientX * map.camera[2];
@@ -394,7 +396,10 @@ function shouldShowObstructions() {
 }
 
 var shouldShowZones = () => {
-    return true;
+    return getZoneVisibility();
+};
+var getZonesAlpha = () => {
+    return getZoneAlpha();
 };
 
 $('#btn-toggle-obs').on('click', (e) => {
@@ -405,5 +410,6 @@ export var Tools = {
     setObstructionsVisible: setObstructionsVisible,
     shouldShowObstructions: shouldShowObstructions,
     shouldShowZones: shouldShowZones,
+    getZonesAlpha: getZonesAlpha,
     updateRstringInfo: updateRstringInfo
 };
