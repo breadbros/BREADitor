@@ -13,6 +13,9 @@ How to install:
 
 TODO
 ====
+* show scrollbars on main window if there are palettes offscreen.
+* setup_shitty_obs_layer like setup_shitty_zone_layer.
+* "Gather all" dialogs
 * dialogs should live in a module
   * enter should attempt to submit a dialog, no matter what.
 * OMG, kill all caught exceptions from the framework. We should be able to "Pause On Caught Exceptions" in peace

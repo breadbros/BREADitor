@@ -1,6 +1,7 @@
 import { Tools } from '../../Tools.js';
 import { modal_error } from './Util.js';
 import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js'
+import { setNormalEntityVisibility, getNormalEntityVisibility } from './EntityPalette.js'
 
 function initLayersWidget(map) {
   var layers = map.mapData.layers;
@@ -44,6 +45,7 @@ function initLayersWidget(map) {
 
         removeAllSelectedLayers(selClass);
 
+        /// TODO: this is disgusting, right?  right.
         window.selected_layer = {
           map_tileData_idx: 999,
           layer: window.$$$currentMap.zoneData,
@@ -105,6 +107,67 @@ function initLayersWidget(map) {
     $list.append(newLayerContainer);
   }
 
+
+
+
+  function addEntitySelectHandler($entity_container) {
+    $entity_container.click( (evt) => {
+      alert( "Haha, charade you are." )
+    }); 
+  };
+
+/*
+        var selClass = "selected";
+
+        removeAllSelectedLayers(selClass);
+
+        /// TODO: this is disgusting, right?  right.
+        window.selected_layer = {
+          map_tileData_idx: 999,
+          layer: window.$$$currentMap.zoneData,
+          $container: $zone_container
+        };
+
+        $zone_container.addClass( selClass );
+
+        evt.stopPropagation()
+      } );
+*/
+
+
+  function setup_shitty_entity_layer(node, $list) {
+
+//    node.click( () => { alert("hody; you selected the entity layer?"); } );
+
+    var tmpLayer = { 
+      MAPED_HIDDEN : !setNormalEntityVisibility(),
+      alpha: 1
+    }; 
+    var $eyeball;
+
+    setNormalEntityVisibility, getNormalEntityVisibility
+
+    var newLayerContainer = generateLayerContainer( l,i );
+    $eyeball = generateContent(998, tmpLayer, newLayerContainer);
+
+// setNormalEntityVisibility, getNormalEntityVisibility
+
+    addEntitySelectHandler( node );
+    $eyeball.on( "click", function(evt) {
+      setNormalEntityVisibility( !getNormalEntityVisibility() );
+
+      tmpLayer.MAPED_HIDDEN = !getNormalEntityVisibility();
+
+      handleEyeball($eyeball, tmpLayer);
+
+      debugger;
+
+      evt.stopPropagation()
+    } );
+
+    $list.append(node);
+  }
+
   function reorder_layers_by_rstring_priority($list, map) {
 
     var childs = $list.children("li");
@@ -130,9 +193,11 @@ function initLayersWidget(map) {
 
             /// TODO this is certainly the wrong place to populate "R" and "E" visually.
             if( rstring_cur_target == "E" ) {
-              node = $("<li class='layer ui-state-default'><button class='eyeball_button question_mark'>?</button>Entities (default)</li>");
+              node = $("<li class='layer ui-state-default'><button class='eyeball_button'></button>Entities (default)</li>");
               node.data("rstring_ref", "E");
-              $list.append(node); 
+
+              setup_shitty_entity_layer(node, $list);
+ 
             } else if( rstring_cur_target == "R" ) {
               node = $("<li class='layer ui-state-default'><button class='eyeball_button question_mark'>?</button>'Render'</li>");
               node.data("rstring_ref", "R");
