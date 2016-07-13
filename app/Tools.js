@@ -1,6 +1,6 @@
 var $ = require('jquery');
 var sprintf = require("sprintf-js").sprintf;
-import { getZoneVisibility, getZoneAlpha, getActiveZone, setActiveZone } from "./js/ui/ZonesPalette.js";
+import { getZoneVisibility, getZoneAlpha, getActiveZone, setActiveZone, scrollZonePalletteToZone } from "./js/ui/ZonesPalette.js";
 
 
 var zoomFn = function(map, e, zoomout) {
@@ -104,6 +104,9 @@ var toolLogic = {
                         zIdx = map.getZone(tX,tY);
                         console.log("ZONES: " + zIdx);
                         setActiveZone(zIdx);
+
+                        scrollZonePalletteToZone(zIdx);
+
                         return;
                     default:
                         throw "SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN";
@@ -156,7 +159,6 @@ var toolLogic = {
                 return;
             }
 
-
             var oX, oY, tX, tY, tIdx, selector;
             var mapOffsetX = map.camera[0];
             var mapOffsetY= map.camera[1];
@@ -182,7 +184,6 @@ var toolLogic = {
                     default:
                         throw "WHAT ARE YOU EVEN DOING, MAN? " + window.selected_layer
                         return;
-
                 }
                 
             } else {

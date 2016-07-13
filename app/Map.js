@@ -75,7 +75,8 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
 
     //this.RAWDATA = jetpack.read(mapdatafile, 'json');
 
-    this.mapRawTileData = jetpack.read(mapdatafile, 'json')
+    this.mapRawTileData = jetpack.read(mapdatafile, 'json') // zone_data: [{x,y,z}, ...]
+
     this.legacyObsData = this.mapRawTileData.legacy_obstruction_data;
     this.tileData = this.mapRawTileData.tile_data;
 
@@ -99,6 +100,24 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     // todo: that probably won't happen. MWAHAHAHAHHA.
     this.vspData["zones"] = $.extend(true, {}, this.vspData["obstructions"]);
     this.vspData["zones"].source_image = "../app/images/zones.png";
+
+    this.compactifyZones = () => {
+        debugger;
+
+        // zone_data: [{x,y,z}, ...]
+
+        var tmpZones, x, y;
+        tmpZones = [];
+
+        // walk the in-memory zoneDagta layer, anything with zone >0, add.
+        $.each(this.zoneData, (idx) => {
+            if(this.zoneData[idx] > 0) {
+                x = getXfromFlat( idx, 20 ) //todo : variable vsp width for zones.
+                y = getYfromFlat( idx, 20 ) //todo : variable vsp width for zones.
+                debugger;
+            }
+        } );
+    };
 
     this.toLoad = 1;
     this.doneLoading = function() {
@@ -250,6 +269,23 @@ function getFlatIdx( x, y, width ) {
     return parseInt(width, 10) * parseInt(y, 10) + parseInt(x, 10);
 }
 
+// extracts the first dimension of a flat-indexed 2 dimensionally array given 
+// the second dimension's maximum value and the value of the flat index you
+// wish to extract the first dimension's value from.
+//
+function getXfromFlat( idx, numColumns ) {
+    return idx%numColumns;
+}
+
+// extracts the second dimension of a flat-indexed 2 dimensionally array given 
+// the second dimension's maximum value and the value of the flat index you
+// wish to extract the second dimension's value from.
+//
+function getYfromFlat( idx, numColumns ) {
+    var flatval = idx - getXfromFlat( idx,numColumns );
+    debugger;
+    return parseInt(flatval/numColumns);
+}
 
 Map.prototype = {
     addEntityWithoutSort(entity, location) {

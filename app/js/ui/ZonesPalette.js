@@ -17,7 +17,12 @@ function _select_zone_ui_inner($node) {
 }
 
 function select_zone_by_index(idx) {
-  var $it_me = $(".zone-row[data-index="+idx+"]");
+  var $it_me;
+  if( !idx ) { 
+    idx = 0; 
+  }
+
+  $it_me = $(".zone-row[data-index="+idx+"]");
   _select_zone_ui_inner($it_me);
   return $it_me;
 }
@@ -234,8 +239,31 @@ export var setActiveZone = (newZone) => {
   _activeZone = newZone;
 };
 
+export var scrollZonePalletteToZone = (zoneToFocus) => {
+  var $container = $(".zones-palette .window-container")
+  var $rowToScrollTo = $(".zone-row.highlighted");
+  var zoneIdx = $rowToScrollTo.data("index");
+  var msg = '';
+  var loc;
+  var $zone_0 = null;
+
+  if( !zoneToFocus ) {
+    zoneToFocus = 0;
+  }
+
+  if( zoneIdx != zoneToFocus ) {
+    msg = "unexpected zone index, expected "+zoneToFocus+", got " + zoneIdx;
+    console.log( msg );
+    throw msg;
+  }
+
+  $zone_0 = $(".zone-row[data-index=0]");
+
+  loc = parseInt( $rowToScrollTo.offset().top - $container.offset().top ); //+ Math.abs($zone_0.offset().top) ); //+ $container.height()) ;
+
+  $(".zones-palette .window-container").scrollTop( loc );
+};
+
 export var ZonesWidget = {
   initZonesWidget: initZonesWidget
 };
-
-//export { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha }; 

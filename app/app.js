@@ -55,6 +55,7 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
       var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
       var map = window.$$$currentMap;
+      map.compactifyZones(); /// TODO this should probably happen not-here?
 
       jetpack.write(map.filenames.mapfile, map.mapData);
       jetpack.write(map.filenames.mapdatafile, map.mapRawTileData);
