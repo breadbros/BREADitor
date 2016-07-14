@@ -3,6 +3,7 @@ var path = require('path');
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 import { ShaderProgram } from "./ShaderProgram.js";
 import { Tools } from "./Tools.js";
+import { getNormalEntityVisibility } from './js/ui/EntityPalette.js'
 
 function buildTileDataTexture(data) {
     var out = new Uint8Array(data.length * 4);
@@ -597,34 +598,38 @@ Map.prototype = {
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-            if (this.entities[layer.name] && this.entities[layer.name].length > 0) {
-                var entities = this.entities[layer.name];
-                var showEntityPreview = (window.selected_layer && layer === window.selected_layer.layer && this.entityPreview);
-                this.spriteShader.use();
+            /// Layered Entities
+            if( getNormalEntityVisibility() ) {
+                if (this.entities[layer.name] && this.entities[layer.name].length > 0) {
+                    var entities = this.entities[layer.name];
+                    var showEntityPreview = (window.selected_layer && layer === window.selected_layer.layer && this.entityPreview);
+                    this.spriteShader.use();
 
-                for (var e = 0; e < entities.length; e++) {
-                    if (showEntityPreview && this.entityPreview.location.ty < entities[e].location.ty && (e === 0 || this.entityPreview.location.ty >= entities[e - 1].location.ty)) {
-                        this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
+                    for (var e = 0; e < entities.length; e++) {
+                        if (showEntityPreview && this.entityPreview.location.ty < entities[e].location.ty && (e === 0 || this.entityPreview.location.ty >= entities[e - 1].location.ty)) {
+                            this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
+                        }
+                        this.renderEntity(entities[e], layer, [1,1,1,1]);
+                        if (this.entityData[entities[e].filename].regions && this.entityData[entities[e].filename].regions['Tall_Redraw']) {
+                            tallEntities.push(entities[e]);
+                        }
                     }
-                    this.renderEntity(entities[e], layer, [1,1,1,1]);
-                    if (this.entityData[entities[e].filename].regions && this.entityData[entities[e].filename].regions['Tall_Redraw']) {
-                        tallEntities.push(entities[e]);
-                    }
+                } else if (this.entityPreview) {
+                    this.spriteShader.use();
+                    this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
                 }
-            } else if (this.entityPreview) {
-                this.spriteShader.use();
-                this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
-            }
 
-            if (this.mapData.tallentitylayer === i) {
-                this.spriteShader.use();
-                for (var e in tallEntities) {
-                    var entity = tallEntities[e];
-                    this.renderEntity(entity, layer, [1, 1, 1, 1], this.entityData[entity.filename].regions['Tall_Redraw']);
+                if (this.mapData.tallentitylayer === i) {
+                    this.spriteShader.use();
+                    for (var e in tallEntities) {
+                        var entity = tallEntities[e];
+                        this.renderEntity(entity, layer, [1, 1, 1, 1], this.entityData[entity.filename].regions['Tall_Redraw']);
+                    }
                 }
             }
         }
 
+        /// OBSTRUCTIONS
         if (Tools.shouldShowObstructions()) {
             var vsp = 'obstructions';
             // TODO obstruction layer shouldn't just default like this
@@ -670,6 +675,7 @@ Map.prototype = {
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
 
+        /// ZONES
         if (Tools.shouldShowZones()) {
             var vsp = 'zones';
             // TODO zones layer shouldn't just default like this
@@ -716,6 +722,7 @@ Map.prototype = {
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
 
+        /// MARCHING ANTS
         if (this.selection.lines.length > 0) {
             var layer = window.selected_layer ? window.selected_layer.layer : {
                 parallax: { X: 1, Y: 1 },

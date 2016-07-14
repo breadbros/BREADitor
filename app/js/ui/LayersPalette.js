@@ -95,6 +95,8 @@ function initLayersWidget(map) {
 
     addZoneSelectHandler( newLayerContainer );
     $eyeball.on( "click", function(evt) {
+
+
       setZoneVisibility( !getZoneVisibility() );
 
       tmpLayer.MAPED_HIDDEN = !getZoneVisibility();
@@ -112,7 +114,7 @@ function initLayersWidget(map) {
 
   function addEntitySelectHandler($entity_container) {
     $entity_container.click( (evt) => {
-      alert( "Haha, charade you are." )
+      console.log( "Haha, charade you are." );
     }); 
   };
 
@@ -143,24 +145,17 @@ function initLayersWidget(map) {
       MAPED_HIDDEN : !setNormalEntityVisibility(),
       alpha: 1
     }; 
-    var $eyeball;
+    var $eyeball = $(node).find('.eyeball_button');
 
-    setNormalEntityVisibility, getNormalEntityVisibility
+    handleEyeball($eyeball, tmpLayer);
 
-    var newLayerContainer = generateLayerContainer( l,i );
-    $eyeball = generateContent(998, tmpLayer, newLayerContainer);
-
-// setNormalEntityVisibility, getNormalEntityVisibility
-
-    addEntitySelectHandler( node );
-    $eyeball.on( "click", function(evt) {
+    $eyeball.click( (evt) => {
+      console.log( "Cleek. " + (!getNormalEntityVisibility()) );
       setNormalEntityVisibility( !getNormalEntityVisibility() );
 
       tmpLayer.MAPED_HIDDEN = !getNormalEntityVisibility();
 
       handleEyeball($eyeball, tmpLayer);
-
-      debugger;
 
       evt.stopPropagation()
     } );
