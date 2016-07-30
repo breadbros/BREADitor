@@ -137,28 +137,38 @@ function initLayersWidget(map) {
 */
 
 
-  function setup_shitty_entity_layer(node, $list) {
-
-//    node.click( () => { alert("hody; you selected the entity layer?"); } );
-
+  function _setup_entity_eyeball(node) {
+    var $eyeball = $(node).find('.eyeball_button');
     var tmpLayer = { 
-      MAPED_HIDDEN : !setNormalEntityVisibility(),
+      MAPED_HIDDEN : !getNormalEntityVisibility(),
       alpha: 1
     }; 
-    var $eyeball = $(node).find('.eyeball_button');
 
     handleEyeball($eyeball, tmpLayer);
 
     $eyeball.click( (evt) => {
-      console.log( "Cleek. " + (!getNormalEntityVisibility()) );
       setNormalEntityVisibility( !getNormalEntityVisibility() );
 
-      tmpLayer.MAPED_HIDDEN = !getNormalEntityVisibility();
+      tmpLayer.MAPED_HIDDEN = !getNormalEntityVisibility(); // todo these nouns need to align.   entityVisibile vs HIDDEN wtf
 
       handleEyeball($eyeball, tmpLayer);
 
       evt.stopPropagation()
-    } );
+    } ); 
+  }
+
+  function setup_shitty_entity_layer(node, $list) {
+
+//    node.click( () => { alert("hody; you selected the entity layer?"); } );
+
+
+
+    var $expand_entities = $(node).find('.entity_expand_button');
+
+
+    _setup_entity_eyeball(node);
+
+
 
     $list.append(node);
   }
@@ -188,7 +198,7 @@ function initLayersWidget(map) {
 
             /// TODO this is certainly the wrong place to populate "R" and "E" visually.
             if( rstring_cur_target == "E" ) {
-              node = $("<li class='layer ui-state-default'><button class='eyeball_button'></button>Entities (default)</li>");
+              node = $("<li class='layer ui-state-default'><button class='eyeball_button'></button><button class='entity_expand_button'></button>Entities (default)</li>");
               node.data("rstring_ref", "E");
 
               setup_shitty_entity_layer(node, $list);
@@ -233,6 +243,8 @@ function initLayersWidget(map) {
     })
 
     w += $(".layers-palette .window-container").outerWidth(true);
+
+    h += 14; //todo fix this - needs to calc from top padding
 
     $(".layers-palette").width(w);
     $(".layers-palette").height(h);  
