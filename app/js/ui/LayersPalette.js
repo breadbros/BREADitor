@@ -1,7 +1,7 @@
 import { Tools } from '../../Tools.js';
 import { modal_error } from './Util.js';
 import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js'
-import { setNormalEntityVisibility, getNormalEntityVisibility } from './EntityPalette.js'
+import { setNormalEntityVisibility, getNormalEntityVisibility, setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js'
 
 function initLayersWidget(map) {
   var layers = map.mapData.layers;
@@ -157,16 +157,38 @@ function initLayersWidget(map) {
     } ); 
   }
 
-  function setup_shitty_entity_layer(node, $list) {
+  function handleEntityExpand(button) {
+    button.removeClass('expand');
+    button.removeClass('contract');
 
-//    node.click( () => { alert("hody; you selected the entity layer?"); } );
+    if( getEntityLayersExpanded() ) {
+      button.addClass('expand');
+    } else {
+      button.addClass('contract');
+    }
 
+    // TODO actually do it.
+  }
 
-
+  function _setup_entity_expand(node) {
     var $expand_entities = $(node).find('.entity_expand_button');
 
+    handleEntityExpand($expand_entities);
+
+    $expand_entities.click( (evt) => {
+      setEntityLayersExpanded( !getEntityLayersExpanded() ); 
+
+      handleEntityExpand($expand_entities);
+
+      evt.stopPropagation()
+    } ); 
+  }
+
+  function setup_shitty_entity_layer(node, $list) {
 
     _setup_entity_eyeball(node);
+
+    _setup_entity_expand(node);
 
 
 
