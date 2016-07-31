@@ -468,6 +468,9 @@ function initLayersWidget(map) {
   }
 
   function generateContent(i, l, $parent) {
+
+    var normalContainer = $("<div class='normal_layer'></div>")
+
     var visible_div = $("<button class='eyeball_button'></button>");
     var name_div = $("<div class='layer_name'></div>");
 
@@ -476,22 +479,33 @@ function initLayersWidget(map) {
     var lucent_div   = $("<div class='layer_lucency'></div>");
     var parallax_div = $("<div class='layer_parallax'>?:?</div>");
 
+    var entityContainer = $("<div class='entity_layer'><button class='eyeball_button'></button><div class='layer_name'></div></div>")
+
+    var entity_name_div = entityContainer.find(".layer_name");
+
     handleEyeball(visible_div, l);
 
     name_div.text((i+1)+": "+l.name);
+    entity_name_div.text( (i+1)+" (entities)" );
+
     lucent_div.text(formatAlphaAsPercentage(l.alpha)+"%")
 
     lucent_div.click(lucent_click);
     parallax_div.click(parallax_click);
 
-    $parent.append(visible_div);
-    $parent.append(name_div);
+    normalContainer.append(visible_div);
+    normalContainer.append(name_div);
 
     // right div
     right_div.append(lucent_div);
     right_div.append(parallax_div);
     
-    $parent.append(right_div);
+    normalContainer.append(right_div);
+
+    $parent.append(entityContainer);
+    $parent.append(normalContainer);
+
+
 
     return visible_div; 
   }

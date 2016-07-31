@@ -13,6 +13,12 @@ How to install:
 
 TODO
 ====
+* force layernames to be unique
+  * update entity.location.layer on layername change
+  * update map.entities[layername] references on layername change
+
+* do not overwrite .chr's in entity.filename with "__default__"
+
 * show scrollbars on main window if there are palettes offscreen.
 * setup_shitty_obs_layer like setup_shitty_zone_layer.
 * "Gather all" dialogs
