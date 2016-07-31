@@ -3,7 +3,7 @@ var path = require('path');
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 import { ShaderProgram } from "./ShaderProgram.js";
 import { Tools } from "./Tools.js";
-import { getNormalEntityVisibility } from './js/ui/EntityPalette.js'
+import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js'
 
 function buildTileDataTexture(data) {
     var out = new Uint8Array(data.length * 4);
@@ -600,7 +600,7 @@ Map.prototype = {
 
             /// Layered Entities
             if( getNormalEntityVisibility() ) {
-                if (this.entities[layer.name] && this.entities[layer.name].length > 0) {
+                if (this.entities[layer.name] && this.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name) ) {
                     var entities = this.entities[layer.name];
                     var showEntityPreview = (window.selected_layer && layer === window.selected_layer.layer && this.entityPreview);
                     this.spriteShader.use();

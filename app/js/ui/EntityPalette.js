@@ -27,7 +27,7 @@ export var shouldShowEntitiesForLayer = (layername) => {
     modal_error("cannot shouldShowEntitiesForLayer, '"+layername+"' is not a layer");
   }
 
-  let shouldHide = window.$$$currentMap.layerLookup["Back Parallax"].maped_HIDE_ENTS;
+  let shouldHide = window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS;
 
   return !shouldHide;
 };
@@ -37,7 +37,9 @@ export var setShowEntitiesForLayer = (layername, isVisible) => {
     modal_error("cannot setShowEntitiesForLayer, '"+layername+"' is not a layer");
   }
 
-  window.$$$currentMap.layerLookup["Back Parallax"].maped_HIDE_ENTS = !isVisible;
+  window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS = !isVisible;
+
+  console.log("ents("+layername+")" + window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS)
 }
 
 

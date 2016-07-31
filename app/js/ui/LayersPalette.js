@@ -56,7 +56,7 @@ function initLayersWidget(map) {
 
       handleEntityEyeball($btn, layerName);
 
-      evt.stopPropagation()
+      evt.stopPropagation();
     } );
   }
 
