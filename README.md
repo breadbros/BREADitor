@@ -16,6 +16,7 @@ TODO
 * force layernames to be unique
   * update entity.location.layer on layername change
   * update map.entities[layername] references on layername change
+  * move to UUIDs for this whole thing
 
 * do not overwrite .chr's in entity.filename with "__default__"
 
@@ -32,8 +33,8 @@ TODO
 * verify load/save of layer lucency values.
 * restore Map palette dimensions like other palettes
 * Need a menu item for gathering all windows within the given area, if they are offscreen.
-* reorder layers
-* edit zones
+* delete layers
+* delete zones
 * entity palette
 * VSP selector
 * entity selector

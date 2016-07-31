@@ -313,7 +313,7 @@ function initLayersWidget(map) {
 
   function lucent_click(evt) {
     var idx, layer, dialog;
-    var $me = $(evt.target).parent().parent();
+    var $me = $(evt.target).closest("li");
     var special = "";
 
     /// TODO: this is special-case and evil.  make more better.
@@ -359,7 +359,7 @@ function initLayersWidget(map) {
   }
 
   function parallax_click(evt) {
-    var idx = parseInt($(this).parent().parent().data("rstring_ref"))-1;
+    var idx = parseInt($(this).closest("li").data("rstring_ref"))-1;
     var layer = window.$$$currentMap.mapData.layers[idx];
 
     evt.stopPropagation();
