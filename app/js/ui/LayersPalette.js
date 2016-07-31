@@ -201,17 +201,20 @@ function initLayersWidget(map) {
 
     if( getEntityLayersExpanded() ) {
       button.addClass('expand');
+
+      $(".entity_layer").show();
+
     } else {
       button.addClass('contract');
+
+      $(".entity_layer").hide();
     }
 
-    // TODO actually do it.
+    resizeWindow();
   }
 
   function _setup_entity_expand(node) {
     var $expand_entities = $(node).find('.entity_expand_button');
-
-    handleEntityExpand($expand_entities);
 
     $expand_entities.click( (evt) => {
       setEntityLayersExpanded( !getEntityLayersExpanded() ); 
@@ -286,6 +289,9 @@ function initLayersWidget(map) {
             console.log("unimplemented, weirdo.");
           } )
     };
+
+    var $expand_entities = $(node).find('.entity_expand_button');
+    handleEntityExpand($expand_entities);
   }
 
   function resizeWindow() {
