@@ -1,7 +1,9 @@
 import { Tools } from '../../Tools.js';
 import { modal_error } from './Util.js';
 import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js'
-import { setNormalEntityVisibility, getNormalEntityVisibility, setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js'
+import { setShowEntitiesForLayer, shouldShowEntitiesForLayer, 
+         setNormalEntityVisibility, getNormalEntityVisibility, 
+         setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js'
 
 function initLayersWidget(map) {
   var layers = map.mapData.layers;
@@ -27,6 +29,32 @@ function initLayersWidget(map) {
       layers[i].MAPED_HIDDEN = !layers[i].MAPED_HIDDEN;
 
       handleEyeball($eyeball, layers[i]);
+
+      evt.stopPropagation()
+    } );
+  }
+
+  function handleEntityEyeball($btn, layerName) {
+    $btn.removeClass('showEnts');
+    $btn.removeClass('hideEnts');
+
+    if( shouldShowEntitiesForLayer(layerName) ) {
+      $btn.addClass('showEnts');
+    } else {
+      $btn.addClass('hideEnts');
+    }
+  }
+
+  function addLayerEntityEyeballHandler($layerContainer, idx) {
+    var layerName = layers[i].name;
+    var $btn = $layerContainer.find(".entity_layer .eyeball_button");
+
+    handleEntityEyeball($btn, layerName);
+
+    $btn.on( "click", function(evt) {
+      setShowEntitiesForLayer(layerName, !shouldShowEntitiesForLayer(layerName))
+
+      handleEntityEyeball($btn, layerName);
 
       evt.stopPropagation()
     } );
@@ -75,6 +103,16 @@ function initLayersWidget(map) {
         evt.stopPropagation()
       } );
   }
+
+  function addLayerEditHandler( $layer_container, i ) {
+      $layer_container.on( "dblclick", function(evt) {
+
+        console.log( "Allow editing of the layer's name here?" );
+
+        evt.stopPropagation()
+      } );
+  }
+
 
   function setup_shitty_zone_layer($list) {
 
@@ -189,7 +227,6 @@ function initLayersWidget(map) {
     _setup_entity_eyeball(node);
 
     _setup_entity_expand(node);
-
 
 
     $list.append(node);
@@ -525,9 +562,12 @@ function initLayersWidget(map) {
 
     newLayerContainer = generateLayerContainer( l,i );
     eyeballButton = generateContent( i, l, newLayerContainer );
+    
+    addLayerEntityEyeballHandler(newLayerContainer, i);
     addLayerEyeballHandler(eyeballButton, i);
-
     addLayerSelectHandler( newLayerContainer, i );
+    addLayerEditHandler( newLayerContainer, i );
+
 
     list.append( newLayerContainer );
   };
