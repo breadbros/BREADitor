@@ -123,8 +123,11 @@ function initLayersWidget(map) {
     var $eyeball;
 
     var newLayerContainer = generateLayerContainer( l,i );
+
+
     $eyeball = generateContent(999, tmpLayer, newLayerContainer);
     newLayerContainer.find(".layer_name").text("Zones");
+    newLayerContainer.find(".entity_layer").remove();
     newLayerContainer.addClass("nosort");
     newLayerContainer.data("alpha", getZoneAlpha()); 
     newLayerContainer.data("rstring_ref", "ZZZ"); 
