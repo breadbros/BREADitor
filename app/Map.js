@@ -17,17 +17,6 @@ function buildTileDataTexture(data) {
     return out;
 }
 
-/// FROM https://www.w3.org/wiki/Dynamic_style_-_manipulating_CSS_with_JavaScript
-/// TODO move to a more general location?
-function getStyleSheet(unique_title) {
-  for(var i=0; i<document.styleSheets.length; i++) {
-    var sheet = document.styleSheets[i];
-    if(sheet.title == unique_title) {
-      return sheet;
-    }
-  }
-}
-
 var __obsColor = [1, 1, 1, 0.5];
 function setColor(r,g,b,a) {
     __obsColor = [r,g,b,a];
