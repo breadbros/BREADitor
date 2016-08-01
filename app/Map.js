@@ -47,12 +47,25 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
         layer.vsp = "default";
     });
 
+    // for "E" layer rendering
+    this.fakeEntityLayer = {
+        name: "Entity Layer (E)",
+        parallax: {
+            X: 1,
+            Y: 1,
+        },
+        vsp: "default"
+    }
+
     this.renderString = this.mapData.renderstring.split(",");
     this.mapSizeInTiles = [0,0];
     this.layerLookup = {};
 
+    /// YOU BIG FAT PHONY
+    this.layerLookup[this.fakeEntityLayer.name] = this.fakeEntityLayer;
+
     for (i = 0; i < this.mapData.layers.length; i++) {
-        if (this.mapData.layers[i].MAPED_HIDDEN)  { continue; }
+        //if (this.mapData.layers[i].MAPED_HIDDEN)  { continue; }
 
         if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
         if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
@@ -92,8 +105,6 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     this.vspData["zones"].source_image = "../app/images/zones.png";
 
     this.compactifyZones = () => {
-        debugger;
-
         // zone_data: [{x,y,z}, ...]
 
         var tmpZones, x, y;
@@ -104,7 +115,6 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
             if(this.zoneData[idx] > 0) {
                 x = getXfromFlat( idx, 20 ) //todo : variable vsp width for zones.
                 y = getYfromFlat( idx, 20 ) //todo : variable vsp width for zones.
-                debugger;
             }
         } );
     };
@@ -135,17 +145,8 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     this.entityTextures['__default__'].img.onload = this.doneLoading;
     this.entityTextures['__default__'].img.src = "../app/images/defaultsprite.png";
 
-    var lastLayer = "";
-    var defaultEntityLayer = "";
-    for (i = 0; i < this.renderString.length; i++) {
-        if (this.renderString[i] === 'E') {
-            defaultEntityLayer = this.mapData.layers[lastLayer].name;
-        }
-        lastLayer = parseInt(this.renderString[i], 10);
-    }
-    if (!defaultEntityLayer) {
-        defaultEntityLayer = this.mapData.layers[0].name;
-    }
+    var defaultEntityLayer = this.fakeEntityLayer.name;
+
     console.log("Buttdicks");
 
     this.entityData = {
@@ -274,7 +275,6 @@ function getXfromFlat( idx, numColumns ) {
 //
 function getYfromFlat( idx, numColumns ) {
     var flatval = idx - getXfromFlat( idx,numColumns );
-    debugger;
     return parseInt(flatval/numColumns);
 }
 
@@ -582,10 +582,10 @@ Map.prototype = {
             layerIndex = parseInt(this.renderString[i], 10) - 1;
             layer = this.mapData.layers[layerIndex];
 
-            // if( this.renderString[i] == 'E' ) {
-
-            //     continue;
-            // }  
+            if( this.renderString[i] == 'E' ) {
+                this.drawEntities(i, this, this.fakeEntityLayer, tallEntities);
+                continue;
+            }  
             if (isNaN(layerIndex)) continue;
             if (layer.MAPED_HIDDEN) continue;
 

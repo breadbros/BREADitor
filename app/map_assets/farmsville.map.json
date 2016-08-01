@@ -151,7 +151,8 @@
         "Y": 250
       },
       "alpha": 1,
-      "vsp": "default"
+      "vsp": "default",
+      "MAPED_HIDDEN": true
     },
     {
       "name": "Water",
@@ -164,7 +165,8 @@
         "Y": 250
       },
       "alpha": 0.5882352941176471,
-      "vsp": "default"
+      "vsp": "default",
+      "MAPED_HIDDEN": false
     },
     {
       "name": "Fishing",
@@ -699,7 +701,7 @@
       "location": {
         "tx": 104,
         "ty": 36,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -720,7 +722,7 @@
       "location": {
         "tx": 80,
         "ty": 87,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -740,7 +742,7 @@
       "location": {
         "tx": 58,
         "ty": 24,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -761,7 +763,7 @@
       "location": {
         "tx": 47,
         "ty": 92,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -781,7 +783,7 @@
       "location": {
         "tx": 87,
         "ty": 64,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -802,7 +804,7 @@
       "location": {
         "tx": 109,
         "ty": 78,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -822,7 +824,7 @@
       "location": {
         "tx": 63,
         "ty": 44,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -842,7 +844,7 @@
       "location": {
         "tx": 98,
         "ty": 52,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -863,7 +865,7 @@
       "location": {
         "tx": 108,
         "ty": 95,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -893,7 +895,7 @@
       "location": {
         "tx": 53,
         "ty": 69,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -913,7 +915,7 @@
       "location": {
         "tx": 96,
         "ty": 53,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -934,7 +936,7 @@
       "location": {
         "tx": 60,
         "ty": 26,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -955,7 +957,7 @@
       "location": {
         "tx": 58,
         "ty": 28,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": true,
@@ -976,7 +978,7 @@
       "location": {
         "tx": 56,
         "ty": 26,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -997,7 +999,7 @@
       "location": {
         "tx": 59,
         "ty": 196,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -1018,7 +1020,7 @@
       "location": {
         "tx": 60,
         "ty": 196,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -1039,7 +1041,7 @@
       "location": {
         "tx": 15,
         "ty": 200,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -1060,7 +1062,7 @@
       "location": {
         "tx": 51,
         "ty": 166,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1081,7 +1083,7 @@
       "location": {
         "tx": 49,
         "ty": 165,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1102,7 +1104,7 @@
       "location": {
         "tx": 125,
         "ty": 171,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1123,7 +1125,7 @@
       "location": {
         "tx": 130,
         "ty": 169,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1144,7 +1146,7 @@
       "location": {
         "tx": 122,
         "ty": 171,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1165,7 +1167,7 @@
       "location": {
         "tx": 117,
         "ty": 169,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1186,7 +1188,7 @@
       "location": {
         "tx": 133,
         "ty": 173,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1207,7 +1209,7 @@
       "location": {
         "tx": 137,
         "ty": 173,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1228,7 +1230,7 @@
       "location": {
         "tx": 97,
         "ty": 160,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1249,7 +1251,7 @@
       "location": {
         "tx": 98,
         "ty": 164,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -1270,7 +1272,7 @@
       "location": {
         "tx": 89,
         "ty": 159,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1291,7 +1293,7 @@
       "location": {
         "tx": 92,
         "ty": 159,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1312,7 +1314,7 @@
       "location": {
         "tx": 85,
         "ty": 159,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1333,7 +1335,7 @@
       "location": {
         "tx": 84,
         "ty": 166,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -1354,7 +1356,7 @@
       "location": {
         "tx": 127,
         "ty": 223,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1384,7 +1386,7 @@
       "location": {
         "tx": 12,
         "ty": 227,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1405,7 +1407,7 @@
       "location": {
         "tx": 19,
         "ty": 223,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1426,7 +1428,7 @@
       "location": {
         "tx": 13,
         "ty": 221,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1447,7 +1449,7 @@
       "location": {
         "tx": 16,
         "ty": 230,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1468,7 +1470,7 @@
       "location": {
         "tx": 19,
         "ty": 233,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -1489,7 +1491,7 @@
       "location": {
         "tx": 86,
         "ty": 217,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1510,7 +1512,7 @@
       "location": {
         "tx": 96,
         "ty": 220,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1531,7 +1533,7 @@
       "location": {
         "tx": 125,
         "ty": 211,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -1552,7 +1554,7 @@
       "location": {
         "tx": 131,
         "ty": 206,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -1573,7 +1575,7 @@
       "location": {
         "tx": 127,
         "ty": 165,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1594,7 +1596,7 @@
       "location": {
         "tx": 119,
         "ty": 165,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1615,7 +1617,7 @@
       "location": {
         "tx": 135,
         "ty": 169,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1636,7 +1638,7 @@
       "location": {
         "tx": 113,
         "ty": 136,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -1656,7 +1658,7 @@
       "location": {
         "tx": 108,
         "ty": 89,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1677,7 +1679,7 @@
       "location": {
         "tx": 113,
         "ty": 74,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1698,7 +1700,7 @@
       "location": {
         "tx": 106,
         "ty": 64,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1719,7 +1721,7 @@
       "location": {
         "tx": 85,
         "ty": 84,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1740,7 +1742,7 @@
       "location": {
         "tx": 101,
         "ty": 49,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1761,7 +1763,7 @@
       "location": {
         "tx": 67,
         "ty": 61,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1782,7 +1784,7 @@
       "location": {
         "tx": 61,
         "ty": 87,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1803,7 +1805,7 @@
       "location": {
         "tx": 48,
         "ty": 88,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1824,7 +1826,7 @@
       "location": {
         "tx": 109,
         "ty": 89,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1845,7 +1847,7 @@
       "location": {
         "tx": 62,
         "ty": 87,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1866,7 +1868,7 @@
       "location": {
         "tx": 120,
         "ty": 75,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1887,7 +1889,7 @@
       "location": {
         "tx": 111,
         "ty": 48,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1908,7 +1910,7 @@
       "location": {
         "tx": 120,
         "ty": 90,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1929,7 +1931,7 @@
       "location": {
         "tx": 87,
         "ty": 44,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1950,7 +1952,7 @@
       "location": {
         "tx": 66,
         "ty": 39,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1971,7 +1973,7 @@
       "location": {
         "tx": 49,
         "ty": 31,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -1992,7 +1994,7 @@
       "location": {
         "tx": 92,
         "ty": 94,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2013,7 +2015,7 @@
       "location": {
         "tx": 41,
         "ty": 63,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2034,7 +2036,7 @@
       "location": {
         "tx": 111,
         "ty": 60,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2055,7 +2057,7 @@
       "location": {
         "tx": 94,
         "ty": 34,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2076,7 +2078,7 @@
       "location": {
         "tx": 70,
         "ty": 43,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2097,7 +2099,7 @@
       "location": {
         "tx": 56,
         "ty": 61,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2118,7 +2120,7 @@
       "location": {
         "tx": 43,
         "ty": 51,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2139,7 +2141,7 @@
       "location": {
         "tx": 32,
         "ty": 75,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2160,7 +2162,7 @@
       "location": {
         "tx": 72,
         "ty": 58,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2181,7 +2183,7 @@
       "location": {
         "tx": 92,
         "ty": 73,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2202,7 +2204,7 @@
       "location": {
         "tx": 0,
         "ty": 0,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2223,7 +2225,7 @@
       "location": {
         "tx": 65,
         "ty": 29,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2244,7 +2246,7 @@
       "location": {
         "tx": 32,
         "ty": 85,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2265,7 +2267,7 @@
       "location": {
         "tx": 26,
         "ty": 85,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2286,7 +2288,7 @@
       "location": {
         "tx": 72,
         "ty": 58,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2307,7 +2309,7 @@
       "location": {
         "tx": 31,
         "ty": 81,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2328,7 +2330,7 @@
       "location": {
         "tx": 22,
         "ty": 86,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2349,7 +2351,7 @@
       "location": {
         "tx": 24,
         "ty": 81,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2370,7 +2372,7 @@
       "location": {
         "tx": 18,
         "ty": 85,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2391,7 +2393,7 @@
       "location": {
         "tx": 35,
         "ty": 89,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Left",
       "pays_attention_to_obstructions": false,
@@ -2412,7 +2414,7 @@
       "location": {
         "tx": 110,
         "ty": 62,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2433,7 +2435,7 @@
       "location": {
         "tx": 112,
         "ty": 62,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2454,7 +2456,7 @@
       "location": {
         "tx": 111,
         "ty": 63,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2475,7 +2477,7 @@
       "location": {
         "tx": 0,
         "ty": 0,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2496,7 +2498,7 @@
       "location": {
         "tx": 0,
         "ty": 0,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2517,7 +2519,7 @@
       "location": {
         "tx": 0,
         "ty": 0,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2538,7 +2540,7 @@
       "location": {
         "tx": 0,
         "ty": 0,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2559,7 +2561,7 @@
       "location": {
         "tx": 126,
         "ty": 90,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2580,7 +2582,7 @@
       "location": {
         "tx": 132,
         "ty": 91,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2601,7 +2603,7 @@
       "location": {
         "tx": 88,
         "ty": 160,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Right",
       "pays_attention_to_obstructions": false,
@@ -2622,7 +2624,7 @@
       "location": {
         "tx": 121,
         "ty": 219,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2642,7 +2644,7 @@
       "location": {
         "tx": 137,
         "ty": 219,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2662,7 +2664,7 @@
       "location": {
         "tx": 132,
         "ty": 219,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2682,7 +2684,7 @@
       "location": {
         "tx": 131,
         "ty": 224,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2702,7 +2704,7 @@
       "location": {
         "tx": 0,
         "ty": 0,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2723,7 +2725,7 @@
       "location": {
         "tx": 0,
         "ty": 0,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
@@ -2744,7 +2746,7 @@
       "location": {
         "tx": 0,
         "ty": 0,
-        "layer": "Water"
+        "layer": false
       },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
