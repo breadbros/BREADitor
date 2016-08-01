@@ -146,6 +146,7 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     if (!defaultEntityLayer) {
         defaultEntityLayer = this.mapData.layers[0].name;
     }
+    console.log("Buttdicks");
 
     this.entityData = {
         '__default__': {
@@ -531,6 +532,41 @@ Map.prototype = {
         }
     },
 
+    drawEntities: function(i, map, layer, tallEntities) {
+        /// Layered Entities
+        if( getNormalEntityVisibility() ) {
+            if (map.entities[layer.name] && map.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name) ) {
+                var entities = map.entities[layer.name];
+                var showEntityPreview = (window.selected_layer && layer === window.selected_layer.layer && map.entityPreview);
+                map.spriteShader.use();
+
+                for (var e = 0; e < entities.length; e++) {
+                    if( showEntityPreview && 
+                        map.entityPreview.location.ty < entities[e].location.ty && 
+                        (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
+                    ) {
+                        map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
+                    }
+                    map.renderEntity(entities[e], layer, [1,1,1,1]);
+                    if (map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw']) {
+                        tallEntities.push(entities[e]);
+                    }
+                }
+            } else if (map.entityPreview) {
+                map.spriteShader.use();
+                map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
+            }
+
+            if (map.mapData.tallentitylayer === i) {
+                map.spriteShader.use();
+                for (var e in tallEntities) {
+                    var entity = tallEntities[e];
+                    map.renderEntity(entity, layer, [1, 1, 1, 1], map.entityData[entity.filename].regions['Tall_Redraw']);
+                }
+            }
+        }
+    },
+
     render: function() {
         var gl = this.gl;
         var i = 0;
@@ -546,6 +582,10 @@ Map.prototype = {
             layerIndex = parseInt(this.renderString[i], 10) - 1;
             layer = this.mapData.layers[layerIndex];
 
+            // if( this.renderString[i] == 'E' ) {
+
+            //     continue;
+            // }  
             if (isNaN(layerIndex)) continue;
             if (layer.MAPED_HIDDEN) continue;
 
@@ -587,35 +627,7 @@ Map.prototype = {
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-            /// Layered Entities
-            if( getNormalEntityVisibility() ) {
-                if (this.entities[layer.name] && this.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name) ) {
-                    var entities = this.entities[layer.name];
-                    var showEntityPreview = (window.selected_layer && layer === window.selected_layer.layer && this.entityPreview);
-                    this.spriteShader.use();
-
-                    for (var e = 0; e < entities.length; e++) {
-                        if (showEntityPreview && this.entityPreview.location.ty < entities[e].location.ty && (e === 0 || this.entityPreview.location.ty >= entities[e - 1].location.ty)) {
-                            this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
-                        }
-                        this.renderEntity(entities[e], layer, [1,1,1,1]);
-                        if (this.entityData[entities[e].filename].regions && this.entityData[entities[e].filename].regions['Tall_Redraw']) {
-                            tallEntities.push(entities[e]);
-                        }
-                    }
-                } else if (this.entityPreview) {
-                    this.spriteShader.use();
-                    this.renderEntity(this.entityPreview, layer, [1, 1, 1, 0.75]);
-                }
-
-                if (this.mapData.tallentitylayer === i) {
-                    this.spriteShader.use();
-                    for (var e in tallEntities) {
-                        var entity = tallEntities[e];
-                        this.renderEntity(entity, layer, [1, 1, 1, 1], this.entityData[entity.filename].regions['Tall_Redraw']);
-                    }
-                }
-            }
+            this.drawEntities(i, this, layer, tallEntities);
         }
 
         /// OBSTRUCTIONS
