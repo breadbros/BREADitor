@@ -38,6 +38,8 @@
         <script>
             window.$CURRENT_SELECTED_TILES = [0,0,0];
 
+            var garbage_zsort = 1;
+
             
 
             $(function() {
@@ -47,7 +49,20 @@
                     stop: function(event, ui) {
                         console.log("draggable STOP");
                         console.log(event);
+                    },
+                    start: function(event, ui) {
+                        /// map palette is always on bottom.
+                        if( $(event.target).hasClass("map-palette") ) {
+                            return;
+                        }
+
+                        $(event.target).css("z-index", garbage_zsort);
+                        garbage_zsort++;
+
+                        console.log("draggable START");
+                        console.log(event);
                     }
+
                 });
 
                 window.$MAP_WINDOW = $(".map-palette.resizable-window");
@@ -153,7 +168,7 @@
 
             .info-palette {
                 width: 200px;
-                height: 200px;
+                height: 300px;
 
                 position: absolute;
                 right: 220px;
