@@ -43,3 +43,55 @@ export var setShowEntitiesForLayer = (layername, isVisible) => {
 }
 
 
+var currentEntities = null;
+var selectedZoneIdx = null;
+
+function initEntitiesWidget(map) {
+  debugger;
+  currentEntities = map.mapData.entities;
+
+  redraw_palette();
+}
+
+function redraw_palette() {
+  var $list = $(".entity-list");
+  $list.html("");
+  var $tmp;
+  // $("#entity-number").text( currentZones.length );
+
+  // var singleclick_handler = (evt) => {
+  //   select_zone_from_pallete(evt);
+  // };
+
+  // var doubleclick_handler = (evt) => { 
+  //   var $it_me = select_zone_from_pallete(evt);
+  //   edit_zone_click(evt,  $it_me.data("index"));
+  // };
+   
+  for (let i = 0; i < currentEntities.length; i++) {
+
+    $tmp = $("<li class='entity-row' data-index='"+i+"'><span class='entity-index'></span><span class='entity-name'></span></li>");
+    $tmp.find(".entity-index").text( i );
+    $tmp.find(".entity-name").text( currentEntities[i].name );
+    
+    // $tmp.click( singleclick_handler );
+
+    // $tmp.dblclick( doubleclick_handler );
+    // $tmp.contextmenu( doubleclick_handler );
+
+    $list.append($tmp);
+  }
+
+  fixContainerSize();
+}
+
+var fixContainerSize = function() {
+  var palette = $(".entity-palette");
+  var container = $(".entity-palette .window-container");
+
+  container.height( palette.height() - 70 );  
+};
+
+export var EntitiesWidget = {
+  initEntitiesWidget: initEntitiesWidget
+};

@@ -156,14 +156,17 @@
                 background-color: orange;
             }
 
-
-            .zones-palette {
+            .zones-palette, .entity-palette {
                 width: 200px;
                 height: 200px;
 
                 position: absolute;
                 right: 10px;
                 bottom: 220px;
+            }
+
+            .zones-palette .window-container, .entity-palette {
+                overflow: scroll;
             }
 
             .info-palette {
@@ -355,10 +358,6 @@
                 padding-top: 2px;
             }
 
-            .zones-palette .window-container {
-                overflow: scroll;
-            }
-
             .zones-list {
                 margin: 0px;
                 padding: 0px;
@@ -435,6 +434,20 @@
 
             <button id="zones-new">New</button>
             <button id="zones-spreadsheet">Spreadsheet Mode</button>
+        </div>
+
+        <div class="entity-palette ui-widget-content draggable-window resizable-window">
+            <h3 class="ui-widget-header">Entities</h3>
+
+            <div class="window-container">
+                <div id="entity-count">entities: <span id="entity-number"></span></div>
+                <ul class="entity-list">
+                    
+                </ul>
+            </div>
+
+            <button id="entity-new">New</button>
+            <button id="entity-spreadsheet">Spreadsheet Mode</button>
         </div>
 
         <div class="info-palette ui-widget-content draggable-window resizable-window">

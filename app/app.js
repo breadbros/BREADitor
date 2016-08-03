@@ -2,6 +2,7 @@ import { Map } from './Map.js';
 import { Tools } from './Tools.js';
 import { LayersWidget } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
+import { EntitiesWidget } from './js/ui/EntityPalette.js';
 
 function initInfoWidget(map) {
 	$("#info-mapname").text( map.mapPath );
@@ -33,6 +34,7 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
             LayersWidget.initLayersWidget( currentMap );
             initInfoWidget( currentMap );
             ZonesWidget.initZonesWidget( currentMap );
+            EntitiesWidget.initEntitiesWidget( currentMap );
 
             Tools.updateRstringInfo();
         });
