@@ -2,7 +2,6 @@ var $ = require('jquery');
 var sprintf = require("sprintf-js").sprintf;
 import { getZoneVisibility, getZoneAlpha, getActiveZone, setActiveZone, scrollZonePalletteToZone } from "./js/ui/ZonesPalette.js";
 
-
 var zoomFn = function(map, e, zoomout) {
     var mouseX = map.camera[0] + e.clientX * map.camera[2];
     var mouseY = map.camera[1] + e.clientY * map.camera[2];
@@ -368,6 +367,7 @@ $('.layers-palette').mouseup(capturePaletteMovementForRestore);
 $('.zones-palette').mouseup(capturePaletteMovementForRestore);
 $('.info-palette').mouseup(capturePaletteMovementForRestore);
 $('.tool-palette').mouseup(capturePaletteMovementForRestore);
+$('.entity-palette').mouseup(capturePaletteMovementForRestore);
 
 /// todo: currently this isn't allowing the multiple-vsp thing to really be "right".
 /// we need to have virtual palletes per vsp, and switch between them when you switch to a layer with a different palette.
