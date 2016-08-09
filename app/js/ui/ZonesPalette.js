@@ -1,7 +1,6 @@
 import { modal_error } from './Util.js';
 
 var currentZones = null;
-
 var selectedZoneIdx = null;
 
 function initZonesWidget(map) {
@@ -100,7 +99,7 @@ template += "<div>Adjacent Activation?: <input type='checkbox' id='zone_can_by_a
 function setup_template() {
   var $template = $(template);
 
-  var vals = new Array(256);//create an empty array with length 45
+  var vals = new Array(256);//create an empty array with length 256
   var select = $template.find("#zone_activation_chance");
 
   $.each(vals, function(idx) {
@@ -148,6 +147,7 @@ function _zone_click(evt, id) {
 
     $( "#modal-dialog" ).show();
     dialog = $( "#modal-dialog" ).dialog({
+      width: 500,
       modal: true,
       buttons: {
         Save: () => { 

@@ -17,9 +17,11 @@ TODO
   * update entity.location.layer on layername change
   * update map.entities[layername] references on layername change
   * move to UUIDs for this whole thing
-
+* make all .dialog( calls pull from a universal width source
+* God, make the edit dialogs look good what's with the lack of label orientation christ what is this the stone ages?
 * do not overwrite .chr's in entity.filename with "__default__"
-
+* Christ, figure out a better template formate than just having it inline (just use REACT already?)
+  * JSON data definition format for zone/entity etc?  Autogen create/edit?  Stupid?  Smart?
 * show scrollbars on main window if there are palettes offscreen.
 * setup_shitty_obs_layer like setup_shitty_zone_layer.
 * "Gather all" dialogs
