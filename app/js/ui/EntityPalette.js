@@ -149,7 +149,18 @@ function setup_template(ent, id) {
       $template.find("#entity_filename").click( () => {
         alert("Pop up file dialog here.");
       } );
-      
+
+
+      // selected either from json definition or from default set.
+      // template += "<div>Animation: <select id='entity_animation'></select>";
+
+      // selected either from json definition or from default set.
+      // template += "<div>Facing: <select id='entity_facing'></select></div>";
+
+      // selected from current set of layers
+      // template += "<div>Location.layer: <select id='entity_location_layer'></select></div>";
+
+
     }
 
   console.log("Populate fields here.");
