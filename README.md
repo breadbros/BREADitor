@@ -50,6 +50,10 @@ TODO
 * properly initialize infoWindow upon load
 * This list is not exhaustive
 * rename __default__ to __VERGE3_DEFAULT__
+* on change of entity filename, reload all animation strands
+* Require Entity name uniqueness?
+  * Modify mapscripts to select entities by name (break the index dependency)
+
 
 Credits
 =======

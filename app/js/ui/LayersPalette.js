@@ -5,10 +5,12 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
          setNormalEntityVisibility, getNormalEntityVisibility, 
          setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js'
 
+var list;
+
 function initLayersWidget(map) {
   var layers = map.mapData.layers;
 
-  var list = $(".layers-palette .layers-list");
+  list = $(".layers-palette .layers-list");
   var newLayerContainer = null;
   var l = null;
   var line = null;
@@ -159,23 +161,6 @@ function initLayersWidget(map) {
     }); 
   };
 
-/*
-        var selClass = "selected";
-
-        removeAllSelectedLayers(selClass);
-
-        /// TODO: this is disgusting, right?  right.
-        window.selected_layer = {
-          map_tileData_idx: 999,
-          layer: window.$$$currentMap.zoneData,
-          $container: $zone_container
-        };
-
-        $zone_container.addClass( selClass );
-
-        evt.stopPropagation()
-      } );
-*/
 
 
   function _setup_entity_eyeball(node) {
@@ -258,39 +243,40 @@ function initLayersWidget(map) {
 
     for (var i = map.renderString.length - 1; i >= 0; i--) {
       rstring_cur_target = map.renderString[i];
-          rstring_ref = parseInt(rstring_cur_target, 10);
-          if (isNaN(rstring_ref)) {
+      rstring_ref = parseInt(rstring_cur_target, 10);
+      if (isNaN(rstring_ref)) {
 
-            /// TODO this is certainly the wrong place to populate "R" and "E" visually.
-            if( rstring_cur_target == "E" ) {
-              node = $("<li class='layer ui-state-default'><button class='eyeball_button'></button><button class='entity_expand_button'></button>Entities (default)</li>");
-              node.data("rstring_ref", "E");
+        /// TODO this is certainly the wrong place to populate "R" and "E" visually.
+        if( rstring_cur_target == "E" ) {
+          node = $("<li class='layer ui-state-default'><button class='eyeball_button'></button><button class='entity_expand_button'></button>Entities (default)</li>");
+          node.data("rstring_ref", "E");
+          node.data("layer_name", "Entity Layer (E)");
 
-              setup_shitty_entity_layer(node, $list);
- 
-            } else if( rstring_cur_target == "R" ) {
-              node = $("<li class='layer ui-state-default'><button class='eyeball_button question_mark'>?</button>'Render'</li>");
-              node.data("rstring_ref", "R");
-              $list.append(node); 
-            } else {
-              console.log( "UNKNOWN RSTRING PARTICLE '"+rstring_cur_target+"'" );
-            }
+          setup_shitty_entity_layer(node, $list);
 
-            continue;
-          }
+        } else if( rstring_cur_target == "R" ) {
+          node = $("<li class='layer ui-state-default'><button class='eyeball_button question_mark'>?</button>'Render'</li>");
+          node.data("rstring_ref", "R");
+          $list.append(node); 
+        } else {
+          console.log( "UNKNOWN RSTRING PARTICLE '"+rstring_cur_target+"'" );
+        }
 
-          for (var j = childs.length - 1; j >= 0; j--) {
-            cur_kid = $(childs[j]);
-            if( cur_kid.data("rstring_ref") == rstring_cur_target ) {
-              $list.append(cur_kid); // re-add to list
-              childs.splice(j, 1); // remove from childs array
-              break;
-            }
-          };
+        continue;
+      }
 
-          $(".eyeball_button.question_mark").click( function() {
-            console.log("unimplemented, weirdo.");
-          } )
+      for (var j = childs.length - 1; j >= 0; j--) {
+        cur_kid = $(childs[j]);
+        if( cur_kid.data("rstring_ref") == rstring_cur_target ) {
+          $list.append(cur_kid); // re-add to list
+          childs.splice(j, 1); // remove from childs array
+          break;
+        }
+      };
+
+      $(".eyeball_button.question_mark").click( function() {
+        console.log("unimplemented, weirdo.");
+      } )
     };
 
     var $expand_entities = $(node).find('.entity_expand_button');
@@ -560,6 +546,7 @@ function initLayersWidget(map) {
     var newLayerContainer = $("<li class='layer ui-state-default'></li>");
     newLayerContainer.data("alpha", layer.alpha);
     newLayerContainer.data("rstring_ref", ""+(layer_index+1) );
+    newLayerContainer.data("layer_name", layer.name );
 
     return newLayerContainer;
   }
@@ -627,6 +614,44 @@ function initLayersWidget(map) {
   redrawAllLucentAndParallax(map);
 };
 
+function get_layernames_by_rstring_order() {
+  var ret = [];
+  var childs = list.children("li");
+  var cur_kid;
+  var rstring_cur_target;
+  var rstring_ref;
+
+  var map = window.$$$currentMap;
+
+  for (var i = map.renderString.length - 1; i >= 0; i--) {
+    rstring_cur_target = map.renderString[i];
+    rstring_ref = parseInt(rstring_cur_target, 10);
+
+    if (isNaN(rstring_ref)) {
+      switch(rstring_cur_target) {
+        case 'E':
+          ret.push("Entity Layer (E)");
+          continue;
+
+        case 'R': //ignore everything else for now
+        default:
+          continue;
+      }
+    }
+
+    for (var j = childs.length - 1; j >= 0; j--) {
+      cur_kid = $(childs[j]);
+      if( cur_kid.data("rstring_ref") == rstring_cur_target ) {
+        ret.push(cur_kid.data("layer_name"));
+        break;
+      }
+    };
+  }
+
+  return ret;
+};
+
 export var LayersWidget = {
     initLayersWidget: initLayersWidget,
+    get_layernames_by_rstring_order: get_layernames_by_rstring_order
 };

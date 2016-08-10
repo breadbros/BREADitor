@@ -1,4 +1,5 @@
 import { modal_error } from './Util.js';
+import { LayersWidget } from './LayersPalette.js';
 
 var _entityVisibility = true;
 var _entityLayersExpanded = false;
@@ -156,6 +157,9 @@ function setup_template(ent, id) {
       var animationKeyset = Object.keys(entData.animations);
 
       var $entAnim = $template.find("#entity_animation");
+
+      /// repopulate animation select
+      $entAnim.empty()
       $.each(animationKeyset, (key, value) => {   
           $entAnim.append(
             $("<option></option>")
@@ -164,17 +168,38 @@ function setup_template(ent, id) {
           ); 
       });
 
+      /// set value.
+      $entAnim.val(ent.animation);
 
-      // selected either from json definition or from default set.
-      // template += "<div>Animation: <select id='entity_animation'></select>";
+      var $entFace = $template.find("#entity_facing");
+      var faceKeyset = ['Up', 'Down', 'Left', 'Right'];
 
-      // selected either from json definition or from default set.
-      // template += "<div>Facing: <select id='entity_facing'></select></div>";
+      /// repopulate animation select
+      $entFace.empty()
+      $.each(faceKeyset, (key, value) => {   
+          $entFace.append(
+            $("<option></option>")
+            .attr("value",value)
+            .text(value)
+          ); 
+      });
 
-      // selected from current set of layers
-      // template += "<div>Location.layer: <select id='entity_location_layer'></select></div>";
+      /// set value.
+      $entFace.val(ent.facing);
 
 
+      var $entLocLay = $template.find("#entity_location_layer");
+      var locLayKeyset = LayersWidget.get_layernames_by_rstring_order();
+      $entLocLay.empty()
+      $.each(locLayKeyset, (key, value) => {   
+          $entLocLay.append(
+            $("<option></option>")
+            .attr("value",value)
+            .text(value)
+          ); 
+      });
+
+      $entLocLay.val(ent.location.layer);
     }
 
   console.log("Populate fields here.");
