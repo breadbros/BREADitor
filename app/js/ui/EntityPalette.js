@@ -151,6 +151,20 @@ function setup_template(ent, id) {
       } );
 
 
+      
+      var entData = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];
+      var animationKeyset = Object.keys(entData.animations);
+
+      var $entAnim = $template.find("#entity_animation");
+      $.each(animationKeyset, (key, value) => {   
+          $entAnim.append(
+            $("<option></option>")
+            .attr("value",value)
+            .text(value)
+          ); 
+      });
+
+
       // selected either from json definition or from default set.
       // template += "<div>Animation: <select id='entity_animation'></select>";
 

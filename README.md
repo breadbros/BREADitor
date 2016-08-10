@@ -46,9 +46,10 @@ TODO
 * eyeball icon for RENDER layer should do ????
 * do we even NEED a render layer?
 * all layers should have unique string names and that should be enforced.
-  * on successful layer namechange, change all entity.location.layers from old -> new
+  * on successful layer namechange, change all entity.location.layers from old -> new 
 * properly initialize infoWindow upon load
 * This list is not exhaustive
+* rename __default__ to __VERGE3_DEFAULT__
 
 Credits
 =======
