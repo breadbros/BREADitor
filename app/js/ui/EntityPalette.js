@@ -120,89 +120,82 @@ template += "<div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly><
 function setup_template(ent, id) {
   var $template = $(template);
 
-    debugger;
+  if(ent) {
+    $( "#modal-dialog" ).attr("title", "Edit Entity (id: "+id+")");
+  } else {
+    $( "#modal-dialog" ).attr("title", "Add New Entity (id: "+(currentEntities.length-1)+")");
+  }
+
+  if(ent) {
+    console.log("Editing: " + ent.name);
+
+    $template.find("#entity_name").val(ent.name);
+    $template.find("#entity_filename").val(ent.filename);
+
+    $template.find("#entity_activation_script").val(ent.activation_script);
+    $template.find("#entity_speed").val(ent.speed);
+    $template.find("#entity_location_x").val(ent.location.tx);
+    $template.find("#entity_location_y").val(ent.location.ty);
+
+    // http://regex.info/blog/2006-09-15/247
+    $template.find("#entity_wander").val(JSON.stringify(ent.wander).replace(/{/g, "{\n").replace(/}/g, "\n}").replace(/,/g, ",\n").replace(/":/g, '": ').replace(/^"/mg, '\t"'));
+
+    $template.find("#entity_pays_attention_to_obstructions").prop( "checked", ent.pays_attention_to_obstructions );
+    $template.find("#entity_is_an_obstruction").prop( "checked", ent.is_an_obstruction );
+    $template.find("#entity_autofaces").prop( "checked", ent.autofaces );
+
+    $template.find("#entity_filename").click( () => {
+      alert("Pop up file dialog here.");
+    } );
+    
+    var entData = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];
+    var animationKeyset = Object.keys(entData.animations);
+
+    var $entAnim = $template.find("#entity_animation");
+
+    /// repopulate animation select
+    $entAnim.empty()
+    $.each(animationKeyset, (key, value) => {   
+        $entAnim.append(
+          $("<option></option>")
+          .attr("value",value)
+          .text(value)
+        ); 
+    });
+
+    /// set value.
+    $entAnim.val(ent.animation);
+
+    var $entFace = $template.find("#entity_facing");
+    var faceKeyset = ['Up', 'Down', 'Left', 'Right'];
+
+    /// repopulate animation select
+    $entFace.empty()
+    $.each(faceKeyset, (key, value) => {   
+        $entFace.append(
+          $("<option></option>")
+          .attr("value",value)
+          .text(value)
+        ); 
+    });
+
+    /// set value.
+    $entFace.val(ent.facing);
 
 
-    if(ent) {
-      $( "#modal-dialog" ).attr("title", "Edit Entity (id: "+id+")");
-    } else {
-      $( "#modal-dialog" ).attr("title", "Add New Entity (id: "+(currentEntities.length-1)+")");
-    }
+    var $entLocLay = $template.find("#entity_location_layer");
+    var locLayKeyset = LayersWidget.get_layernames_by_rstring_order();
+    $entLocLay.empty()
+    $.each(locLayKeyset, (key, value) => {   
+        $entLocLay.append(
+          $("<option></option>")
+          .attr("value",value)
+          .text(value)
+        ); 
+    });
 
-    if(ent) {
-      console.log("Editing: " + ent.name);
-
-      $template.find("#entity_name").val(ent.name);
-      $template.find("#entity_filename").val(ent.filename);
-
-      $template.find("#entity_activation_script").val(ent.activation_script);
-      $template.find("#entity_speed").val(ent.speed);
-      $template.find("#entity_location_x").val(ent.location.tx);
-      $template.find("#entity_location_y").val(ent.location.ty);
-
-      // http://regex.info/blog/2006-09-15/247
-      $template.find("#entity_wander").val(JSON.stringify(ent.wander).replace(/{/g, "{\n").replace(/}/g, "\n}").replace(/,/g, ",\n").replace(/":/g, '": ').replace(/^"/mg, '\t"'));
-
-      $template.find("#entity_pays_attention_to_obstructions").prop( "checked", ent.pays_attention_to_obstructions );
-      $template.find("#entity_is_an_obstruction").prop( "checked", ent.is_an_obstruction );
-      $template.find("#entity_autofaces").prop( "checked", ent.autofaces );
-
-      $template.find("#entity_filename").click( () => {
-        alert("Pop up file dialog here.");
-      } );
-
-
-      
-      var entData = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];
-      var animationKeyset = Object.keys(entData.animations);
-
-      var $entAnim = $template.find("#entity_animation");
-
-      /// repopulate animation select
-      $entAnim.empty()
-      $.each(animationKeyset, (key, value) => {   
-          $entAnim.append(
-            $("<option></option>")
-            .attr("value",value)
-            .text(value)
-          ); 
-      });
-
-      /// set value.
-      $entAnim.val(ent.animation);
-
-      var $entFace = $template.find("#entity_facing");
-      var faceKeyset = ['Up', 'Down', 'Left', 'Right'];
-
-      /// repopulate animation select
-      $entFace.empty()
-      $.each(faceKeyset, (key, value) => {   
-          $entFace.append(
-            $("<option></option>")
-            .attr("value",value)
-            .text(value)
-          ); 
-      });
-
-      /// set value.
-      $entFace.val(ent.facing);
-
-
-      var $entLocLay = $template.find("#entity_location_layer");
-      var locLayKeyset = LayersWidget.get_layernames_by_rstring_order();
-      $entLocLay.empty()
-      $.each(locLayKeyset, (key, value) => {   
-          $entLocLay.append(
-            $("<option></option>")
-            .attr("value",value)
-            .text(value)
-          ); 
-      });
-
-      $entLocLay.val(ent.location.layer);
-    }
-
-  console.log("Populate fields here.");
+    $entLocLay.val(ent.location.layer);
+  }
 
   return $template;
 }
@@ -220,8 +213,6 @@ function _entity_click(evt, id) {
   evt.stopPropagation();
 
   var dialog;
-
-  debugger;
 
   var ent = currentEntities[id];
 
@@ -253,6 +244,67 @@ function _entity_click(evt, id) {
       }
     });
   });
+}
+
+function update_entity(dialog, ent_id) {
+
+  var entity_name = $("#entity_name").val(); // TODO: validate uniqueness
+  var entity_filename = $("#entity_filename").val(); // TODO: validate existance  
+  var entity_activation_script = $("#entity_activation_script").val();
+  var entity_speed = $("#entity_speed").val();
+
+  var entity_pays_attention_to_obstructions = $("#entity_pays_attention_to_obstructions").is(':checked');
+  var entity_is_an_obstruction = $("#entity_is_an_obstruction").is(':checked');
+  var entity_autofaces = $("#entity_autofaces").is(':checked');
+
+  var entity_wander = currentEntities[ent_id].wander; // TODO: allow actual editing of wander.
+
+  var entity_animation = $("#entity_animation").val();
+  var entity_facing = $("#entity_facing").val();
+
+  var loc_tx = $("#entity_location_x").val();
+  var loc_ty = $("#entity_location_y").val();
+  var loc_l = $("#entity_location_layer").val();
+
+  // TODO : PX/PY?
+  var loc = {
+    tx: loc_tx,
+    ty: loc_ty,
+    layer: loc_l
+  };
+
+  var ent = null;
+
+  if(!$.isNumeric(ent_id) || ent_id < 0) {
+    modal_error("Invalid input: ent_id ("+ent_id+") is invalid.");
+    return;
+  }
+
+  if( !$.isNumeric(entity_speed) ) {
+    modal_error("Invalid input: speed not numeric ("+entity_speed+").");
+    return;
+  }
+
+  ent = {
+    "name": entity_name, 
+    "filename": entity_filename,
+    
+    "facing": entity_facing,
+    "pays_attention_to_obstructions": entity_pays_attention_to_obstructions,
+    "is_an_obstruction": entity_is_an_obstruction, 
+    "autofaces": entity_autofaces,
+    "speed": entity_speed, 
+    "wander": entity_wander,
+    "activation_script": entity_activation_script, 
+    "animation": entity_animation,
+
+    "location": loc
+  };
+
+  currentEntities[ent_id] = ent;
+  redraw_palette();
+
+  dialog.dialog( "close" );
 }
 
 

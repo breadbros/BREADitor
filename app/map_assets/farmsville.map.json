@@ -739,23 +739,23 @@
     {
       "name": "Z Villager C",
       "filename": "__default__",
-      "location": {
-        "tx": 58,
-        "ty": 24,
-        "layer": "Entity Layer (E)"
-      },
-      "facing": "Down",
+      "facing": "Up",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": true,
       "autofaces": false,
-      "speed": 40,
+      "speed": "40",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "L1R1D1U2D1R1L1B"
       },
       "activation_script": "Zealot1",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "58",
+        "ty": "24",
+        "layer": "Entity Layer (E)"
+      }
     },
     {
       "name": "Villager D",
