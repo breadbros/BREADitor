@@ -101,6 +101,17 @@ var fixContainerSize = function() {
   container.height( palette.height() - 70 );  
 };
 
+$(".entity-palette").resize( function() {
+  fixContainerSize();
+} );
+
+$(".entity-palette #entity-new").click( (evt) => {
+  new_entity_click(evt);
+});
+
+$(".entity-palette #entity-spreadsheet").click( () => {
+  alert("SPREAD THAT SHEET entity SHEIT");
+});
 
 var template = "<div>Name: <input id='entity_name'></div>";
 template += "<div>Filename: <input id='entity_filename'></div>";
@@ -201,6 +212,7 @@ function setup_template(ent, id) {
 }
 
 
+
 function new_entity_click(evt) {
   _entity_click(evt);
 }
@@ -257,7 +269,17 @@ function update_entity(dialog, ent_id) {
   var entity_is_an_obstruction = $("#entity_is_an_obstruction").is(':checked');
   var entity_autofaces = $("#entity_autofaces").is(':checked');
 
-  var entity_wander = currentEntities[ent_id].wander; // TODO: allow actual editing of wander.
+
+  var entity_wander;
+
+  if(currentEntities.length < ent_id) {
+   entity_wander = currentEntities[ent_id].wander; // TODO: allow actual editing of wander.
+   console.log("YOU REALLY NEED TO IMPLEMENT WANDER-EDITING");
+  } else {
+    entity_wander = {mode: "Scripted", delay: 0, initial_movestring: ""}
+    alert("Creating new entity with bullshit wander because you haven't actually added it. Dick.");
+  }
+
 
   var entity_animation = $("#entity_animation").val();
   var entity_facing = $("#entity_facing").val();

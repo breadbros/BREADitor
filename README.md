@@ -53,7 +53,11 @@ TODO
 * on change of entity filename, reload all animation strands
 * Require Entity name uniqueness?
   * Modify mapscripts to select entities by name (break the index dependency)
-
+* New Entity:
+  * Filename, even when tabbed to
+  * Animation <- dependent on valid Filename
+  * Facing <- dependent on valid Filename (maybe?)
+  * location.layer <- populate
 
 Credits
 =======
