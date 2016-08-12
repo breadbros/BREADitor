@@ -232,8 +232,6 @@ function _entity_click(evt, id) {
 
     var $template = setup_template(ent, id);
 
-//debugger;
-
     $( "#modal-dialog" ).html("");
     $( "#modal-dialog" ).append($template);
 
@@ -324,12 +322,43 @@ function update_entity(dialog, ent_id) {
     "location": loc
   };
 
+  var old_layer = currentEntities[ent_id].location.layer;
+  var new_layer;
   currentEntities[ent_id] = ent;
+  new_layer = currentEntities[ent_id].location.layer;
+
+  if( old_layer != new_layer ) {
+    relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);
+  }
+
   redraw_palette();
 
   dialog.dialog( "close" );
 }
 
+
+/// todo: ent_name should be a uuid
+/// todo: until then, make sure ent_name is verified unique 
+var relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {
+  var myboy;
+  var ents = window.$$$currentMap.entities;
+
+  for (var i = ents[old_layer].length - 1; i >= 0; i--) {
+    if( ents[old_layer][i].name == ent_name ) {
+      debugger;
+
+      if(!ents[new_layer]) {
+        ents[new_layer] = [];
+      }
+ 
+      ents[new_layer].push( ents[old_layer][i] );
+      delete ents[old_layer][i];
+      return;
+    }
+  }
+
+  alert( "FAILED TO MOVE entity '"+ent_name+"' from layer '"+old_layer+"' to layer '"+new_layer+"'.  FOR REASONS." );
+};
 
 export var EntitiesWidget = {
   initEntitiesWidget: initEntitiesWidget
