@@ -241,6 +241,7 @@ function _entity_click(evt, id) {
     dialog = $( "#modal-dialog" ).dialog({
       width: 500,
       modal: true,
+      title: $( "#modal-dialog" ).attr("title"),
       buttons: {
         Save: () => { 
           var _id = ($.isNumeric(id) && ent) ? id : currentEntities.length;
@@ -272,10 +273,10 @@ function update_entity(dialog, ent_id) {
 
   var entity_wander;
 
-  if(currentEntities.length < ent_id) {
+  if(ent_id < currentEntities.length) { // edit
    entity_wander = currentEntities[ent_id].wander; // TODO: allow actual editing of wander.
    console.log("YOU REALLY NEED TO IMPLEMENT WANDER-EDITING");
-  } else {
+  } else { // add
     entity_wander = {mode: "Scripted", delay: 0, initial_movestring: ""}
     alert("Creating new entity with bullshit wander because you haven't actually added it. Dick.");
   }
