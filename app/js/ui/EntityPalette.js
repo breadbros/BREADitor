@@ -345,14 +345,14 @@ var relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {
 
   for (var i = ents[old_layer].length - 1; i >= 0; i--) {
     if( ents[old_layer][i].name == ent_name ) {
-      debugger;
 
       if(!ents[new_layer]) {
         ents[new_layer] = [];
       }
- 
-      ents[new_layer].push( ents[old_layer][i] );
-      delete ents[old_layer][i];
+
+      myboy = ents[old_layer].splice(i, 1)
+      ents[new_layer].push( myboy[0] ); //remember to unbox. :(
+
       return;
     }
   }
