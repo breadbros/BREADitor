@@ -20,9 +20,9 @@ function updateLocationFunction(map) {
   localStorage[key+'-mapy'] = y;
 }
 
-function bootstrapMap( mapFile, tiledataFile, vspFile ) {
+function bootstrapMap( mapFile, tiledataFile ) {
     new Map(
-        mapFile, tiledataFile, vspFile,
+        mapFile, tiledataFile,
         updateLocationFunction
     ).ready()
         .then(function(m) {
@@ -65,13 +65,7 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
       console.log('HELLO I AM $$$SAVE');
     };
 
-    window.$$$load = function() {
-     var remote = require('remote');
-     var dialog = remote.require('dialog');
-
-     dialog.showOpenDialog({ filters: [
-       { name: 'text', extensions: ['map.json'] }
-      ]}, function (fileNames) {
+    var loadByFilename = (fileNames) => {
       if (fileNames === undefined) return;
       var fileName = fileNames[0];
       var dataName, vspName;
@@ -80,10 +74,22 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
       vspName = fileName.replace('.map.json', '.vsp.json');
 
       /// todo: verify that all three of these files, you know... exist?
-      bootstrapMap(fileName, dataName, vspName);
-     });
+      bootstrapMap(fileName, dataName);
+    };
+
+    window.$$$load = function() {
+      var remote = require('remote');
+      var dialog = remote.require('dialog');
+
+      dialog.showOpenDialog(
+        {filters: [{ name: 'text', extensions: ['map.json'] }]}, 
+        loadByFilename
+      );
     }
 
+    loadByFilename(['../app/map_assets/farmsville.map.json']);
+
+    /*
     /// INITIAL LOAD
     /// TODO: special case this with a null map for new-saving?
     bootstrapMap(
@@ -94,6 +100,7 @@ function bootstrapMap( mapFile, tiledataFile, vspFile ) {
 			'obstructions': '../app/map_assets/farmsville.obsvsp.json'
 	    }
     );
+    */
 })();
 
 /*

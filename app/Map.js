@@ -22,15 +22,15 @@ function setColor(r,g,b,a) {
     __obsColor = [r,g,b,a];
 }
 
-export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction) {
+export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     var i;
     console.log("Loading map", mapfile);
 
     this.filenames = {
         'mapfile' : mapfile,
-        'mapdatafile': mapdatafile,
-        'vspfiles' : vspfiles
+        'mapdatafile': mapdatafile
     };
+
     this.dataPath = path.dirname(mapdatafile);
 
     this.updateLocationFn = updateLocationFunction;
@@ -41,7 +41,10 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
     }.bind(this));
 
     this.mapPath = mapfile;
-    this.mapData = jetpack.read(mapfile, 'json');
+    this.mapData = jetpack.read(mapfile, 'json')
+
+    this.filenames.vspfiles = this.mapData.vsp;
+
     // TEMPORARY -- should come from the mapdata itself
     this.mapData.layers.forEach((layer) => {
         layer.vsp = "default";
@@ -94,8 +97,9 @@ export var Map = function(mapfile, mapdatafile, vspfiles, updateLocationFunction
      console.log("zones ->", this.zoneData);
 
     this.vspData = {};
-    for (var k in vspfiles) {
-        this.vspData[k] = jetpack.read(vspfiles[k], 'json');
+    for (var k in this.filenames.vspfiles) {
+        let tmppath = path.join( this.dataPath, this.filenames.vspfiles[k] );
+        this.vspData[k] = jetpack.read(tmppath, 'json');
         console.log(k, "->", this.vspData[k]);
     }
     
