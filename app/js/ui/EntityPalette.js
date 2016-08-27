@@ -322,12 +322,17 @@ function update_entity(dialog, ent_id) {
     "location": loc
   };
 
-  var old_layer = currentEntities[ent_id].location.layer;
+  var old_layer;
   var new_layer;
   currentEntities[ent_id] = ent;
-  new_layer = currentEntities[ent_id].location.layer;
 
-  if( old_layer != new_layer ) {
+  if( currentEntities[ent_id] && currentEntities[ent_id].location ) {
+    old_layer = currentEntities[ent_id].location.layer;
+  } else {
+    old_layer = new_layer;
+  }
+
+  if( old_layer && new_layer && old_layer != new_layer ) {
     relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);
   }
 
