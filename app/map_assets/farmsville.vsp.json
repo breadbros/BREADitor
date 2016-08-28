@@ -1,8 +1,8 @@
 {
 	"tilesize": {
-		"width" : 16,
-		"height" : 16
+		"width": 16,
+		"height": 16
 	},
 	"tiles_per_row": 20,
-	"source_image": "../app/map_assets/farmsville.tiles.png"
+	"source_image": "farmsville.tiles.png"
 }
