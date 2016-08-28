@@ -1,6 +1,6 @@
 {
     "animations": {
-        "splash": [ [ [0, 10000] ], "BackAndForth" ]
+        "Idle Down": [ [ [0, 10000] ], "BackAndForth" ]
     },
     "dims": [
         554, 

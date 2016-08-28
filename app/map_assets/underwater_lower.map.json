@@ -24,7 +24,9 @@
         "Y": 75
       },
       "alpha": 1,
-      "vsp": "default"
+      "vsp": "default",
+      "MAPED_HIDDEN": false,
+      "maped_HIDE_ENTS": false
     },
     {
       "name": "Parallax",
@@ -37,7 +39,9 @@
         "Y": 75
       },
       "alpha": 1,
-      "vsp": "default"
+      "vsp": "default",
+      "MAPED_HIDDEN": false,
+      "maped_HIDE_ENTS": false
     },
     {
       "name": "Forground Fringe",
@@ -50,7 +54,9 @@
         "Y": 75
       },
       "alpha": 1,
-      "vsp": "default"
+      "vsp": "default",
+      "maped_HIDE_ENTS": false,
+      "MAPED_HIDDEN": false
     }
   ],
   "zones": [
@@ -606,7 +612,7 @@
       "animation": "Idle Down"
     },
     {
-      "name": "asddasdadasd",
+      "name": "BACKGROUND",
       "filename": "map_chrs/undersea_cave/lower/lower_bg.json",
       "facing": "Up",
       "pays_attention_to_obstructions": false,
@@ -644,7 +650,28 @@
       "location": {
         "tx": "4",
         "ty": "0",
-        "layer": "Entity Layer (E)"
+        "layer": "Forground Fringe"
+      }
+    },
+    {
+      "name": "PARRALAX ",
+      "filename": "map_chrs/undersea_cave/lower/lower_parallax.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": "0",
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "location": {
+        "tx": "47",
+        "ty": "17",
+        "layer": "Parallax"
       }
     }
   ]
