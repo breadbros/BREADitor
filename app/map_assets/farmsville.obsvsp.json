@@ -4,5 +4,5 @@
 		"height" : 16
 	},
 	"tiles_per_row": 20,
-	"source_image": "../app/map_assets/farmsville.obs.png"
+	"source_image": "farmsville.obs.png"
 }

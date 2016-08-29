@@ -4,5 +4,5 @@
 		"height" : 16
 	},
 	"tiles_per_row": 20,
-	"source_image": "../app/map_assets/underwater_cave.tiles.png"
+	"source_image": "underwater_cave.tiles.png"
 }

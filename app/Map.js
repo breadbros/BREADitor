@@ -24,7 +24,7 @@ function setColor(r,g,b,a) {
 
 export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     var i;
-    console.log("Loading map", mapfile);
+    console.info("Loading map", mapfile);
 
     this.filenames = {
         'mapfile' : mapfile,
@@ -44,6 +44,14 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     this.mapData = jetpack.read(mapfile, 'json')
 
     this.filenames.vspfiles = this.mapData.vsp;
+
+    if( typeof this.filenames.vspfiles != 'object' ) {
+        throw "vspfiles needs to be a Dictionary.";
+    } 
+
+    if( !this.filenames.vspfiles['default'] ) {
+        throw "vspfiles['default'] needs to be defined.";
+    } 
 
     // TEMPORARY -- should come from the mapdata itself
     this.mapData.layers.forEach((layer) => {
@@ -94,19 +102,20 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
         // todo verify this is right
         this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y,this.mapSizeInTiles[0])] = tmpZones[idx].z;
      } );
-     console.log("zones ->", this.zoneData);
+     console.info("zones ->", this.zoneData);
 
     this.vspData = {};
     for (var k in this.filenames.vspfiles) {
         let tmppath = path.join( this.dataPath, this.filenames.vspfiles[k] );
+        console.info( "Loading '"+tmppath+"'..." );
         this.vspData[k] = jetpack.read(tmppath, 'json');
-        console.log(k, "->", this.vspData[k]);
+        console.info(k, "->", this.vspData[k]);
     }
-    
+
     // todo: stop being evil
     // todo: that probably won't happen. MWAHAHAHAHHA.
     this.vspData["zones"] = $.extend(true, {}, this.vspData["obstructions"]);
-    this.vspData["zones"].source_image = "../app/images/zones.png";
+    this.vspData["zones"].source_image = "../../app/images/zones.png";
 
     this.compactifyZones = () => {
         // zone_data: [{x,y,z}, ...]
@@ -136,10 +145,12 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
         // TODO probably actually want to fail the load or do something other than
         // just silently carry on when the image can't be loaded
 
+        let tmppath = path.join( this.dataPath, this.vspData[k].source_image );
+
         this.toLoad++;
         this.vspImages[k] = new Image();
         this.vspImages[k].onload = this.doneLoading;
-        this.vspImages[k].src = this.vspData[k].source_image;
+        this.vspImages[k].src = tmppath;
     }
 
     this.toLoad++;
@@ -150,8 +161,6 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     this.entityTextures['__default__'].img.src = "../app/images/defaultsprite.png";
 
     var defaultEntityLayer = this.fakeEntityLayer.name;
-
-    console.log("Buttdicks");
 
     this.entityData = {
         '__default__': {
@@ -179,7 +188,7 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
 
     for (var i in this.entities) {
         if (this.entities[i]) {
-            console.log("Sorting entities on layer", i, ", ", this.entities[i].length, "entities to sort");
+            console.info("Sorting entities on layer", i, ", ", this.entities[i].length, "entities to sort");
             this.entities[i].sort(function(a, b) {
                 return a.location.ty - b.location.ty;
             });
@@ -242,10 +251,10 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
                 }
             }
 
-            console.log("Recalculated lines:");
-            console.log(this.hull);
-            console.log(this.tiles);
-            console.log(this.lines);
+            console.info("Recalculated lines:");
+            console.info(this.hull);
+            console.info(this.tiles);
+            console.info(this.lines);
         },
 
         hull: { x:null, y:null, w:0, h:0 },
@@ -314,8 +323,9 @@ Map.prototype = {
                         imagePath += ".png";
                     }
                     if (!jetpack.inspect(imagePath)) {
-                        console.log("Couldn't load image", data.image, "for entity", entity.filename, "; falling back.");
-                        this.entityData[entity.filename].image = '__default__';
+                        console.warn("Couldn't load image", data.image, "for entity", entity.filename, "; falling back.");
+                        //this.entityData[entity.filename].image = '__default__';
+                        entity.MAPED_USEDEFAULT = true;
                         return;
                     }
 
@@ -325,17 +335,24 @@ Map.prototype = {
                     this.entityTextures[data.image].img.onload = this.doneLoading;
                     this.entityTextures[data.image].img.src = imagePath;
                 }
+
+                entity.MAPED_USEDEFAULT = false;
             } else {
-                console.log("Could not find '"+entity.filename+"', using the default.");
-                entity.filename = '__default__';
+                console.warn("Could not find '"+entity.filename+"', using the default.");
+                entity.MAPED_USEDEFAULT = true;
             }
         }
 
-        if (this.entityData[entity.filename].regions && this.entityData[entity.filename].regions['Tall_Redraw'] && !this.mapData.tallentitylayer) {
-            alert("ERROR: Loading tall entity " + entity.filename + " with no tallentitylayer in map!");
+        if( !entity.MAPED_USEDEFAULT ) {
+            if (this.entityData[entity.filename].regions && this.entityData[entity.filename].regions['Tall_Redraw'] && !this.mapData.tallentitylayer) {
+                alert("ERROR: Loading tall entity " + entity.filename + " with no tallentitylayer in map!");
+            }
+
+            entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];            
+        } else {
+            entity.animation = "Idle Down"; /// m-m-m-magick (__default__ has this)
         }
 
-        entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
     },
 
     addEntity: function(filename, location) {
@@ -397,25 +414,25 @@ Map.prototype = {
             var k = null;
 
             for( k in paletteDict ) {
-                console.log( 'paletteDict.' + k );
+                console.info( 'paletteDict.' + k );
                 configVar = k + ' settings'; // this should be CONST'd somewhere and referenced in both places
                 $pal = $('.' + k);
 
-                console.log( 'configVar: ' + configVar );
-                console.log( '$pal: ' + $pal );
-                console.log( 'localStorage[configVar]: ' + localStorage[configVar] )
+                console.info( 'configVar: ' + configVar );
+                console.info( '$pal: ' + $pal );
+                console.info( 'localStorage[configVar]: ' + localStorage[configVar] )
 
                 if( localStorage[configVar] && $pal ) {
                     obj = JSON.parse(localStorage[configVar]);
 
-                    console.log('oh yeah: ' + obj);
+                    console.info('oh yeah: ' + obj);
 
                     if( obj.w ) { $pal.width(obj.w); }
                     if( obj.h ) { $pal.height(obj.h); }
                     if( obj.x ) { $pal.css('left', obj.x); }
                     if( obj.y ) { $pal.css('top', obj.y); }
                 } else {
-                    console.log('lol, no');
+                    console.info('lol, no');
                 }
             }
         }
@@ -431,10 +448,10 @@ Map.prototype = {
             if( localStorage[key+'-layerspallete'] )   { this.camera[1] = parseInt(localStorage[key+'-mapy']); }
 
             if( localStorage['palettes'] ) {
-                console.log('palletes found...');
+                console.info('palletes found...');
                 setPaletteLocations( JSON.parse(localStorage['palettes']) );
             } else {
-                console.log('no palettes registered.');
+                console.warn('no palettes registered.');
             }
         }
 
@@ -461,7 +478,7 @@ Map.prototype = {
     },
 
     setCanvas: function($canvas) {
-        console.log("Setting canvas on map");
+        console.info("Setting canvas on map");
         if (!!this.renderContainer) this.cleanUpCallbacks();
 
         // set up callbacks
@@ -552,7 +569,7 @@ Map.prototype = {
                         map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
                     }
                     map.renderEntity(entities[e], layer, [1,1,1,1]);
-                    if (map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw']) {
+                    if (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw']) {
                         tallEntities.push(entities[e]);
                     }
                 }
@@ -762,8 +779,7 @@ Map.prototype = {
     renderEntity: function(entity, layer, tint, clip) {
         var gl = this.gl;
         var tilesize = this.vspData[layer.vsp].tilesize;
-
-        var entityData = this.entityData[entity.filename];
+        var entityData = entity.MAPED_USEDEFAULT ? this.entityData['__default__'] : this.entityData[entity.filename];
         var entityTexture = this.entityTextures[entityData.image]
 
         clip = (clip === undefined ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);

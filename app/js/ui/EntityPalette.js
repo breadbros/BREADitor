@@ -159,7 +159,15 @@ function setup_template(ent, id) {
       alert("Pop up file dialog here.");
     } );
     
-    var entData = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];
+    var entData; 
+    if( window.$$$currentMap.entityData[ent.filename] ) {
+      entData = window.$$$currentMap.entityData[ent.filename];
+    } else {
+      console.warn( "I DO NOT KNOW HOW TO RENDER ["+ent.filename+"]" );
+      entData = window.$$$currentMap.entityData['__default__'];
+    }
+
+    // = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];
     var animationKeyset = Object.keys(entData.animations);
 
     var $entAnim = $template.find("#entity_animation");

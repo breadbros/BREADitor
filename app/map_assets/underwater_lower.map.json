@@ -24,9 +24,7 @@
         "Y": 75
       },
       "alpha": 1,
-      "vsp": "default",
-      "MAPED_HIDDEN": false,
-      "maped_HIDE_ENTS": false
+      "vsp": "default"
     },
     {
       "name": "Parallax",
@@ -39,9 +37,7 @@
         "Y": 75
       },
       "alpha": 1,
-      "vsp": "default",
-      "MAPED_HIDDEN": false,
-      "maped_HIDE_ENTS": false
+      "vsp": "default"
     },
     {
       "name": "Forground Fringe",
@@ -54,9 +50,7 @@
         "Y": 75
       },
       "alpha": 1,
-      "vsp": "default",
-      "maped_HIDE_ENTS": false,
-      "MAPED_HIDDEN": false
+      "vsp": "default"
     }
   ],
   "zones": [
@@ -297,281 +291,294 @@
   ],
   "entities": [
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 21,
-        "ty": 40,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Jelly 1",
+      "filename": "monster_jelly",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "21",
+        "ty": "40",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 31,
-        "ty": 40,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Jelly 2",
+      "filename": "monster_jelly",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "31",
+        "ty": "40",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 25,
-        "ty": 52,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Jelly 3",
+      "filename": "monster_jelly",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "25",
+        "ty": "52",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 25,
-        "ty": 54,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Jelly 4",
+      "filename": "monster_jelly",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "25",
+        "ty": "54",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 27,
-        "ty": 52,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Jelly 5",
+      "filename": "monster_jelly",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "27",
+        "ty": "52",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 27,
-        "ty": 54,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Jelly 6",
+      "filename": "monster_jelly",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "27",
+        "ty": "54",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 36,
-        "ty": 29,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Dork 1",
+      "filename": "monster_dorkupine",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "36",
+        "ty": "29",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 38,
-        "ty": 29,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Jelly 7",
+      "filename": "monster_jelly",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "38",
+        "ty": "29",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 18,
-        "ty": 47,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Dork 2",
+      "filename": "monster_dorkupine",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "18",
+        "ty": "47",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 19,
-        "ty": 46,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Dork 3",
+      "filename": "monster_dorkupine",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "19",
+        "ty": "46",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 20,
-        "ty": 47,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Dork 4",
+      "filename": "monster_dorkupine",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "20",
+        "ty": "47",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 24,
-        "ty": 53,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Jelly 8",
+      "filename": "monster_jelly",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "24",
+        "ty": "53",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
-      "name": "",
-      "filename": "__default__",
-      "location": {
-        "tx": 28,
-        "ty": 53,
-        "layer": "Entity Layer (E)"
-      },
+      "name": "Jelly 9",
+      "filename": "monster_jelly",
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": 100,
+      "speed": "100",
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "Z0W15Z1W15B"
       },
       "activation_script": "",
-      "animation": "Idle Down"
+      "animation": "Idle Down",
+      "location": {
+        "tx": "28",
+        "ty": "53",
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Bert",
-      "filename": "__default__",
+      "filename": "seafood_bert",
       "location": {
         "tx": 28,
         "ty": 33,
@@ -588,11 +595,12 @@
         "initial_movestring": ""
       },
       "activation_script": "bert",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Boss",
-      "filename": "__default__",
+      "filename": "monster_jelly_large",
       "location": {
         "tx": 0,
         "ty": 0,
@@ -609,11 +617,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
-      "name": "BACKGROUND",
-      "filename": "map_chrs/undersea_cave/lower/lower_bg.json",
+      "name": "BACKGROUND ART",
+      "filename": "map_chrs\\undersea_cave\\lower\\lower_bg.json",
       "facing": "Up",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
@@ -630,48 +639,6 @@
         "tx": "4",
         "ty": "0",
         "layer": "Background Fringe"
-      }
-    },
-    {
-      "name": "FOREGROUND",
-      "filename": "map_chrs/undersea_cave/lower/lower_bg.json",
-      "facing": "Up",
-      "pays_attention_to_obstructions": false,
-      "is_an_obstruction": false,
-      "autofaces": false,
-      "speed": "100",
-      "wander": {
-        "mode": "Scripted",
-        "delay": 0,
-        "initial_movestring": ""
-      },
-      "activation_script": "",
-      "animation": "Idle Down",
-      "location": {
-        "tx": "4",
-        "ty": "0",
-        "layer": "Forground Fringe"
-      }
-    },
-    {
-      "name": "PARRALAX ",
-      "filename": "map_chrs/undersea_cave/lower/lower_parallax.json",
-      "facing": "Up",
-      "pays_attention_to_obstructions": false,
-      "is_an_obstruction": false,
-      "autofaces": false,
-      "speed": "0",
-      "wander": {
-        "mode": "Scripted",
-        "delay": 0,
-        "initial_movestring": ""
-      },
-      "activation_script": "",
-      "animation": "Idle Down",
-      "location": {
-        "tx": "47",
-        "ty": "17",
-        "layer": "Parallax"
       }
     }
   ]

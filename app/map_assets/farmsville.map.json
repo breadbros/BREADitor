@@ -52,6 +52,7 @@
     }
   ],
   "name": "Bumsville: City of Bums",
+  "tallentitylayer": 7,
   "vsp": {
     "default": "farmsville.vsp.json",
     "obstructions": "farmsville.obsvsp.json"
@@ -59,7 +60,6 @@
   "music": "",
   "renderstring": "2,1,3,8,7,E,6,4,5,9,R",
   "initscript": "start",
-  "tallentitylayer": 7,
   "starting_coordinates": [
     0,
     0
@@ -154,8 +154,7 @@
         "Y": 250
       },
       "alpha": 1,
-      "vsp": "default",
-      "MAPED_HIDDEN": false
+      "vsp": "default"
     },
     {
       "name": "Water",
@@ -168,8 +167,7 @@
         "Y": 250
       },
       "alpha": 0.5882352941176471,
-      "vsp": "default",
-      "MAPED_HIDDEN": false
+      "vsp": "default"
     },
     {
       "name": "Fishing",
@@ -689,18 +687,12 @@
       "activation_script": "dorkupine_intro",
       "activation_chance": 1,
       "can_by_adjacent_activated": true
-    },
-    {
-      "name": "BUTTS",
-      "activation_script": "123",
-      "activation_chance": "4",
-      "can_by_adjacent_activated": true
     }
   ],
   "entities": [
     {
       "name": "Villager A (Vorn)",
-      "filename": "chrs_json/object_orphan_machine.json",
+      "filename": "chrs\\walker_05.chr",
       "location": {
         "tx": 104,
         "ty": 36,
@@ -717,11 +709,12 @@
         "initial_movestring": ""
       },
       "activation_script": "Ent0",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Villager B",
-      "filename": "chrs_json/object_rat.json",
+      "filename": "chrs\\walker_02.chr",
       "location": {
         "tx": 80,
         "ty": 87,
@@ -737,32 +730,34 @@
         "delay": 75
       },
       "activation_script": "Ent1",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Z Villager C",
-      "filename": "__default__",
-      "facing": "Up",
+      "filename": "chrs\\walker_05.chr",
+      "location": {
+        "tx": 58,
+        "ty": 24,
+        "layer": "Entity Layer (E)"
+      },
+      "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": true,
       "autofaces": false,
-      "speed": "40",
+      "speed": 40,
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": "L1R1D1U2D1R1L1B"
       },
       "activation_script": "Zealot1",
-      "animation": "Idle Down",
-      "location": {
-        "tx": "58",
-        "ty": "24",
-        "layer": "Entity Layer (E)"
-      }
+      "MAPED_USEDEFAULT": true,
+      "animation": "Idle Down"
     },
     {
       "name": "Villager D",
-      "filename": "__default__",
+      "filename": "chrs\\walker_01.chr",
       "location": {
         "tx": 47,
         "ty": 92,
@@ -778,11 +773,12 @@
         "delay": 50
       },
       "activation_script": "Ent3",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Villager E",
-      "filename": "__default__",
+      "filename": "chrs\\walker_03.chr",
       "location": {
         "tx": 87,
         "ty": 64,
@@ -799,11 +795,12 @@
         "initial_movestring": ""
       },
       "activation_script": "Ent4",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Villager F",
-      "filename": "__default__",
+      "filename": "chrs\\kadan.chr",
       "location": {
         "tx": 109,
         "ty": 78,
@@ -819,11 +816,12 @@
         "delay": 80
       },
       "activation_script": "Ent5",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Villager G",
-      "filename": "__default__",
+      "filename": "chrs\\walker_06.chr",
       "location": {
         "tx": 63,
         "ty": 44,
@@ -839,11 +837,12 @@
         "delay": 115
       },
       "activation_script": "Ent6",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Villager H",
-      "filename": "__default__",
+      "filename": "chrs\\walker_03.chr",
       "location": {
         "tx": 98,
         "ty": 52,
@@ -860,11 +859,12 @@
         "initial_movestring": "L4U9R14D9L10B"
       },
       "activation_script": "Ent7",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Villager I",
-      "filename": "__default__",
+      "filename": "chrs\\walker_01.chr",
       "location": {
         "tx": 108,
         "ty": 95,
@@ -890,11 +890,12 @@
         }
       },
       "activation_script": "ent8",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Villager J",
-      "filename": "__default__",
+      "filename": "chrs\\walker_02.chr",
       "location": {
         "tx": 53,
         "ty": 69,
@@ -910,11 +911,12 @@
         "delay": 50
       },
       "activation_script": "Ent9",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Villager K",
-      "filename": "__default__",
+      "filename": "chrs\\walker_03.chr",
       "location": {
         "tx": 96,
         "ty": 53,
@@ -931,11 +933,12 @@
         "initial_movestring": ""
       },
       "activation_script": "Ent27",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Z Villager L",
-      "filename": "__default__",
+      "filename": "chrs\\vorn.chr",
       "location": {
         "tx": 60,
         "ty": 26,
@@ -952,11 +955,12 @@
         "initial_movestring": "U1D1L1R2L1D1U1B"
       },
       "activation_script": "Zealot2",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Z Villager M",
-      "filename": "__default__",
+      "filename": "chrs\\walker_01.chr",
       "location": {
         "tx": 58,
         "ty": 28,
@@ -973,11 +977,12 @@
         "initial_movestring": "R1L1U1D2U1L1R1B"
       },
       "activation_script": "Zealot3",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Z Villager N",
-      "filename": "__default__",
+      "filename": "chrs\\walker_03.chr",
       "location": {
         "tx": 56,
         "ty": 26,
@@ -994,11 +999,12 @@
         "initial_movestring": "D1U1R1L2R1U1D1B"
       },
       "activation_script": "Zealot4",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Person A",
-      "filename": "__default__",
+      "filename": "chrs\\walker_01.chr",
       "location": {
         "tx": 59,
         "ty": 196,
@@ -1015,11 +1021,12 @@
         "initial_movestring": ""
       },
       "activation_script": "person_a",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Person B",
-      "filename": "__default__",
+      "filename": "chrs\\walker_03.chr",
       "location": {
         "tx": 60,
         "ty": 196,
@@ -1036,11 +1043,12 @@
         "initial_movestring": ""
       },
       "activation_script": "person_b",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Person C",
-      "filename": "__default__",
+      "filename": "chrs\\kadan.chr",
       "location": {
         "tx": 15,
         "ty": 200,
@@ -1057,11 +1065,12 @@
         "initial_movestring": ""
       },
       "activation_script": "person_c",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Person D",
-      "filename": "__default__",
+      "filename": "chrs\\walker_07.chr",
       "location": {
         "tx": 51,
         "ty": 166,
@@ -1078,11 +1087,12 @@
         "initial_movestring": ""
       },
       "activation_script": "Dexters_Dad",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Person E",
-      "filename": "__default__",
+      "filename": "chrs\\walker_02.chr",
       "location": {
         "tx": 49,
         "ty": 165,
@@ -1099,11 +1109,12 @@
         "initial_movestring": ""
       },
       "activation_script": "Dexters_Mom",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Student A",
-      "filename": "__default__",
+      "filename": "chrs\\kadan.chr",
       "location": {
         "tx": 125,
         "ty": 171,
@@ -1120,11 +1131,12 @@
         "initial_movestring": ""
       },
       "activation_script": "student_a",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Student B",
-      "filename": "__default__",
+      "filename": "chrs\\walker_02.chr",
       "location": {
         "tx": 130,
         "ty": 169,
@@ -1141,11 +1153,12 @@
         "initial_movestring": ""
       },
       "activation_script": "student_b",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Student C",
-      "filename": "__default__",
+      "filename": "chrs\\walker_01.chr",
       "location": {
         "tx": 122,
         "ty": 171,
@@ -1162,11 +1175,12 @@
         "initial_movestring": ""
       },
       "activation_script": "student_c",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Student D",
-      "filename": "__default__",
+      "filename": "chrs\\kadan.chr",
       "location": {
         "tx": 117,
         "ty": 169,
@@ -1183,11 +1197,12 @@
         "initial_movestring": ""
       },
       "activation_script": "student_d",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Student E",
-      "filename": "__default__",
+      "filename": "chrs\\walker_02.chr",
       "location": {
         "tx": 133,
         "ty": 173,
@@ -1204,11 +1219,12 @@
         "initial_movestring": ""
       },
       "activation_script": "student_e",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Student F",
-      "filename": "__default__",
+      "filename": "chrs\\walker_03.chr",
       "location": {
         "tx": 137,
         "ty": 173,
@@ -1225,11 +1241,12 @@
         "initial_movestring": ""
       },
       "activation_script": "student_f",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Little Daddy Bruce",
-      "filename": "__default__",
+      "filename": "chrs\\walker_01.chr",
       "location": {
         "tx": 97,
         "ty": 160,
@@ -1246,11 +1263,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Fashion Babe",
-      "filename": "__default__",
+      "filename": "chrs\\walker_03.chr",
       "location": {
         "tx": 98,
         "ty": 164,
@@ -1267,11 +1285,12 @@
         "initial_movestring": ""
       },
       "activation_script": "fashion_babe",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Hair Guy",
-      "filename": "__default__",
+      "filename": "chrs\\kadan.chr",
       "location": {
         "tx": 89,
         "ty": 159,
@@ -1288,11 +1307,12 @@
         "initial_movestring": ""
       },
       "activation_script": "hair_stylist",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Hair Colorist",
-      "filename": "__default__",
+      "filename": "chrs\\walker_02.chr",
       "location": {
         "tx": 92,
         "ty": 159,
@@ -1309,11 +1329,12 @@
         "initial_movestring": ""
       },
       "activation_script": "hair_colorist",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Clothes Guy",
-      "filename": "__default__",
+      "filename": "chrs\\vorn.chr",
       "location": {
         "tx": 85,
         "ty": 159,
@@ -1330,11 +1351,12 @@
         "initial_movestring": ""
       },
       "activation_script": "clothes_guy",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Music Man",
-      "filename": "__default__",
+      "filename": "chrs\\walker_02.chr",
       "location": {
         "tx": 84,
         "ty": 166,
@@ -1351,11 +1373,12 @@
         "initial_movestring": ""
       },
       "activation_script": "music_man",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Archivist",
-      "filename": "__default__",
+      "filename": "chrs\\vorn.chr",
       "location": {
         "tx": 127,
         "ty": 223,
@@ -1381,11 +1404,12 @@
         }
       },
       "activation_script": "Archivist",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Churchy A",
-      "filename": "__default__",
+      "filename": "chrs\\walker_01.chr",
       "location": {
         "tx": 12,
         "ty": 227,
@@ -1402,11 +1426,12 @@
         "initial_movestring": ""
       },
       "activation_script": "ChurchA",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Churchy B",
-      "filename": "__default__",
+      "filename": "chrs\\vorn.chr",
       "location": {
         "tx": 19,
         "ty": 223,
@@ -1423,11 +1448,12 @@
         "initial_movestring": ""
       },
       "activation_script": "ChurchB",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Churchy C",
-      "filename": "__default__",
+      "filename": "chrs\\walker_02.chr",
       "location": {
         "tx": 13,
         "ty": 221,
@@ -1444,11 +1470,12 @@
         "initial_movestring": ""
       },
       "activation_script": "ChurchC",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Churchy D",
-      "filename": "__default__",
+      "filename": "chrs\\walker_05.chr",
       "location": {
         "tx": 16,
         "ty": 230,
@@ -1465,11 +1492,12 @@
         "initial_movestring": ""
       },
       "activation_script": "ChurchD",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Churchy E",
-      "filename": "__default__",
+      "filename": "chrs\\kadan.chr",
       "location": {
         "tx": 19,
         "ty": 233,
@@ -1486,11 +1514,12 @@
         "initial_movestring": ""
       },
       "activation_script": "ChurchE",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Student G",
-      "filename": "__default__",
+      "filename": "chrs\\walker_03.chr",
       "location": {
         "tx": 86,
         "ty": 217,
@@ -1507,11 +1536,12 @@
         "initial_movestring": ""
       },
       "activation_script": "student_g",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Student H",
-      "filename": "__default__",
+      "filename": "chrs\\walker_02.chr",
       "location": {
         "tx": 96,
         "ty": 220,
@@ -1528,11 +1558,12 @@
         "initial_movestring": ""
       },
       "activation_script": "student_h",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Student I",
-      "filename": "__default__",
+      "filename": "chrs\\walker_06.chr",
       "location": {
         "tx": 125,
         "ty": 211,
@@ -1549,11 +1580,12 @@
         "initial_movestring": ""
       },
       "activation_script": "student_i",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Student J",
-      "filename": "__default__",
+      "filename": "chrs\\walker_02.chr",
       "location": {
         "tx": 131,
         "ty": 206,
@@ -1570,11 +1602,12 @@
         "initial_movestring": ""
       },
       "activation_script": "student_j",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Tank",
-      "filename": "__default__",
+      "filename": "chrs\\kadan.chr",
       "location": {
         "tx": 127,
         "ty": 165,
@@ -1591,11 +1624,12 @@
         "initial_movestring": ""
       },
       "activation_script": "tank",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Geek",
-      "filename": "__default__",
+      "filename": "chrs\\walker_01.chr",
       "location": {
         "tx": 119,
         "ty": 165,
@@ -1612,11 +1646,12 @@
         "initial_movestring": ""
       },
       "activation_script": "geek",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "wimp",
-      "filename": "__default__",
+      "filename": "chrs\\vorn.chr",
       "location": {
         "tx": 135,
         "ty": 169,
@@ -1633,11 +1668,12 @@
         "initial_movestring": ""
       },
       "activation_script": "wimp",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Veggiesmith",
-      "filename": "__default__",
+      "filename": "chrs\\kadan.chr",
       "location": {
         "tx": 113,
         "ty": 136,
@@ -1653,11 +1689,12 @@
         "delay": 200
       },
       "activation_script": "veggiesmith",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "d1",
-      "filename": "__default__",
+      "filename": "chrs\\single_door_left.chr",
       "location": {
         "tx": 108,
         "ty": 89,
@@ -1674,11 +1711,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "d2",
-      "filename": "__default__",
+      "filename": "chrs\\single_door_left.chr",
       "location": {
         "tx": 113,
         "ty": 74,
@@ -1695,11 +1733,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "d3",
-      "filename": "__default__",
+      "filename": "chrs\\single_door_left.chr",
       "location": {
         "tx": 106,
         "ty": 64,
@@ -1716,11 +1755,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "d4",
-      "filename": "__default__",
+      "filename": "chrs\\single_door_left.chr",
       "location": {
         "tx": 85,
         "ty": 84,
@@ -1737,11 +1777,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "d5",
-      "filename": "__default__",
+      "filename": "chrs\\single_door_left.chr",
       "location": {
         "tx": 101,
         "ty": 49,
@@ -1758,11 +1799,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "d6",
-      "filename": "__default__",
+      "filename": "chrs\\single_door_left.chr",
       "location": {
         "tx": 67,
         "ty": 61,
@@ -1779,11 +1821,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "d7",
-      "filename": "__default__",
+      "filename": "chrs\\single_door_left.chr",
       "location": {
         "tx": 61,
         "ty": 87,
@@ -1800,11 +1843,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "d8",
-      "filename": "__default__",
+      "filename": "chrs\\single_door_left.chr",
       "location": {
         "tx": 48,
         "ty": 88,
@@ -1821,11 +1865,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "d9",
-      "filename": "__default__",
+      "filename": "chrs\\single_door_right.chr",
       "location": {
         "tx": 109,
         "ty": 89,
@@ -1842,11 +1887,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "d10",
-      "filename": "__default__",
+      "filename": "chrs\\single_door_right.chr",
       "location": {
         "tx": 62,
         "ty": 87,
@@ -1863,6 +1909,7 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
@@ -1884,6 +1931,7 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": false,
       "animation": "Idle Down"
     },
     {
@@ -2182,7 +2230,7 @@
     },
     {
       "name": "stan-d",
-      "filename": "__default__",
+      "filename": "chrs_json/object_stand.json",
       "location": {
         "tx": 92,
         "ty": 73,
@@ -2199,11 +2247,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "dexter",
-      "filename": "__default__",
+      "filename": "pc_dexter.chr",
       "location": {
         "tx": 0,
         "ty": 0,
@@ -2220,6 +2269,7 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
@@ -2245,7 +2295,7 @@
     },
     {
       "name": "Thaco Bell",
-      "filename": "__default__",
+      "filename": "chrs_json/object_thacobell.json",
       "location": {
         "tx": 32,
         "ty": 85,
@@ -2262,6 +2312,7 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
@@ -2392,7 +2443,7 @@
     },
     {
       "name": "West Greeter",
-      "filename": "__default__",
+      "filename": "chrs\\walker_01.chr",
       "location": {
         "tx": 35,
         "ty": 89,
@@ -2409,11 +2460,12 @@
         "initial_movestring": ""
       },
       "activation_script": "west_greeter",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Jelly (Ranched)",
-      "filename": "__default__",
+      "filename": "monster_jelly",
       "location": {
         "tx": 110,
         "ty": 62,
@@ -2430,11 +2482,12 @@
         "initial_movestring": "Z0W100Z1W100B"
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Jelly (Ranched)",
-      "filename": "__default__",
+      "filename": "monster_jelly",
       "location": {
         "tx": 112,
         "ty": 62,
@@ -2451,11 +2504,12 @@
         "initial_movestring": "Z1W100Z0W100B"
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "Jelly (Ranched)",
-      "filename": "__default__",
+      "filename": "monster_jelly",
       "location": {
         "tx": 111,
         "ty": 63,
@@ -2472,11 +2526,12 @@
         "initial_movestring": "Z0W100Z1W100B"
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "",
-      "filename": "__default__",
+      "filename": "seafood_sully",
       "location": {
         "tx": 0,
         "ty": 0,
@@ -2493,11 +2548,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "",
-      "filename": "__default__",
+      "filename": "seafood_crab",
       "location": {
         "tx": 0,
         "ty": 0,
@@ -2514,11 +2570,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "",
-      "filename": "__default__",
+      "filename": "seafood_crab",
       "location": {
         "tx": 0,
         "ty": 0,
@@ -2535,11 +2592,12 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
       "name": "",
-      "filename": "__default__",
+      "filename": "seafood_crab",
       "location": {
         "tx": 0,
         "ty": 0,
@@ -2556,6 +2614,7 @@
         "initial_movestring": ""
       },
       "activation_script": "",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
@@ -2602,7 +2661,7 @@
     },
     {
       "name": "Sugar Ray",
-      "filename": "__default__",
+      "filename": "chrs\\sugar_ray",
       "location": {
         "tx": 88,
         "ty": 160,
@@ -2619,150 +2678,158 @@
         "initial_movestring": ""
       },
       "activation_script": "sugar_ray",
+      "MAPED_USEDEFAULT": true,
       "animation": "Idle Down"
     },
     {
-      "name": "Learn 8",
-      "filename": "__default__",
+      "name": "",
+      "filename": "chrs\\walker_07",
+      "location": {
+        "tx": 121,
+        "ty": 219,
+        "layer": "Entity Layer (E)"
+      },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": "40",
+      "speed": 40,
       "wander": {
         "mode": "Zone",
         "delay": 100
       },
       "activation_script": "Learn_8",
-      "animation": "Idle Down",
-      "location": {
-        "tx": "121",
-        "ty": "219",
-        "layer": "Entity Layer (E)"
-      }
+      "MAPED_USEDEFAULT": true,
+      "animation": "Idle Down"
     },
     {
-      "name": "Learn 9",
-      "filename": "__default__",
+      "name": "",
+      "filename": "chrs\\walker_03",
+      "location": {
+        "tx": 137,
+        "ty": 219,
+        "layer": "Entity Layer (E)"
+      },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": "40",
+      "speed": 40,
       "wander": {
         "mode": "Zone",
         "delay": 100
       },
       "activation_script": "Learn_9",
-      "animation": "Idle Down",
-      "location": {
-        "tx": "137",
-        "ty": "219",
-        "layer": "Entity Layer (E)"
-      }
+      "MAPED_USEDEFAULT": true,
+      "animation": "Idle Down"
     },
     {
-      "name": "Learn 10",
-      "filename": "__default__",
+      "name": "",
+      "filename": "chrs\\sailor",
+      "location": {
+        "tx": 132,
+        "ty": 219,
+        "layer": "Entity Layer (E)"
+      },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": "40",
+      "speed": 40,
       "wander": {
         "mode": "Zone",
         "delay": 100
       },
       "activation_script": "Learn_10",
-      "animation": "Idle Down",
-      "location": {
-        "tx": "132",
-        "ty": "219",
-        "layer": "Entity Layer (E)"
-      }
+      "MAPED_USEDEFAULT": true,
+      "animation": "Idle Down"
     },
     {
-      "name": "Learn 11",
-      "filename": "__default__",
+      "name": "",
+      "filename": "chrs\\npc_redwizard",
+      "location": {
+        "tx": 131,
+        "ty": 224,
+        "layer": "Entity Layer (E)"
+      },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": "40",
+      "speed": 40,
       "wander": {
         "mode": "Zone",
         "delay": 100
       },
       "activation_script": "Learn_11",
-      "animation": "Idle Down",
-      "location": {
-        "tx": "131",
-        "ty": "224",
-        "layer": "Entity Layer (E)"
-      }
+      "MAPED_USEDEFAULT": true,
+      "animation": "Idle Down"
     },
     {
-      "name": "Labrat 1",
-      "filename": "__default__",
+      "name": "",
+      "filename": "monster_labdorkupine",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)"
+      },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": "100",
+      "speed": 100,
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": ""
       },
       "activation_script": "labrat_1",
-      "animation": "Idle Down",
-      "location": {
-        "tx": "0",
-        "ty": "0",
-        "layer": "Entity Layer (E)"
-      }
+      "MAPED_USEDEFAULT": true,
+      "animation": "Idle Down"
     },
     {
-      "name": "Labrat 2",
-      "filename": "__default__",
+      "name": "",
+      "filename": "monster_labdorkupine",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)"
+      },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": "100",
+      "speed": 100,
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": ""
       },
       "activation_script": "labrat_2",
-      "animation": "Idle Down",
-      "location": {
-        "tx": "0",
-        "ty": "0",
-        "layer": "Entity Layer (E)"
-      }
+      "MAPED_USEDEFAULT": true,
+      "animation": "Idle Down"
     },
     {
-      "name": "Labrat 3",
-      "filename": "__default__",
+      "name": "",
+      "filename": "monster_labdorkupine",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)"
+      },
       "facing": "Down",
       "pays_attention_to_obstructions": false,
       "is_an_obstruction": false,
       "autofaces": false,
-      "speed": "100",
+      "speed": 100,
       "wander": {
         "mode": "Scripted",
         "delay": 0,
         "initial_movestring": ""
       },
       "activation_script": "labrat_3",
-      "animation": "Idle Down",
-      "location": {
-        "tx": "0",
-        "ty": "0",
-        "layer": "Entity Layer (E)"
-      }
+      "MAPED_USEDEFAULT": true,
+      "animation": "Idle Down"
     }
   ]
 }
