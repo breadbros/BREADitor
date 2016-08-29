@@ -1,6 +1,6 @@
 {
     "animations": {
-		"Idle Down": [ [ [0, 10000] ], "BackAndForth" ]
+        "STATIC": [ [ [0, 10000] ], "BackAndForth" ]
     },
     "dims": [
         664, 
@@ -8,7 +8,7 @@
     ], 
     "hitbox": [0,0,0,0],
     "frames": 1, 
-    "image": "map_chrs/undersea_cave/lower/lower_bg.png", 
+    "image": "chrs_map/undersea_cave/lower/lower_fg.png", 
     "inner_pad": 0, 
     "outer_pad": 0, 
     "per_row": 1

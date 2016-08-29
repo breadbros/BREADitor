@@ -270,7 +270,7 @@ function update_entity(dialog, ent_id) {
   var entity_name = $("#entity_name").val(); // TODO: validate uniqueness
   var entity_filename = $("#entity_filename").val(); // TODO: validate existance  
   var entity_activation_script = $("#entity_activation_script").val();
-  var entity_speed = $("#entity_speed").val();
+  var entity_speed = parseInt($("#entity_speed").val());
 
   var entity_pays_attention_to_obstructions = $("#entity_pays_attention_to_obstructions").is(':checked');
   var entity_is_an_obstruction = $("#entity_is_an_obstruction").is(':checked');
@@ -291,8 +291,8 @@ function update_entity(dialog, ent_id) {
   var entity_animation = $("#entity_animation").val();
   var entity_facing = $("#entity_facing").val();
 
-  var loc_tx = $("#entity_location_x").val();
-  var loc_ty = $("#entity_location_y").val();
+  var loc_tx = parseInt($("#entity_location_x").val());
+  var loc_ty = parseInt($("#entity_location_y").val());
   var loc_l = $("#entity_location_layer").val();
 
   // TODO : PX/PY?
