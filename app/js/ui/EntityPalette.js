@@ -122,8 +122,9 @@ template += "<div>Pays attention to obstructions?: <input type='checkbox' id='en
 template += "<div>Is an obstructions?: <input type='checkbox' id='entity_is_an_obstruction'></div>";
 template += "<div>Autofaces when activated?: <input type='checkbox' id='entity_autofaces'></div>";
 template += "<div>Speed: <input id='entity_speed'></div>";
-template += "<div>Location.tx: <input id='entity_location_x'></div>";
-template += "<div>Location.ty: <input id='entity_location_y'></div>";
+template += "<div>Location.tx: <input id='entity_location_tx'></div>";
+template += "<div>Location.ty: <input id='entity_location_ty'></div>";
+
 template += "<div>Location.layer: <select id='entity_location_layer'></select></div>";
 template += "<div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly></textarea></div>";
 
@@ -145,8 +146,8 @@ function setup_template(ent, id) {
 
     $template.find("#entity_activation_script").val(ent.activation_script);
     $template.find("#entity_speed").val(ent.speed);
-    $template.find("#entity_location_x").val(ent.location.tx);
-    $template.find("#entity_location_y").val(ent.location.ty);
+    $template.find("#entity_location_tx").val(ent.location.tx);
+    $template.find("#entity_location_ty").val(ent.location.ty);
 
     // http://regex.info/blog/2006-09-15/247
     $template.find("#entity_wander").val(JSON.stringify(ent.wander).replace(/{/g, "{\n").replace(/}/g, "\n}").replace(/,/g, ",\n").replace(/":/g, '": ').replace(/^"/mg, '\t"'));
@@ -291,8 +292,8 @@ function update_entity(dialog, ent_id) {
   var entity_animation = $("#entity_animation").val();
   var entity_facing = $("#entity_facing").val();
 
-  var loc_tx = parseInt($("#entity_location_x").val());
-  var loc_ty = parseInt($("#entity_location_y").val());
+  var loc_tx = parseInt($("#entity_location_tx").val());
+  var loc_ty = parseInt($("#entity_location_ty").val());
   var loc_l = $("#entity_location_layer").val();
 
   // TODO : PX/PY?

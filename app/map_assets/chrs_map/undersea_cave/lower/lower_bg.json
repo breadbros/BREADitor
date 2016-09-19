@@ -1,6 +1,6 @@
 {
     "animations": {
-		"STATIC": [ [ [0, 10000] ], "BackAndForth" ]
+		"STATIC": [ [ [0, 10000], [1, 20] ], "BackAndForth" ]
     },
     "dims": [
         664, 
