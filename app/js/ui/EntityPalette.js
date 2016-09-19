@@ -122,10 +122,10 @@ template += "<div>Pays attention to obstructions?: <input type='checkbox' id='en
 template += "<div>Is an obstructions?: <input type='checkbox' id='entity_is_an_obstruction'></div>";
 template += "<div>Autofaces when activated?: <input type='checkbox' id='entity_autofaces'></div>";
 template += "<div>Speed: <input id='entity_speed'></div>";
-template += "<div>Location.tx: <input id='entity_location_tx'></div>";
-template += "<div>Location.ty: <input id='entity_location_ty'></div>";
-template += "<div>Location.px: <input id='entity_location_px'></div>";
-template += "<div>Location.py: <input id='entity_location_py'></div>";
+template += "<div class='tile_coordinates'>Location.tx: <input id='entity_location_tx'></div>";
+template += "<div class='tile_coordinates'>Location.ty: <input id='entity_location_ty'></div>";
+template += "<div class='pixel_coordinates'>Location.px: <input id='entity_location_px'></div>";
+template += "<div class='pixel_coordinates'>Location.py: <input id='entity_location_py'></div>";
 
 template += "<div>Location.layer: <select id='entity_location_layer'></select></div>";
 template += "<div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly></textarea></div>";
@@ -231,6 +231,48 @@ function setup_template(ent, id) {
   return $template;
 }
 
+function assert_tileness() {
+  var loc_tx = parseInt($("#entity_location_tx").val());
+  var loc_ty = parseInt($("#entity_location_ty").val());
+
+  $("#entity_location_px").val(loc_tx*16)  // TODO should be tilesize not 16
+  $("#entity_location_py").val(loc_ty*16)  // TODO should be tilesize not 16
+}
+
+function assert_pixel_versus_tile_in_editing() {
+  var loc_tx = parseInt($("#entity_location_tx").val());
+  var loc_ty = parseInt($("#entity_location_ty").val());
+
+  var loc_px = parseInt($("#entity_location_px").val());
+  var loc_py = parseInt($("#entity_location_py").val());
+
+  var pixels_on = false;
+  var tiles_on = false;
+
+  var tiles = $("div.tile_coordinates input");
+  var pixels = $("div.pixel_coordinates input");
+
+  tiles.css("background-color", "#AAA");
+  pixels.css("background-color", "#AAA");
+
+  if( !loc_px && !loc_py ) {
+    tiles_on = true;
+  } else {
+    if( loc_tx*16 == loc_px && loc_ty*16 == loc_py ) { // TODO: pi
+      tiles_on = true;
+    } else {
+      pixels_on = true;
+    }
+  }
+
+  if( tiles_on ) {
+    tiles.css("background-color", "white");
+  }
+
+  if( pixels_on ) {
+    pixels.css("background-color", "white");
+  }
+}
 
 
 function new_entity_click(evt) {
@@ -256,6 +298,9 @@ function _entity_click(evt, id) {
     $( "#modal-dialog" ).append($template);
 
     $( "#modal-dialog" ).show();
+
+    assert_pixel_versus_tile_in_editing();
+    
     dialog = $( "#modal-dialog" ).dialog({
       width: 500,
       modal: true,
@@ -274,6 +319,15 @@ function _entity_click(evt, id) {
         $( "#modal-dialog" ).html("");
       }
     });
+  });
+
+  $("div.tile_coordinates input").on( "change", () => {
+    assert_tileness();
+    assert_pixel_versus_tile_in_editing();
+  });
+
+  $("div.pixel_coordinates input").on( "change", () => {
+    assert_pixel_versus_tile_in_editing();
   });
 }
 
