@@ -124,6 +124,8 @@ template += "<div>Autofaces when activated?: <input type='checkbox' id='entity_a
 template += "<div>Speed: <input id='entity_speed'></div>";
 template += "<div>Location.tx: <input id='entity_location_tx'></div>";
 template += "<div>Location.ty: <input id='entity_location_ty'></div>";
+template += "<div>Location.px: <input id='entity_location_px'></div>";
+template += "<div>Location.py: <input id='entity_location_py'></div>";
 
 template += "<div>Location.layer: <select id='entity_location_layer'></select></div>";
 template += "<div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly></textarea></div>";
@@ -146,8 +148,17 @@ function setup_template(ent, id) {
 
     $template.find("#entity_activation_script").val(ent.activation_script);
     $template.find("#entity_speed").val(ent.speed);
+
     $template.find("#entity_location_tx").val(ent.location.tx);
     $template.find("#entity_location_ty").val(ent.location.ty);
+
+    if(typeof ent.location.px == "undefined") {
+      ent.location.px = ent.location.tx * 16; //TODO: should be based on tilesize
+      ent.location.py = ent.location.ty * 16; //TODO: should be based on tilesize
+    }
+
+    $template.find("#entity_location_px").val(ent.location.px);
+    $template.find("#entity_location_py").val(ent.location.py);
 
     // http://regex.info/blog/2006-09-15/247
     $template.find("#entity_wander").val(JSON.stringify(ent.wander).replace(/{/g, "{\n").replace(/}/g, "\n}").replace(/,/g, ",\n").replace(/":/g, '": ').replace(/^"/mg, '\t"'));
@@ -294,12 +305,18 @@ function update_entity(dialog, ent_id) {
 
   var loc_tx = parseInt($("#entity_location_tx").val());
   var loc_ty = parseInt($("#entity_location_ty").val());
+
+  var loc_px = parseInt($("#entity_location_px").val());
+  var loc_py = parseInt($("#entity_location_py").val());
+
   var loc_l = $("#entity_location_layer").val();
 
   // TODO : PX/PY?
   var loc = {
     tx: loc_tx,
     ty: loc_ty,
+    px: loc_px,
+    py: loc_py,
     layer: loc_l
   };
 

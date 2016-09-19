@@ -309,7 +309,8 @@
         "tx": 21,
         "ty": 40,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Jelly 2",
@@ -330,7 +331,8 @@
         "tx": 31,
         "ty": 40,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Jelly 3",
@@ -351,7 +353,8 @@
         "tx": 25,
         "ty": 52,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Jelly 4",
@@ -372,7 +375,8 @@
         "tx": 25,
         "ty": 54,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Jelly 5",
@@ -393,7 +397,8 @@
         "tx": 27,
         "ty": 52,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Jelly 6",
@@ -414,7 +419,8 @@
         "tx": 27,
         "ty": 54,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Dork 1",
@@ -435,7 +441,8 @@
         "tx": 36,
         "ty": 29,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Jelly 7",
@@ -456,7 +463,8 @@
         "tx": 38,
         "ty": 29,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Dork 2",
@@ -477,7 +485,8 @@
         "tx": 18,
         "ty": 47,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Dork 3",
@@ -498,7 +507,8 @@
         "tx": 19,
         "ty": 46,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Dork 4",
@@ -519,7 +529,8 @@
         "tx": 20,
         "ty": 47,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Jelly 8",
@@ -540,7 +551,8 @@
         "tx": 24,
         "ty": 53,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Jelly 9",
@@ -561,7 +573,8 @@
         "tx": 28,
         "ty": 53,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Bert",
@@ -582,7 +595,8 @@
         "tx": 28,
         "ty": 33,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "Boss",
@@ -603,7 +617,8 @@
         "tx": 0,
         "ty": 0,
         "layer": "Entity Layer (E)"
-      }
+      },
+      "MAPED_USEDEFAULT": true
     },
     {
       "name": "BACKGROUND ART",
@@ -623,6 +638,8 @@
       "location": {
         "tx": 4,
         "ty": 0,
+        "px": 67,
+        "py": 3,
         "layer": "Background Fringe"
       }
     }
