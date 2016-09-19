@@ -358,6 +358,9 @@ Map.prototype = {
     addEntity: function(filename, location) {
         this.addEntityWithoutSort(filename, location);
         this.entities[location.layer].sort(function(a, b) {
+            if( a.location.py && b.location.py ) {
+                returna.location.py - b.location.py; // TODO almost certainly wrong; probably should convery from ty -> py if no py and then compare py.
+            }
             return a.location.ty - b.location.ty;
         });
     },
@@ -563,7 +566,7 @@ Map.prototype = {
 
                 for (var e = 0; e < entities.length; e++) {
                     if( showEntityPreview && 
-                        map.entityPreview.location.ty < entities[e].location.ty && 
+                        map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
                         (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
                     ) {
                         map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);

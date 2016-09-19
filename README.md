@@ -40,6 +40,8 @@ TODO
 * entity palette
 * VSP selector
 * entity selector
+* remove the hardcoded 16's in the entity palette: should be referencing the current tileset's tilesize.
+* maybe have some data-marker in the format if it's px/py vs tx/ty?  
 * continuous drawing (draw everything in a line from prevLoc to curLoc per frame.  BREZINGHAMZ J0)
 * eyeball icons for entity layer should hide the "normal" entities
 * we should change the entity layer paradigm since they can be ANYWHERE now
