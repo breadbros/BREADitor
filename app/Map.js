@@ -177,23 +177,27 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
         }
     };
 
-    this.entities = {};
-    for (i = 0; i < this.mapData.entities.length; i++) {
-        var entity = this.mapData.entities[i];
-        // console.log(entity);
+    this.createEntityRenderData = () => {
+        this.entities = {};
+        for (i = 0; i < this.mapData.entities.length; i++) {
+            var entity = this.mapData.entities[i];
+            // console.log(entity);
 
-        entity.location.layer = entity.location.layer || defaultEntityLayer;
-        this.addEntityWithoutSort(entity, entity.location, false);
-    }
-
-    for (var i in this.entities) {
-        if (this.entities[i]) {
-            console.info("Sorting entities on layer", i, ", ", this.entities[i].length, "entities to sort");
-            this.entities[i].sort(function(a, b) {
-                return a.location.ty - b.location.ty;
-            });
+            entity.location.layer = entity.location.layer || defaultEntityLayer;
+            this.addEntityWithoutSort(entity, entity.location, false);
         }
-    }
+
+        for (var i in this.entities) {
+            if (this.entities[i]) {
+                console.info("Sorting entities on layer", i, ", ", this.entities[i].length, "entities to sort");
+                this.entities[i].sort(function(a, b) {
+                    return a.location.ty - b.location.ty;
+                });
+            }
+        }        
+    };
+
+    this.createEntityRenderData();
 
     this.renderContainer = null;
 
@@ -801,6 +805,10 @@ Map.prototype = {
             tx = entity.location.tx;
             ty = entity.location.ty; 
         }
+
+        // if( layer.name == "Background Fringe" ) {
+        //      console.log( "pixels (lower_bg): (" + entity.location.px +","+ entity.location.py+")" );
+        // }
 
         tx -= (entityData.hitbox[0] / tilesize.width);
         ty -= (entityData.hitbox[1] / tilesize.height);
