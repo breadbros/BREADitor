@@ -416,6 +416,8 @@ function update_entity(dialog, ent_id) {
     relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);
   }
 
+  debugger;
+
   redraw_palette();
 
   dialog.dialog( "close" );

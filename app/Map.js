@@ -792,8 +792,19 @@ Map.prototype = {
         gl.enableVertexAttribArray(a_vertices);
         gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
 
-        var tx = entity.location.tx - (entityData.hitbox[0] / tilesize.width);
-        var ty = entity.location.ty - (entityData.hitbox[1] / tilesize.height);
+        var tx, ty;
+
+        if( entity.location.px && entity.location.px ) {
+            tx = entity.location.px / tilesize.width;
+            ty = entity.location.py / tilesize.height;
+        } else {
+            tx = entity.location.tx;
+            ty = entity.location.ty; 
+        }
+
+        tx -= (entityData.hitbox[0] / tilesize.width);
+        ty -= (entityData.hitbox[1] / tilesize.height);
+
         var tw = clip[2] / tilesize.width;
         var th = clip[3] / tilesize.height;
 

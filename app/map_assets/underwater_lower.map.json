@@ -638,8 +638,8 @@
       "location": {
         "tx": 4,
         "ty": 0,
-        "px": 67,
-        "py": 3,
+        "px": 100,
+        "py": 100,
         "layer": "Background Fringe"
       }
     }
