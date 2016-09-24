@@ -3,6 +3,7 @@ import { Tools } from './Tools.js';
 import { LayersWidget } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
+var path = require('path');
 
 function initInfoWidget(map) {
 	$("#info-mapname").text( map.mapPath );
@@ -87,7 +88,11 @@ function bootstrapMap( mapFile, tiledataFile ) {
       );
     }
 
-    loadByFilename(['../app/map_assets/farmsville.map.json']);
+    window.appPath = path.dirname(require.main.filename);
+
+    window.$$$load();
+
+    //loadByFilename(['../app/map_assets/farmsville.map.json']);
 
     /*
     /// INITIAL LOAD

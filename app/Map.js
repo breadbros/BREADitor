@@ -115,7 +115,10 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     // todo: stop being evil
     // todo: that probably won't happen. MWAHAHAHAHHA.
     this.vspData["zones"] = $.extend(true, {}, this.vspData["obstructions"]);
-    this.vspData["zones"].source_image = "../../app/images/zones.png";
+
+    this.vspData["zones"].source_image = path.join(window.appPath, "/images/zones.png");
+
+    debugger;
 
     this.compactifyZones = () => {
         // zone_data: [{x,y,z}, ...]
@@ -150,7 +153,13 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
         this.toLoad++;
         this.vspImages[k] = new Image();
         this.vspImages[k].onload = this.doneLoading;
-        this.vspImages[k].src = tmppath;
+
+
+        if( k != "zones" ) { // TODO: a better solution to map-relative assets versus app-relative assets.  THIS IS SAD AND PATHETIC AND SADTHETIC
+            this.vspImages[k].src = tmppath;
+        } else {
+            this.vspImages[k].src = this.vspData[k].source_image;
+        }
     }
 
     this.toLoad++;
