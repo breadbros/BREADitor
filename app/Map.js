@@ -339,9 +339,9 @@ Map.prototype = {
                 }
 
                 if (!this.entityTextures[data.image]) {
-                    var imagePath = jetpack.path(this.dataPath, data.image);
+                    var imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image); // TODO maybe make this definable in this.mapedConfigData too?
                     if (!jetpack.inspect(imagePath)) {
-                        imagePath += ".png";
+                        imagePath += ".png"; // TODO this is stupid and bad and wrong. 
                     }
                     if (!jetpack.inspect(imagePath)) {
                         console.warn("Couldn't load image", data.image, "for entity", entity.filename, "; falling back.");
@@ -822,10 +822,6 @@ Map.prototype = {
             tx = entity.location.tx;
             ty = entity.location.ty; 
         }
-
-        // if( layer.name == "Background Fringe" ) {
-        //      console.log( "pixels (lower_bg): (" + entity.location.px +","+ entity.location.py+")" );
-        // }
 
         tx -= (entityData.hitbox[0] / tilesize.width);
         ty -= (entityData.hitbox[1] / tilesize.height);
