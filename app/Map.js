@@ -33,6 +33,8 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
 
     this.dataPath = path.dirname(mapdatafile);
 
+    this.mapedConfigFile = path.join(this.dataPath,"$$$_MAPED.json")
+
     this.updateLocationFn = updateLocationFunction;
 
     this.readyPromise = new Promise(function(resolve, reject) {
@@ -42,6 +44,7 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
 
     this.mapPath = mapfile;
     this.mapData = jetpack.read(mapfile, 'json')
+    this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
 
     this.filenames.vspfiles = this.mapData.vsp;
 
@@ -118,8 +121,6 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
 
     this.vspData["zones"].source_image = path.join(window.appPath, "/images/zones.png");
 
-    debugger;
-
     this.compactifyZones = () => {
         // zone_data: [{x,y,z}, ...]
 
@@ -167,7 +168,7 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
         '__default__': { img: new Image() }
     };
     this.entityTextures['__default__'].img.onload = this.doneLoading;
-    this.entityTextures['__default__'].img.src = "../app/images/defaultsprite.png";
+    this.entityTextures['__default__'].img.src =  path.join(window.appPath, "/images/defaultsprite.png");
 
     var defaultEntityLayer = this.fakeEntityLayer.name;
 
@@ -312,8 +313,15 @@ Map.prototype = {
         this.entities[location.layer].push(entity);
 
         if (!this.entityData[entity.filename]) {
-            var datafile = jetpack.path(this.dataPath, entity.filename);
-            var data = jetpack.read(datafile, 'json');
+            var datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
+            var data;
+        
+            try {
+                data = jetpack.read(datafile, 'json');
+            } catch(e) {
+                console.log( "Totally couldnt read datafile: '"+datafile+"'" );
+            }
+             
             if (data) {
                 this.entityData[entity.filename] = data;
 
@@ -351,7 +359,7 @@ Map.prototype = {
 
                 entity.MAPED_USEDEFAULT = false;
             } else {
-                console.warn("Could not find '"+entity.filename+"', using the default.");
+                console.warn("Could not find '"+entity.filename+"', using the default. Path: ", datafile);
                 entity.MAPED_USEDEFAULT = true;
             }
         }
