@@ -13,6 +13,7 @@ How to install:
 
 TODO
 ====
+* Change mouse cursor to the current tool icon (or crosshairs?)
 * force layernames to be unique
   * update entity.location.layer on layername change
   * update map.entities[layername] references on layername change

@@ -1,5 +1,7 @@
 var $ = require('jquery');
 var sprintf = require("sprintf-js").sprintf;
+var app = require('remote').require('app');
+var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 import { getZoneVisibility, getZoneAlpha, getActiveZone, setActiveZone, scrollZonePalletteToZone } from "./js/ui/ZonesPalette.js";
 
 var zoomFn = function(map, e, zoomout) {
@@ -25,8 +27,6 @@ var grue_zoom = function(zoomout, evt) {
 
     zoomFn( window.$$$currentMap, evt, zoomout );
 }
-
-varMostActive
 
 var toolLogic = {
 
@@ -71,6 +71,8 @@ var toolLogic = {
 
     "EYEDROPPER" : {
         "mousedown": function(map, e) {
+            console.log("EYEDROPPER->mousedown...");
+
             if( !window.selected_layer ) {
                 console.log("You havent selected a layer yet.");
                 alert("You havent selected a layer yet.");
@@ -147,6 +149,8 @@ var toolLogic = {
 
     "DRAW" : {
         "mousedown": function(map, e) {
+            console.log("DRAW->mousedown...");
+
             if( !window.selected_layer ) {
                 console.log("You havent selected a layer yet.");
                 alert("You havent selected a layer yet.");
@@ -194,7 +198,7 @@ var toolLogic = {
             }
         },
         "mouseup": function(map, e) {
-            console.log("EYEDROPPER->mouseup: NOTHING");
+            console.log("DRAW->mouseup: NOTHING");
         },
 
         /// todo this doesn't seem to drag correctly for rightmouse...
@@ -372,6 +376,9 @@ $('.entity-palette').mouseup(capturePaletteMovementForRestore);
 /// todo: currently this isn't allowing the multiple-vsp thing to really be "right".
 /// we need to have virtual palletes per vsp, and switch between them when you switch to a layer with a different palette.
 function initializeTileSelectorsForMap(imageFile) {
+    imageFile = jetpack.path($$$currentMap.dataPath,imageFile)
+    imageFile = "file:///" + imageFile.replace(new RegExp("\\\\", 'g'), "/"); // TODO this is incredibly dirty, right?
+
     $("#left-palette").removeAttr('style');
     $("#right-palette").removeAttr('style');
 
