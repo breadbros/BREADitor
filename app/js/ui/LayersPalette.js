@@ -26,6 +26,10 @@ function initLayersWidget(map) {
     }
   }
 
+  $(".layers-palette #layers-new").click( (evt) => {
+    new_layer_click(evt);
+  });
+
   function addLayerEyeballHandler( $eyeball, i ) {
     $eyeball.on( "click", function(evt) {
       layers[i].MAPED_HIDDEN = !layers[i].MAPED_HIDDEN;
