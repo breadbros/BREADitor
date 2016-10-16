@@ -229,14 +229,7 @@ function updateRstringInfo( newRstring ) {
         return;
     }
 
-    if( typeof newRstring === "string" ) {
-        console.log("Setting new rstring: '"+newRstring+"'");
-        window.$$$currentMap.renderString = newRstring;
-    } else {
-        newRstring = window.$$$currentMap.renderString;
-    }
-
-    $("#info-rstring").text( newRstring );
+    $("#info-rstring").text( window.$$$currentMap.layerRenderOrder.join(",") );
 }
 
 

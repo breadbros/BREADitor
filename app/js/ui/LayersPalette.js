@@ -7,6 +7,10 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
 
 var list;
 
+var new_layer_click = (evt) => {
+  alert("new_layer_click!");
+};
+ 
 function initLayersWidget(map) {
   var layers = map.mapData.layers;
 
@@ -245,8 +249,8 @@ function initLayersWidget(map) {
     // node.data("rstring_ref", "E");
     // $list.append(node);
 
-    for (var i = map.renderString.length - 1; i >= 0; i--) {
-      rstring_cur_target = map.renderString[i];
+    for (var i = map.layerRenderOrder.length - 1; i >= 0; i--) {
+      rstring_cur_target = map.layerRenderOrder[i];
       rstring_ref = parseInt(rstring_cur_target, 10);
       if (isNaN(rstring_ref)) {
 
@@ -612,7 +616,7 @@ function initLayersWidget(map) {
       throw e;
     }
 
-    Tools.updateRstringInfo( rstring.join(",") );
+    window.$$$currentMap.updateRstring(rstring);
   } );
 
   redrawAllLucentAndParallax(map);
@@ -627,8 +631,8 @@ function get_layernames_by_rstring_order() {
 
   var map = window.$$$currentMap;
 
-  for (var i = map.renderString.length - 1; i >= 0; i--) {
-    rstring_cur_target = map.renderString[i];
+  for (var i = map.layerRenderOrder.length - 1; i >= 0; i--) {
+    rstring_cur_target = map.layerRenderOrder[i];
     rstring_ref = parseInt(rstring_cur_target, 10);
 
     if (isNaN(rstring_ref)) {

@@ -71,7 +71,26 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
         vsp: "default"
     }
 
-    this.renderString = this.mapData.renderstring.split(",");
+    this.updateRstring = (rstring) => {
+
+        if( typeof rstring === "string" ) {
+            console.log("Setting new rstring: '"+rstring+"'");
+            this.layerRenderOrder = rstring.split(",");        
+        } else if(typeof rstring.length == "number") {
+            console.log("Setting new rstring: '");
+            console.log(rstring);
+
+            this.layerRenderOrder = rstring;
+        } else {
+            throw "What fresh hell is this.  What are you throwing at updateRstring?!";
+        }
+
+        this.mapData.renderstring = this.layerRenderOrder.join(",");
+
+        Tools.updateRstringInfo()
+    };
+
+    this.updateRstring( this.mapData.renderstring );
     this.mapSizeInTiles = [0,0];
     this.layerLookup = {};
 
@@ -620,14 +639,14 @@ Map.prototype = {
 
         var tallEntities = [];
 
-        for (i = 0; i < (this.renderString.length); i++) {
+        for (i = 0; i < (this.layerRenderOrder.length); i++) {
             var layerIndex;
             var layer;
 
-            layerIndex = parseInt(this.renderString[i], 10) - 1;
+            layerIndex = parseInt(this.layerRenderOrder[i], 10) - 1;
             layer = this.mapData.layers[layerIndex];
 
-            if( this.renderString[i] == 'E' ) {
+            if( this.layerRenderOrder[i] == 'E' ) {
                 this.drawEntities(i, this, this.fakeEntityLayer, tallEntities);
                 continue;
             }  
