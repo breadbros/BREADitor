@@ -32,6 +32,8 @@ var runBuild = function () {
 };
 
 var runGulpWatch = function () {
+    console.log("runGulpWatch!!!!");
+
     watch = childProcess.spawn(gulpPath, [
         'watch',
         '--env=' + utils.getEnvName(),
@@ -40,10 +42,20 @@ var runGulpWatch = function () {
         stdio: 'inherit'
     });
 
+    watch.on('error', (err) => {
+        console.log("ERROR IN GULP WATCH!!!");
+        console.log(err);
+        console.log("ERROR IN GULP WATCH!!!");
+    });
+
     watch.on('close', function (code) {
+        console.log("WE WANT TO RESPAWN HERE?");
+        console.log(code);
+        console.log("WE WANT TO RESPAWN HERE?");
+
         // Gulp watch exits when error occured during build.
         // Just respawn it then.
-        runGulpWatch();
+        // runGulpWatch();
     });
 };
 

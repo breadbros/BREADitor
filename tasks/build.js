@@ -61,7 +61,14 @@ var bundle = function (src, dest) {
     }).then(function () {
         deferred.resolve();
     }).catch(function (err) {
+        console.log("NO NO NO NO NO NONONONONO")
+        console.log("NO NO NO NO NO NONONONONO")
+        console.log("NO NO NO NO NO NONONONONO")
+
+        console.log("Fluxbot kplz")
+
         console.error(err);
+        process.exit(-1) /// remove this once there's fluxbot notification.
     });
 
     return deferred.promise;
