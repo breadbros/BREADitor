@@ -1,4 +1,4 @@
-import { Map } from './Map.js';
+import { Map, verifyTileData, verifyMap } from './Map.js';
 import { Tools } from './Tools.js';
 import { LayersWidget } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
@@ -22,23 +22,34 @@ function updateLocationFunction(map) {
 }
 
 function bootstrapMap( mapFile, tiledataFile ) {
-    new Map(
-        mapFile, tiledataFile,
-        updateLocationFunction
-    ).ready()
-        .then(function(m) {
-            var currentMap = m;
-            m.setCanvas($('.map_canvas'));
 
-            window.$$$currentMap = currentMap;
+  verifyTileData(tiledataFile)
+    .then(() => {
+      console.log("verify map?");
+      verifyMap(mapFile)
+    .then(() => {
+      console.log("create map?");
+      new Map(
+          mapFile, tiledataFile,
+          updateLocationFunction
+      ).ready()
+          .then(function(m) {
+              var currentMap = m;
+              m.setCanvas($('.map_canvas'));
 
-            LayersWidget.initLayersWidget( currentMap );
-            initInfoWidget( currentMap );
-            ZonesWidget.initZonesWidget( currentMap );
-            EntitiesWidget.initEntitiesWidget( currentMap );
+              window.$$$currentMap = currentMap;
 
-            Tools.updateRstringInfo();
-        });
+              LayersWidget.initLayersWidget( currentMap );
+              initInfoWidget( currentMap );
+              ZonesWidget.initZonesWidget( currentMap );
+              EntitiesWidget.initEntitiesWidget( currentMap );
+
+              Tools.updateRstringInfo();
+          });
+        }
+      )
+    }
+  )
 }
 
 (function() {

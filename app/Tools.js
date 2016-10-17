@@ -222,7 +222,7 @@ var toolLogic = {
     }
 };
 
-function updateRstringInfo( newRstring ) {
+function updateRstringInfo() {
 
     if( !window.$$$currentMap ) {
         console.log("lol, no window.$$$currentMap yet.");

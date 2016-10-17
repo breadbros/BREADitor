@@ -9,9 +9,8 @@
 
         <script>
             window.jQuery = window.$ = require('jquery');
-            require('jquery-ui');
         </script>
-
+        <script src="vendor/jquery-ui/jquery-ui.js"></script>
 
         <script src="vendor/jquery.event.drag-2.2/jquery.event.drag-2.2.js"></script>
 <!--
@@ -80,10 +79,10 @@
         </script>
 
         <script>
-            require('electron').ipcRenderer.on('$$$save', (event, message) => {
-                console.log("spooky action at a distance! SAVE")
-                console.log(message);  // Prints "whoooooooh!"
-            });
+            // require('electron').ipcRenderer.on('$$$save', (event, message) => {
+            //     console.log("spooky action at a distance! SAVE")
+            //     console.log(message);  // Prints "whoooooooh!"
+            // });
         </script>
     </head>
     <body>

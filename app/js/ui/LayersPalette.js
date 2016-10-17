@@ -8,12 +8,19 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
 var list;
 
 var new_layer_click = (evt) => {
-  alert("new_layer_click!");
+  _layer_click(evt);
 };
- 
-function initLayersWidget(map) {
-  var layers = map.mapData.layers;
 
+var layers = null;
+var map = null;
+function initLayersWidget(_map) {
+  map = _map;
+  layers = map.mapData.layers;
+
+  redraw_palette(map);
+};
+
+function redraw_palette(map) {
   list = $(".layers-palette .layers-list");
   var newLayerContainer = null;
   var l = null;
@@ -658,6 +665,172 @@ function get_layernames_by_rstring_order() {
 
   return ret;
 };
+
+/*
+{
+  "name":"Background Art",
+  "parallax":{"X":1,"Y":1},
+  "dimensions":{"X":78,"Y":75},
+  "alpha":1,
+  "vsp":"default",
+  "MAPED_HIDDEN":false,
+  "maped_HIDE_ENTS":false
+}
+*/
+
+
+var template = "<div>Name: <input id='layer_name'></div>";
+template += "<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> y: <input id='layer_parallax_y' value='1' size=3></div>";
+template += "<div>Dimensions (tiles): w: <input id='layer_dims_x' size=3> h: <input id='layer_dims_y' size=3></div>";
+template += "<div>Alpha: <input id='layer_opacity' value='1' size=3></div>";
+template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
+
+function setup_template() {
+  var $template = $(template);
+
+  var $dims_x = $template.find("#layer_dims_x");
+  var $dims_y = $template.find("#layer_dims_y");
+
+  $dims_x.val(window.$$$currentMap.mapSizeInTiles[0]);
+  $dims_y.val(window.$$$currentMap.mapSizeInTiles[1]);
+
+  return $template;
+}
+
+function _layer_click(evt) {
+  evt.stopPropagation();
+
+  var dialog;
+
+  //var zone = currentZones[id];
+
+  var layer = false;
+
+  $(() => {
+
+    var $template = setup_template();
+    var newLayerId = window.$$$currentMap.mapData.layers.length;
+
+    if(layer) {
+      $( "#modal-dialog" ).attr("title", "Edit Layer "+id+")");
+    } else {
+      $( "#modal-dialog" ).attr("title", "Add New Layer (id: "+ (newLayerId) +")");
+    }
+    $( "#modal-dialog" ).html("");
+    $( "#modal-dialog" ).append($template);
+
+    if(layer) {
+      // console.log("Editing: " + zone.name);
+
+      // $template.find("#zone_name").val(zone.name);
+      // $template.find("#zone_activation_script").val(zone.activation_script);
+      // $template.find("#zone_activation_chance").val(zone.activation_chance);
+      // $template.find("#zone_can_by_adjacent_activated").prop( "checked", zone.can_by_adjacent_activated );
+    }
+
+    $( "#modal-dialog" ).show();
+    dialog = $( "#modal-dialog" ).dialog({
+      width: 500,
+      modal: true,
+      buttons: {
+        Save: () => { 
+          update_layer(dialog, newLayerId);
+        },
+        "Cancel": function() {
+          dialog.dialog( "close" );
+        }
+      },
+      close: function() {
+        $( "#modal-dialog" ).html("");
+      }
+    });
+  });
+}
+
+function update_layer(dialog, layer_id) {
+
+/*
+var template = "<div>Name: <input id='layer_name'></div>";
+template += "<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> y: <input id='layer_parallax_y' value='1' size=3></div>";
+template += "<div>Dimensions (tiles): w: <input id='layer_dims_x' size=3> h: <input id='layer_dims_y' size=3></div>";
+template += "<div>Alpha: <input id='layer_opacity' value='1' size=3></div>";
+template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
+*/
+
+  var name = dialog.find("#layer_name").val();
+  var par_x = dialog.find("#layer_parallax_x").val();
+  var par_y = dialog.find("#layer_parallax_y").val();
+  var dims_x = dialog.find("#layer_dims_x").val();
+  var dims_y = dialog.find("#layer_dims_y").val();
+  var alpha = dialog.find("#layer_opacity").val();
+  var vsp = dialog.find("#layer_vsp").val();
+  var layer = null;
+
+  if(!$.isNumeric(par_x)) {
+    modal_error("Invalid input: parralax x ("+par_x+") is invalid.");
+    return;
+  }
+  if(!$.isNumeric(par_y) ) {
+    modal_error("Invalid input: parralax y ("+par_y+") is invalid.");
+    return;
+  }
+  if(!$.isNumeric(dims_x) && dims_x >= 0 ) {
+    modal_error("Invalid input: dimension x ("+dims_x+") is invalid.");
+    return;
+  }
+  dims_x = parseInt(dims_x);
+  if(!$.isNumeric(dims_y) && dims_y >= 0 ) {
+    modal_error("Invalid input: dimension y ("+dims_y+") is invalid.");
+    return;
+  }
+  dims_y = parseInt(dims_y);
+  if(!$.isNumeric(alpha) || alpha < 0 || alpha > 1) {
+    modal_error("Invalid input: alpha ("+alpha+") is invalid.  Try values [0...1]");
+    return;
+  }
+
+  if(!name) {
+    modal_error("Invalid name: you must define a name.");
+    return;
+  }
+
+  var nameSet = window.$$$currentMap.mapData.layers.map( (l) => { return l.name } );
+  if( nameSet.indexOf(name) != -1 ) {
+    modal_error("Invalid input: name ("+name+") is not unique on this map.  Try a new, unique name.");
+    return;
+  }
+
+  alpha = parseFloat(alpha);
+
+  layer = {
+    name: name, 
+    alpha: alpha,
+    dimensions: {
+      X: dims_x,
+      Y: dims_y
+    },
+    parallax: {
+      X: par_x,
+      Y: par_y
+    },
+    vsp: vsp
+  };
+
+  var layersLength = 0;
+  window.$$$currentMap.mapData.layers.push(layer);
+  layersLength = window.$$$currentMap.mapData.layers.length;
+  window.$$$currentMap.layerLookup[name] = window.$$$currentMap.mapData.layers[layersLength-1];
+  window.$$$currentMap.layerRenderOrder.push( ""+(layersLength-1) );
+  window.$$$currentMap.mapRawTileData.tile_data.push( new Array( (dims_x*dims_y) ).fill(0) );
+
+  redraw_palette(window.$$$currentMap);
+  Tools.updateRstringInfo();
+
+  dialog.dialog( "close" );
+}
+
+
+
 
 export var LayersWidget = {
     initLayersWidget: initLayersWidget,

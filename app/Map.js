@@ -22,6 +22,112 @@ function setColor(r,g,b,a) {
     __obsColor = [r,g,b,a];
 }
 
+export var verifyTileData = (mapdatafile) => {
+    var promiseResolver;
+    var promiseRejecter;
+    var readyPromise = new Promise(function(resolve, reject) {
+        promiseResolver = resolve;
+        promiseRejecter = reject;
+    });
+
+    console.log("No verification done on tile data yet...");
+
+    promiseResolver();
+
+    return readyPromise;
+}; 
+
+var saveData = (mapFile, mapData) => {
+    var app = require('remote').require('app');
+    var jetpack = require('fs-jetpack').cwd(app.getAppPath());
+
+    var map = window.$$$currentMap;
+
+    jetpack.write(mapFile, mapData);
+};
+
+
+var verifyPromiseResolver;
+var verifyPromiseRejecter;
+
+export var verifyMap = (mapfile) => {
+    var remote = require('remote');
+    var dialog = remote.require('dialog');
+
+
+    var readyPromise = new Promise(function(resolve, reject) {
+        verifyPromiseResolver = resolve;
+        verifyPromiseRejecter = reject;
+    });
+
+    var mapData = jetpack.read( mapfile, 'json' );
+
+    var needsDefault = false;
+    var needsObstructions = false;
+
+    if( typeof mapData.vsp == "string" ) {
+        //alert("Detected old format vsps: '"+mapdata.vsp+"'.\n\nPlease select a json vsp for the map's default and a second one for the obstructions.");
+        needsDefault = true;
+        needsObstructions = true;
+    } else {
+        if( !mapData.vsp['default'] ) {
+            needsDefault = true;            
+        }
+
+        if( !mapData.vsp['obstructions'] ) {
+            needsObstructions = true;            
+        }
+    } 
+
+    if( typeof mapData.vsp != "object" ) {
+        mapData.vsp = {};
+    }
+
+    var filenames;
+    var filename;
+
+    if( needsDefault ) {
+        alert("Due to sins (surely on your part) you do not have a default tile vsp set.  Please select the correct one.");
+
+        filenames = dialog.showOpenDialog({
+                title:'Choose a default tileset',
+                filters: [{  name: "tileset", extensions: ['vsp.json'] }]
+            }
+        );
+
+        filename = filenames[0].replace(path.dirname(mapfile) + path.sep,'')
+        
+        mapData.vsp["default"] = filename;
+    } 
+
+    if( needsObstructions ) {
+        alert("Please select the obstruction tileset for this map.");
+
+        filenames = dialog.showOpenDialog({
+                title:'Choose an obstruction tileset',
+                filters: [{  name: "tileset", extensions: ['obsvsp.json'] }]
+            }
+        );
+
+        filename = filenames[0].replace(path.dirname(mapfile) + path.sep,'')
+        
+        mapData.vsp["obstructions"] = filename;
+    }
+
+    for (var i = mapData.layers.length - 1; i >= 0; i--) {
+        if( !mapData.layers[i].vsp ) {
+            console.log('setting layer['+i+']s vsp to default...');
+            mapData.layers[i].vsp = 'default';
+        }
+    }
+
+    saveData( mapfile, mapData );
+
+    verifyPromiseResolver();
+
+    return readyPromise;
+};
+
 export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     var i;
     console.info("Loading map", mapfile);
@@ -43,23 +149,10 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     }.bind(this));
 
     this.mapPath = mapfile;
-    this.mapData = jetpack.read(mapfile, 'json')
-    this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
+    this.mapData = jetpack.read( mapfile, 'json' )
+    this.mapedConfigData = jetpack.read( this.mapedConfigFile, 'json' );
 
     this.filenames.vspfiles = this.mapData.vsp;
-
-    if( typeof this.filenames.vspfiles != 'object' ) {
-        throw "vspfiles needs to be a Dictionary.";
-    } 
-
-    if( !this.filenames.vspfiles['default'] ) {
-        throw "vspfiles['default'] needs to be defined.";
-    } 
-
-    // TEMPORARY -- should come from the mapdata itself
-    this.mapData.layers.forEach((layer) => {
-        layer.vsp = "default";
-    });
 
     // for "E" layer rendering
     this.fakeEntityLayer = {
@@ -146,7 +239,7 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
         var tmpZones, x, y;
         tmpZones = [];
 
-        // walk the in-memory zoneDagta layer, anything with zone >0, add.
+        // walk the in-memory zoneData layer, anything with zone >0, add.
         $.each(this.zoneData, (idx) => {
             if(this.zoneData[idx] > 0) {
                 x = getXfromFlat( idx, 20 ) //todo : variable vsp width for zones.
