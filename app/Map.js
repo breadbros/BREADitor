@@ -115,7 +115,7 @@ export var verifyMap = (mapfile) => {
     }
 
     for (var i = mapData.layers.length - 1; i >= 0; i--) {
-        if( !mapData.layers[i].vsp ) {
+        if( !mapData.layers[i].vsp ) {f
             console.log('setting layer['+i+']s vsp to default...');
             mapData.layers[i].vsp = 'default';
         }

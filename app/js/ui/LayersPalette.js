@@ -709,7 +709,7 @@ function _layer_click(evt) {
   $(() => {
 
     var $template = setup_template();
-    var newLayerId = window.$$$currentMap.mapData.layers.length;
+    var newLayerId = window.$$$currentMap.mapData.layers.length + 1;
 
     if(layer) {
       $( "#modal-dialog" ).attr("title", "Edit Layer "+id+")");
@@ -820,7 +820,7 @@ template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
   window.$$$currentMap.mapData.layers.push(layer);
   layersLength = window.$$$currentMap.mapData.layers.length;
   window.$$$currentMap.layerLookup[name] = window.$$$currentMap.mapData.layers[layersLength-1];
-  window.$$$currentMap.layerRenderOrder.push( ""+(layersLength-1) );
+  window.$$$currentMap.layerRenderOrder.push( ""+(layersLength) );
   window.$$$currentMap.mapRawTileData.tile_data.push( new Array( (dims_x*dims_y) ).fill(0) );
 
   redraw_palette(window.$$$currentMap);
