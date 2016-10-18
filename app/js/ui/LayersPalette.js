@@ -806,12 +806,12 @@ template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
     name: name, 
     alpha: alpha,
     dimensions: {
-      X: dims_x,
-      Y: dims_y
+      X: parseInt(dims_x),
+      Y: parseInt(dims_y)
     },
     parallax: {
-      X: par_x,
-      Y: par_y
+      X: parseFloat(par_x),
+      Y: parseFloat(par_y)
     },
     vsp: vsp
   };
@@ -828,9 +828,6 @@ template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
 
   dialog.dialog( "close" );
 }
-
-
-
 
 export var LayersWidget = {
     initLayersWidget: initLayersWidget,
