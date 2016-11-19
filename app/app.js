@@ -118,22 +118,25 @@ function bootstrapMap( mapFile, tiledataFile ) {
 
     window.$$$toggle_pallete = function(pal) {
 
+      var node_selector = "";
       var node = pal + "-palette";
 
       if( window.$$$palette_registry.indexOf(node) >= 0 ) {
-        node = $("."+node);
+        node_selector = "."+node; 
+        node = $(node_selector);
 
-        if(node.length) {
-          alert("GOOD");
-          console.log(node)
-          console.log(node.length)
-        } else {
-          alert("BAD");
+        if(!node.length) {
+          throw "Invalid palette node selector: '"+node_selector+"'";
         }
       } else {
         throw "Invalid palette name: '"+pal+"'";
       }
 
+      if( node.is(":visible") ) {
+        node.hide();
+      } else {
+        node.show();
+      }
 
     };
 
