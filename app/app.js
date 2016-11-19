@@ -93,6 +93,10 @@ function bootstrapMap( mapFile, tiledataFile ) {
       alert("Maped4 is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.  TODO: make this better.");
     };
 
+    window.$$$collect_all_windows = function() {
+      alert("Collect all windwos.")
+    };
+
     window.$$$load = function() {
       var remote = require('remote');
       var dialog = remote.require('dialog');
@@ -102,6 +106,32 @@ function bootstrapMap( mapFile, tiledataFile ) {
         loadByFilename
       );
     }
+
+    window.$$$toggle_pallete = function(pal) {
+      switch(pal) {
+        case "map":
+          alert("map");
+          break;
+        case "tools":
+          alert("tools");
+          break;
+        case "info":
+          alert("info");
+          break;
+        case "layers":
+          alert("layers");
+          break;
+        case "zones":
+          alert("zones");
+          break;
+        case "entities":
+          alert("entities");
+          break;
+        default:
+          throw "fuck you, no '"+pal+"' ";
+      }
+
+    };
 
     window.appPath = path.dirname(require.main.filename);
 

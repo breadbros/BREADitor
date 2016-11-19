@@ -102,6 +102,48 @@ app.on('ready', function () {
                 { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
                 { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
                 */
+            ]}, {
+            label: "Palettes",
+
+            submenu: [
+                { label: "Map",
+                    click: function() { 
+                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("map");'); 
+                    }
+                },
+                { label: "Tools",
+                    click: function() { 
+                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("tools");'); 
+                    }
+                 },
+                { label: "Info",
+                    click: function() { 
+                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("info");'); 
+                    }
+                 },
+                { label: "Layers",
+                    click: function() { 
+                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("layers");'); 
+                    }
+                 },
+                { label: "Zones",
+                    click: function() { 
+                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("zones");'); 
+                    }
+                 },
+                { label: "Entities",
+                    click: function() { 
+                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("entities");'); 
+                    }
+                 },
+                { type: "separator" },
+                { 
+                    label: "Collect all visible windows", 
+                    accelerator: "CmdOrCtrl+Shift+C", 
+                    click: function() { 
+                        mainWindow.webContents.executeJavaScript('window.$$$collect_all_windows();'); 
+                    }
+                }
             ]}
         ];
 
