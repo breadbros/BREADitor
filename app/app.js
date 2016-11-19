@@ -89,6 +89,10 @@ function bootstrapMap( mapFile, tiledataFile ) {
       bootstrapMap(fileName, dataName);
     };
 
+    window.$$$about_maped4 = function() {
+      alert("Maped4 is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.  TODO: make this better.");
+    };
+
     window.$$$load = function() {
       var remote = require('remote');
       var dialog = remote.require('dialog');

@@ -74,7 +74,7 @@ app.on('ready', function () {
 
         // Create the Application's main menu
         var template = [{
-            label: "Application",
+            label: "File",
             submenu: [
                 { label: "Save", selector: "CmdOrCtrl+S", click: function() { 
                     mainWindow.webContents.executeJavaScript('window.$$$save();');
@@ -83,7 +83,9 @@ app.on('ready', function () {
                     mainWindow.webContents.executeJavaScript('window.$$$load();');
                 } },
                 { type: "separator" },
-                { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
+                { label: "About Application", click: function() { 
+                    mainWindow.webContents.executeJavaScript('window.$$$about_maped4();');
+                } },
                 { type: "separator" },
                 { label: "Refresh", accelerator: "Command+R", click: function() { app.refresh(); }},
                 { type: "separator" },
