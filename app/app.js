@@ -107,29 +107,33 @@ function bootstrapMap( mapFile, tiledataFile ) {
       );
     }
 
+    window.$$$palette_registry = [
+      "map-palette",
+      "tool-palette",
+      "layers-palette",
+      "zones-palette",
+      "entity-palette",
+      "info-palette"
+    ];
+
     window.$$$toggle_pallete = function(pal) {
-      switch(pal) {
-        case "map":
-          alert("map");
-          break;
-        case "tools":
-          alert("tools");
-          break;
-        case "info":
-          alert("info");
-          break;
-        case "layers":
-          alert("layers");
-          break;
-        case "zones":
-          alert("zones");
-          break;
-        case "entities":
-          alert("entities");
-          break;
-        default:
-          throw "fuck you, no '"+pal+"' ";
+
+      var node = pal + "-palette";
+
+      if( window.$$$palette_registry.indexOf(node) >= 0 ) {
+        node = $("."+node);
+
+        if(node.length) {
+          alert("GOOD");
+          console.log(node)
+          console.log(node.length)
+        } else {
+          alert("BAD");
+        }
+      } else {
+        throw "Invalid palette name: '"+pal+"'";
       }
+
 
     };
 

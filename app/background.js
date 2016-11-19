@@ -113,7 +113,7 @@ app.on('ready', function () {
                 },
                 { label: "Tools",
                     click: function() { 
-                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("tools");'); 
+                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("tool");'); 
                     }
                  },
                 { label: "Info",
@@ -133,7 +133,7 @@ app.on('ready', function () {
                  },
                 { label: "Entities",
                     click: function() { 
-                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("entities");'); 
+                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("entity");'); 
                     }
                  },
                 { type: "separator" },
