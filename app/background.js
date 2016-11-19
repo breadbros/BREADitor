@@ -76,10 +76,10 @@ app.on('ready', function () {
         var template = [{
             label: "File",
             submenu: [
-                { label: "Save", selector: "CmdOrCtrl+S", click: function() { 
+                { label: "Save", accelerator: "CmdOrCtrl+S", click: function() { 
                     mainWindow.webContents.executeJavaScript('window.$$$save();');
                 } },
-                { label: "Load", selector: "CmdOrCtrl+L", click: function() { 
+                { label: "Load", accelerator: "CmdOrCtrl+L", click: function() { 
                     mainWindow.webContents.executeJavaScript('window.$$$load();');
                 } },
                 { type: "separator" },
