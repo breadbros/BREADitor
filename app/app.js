@@ -114,6 +114,17 @@ function bootstrapMap( mapFile, tiledataFile ) {
       Tools.savePalettePositions();
     };
 
+    window.$$$show_all_windows = function() {
+
+      window.$$$palette_registry.map( (pal) => {
+        var node_selector = "."+pal;
+        var $node = $(node_selector);
+        $node.show();
+      } );
+
+      Tools.savePalettePositions();
+    };
+
     window.$$$load = function() {
       var remote = require('remote');
       var dialog = remote.require('dialog');

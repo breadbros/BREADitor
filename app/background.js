@@ -138,12 +138,19 @@ app.on('ready', function () {
                  },
                 { type: "separator" },
                 { 
-                    label: "Collect all visible windows", 
+                    label: "Collect all visible palettes", 
                     accelerator: "CmdOrCtrl+Shift+C", 
                     click: function() { 
                         mainWindow.webContents.executeJavaScript('window.$$$collect_all_windows();'); 
                     }
-                }
+                },
+                { 
+                    label: "Show all palettes", 
+                    accelerator: "CmdOrCtrl+Shift+Alt+C", 
+                    click: function() { 
+                        mainWindow.webContents.executeJavaScript('window.$$$show_all_windows();'); 
+                    }
+                },
             ]}
         ];
 

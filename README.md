@@ -13,6 +13,7 @@ How to install:
 
 TODO
 ====
+* Fix Layers palette reflow if you initialize it hidden but then show it.  (needs dynamic resize on show)
 * Change mouse cursor to the current tool icon (or crosshairs?)
 * force layernames to be unique
   * update entity.location.layer on layername change
