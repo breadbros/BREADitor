@@ -94,7 +94,24 @@ function bootstrapMap( mapFile, tiledataFile ) {
     };
 
     window.$$$collect_all_windows = function() {
-      alert("Collect all windwos.")
+
+      var x = 0;
+      var y = 0;
+      var z = 0;
+
+      window.$$$palette_registry.map( (pal) => {
+        var node_selector = "."+pal;
+        var $node = $(node_selector);
+        $node.css("top", y+"px");
+        $node.css("left", x+"px");
+
+        x += 30;
+        y += 30;
+        z ++;
+
+      } );
+
+      Tools.savePalettePositions();
     };
 
     window.$$$load = function() {
@@ -137,7 +154,6 @@ function bootstrapMap( mapFile, tiledataFile ) {
       } else {
         node.show();
       }
-
     };
 
     window.appPath = path.dirname(require.main.filename);

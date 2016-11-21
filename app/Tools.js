@@ -319,8 +319,8 @@ $("#btn-tool-zoomout").click( function(e) {
 
 $("#btn-tool-drag").click();
 
-function capturePaletteMovementForRestore() {
-    var $pal = $(this);
+function capturePaletteMovementForRestore($node) {
+    var $pal = $($node);
     var classes = $pal.attr("class").split(' ');
 
     var key = null;
@@ -360,11 +360,22 @@ function capturePaletteMovementForRestore() {
     localStorage[key+' settings'] = JSON.stringify(obj);
 };
 
-$('.layers-palette').mouseup(capturePaletteMovementForRestore);
-$('.zones-palette').mouseup(capturePaletteMovementForRestore);
-$('.info-palette').mouseup(capturePaletteMovementForRestore);
-$('.tool-palette').mouseup(capturePaletteMovementForRestore);
-$('.entity-palette').mouseup(capturePaletteMovementForRestore);
+$( document ).ready( () => {
+    window.$$$palette_registry.map( (pal) => {
+        var node_selector = "."+pal;
+        var $node = $(node_selector); 
+        $node.mouseup(() => { capturePaletteMovementForRestore($node) });
+    } );
+} );
+
+var savePalettePositions = () => {
+    window.$$$palette_registry.map( (pal) => {
+        var node_selector = "."+pal;
+        var $node = $(node_selector);
+
+        capturePaletteMovementForRestore($node);
+    } );
+};
 
 /// todo: currently this isn't allowing the multiple-vsp thing to really be "right".
 /// we need to have virtual palletes per vsp, and switch between them when you switch to a layer with a different palette.
@@ -451,5 +462,6 @@ export var Tools = {
     shouldShowObstructions: shouldShowObstructions,
     shouldShowZones: shouldShowZones,
     getZonesAlpha: getZonesAlpha,
-    updateRstringInfo: updateRstringInfo
+    updateRstringInfo: updateRstringInfo,
+    savePalettePositions: savePalettePositions
 };
