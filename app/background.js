@@ -136,6 +136,11 @@ app.on('ready', function () {
                         mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("entity");'); 
                     }
                  },
+                { label: "Tileset Selector",
+                    click: function() { 
+                        mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete("tileset-selector");'); 
+                    }
+                 },
                 { type: "separator" },
                 { 
                     label: "Collect all visible palettes", 

@@ -4,6 +4,18 @@ var app = require('remote').require('app');
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 import { getZoneVisibility, getZoneAlpha, getActiveZone, setActiveZone, scrollZonePalletteToZone } from "./js/ui/ZonesPalette.js";
 
+var updateLocationFunction = (map) => {
+  var x = map.camera[0];
+  var y = map.camera[1];
+  var key = 'map-'+ map.mapData.name;
+
+    $("#info-location").text( x +","+y );
+
+  localStorage[key+'-mapx'] = x;
+  localStorage[key+'-mapy'] = y;
+}
+
+
 var zoomFn = function(map, e, zoomout) {
     var mouseX = map.camera[0] + e.clientX * map.camera[2];
     var mouseY = map.camera[1] + e.clientY * map.camera[2];
@@ -475,5 +487,6 @@ export var Tools = {
     shouldShowZones: shouldShowZones,
     getZonesAlpha: getZonesAlpha,
     updateRstringInfo: updateRstringInfo,
-    savePalettePositions: savePalettePositions
+    savePalettePositions: savePalettePositions,
+    updateLocationFunction: updateLocationFunction
 };

@@ -4,6 +4,9 @@ import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from
 import { setShowEntitiesForLayer, shouldShowEntitiesForLayer, 
          setNormalEntityVisibility, getNormalEntityVisibility, 
          setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js'
+import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
+
+
 
 var list;
 
@@ -116,6 +119,8 @@ function redraw_palette(map) {
           $container: $layer_container
         };
         $layer_container.addClass(selClass);
+
+        TilesetSelectorWidget.initTilesetSelectorWidget( map, layers[i] )
 
         evt.stopPropagation()
       } );

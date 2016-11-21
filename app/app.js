@@ -3,22 +3,13 @@ import { Tools } from './Tools.js';
 import { LayersWidget } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
+
+
 var path = require('path');
 
 function initInfoWidget(map) {
 	$("#info-mapname").text( map.mapPath );
 	$("#info-dims").text( map.mapSizeInTiles[0]+"x"+map.mapSizeInTiles[1] );
-}
-
-function updateLocationFunction(map) {
-  var x = map.camera[0];
-  var y = map.camera[1];
-  var key = 'map-'+ map.mapData.name;
-
-	$("#info-location").text( x +","+y );
-
-  localStorage[key+'-mapx'] = x;
-  localStorage[key+'-mapy'] = y;
 }
 
 function bootstrapMap( mapFile, tiledataFile ) {
@@ -31,7 +22,7 @@ function bootstrapMap( mapFile, tiledataFile ) {
       console.log("create map?");
       new Map(
           mapFile, tiledataFile,
-          updateLocationFunction
+          Tools.updateLocationFunction
       ).ready()
           .then(function(m) {
               var currentMap = m;
@@ -141,7 +132,8 @@ function bootstrapMap( mapFile, tiledataFile ) {
       "layers-palette",
       "zones-palette",
       "entity-palette",
-      "info-palette"
+      "info-palette",
+      "tileset-selector-palette"
     ];
 
     window.$$$toggle_pallete = function(pal) {

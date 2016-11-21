@@ -4,6 +4,7 @@ var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 import { ShaderProgram } from "./ShaderProgram.js";
 import { Tools } from "./Tools.js";
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js'
+var sprintf = require("sprintf-js").sprintf;
 
 function buildTileDataTexture(data) {
     var out = new Uint8Array(data.length * 4);
@@ -53,7 +54,6 @@ var verifyPromiseRejecter;
 export var verifyMap = (mapfile) => {
     var remote = require('remote');
     var dialog = remote.require('dialog');
-
 
     var readyPromise = new Promise(function(resolve, reject) {
         verifyPromiseResolver = resolve;
@@ -132,10 +132,18 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     var i;
     console.info("Loading map", mapfile);
 
-    this.filenames = {
-        'mapfile' : mapfile,
-        'mapdatafile': mapdatafile
-    };
+    if( typeof mapfile != typeof mapdatafile ) {
+        throw sprintf("type mismatch on mapfile and mapdatafile.  both must be object or string. got: '%s', '%s'", typeof mapfile, typeof mapdatafile); 
+    }
+
+    var FILELOAD_MODE = (typeof mapfile == "string");
+
+    this.filenames = {};
+
+    if( FILELOAD_MODE ) {
+        this.filenames.mapfile = mapfile;
+        this.filenames.mapdatafile = mapdatafile;
+    }
 
     this.dataPath = path.dirname(mapdatafile);
 
@@ -148,12 +156,18 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
         this.promiseRejecter = reject;
     }.bind(this));
 
-    this.mapPath = mapfile;
-    this.mapData = jetpack.read( mapfile, 'json' )
+    if( FILELOAD_MODE ) {
+        this.mapData = jetpack.read( mapfile, 'json' );
+        this.mapPath = mapfile;
+    } else {
+        this.mapData = mapfile;
+        this.mapPath = "There is no path, this was pure data ya dummy.";
+    }
+    
     this.mapedConfigData = jetpack.read( this.mapedConfigFile, 'json' );
 
-    this.filenames.vspfiles = this.mapData.vsp;
-
+    this.filenames.vspfiles = this.mapData.vsp;    
+    
     // for "E" layer rendering
     this.fakeEntityLayer = {
         name: "Entity Layer (E)",
@@ -202,10 +216,12 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     }
     this.camera = [0, 0, 1];
 
-    //this.RAWDATA = jetpack.read(mapdatafile, 'json');
-
-    this.mapRawTileData = jetpack.read(mapdatafile, 'json') // zone_data: [{x,y,z}, ...]
-
+    if( FILELOAD_MODE ) {
+        this.mapRawTileData = jetpack.read(mapdatafile, 'json') // zone_data: [{x,y,z}, ...]    
+    } else {
+        this.mapRawTileData = mapdatafile;   
+    }
+    
     this.legacyObsData = this.mapRawTileData.legacy_obstruction_data;
     this.tileData = this.mapRawTileData.tile_data;
 
@@ -220,12 +236,17 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
      console.info("zones ->", this.zoneData);
 
     this.vspData = {};
-    for (var k in this.filenames.vspfiles) {
-        let tmppath = path.join( this.dataPath, this.filenames.vspfiles[k] );
-        console.info( "Loading '"+tmppath+"'..." );
-        this.vspData[k] = jetpack.read(tmppath, 'json');
-        console.info(k, "->", this.vspData[k]);
-    }
+
+    // if( FILELOAD_MODE ) {
+        for (var k in this.filenames.vspfiles) {
+            let tmppath = path.join( this.dataPath, this.filenames.vspfiles[k] );
+            console.info( "Loading '"+tmppath+"'..." );
+            this.vspData[k] = jetpack.read(tmppath, 'json');
+            console.info(k, "->", this.vspData[k]);
+        }        
+    // } else {
+    //     debugger;
+    // }
 
     // todo: stop being evil
     // todo: that probably won't happen. MWAHAHAHAHHA.
