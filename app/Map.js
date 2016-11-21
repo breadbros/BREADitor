@@ -567,6 +567,7 @@ Map.prototype = {
                     if( obj.h ) { $pal.height(obj.h); }
                     if( obj.x ) { $pal.css('left', obj.x); }
                     if( obj.y ) { $pal.css('top', obj.y); }
+                    obj.hide ? $pal.hide() : $pal.show(); 
                 } else {
                     console.info('lol, no');
                 }
@@ -574,6 +575,8 @@ Map.prototype = {
         }
 
         if( localStorage[key] ) {
+
+            /// TODO This is weird.  Why is the map palette being set here and then again in setPaletteLocations?
             if( localStorage[key+'-width'] )  { $cont.width(localStorage[key+'-width']); }
             if( localStorage[key+'-height'] ) { $cont.height(localStorage[key+'-height']); }
             if( localStorage[key+'-top'] )    { $cont.css( 'top', localStorage[key+'-top']); }

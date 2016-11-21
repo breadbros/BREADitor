@@ -154,6 +154,8 @@ function bootstrapMap( mapFile, tiledataFile ) {
       } else {
         node.show();
       }
+
+      Tools.savePalettePositions();
     };
 
     window.appPath = path.dirname(require.main.filename);

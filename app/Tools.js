@@ -356,6 +356,7 @@ function capturePaletteMovementForRestore($node) {
     obj['h'] = $pal.height();
     obj['x'] = $pal.css('left');
     obj['y'] = $pal.css('top');
+    obj['hide'] = $pal.is(':visible') ? false : true;
 
     localStorage[key+' settings'] = JSON.stringify(obj);
 };
