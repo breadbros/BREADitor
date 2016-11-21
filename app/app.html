@@ -99,6 +99,11 @@
                 height: 1.3em;
             }
 
+            h3.ui-widget-header button.close-palette {
+                float: right;
+                margin-right: 2px;
+            }
+
             h3.ui-widget-header {
                 margin-bottom: 0;
                 height: 1.3em;
@@ -393,14 +398,14 @@
         </style>
 
         <div class="map-palette ui-widget-content resizable-window draggable-window">
-            <h3 class="ui-widget-header">Map</h3>
+            <h3 class="ui-widget-header">Map<button class="close-palette">x</button></h3>
             <div class="map_canvas_container">
                 <canvas class="map_canvas"></canvas>
             </div>
         </div>
 
         <div class="tool-palette ui-widget-content draggable-window">
-            <h3 class="ui-widget-header" id="tool-title">Tool</h3>
+            <h3 class="ui-widget-header" id="tool-title">Tool<button class="close-palette">x</button></h3>
 
             <button id="btn-tool-drag"></button>
             <button id="btn-tool-eyedropper"></button>
@@ -417,7 +422,7 @@
         </div>
 
         <div class="layers-palette ui-widget-content draggable-window resizable-window">
-            <h3 class="ui-widget-header">Layers</h3>
+            <h3 class="ui-widget-header">Layers<button class="close-palette">x</button></h3>
 
             <div class="window-container">
                 <ul class="layers-list">
@@ -428,7 +433,7 @@
         </div>
 
         <div class="zones-palette ui-widget-content draggable-window resizable-window">
-            <h3 class="ui-widget-header">Zones</h3>
+            <h3 class="ui-widget-header">Zones<button class="close-palette">x</button></h3>
 
             <div class="window-container">
                 <div id="zone-count">zones: <span id="zones-number"></span></div>
@@ -442,7 +447,7 @@
         </div>
 
         <div class="entity-palette ui-widget-content draggable-window resizable-window">
-            <h3 class="ui-widget-header">Entities</h3>
+            <h3 class="ui-widget-header">Entities<button class="close-palette">x</button></h3>
 
             <div class="window-container">
                 <div id="entity-count">entities: <span id="entity-number"></span></div>
@@ -456,7 +461,7 @@
         </div>
 
         <div class="info-palette ui-widget-content draggable-window resizable-window">
-            <h3 class="ui-widget-header">Info</h3>
+            <h3 class="ui-widget-header">Info<button class="close-palette">x</button></h3>
             <ul>
                 <li>map: <span id="info-mapname"></span></li>
                 <li>dims: <span id="info-dims"></span></li>

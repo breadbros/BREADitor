@@ -360,11 +360,22 @@ function capturePaletteMovementForRestore($node) {
     localStorage[key+' settings'] = JSON.stringify(obj);
 };
 
+var paletteCloseListener = ($pal_close_button) => {
+    $pal_close_button.closest(".ui-widget-content").hide();
+}
+
+/// setup palette listeners
 $( document ).ready( () => {
     window.$$$palette_registry.map( (pal) => {
         var node_selector = "."+pal;
-        var $node = $(node_selector); 
+        var $node = $(node_selector);
+        var $node2;
+        /// palette motion save listener
         $node.mouseup(() => { capturePaletteMovementForRestore($node) });
+
+        /// palette "X" button listener
+        $node2 = $(node_selector + " button.close-palette");
+        $node2.click(() => { paletteCloseListener($node2) });
     } );
 } );
 
