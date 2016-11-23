@@ -6,7 +6,7 @@ import { Tools } from "./Tools.js";
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js'
 var sprintf = require("sprintf-js").sprintf;
 
-function buildTileDataTexture(data) {
+function buildTileDataTexture(data) {    
     var out = new Uint8Array(data.length * 4);
     for (var i = 0; i < data.length; i++) {
         var t = data[i];

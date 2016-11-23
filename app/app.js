@@ -95,6 +95,7 @@ function bootstrapMap( mapFile, tiledataFile ) {
         var $node = $(node_selector);
         $node.css("top", y+"px");
         $node.css("left", x+"px");
+        $node.css("z-index", z);
 
         x += 30;
         y += 30;

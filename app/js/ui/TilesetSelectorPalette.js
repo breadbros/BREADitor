@@ -7,10 +7,7 @@ var old_layer;
 
 var vsp_mapdata, vsp_tiledata, vsp_map;
 
-
 var create_dynamic_map = (vspName) => {
-  window.$$$currentMap.vspData[vspName]
-
   var dynMap = {
     entities: [],
     layers: [{
@@ -41,29 +38,34 @@ var create_dynamic_map = (vspName) => {
   return dynMap;
 };
 
-var create_dynamic_tiledata = (mapdata) => {
-
+var create_dynamic_tiledata = (mapdata, layerdata) => {;
   return { tile_data: [0,1,2,3,4,5], zone_data: [] };
 };
 
 var create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer ) => {
 
-  debugger;
-  console.log("create map?");
   return new Map(
       mapData, tileData, updateLocationFunction
   ).ready().then(function(m) {
+
+    var tileSetSize = 0;
+
     m.vspImages = window.$$$currentMap.vspImages; /// TODO: somewhere something is going wrong here.  FIX.
     
-    m.mapData.layers[0].dimensions.X = m.vspImages[newLayer.vsp].width;
-    m.mapData.layers[0].dimensions.Y = m.vspImages[newLayer.vsp].height;
+    m.mapData.layers[0].dimensions.X = parseInt(m.vspImages[newLayer.vsp].width / window.$$$currentMap.vspData[newLayer.vsp].tilesize.width);
+    m.mapData.layers[0].dimensions.Y = parseInt(m.vspImages[newLayer.vsp].height / window.$$$currentMap.vspData[newLayer.vsp].tilesize.height);
 
-    debugger;
-    m.setCanvas($('.tileset_selector_canvas'));
-    debugger;
+    tileSetSize = m.mapData.layers[0].dimensions.X * m.mapData.layers[0].dimensions.Y;
+
+    /// this overwrites most of create_dynamic_tiledata, which was temporary.
+    m.tileData = [[]];
+    for (var i = 0; i < tileSetSize; i++) {
+      m.tileData[0].push(i);
+    }
+
+    m.setCanvas( $('.tileset_selector_canvas') );
 
     //TODO need to set a channel up to the tile selectors.
-
     vsp_map = m;
 
     finalize_process(newMap, newLayer);
@@ -81,6 +83,7 @@ var finalize_process = (newMap, newLayer) => {
   if( !old_layer && newLayer ) {
     debugger;
   } 
+
   /// maybe reinit for new layer vsp?
   else if( old_layer && old_layer != newLayer ) {
     debugger;
@@ -106,7 +109,7 @@ var initTilesetSelectorWidget = (newMap, newLayer) => {
     }
 
     vsp_mapdata = create_dynamic_map( newLayer.vsp );
-    vsp_tiledata = create_dynamic_tiledata( vsp_mapdata );
+    vsp_tiledata = create_dynamic_tiledata( vsp_mapdata, newLayer );
     
     create_map( vsp_mapdata, vsp_tiledata, Tools.updateLocationFunction, newMap, newLayer );
   }
