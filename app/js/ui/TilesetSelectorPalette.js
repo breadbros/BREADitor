@@ -50,12 +50,15 @@ var create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer ) 
 
     var tileSetSize = 0;
 
-    m.vspImages = window.$$$currentMap.vspImages; /// TODO: somewhere something is going wrong here.  FIX.
-    m.vspData = window.$$$currentMap.vspData;
+    m.vspImages = newMap.vspImages; /// TODO: somewhere something is going wrong here.  FIX.
+    m.vspData = newMap.vspData;
 
-    m.mapData.layers[0].dimensions.X = parseInt(m.vspImages[newLayer.vsp].width / window.$$$currentMap.vspData[newLayer.vsp].tilesize.width);
-    m.mapData.layers[0].dimensions.Y = parseInt(m.vspImages[newLayer.vsp].height / window.$$$currentMap.vspData[newLayer.vsp].tilesize.height);
-    m.mapData.layers[0].vsp = newLayer.vsp;
+    m.mapData.layers[0].dimensions.X = parseInt(m.vspImages[newLayer.vsp].width / m.vspData[newLayer.vsp].tilesize.width);
+    m.mapData.layers[0].dimensions.Y = parseInt(m.vspImages[newLayer.vsp].height / m.vspData[newLayer.vsp].tilesize.height);
+    m.mapSizeInTiles = [
+        m.mapData.layers[0].dimensions.X,
+        m.mapData.layers[0].dimensions.Y
+    ];
 
     tileSetSize = m.mapData.layers[0].dimensions.X * m.mapData.layers[0].dimensions.Y;
 
