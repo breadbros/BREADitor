@@ -122,7 +122,7 @@ function bootstrapMap( mapFile, tiledataFile ) {
       var dialog = remote.require('dialog');
 
       dialog.showOpenDialog(
-        {filters: [{ name: 'text', extensions: ['map.json'] }]}, 
+        {filters: [{ name: 'text', extensions: ['map.json'] }]},
         loadByFilename
       );
     }
@@ -143,7 +143,7 @@ function bootstrapMap( mapFile, tiledataFile ) {
       var node = pal + "-palette";
 
       if( window.$$$palette_registry.indexOf(node) >= 0 ) {
-        node_selector = "."+node; 
+        node_selector = "."+node;
         node = $(node_selector);
 
         if(!node.length) {
