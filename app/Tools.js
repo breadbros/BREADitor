@@ -1,14 +1,16 @@
 var $ = require('jquery');
 var sprintf = require("sprintf-js").sprintf;
+
 var app = require('remote').require('app');
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
+
 import { getZoneVisibility, getZoneAlpha, getActiveZone, setActiveZone, scrollZonePalletteToZone } from "./js/ui/ZonesPalette.js";
 
 
 /// todo: definitely need to wipeout undo stack on map change.  Probably should make it a child object of Maps, really....
 var undoStack = [];
 var redoStack = [];
-var undomap = null;
+var undoredo_map = null;
 
 var change_one_tile = (
     map, 
@@ -30,7 +32,7 @@ var change_one_tile = (
     }
 
     undoStack.push( [[tileX, tileY, layerIdx, was]] );
-    undomap = map;
+    undoredo_map = map;
 
     map.setTile(
         tileX, tileY,
@@ -58,15 +60,29 @@ var undo = () => {
     }
 
     changes = undoStack.pop();
-    redoStack.push(changes);
+    //redoStack.push(changes);
+
+    var redoSet = []
+
+    var was;
 
     for (var i = changes.length - 1; i >= 0; i--) {
         /// undostacks should be a child of Map objects.  This is a poor temporary solution
-        undomap.setTile(
+        was = undoredo_map.getTile(changes[i][0],changes[i][1],changes[i][2]);
+
+        if( was === changes[i][3] ) {
+            throw "undo/redo 'was' and 'is' are the same.  this should never happen.";
+        }
+
+        undoredo_map.setTile(
             changes[i][0],changes[i][1],
             changes[i][2],changes[i][3]
         );
+
+        redoSet.push([changes[i][0],changes[i][1],changes[i][2],was]);
     }
+
+    redoStack.push(redoSet);
 }
 
 var redo = () => {
@@ -83,12 +99,20 @@ var redo = () => {
 
     for (var i = changes.length - 1; i >= 0; i--) {
         /// undostacks should be a child of Map objects.  This is a poor temporary solution
-        undomap.setTile(
+        undoredo_map.setTile(
             changes[i][0],changes[i][1],
             changes[i][2],changes[i][3]
         );
     }
 }
+
+var UndoRedo = {
+    undo: undo,
+    redo: redo,
+    _undoStack: undoStack,
+    _redoStack: redoStack,
+    change_one_tile: change_one_tile
+};
 
 var updateLocationFunction = (map) => {
   var x = map.camera[0];
