@@ -106,6 +106,9 @@ var toolLogic = {
             oX = mapOffsetX + mouseOffsetX;
             oY = mapOffsetY + mouseOffsetY;
 
+            oX *= map.camera[2];
+            oY *= map.camera[2];
+
             tX = parseInt(oX/16);
             tY = parseInt(oY/16);
 
