@@ -30,7 +30,7 @@ var create_dynamic_map = (vspName) => {
     starting_coordinates: [0,0], // TODO: probably unnecessary
     //tallentitylayer: 1,
     vsp: {},
-    zones: []
+    zones: undefined
   };
 
   dynMap.vsp[vspName] = window.$$$currentMap.mapData.vsp[vspName];
@@ -50,10 +50,15 @@ var create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer ) 
 
     var tileSetSize = 0;
 
-    m.vspImages = window.$$$currentMap.vspImages; /// TODO: somewhere something is going wrong here.  FIX.
-    
-    m.mapData.layers[0].dimensions.X = parseInt(m.vspImages[newLayer.vsp].width / window.$$$currentMap.vspData[newLayer.vsp].tilesize.width);
-    m.mapData.layers[0].dimensions.Y = parseInt(m.vspImages[newLayer.vsp].height / window.$$$currentMap.vspData[newLayer.vsp].tilesize.height);
+    m.vspImages = newMap.vspImages; /// TODO: somewhere something is going wrong here.  FIX.
+    m.vspData = newMap.vspData;
+
+    m.mapData.layers[0].dimensions.X = parseInt(m.vspImages[newLayer.vsp].width / m.vspData[newLayer.vsp].tilesize.width);
+    m.mapData.layers[0].dimensions.Y = parseInt(m.vspImages[newLayer.vsp].height / m.vspData[newLayer.vsp].tilesize.height);
+    m.mapSizeInTiles = [
+        m.mapData.layers[0].dimensions.X,
+        m.mapData.layers[0].dimensions.Y
+    ];
 
     tileSetSize = m.mapData.layers[0].dimensions.X * m.mapData.layers[0].dimensions.Y;
 
@@ -82,7 +87,7 @@ var finalize_process = (newMap, newLayer) => {
   /// full init
   if( !old_layer && newLayer ) {
     debugger;
-  } 
+  }
 
   /// maybe reinit for new layer vsp?
   else if( old_layer && old_layer != newLayer ) {
@@ -91,6 +96,8 @@ var finalize_process = (newMap, newLayer) => {
 
   old_map = newMap;
   old_layer = newLayer;
+
+  vsp_map.render();
 };
 
 var initTilesetSelectorWidget = (newMap, newLayer) => {
@@ -102,7 +109,7 @@ var initTilesetSelectorWidget = (newMap, newLayer) => {
     $(".tileset_selector_canvas_container h3.note").show();
     $(".tileset_selector_canvas_container canvas").hide();
   }
-  
+
   if( newLayer ) {
     if( !window.$$$currentMap.vspData[newLayer.vsp] ) {
       throw "current map didnt contain vsp '"+newLayer.vsp+"'.  Only contained: " + Object.keys(window.$$$currentMap.vspData).join(",");
@@ -110,11 +117,16 @@ var initTilesetSelectorWidget = (newMap, newLayer) => {
 
     vsp_mapdata = create_dynamic_map( newLayer.vsp );
     vsp_tiledata = create_dynamic_tiledata( vsp_mapdata, newLayer );
-    
+
     create_map( vsp_mapdata, vsp_tiledata, Tools.updateLocationFunction, newMap, newLayer );
   }
 };
 
+var renderTilesetSelectorWidget = () => {
+    if (vsp_map) vsp_map.render();
+};
+
 export var TilesetSelectorWidget = {
-  initTilesetSelectorWidget: initTilesetSelectorWidget
+  initTilesetSelectorWidget: initTilesetSelectorWidget,
+  renderTilesetSelectorWidget: renderTilesetSelectorWidget
 };
