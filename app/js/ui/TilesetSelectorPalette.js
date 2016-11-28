@@ -81,6 +81,14 @@ var create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer ) 
 
     Tools.initToolsToMapContainer( $('.tileset_selector_canvas'), vsp_map );
 
+    $("#btn-vsp-zoomin").click( function(e) {
+        Tools.grue_zoom(false, vsp_map);
+    } );
+
+    $("#btn-vsp-zoomout").click( function(e) {
+        Tools.grue_zoom(true, vsp_map);
+    } );
+
     finalize_process(newMap, newLayer);
   });
 

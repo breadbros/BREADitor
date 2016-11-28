@@ -28,16 +28,17 @@ var zoomFn = function(map, e, zoomout) {
     map.camera[1] = mouseY - (e.clientY * map.camera[2]);
 };
 
-// function to be renamed (and probably changed) later.
-var grue_zoom = function(zoomout, evt) {
-    // if no event, fake it and center on current view.
+// TODO function to be renamed (and probably changed) later.  This is dumb.
+var grue_zoom = function(zoomout, map, evt) {
+    // if no event, fake it and center on current view.  
+    // TODO Do we even ACCEPT events anymore?
     if( !evt ) {
         evt = {};
-        evt.clientX = window.$$$currentMap.renderContainer.width() / 2;
-        evt.clientY = window.$$$currentMap.renderContainer.height() / 2;
+        evt.clientX = map.renderContainer.width() / 2;
+        evt.clientY = map.renderContainer.height() / 2;
     }
 
-    zoomFn( window.$$$currentMap, evt, zoomout );
+    zoomFn( map, evt, zoomout );
 }
 
 var toolLogic = {
@@ -129,6 +130,8 @@ var toolLogic = {
 
                 if( map.mapData.isTileSelectorMap ) { /// todo seriously branching code here is not a good idea for complexity reasons.  rework later?
                     tIdx = map.getTile(tX,tY,0);
+                    map.selection.deselect();
+                    map.selection.add(tX,tY,1,1);
                 } else {
                     tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
                 }
@@ -323,12 +326,12 @@ var updateZoomText = function() {
 };
 
 $("#btn-tool-zoomin").click( function(e) {
-    grue_zoom(false);
+    grue_zoom(false, window.$$$currentMap);
     updateZoomText();
 } );
 
 $("#btn-tool-zoomout").click( function(e) {
-    grue_zoom(true);
+    grue_zoom(true, window.$$$currentMap);
     updateZoomText();
 } );
 
@@ -492,5 +495,6 @@ export var Tools = {
     updateRstringInfo: updateRstringInfo,
     savePalettePositions: savePalettePositions,
     updateLocationFunction: updateLocationFunction,
-    initToolsToMapContainer: initToolsToMapContainer
+    initToolsToMapContainer: initToolsToMapContainer,
+    grue_zoom: grue_zoom
 };

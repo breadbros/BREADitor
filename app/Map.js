@@ -375,13 +375,13 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
             this.recalculateLines();
         },
         deselect: function() {
-            hull.x = null;
-            hull.y = null;
-            hull.w = 0;
-            hull.h = 0;
+            this.hull.x = null;
+            this.hull.y = null;
+            this.hull.w = 0;
+            this.hull.h = 0;
 
-            tiles = [];
-            lines = [];
+            this.tiles = [];
+            this.lines = [];
         },
 
         // "private"
