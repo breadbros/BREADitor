@@ -97,17 +97,18 @@ var create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer ) 
 var finalize_process = (newMap, newLayer) => {
 
   if( old_map && old_map != newMap ) {
-    debugger;
+    console.log( "oh dear god are we handling map reloading?" );
+    throw "I dont think we're handling map reloading well yet.  Audit when people complain of this message.";
   }
 
   /// full init
   if( !old_layer && newLayer ) {
-    debugger;
+    console.log( "first time" );
   }
 
   /// maybe reinit for new layer vsp?
   else if( old_layer && old_layer != newLayer ) {
-    debugger;
+    console.log("VSP layer shifting!  Reset things!");
   }
 
   old_map = newMap;

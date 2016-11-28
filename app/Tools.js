@@ -4,6 +4,92 @@ var app = require('remote').require('app');
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 import { getZoneVisibility, getZoneAlpha, getActiveZone, setActiveZone, scrollZonePalletteToZone } from "./js/ui/ZonesPalette.js";
 
+
+/// todo: definitely need to wipeout undo stack on map change.  Probably should make it a child object of Maps, really....
+var undoStack = [];
+var redoStack = [];
+var undomap = null;
+
+var change_one_tile = (
+    map, 
+    tileX, tileY,
+    layerIdx, tileIdx
+) => {
+
+    /// TODO: terrible place for this.  find a better init location, nub
+    if( !undoStack.length ) {
+        $("#btn-tool-undo").click( undo );
+        $("#btn-tool-redo").click( redo );
+    }
+
+    var was = map.getTile( tileX, tileY, layerIdx );
+
+    if( was == tileIdx ) {
+        console.log("skip draw of duplicate tile.");
+        return;
+    }
+
+    undoStack.push( [[tileX, tileY, layerIdx, was]] );
+    undomap = map;
+
+    map.setTile(
+        tileX, tileY,
+        layerIdx, tileIdx
+    );
+    redoStack = [];
+
+    undolog();
+};
+
+var undolog = () => {
+    console.log("undoStack: ")
+    console.log(undoStack)
+    console.log("redoStack: ")
+    console.log(redoStack)
+}
+
+var undo = () => {
+    var changes;
+
+    undolog();
+
+    if( undoStack.length <= 0 ) {
+        return;
+    }
+
+    changes = undoStack.pop();
+    redoStack.push(changes);
+
+    for (var i = changes.length - 1; i >= 0; i--) {
+        /// undostacks should be a child of Map objects.  This is a poor temporary solution
+        undomap.setTile(
+            changes[i][0],changes[i][1],
+            changes[i][2],changes[i][3]
+        );
+    }
+}
+
+var redo = () => {
+    var changes;
+
+    if( redoStack.length <= 0 ) {
+        return;
+    }
+
+    undolog();
+
+    changes = redoStack.pop();
+    undoStack.push(changes);
+
+    for (var i = changes.length - 1; i >= 0; i--) {
+        /// undostacks should be a child of Map objects.  This is a poor temporary solution
+        undomap.setTile(
+            changes[i][0],changes[i][1],
+            changes[i][2],changes[i][3]
+        );
+    }
+}
+
 var updateLocationFunction = (map) => {
   var x = map.camera[0];
   var y = map.camera[1];
@@ -14,7 +100,6 @@ var updateLocationFunction = (map) => {
   localStorage[key+'-mapx'] = x;
   localStorage[key+'-mapy'] = y;
 }
-
 
 var zoomFn = function(map, e, zoomout) {
     var mouseX = map.camera[0] + e.clientX * map.camera[2];
@@ -196,7 +281,6 @@ map.selection.add(tX,tY,1,1);
             tX = parseInt(oX/16);
             tY = parseInt(oY/16);
 
-
             /// TODO: Again, this is dumb.  LALALA.
             if( window.selected_layer.map_tileData_idx > 900 ) {
 
@@ -212,7 +296,9 @@ map.selection.add(tX,tY,1,1);
                 }
                 
             } else {
-                map.setTile(
+
+                change_one_tile(
+                    map, 
                     tX,tY,
                     window.selected_layer.map_tileData_idx,
                     window.$CURRENT_SELECTED_TILES[e.button]
@@ -498,5 +584,6 @@ export var Tools = {
     savePalettePositions: savePalettePositions,
     updateLocationFunction: updateLocationFunction,
     initToolsToMapContainer: initToolsToMapContainer,
-    grue_zoom: grue_zoom
+    grue_zoom: grue_zoom,
+    undo: undo
 };
