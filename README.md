@@ -7,6 +7,12 @@ How to install:
 3. npm install
 4. npm start
 
+Base project: https://github.com/szwacz/electron-boilerplate
+End-to-end testing: https://github.com/electron/spectron
+App packaging: https://github.com/electron-userland/electron-builder
+
+
+
 (just npm start after the first time.)
 
 (Edit this if this is wrong.  Need to install fresh.)
