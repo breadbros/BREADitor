@@ -295,23 +295,21 @@ var tools = function( action, map, evt ) {
     }
 };
 
-function initToolsToMapContainer( renderContainer ) {
+function initToolsToMapContainer( renderContainer, map ) {
 
     renderContainer.on('mousedown', function(e) {
-        tools( 'mousedown', window.$$$currentMap, e );
+        tools( 'mousedown', map, e );
     });
     renderContainer.on('mousemove', function(e) {
-        tools( 'mousemove', window.$$$currentMap, e );
+        tools( 'mousemove', map, e );
     });
     renderContainer.on('mouseup', function(e) {
-        tools( 'mouseup', window.$$$currentMap, e );
+        tools( 'mouseup', map, e );
     });
     renderContainer.on('mousewheel', function(e) {
-        tools( 'mousewheel', window.$$$currentMap, e );
+        tools( 'mousewheel', map, e );
     });
 }
-
-initToolsToMapContainer( $('.map_canvas') );
 
 var updateZoomText = function() {
     var txt = (100 / window.$$$currentMap.camera[2]) + "%";
@@ -488,5 +486,6 @@ export var Tools = {
     getZonesAlpha: getZonesAlpha,
     updateRstringInfo: updateRstringInfo,
     savePalettePositions: savePalettePositions,
-    updateLocationFunction: updateLocationFunction
+    updateLocationFunction: updateLocationFunction,
+    initToolsToMapContainer: initToolsToMapContainer
 };

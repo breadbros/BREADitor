@@ -3,6 +3,7 @@ import { Tools } from './Tools.js';
 import { LayersWidget } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
+import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
 
 
 var path = require('path');
@@ -35,6 +36,8 @@ function bootstrapMap( mapFile, tiledataFile ) {
               ZonesWidget.initZonesWidget( currentMap );
               EntitiesWidget.initEntitiesWidget( currentMap );
 
+              Tools.initToolsToMapContainer( $('.map_canvas'), window.$$$currentMap );
+
               Tools.updateRstringInfo();
           });
         }
@@ -48,8 +51,10 @@ function bootstrapMap( mapFile, tiledataFile ) {
 
     var tick = function(timestamp) {
         if (!!window.$$$currentMap) {
-            window.$$$currentMap.render();
+          window.$$$currentMap.render();
+          TilesetSelectorWidget.renderTilesetSelectorWidget();
         }
+
         window.requestAnimationFrame(tick);
     };
     window.requestAnimationFrame(tick);

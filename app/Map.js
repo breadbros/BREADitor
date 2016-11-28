@@ -161,7 +161,7 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
         this.mapPath = mapfile;
     } else {
         this.mapData = mapfile;
-        this.mapPath = "There is no path, this was pure data ya dummy.";
+        this.mapPath = null; // TODO, I dunno, maybe this is stupid?  What do we use this for anyway?
     }
 
     this.mapedConfigData = jetpack.read( this.mapedConfigFile, 'json' );
@@ -755,10 +755,6 @@ Map.prototype = {
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         var tallEntities = [];
-        if (this.mapPath === "There is no path, this was pure data ya dummy.") {
-            console.log("!!!! RENDERING VSP MAP");
-            debugger;
-        }
 
         for (i = 0; i < (this.layerRenderOrder.length); i++) {
             var layerIndex;
