@@ -7,8 +7,14 @@ var old_layer;
 
 var vsp_mapdata, vsp_tiledata, vsp_map;
 
+var is_active = () => {
+
+}
+
 var create_dynamic_map = (vspName) => {
   var dynMap = {
+    isTileSelectorMap: true, // TODO: this is for special-case branch code.  Rework everythgin so branching isnt necessary later?
+
     entities: [],
     layers: [{
       MAPED_HIDDEN: false,
@@ -72,6 +78,8 @@ var create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer ) 
 
     //TODO need to set a channel up to the tile selectors.
     vsp_map = m;
+
+    Tools.initToolsToMapContainer( $('.tileset_selector_canvas'), vsp_map );
 
     finalize_process(newMap, newLayer);
   });

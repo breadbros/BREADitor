@@ -126,7 +126,12 @@ var toolLogic = {
                 }
                 
             } else {
-                tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
+
+                if( map.mapData.isTileSelectorMap ) { /// todo seriously branching code here is not a good idea for complexity reasons.  rework later?
+                    tIdx = map.getTile(tX,tY,0);
+                } else {
+                    tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
+                }
             }
 
             window.$CURRENT_SELECTED_TILES[e.button] = tIdx;
