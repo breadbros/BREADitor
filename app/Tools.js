@@ -103,11 +103,8 @@ var toolLogic = {
             var mouseOffsetX = e.offsetX;
             var mouseOffsetY = e.offsetY;
 
-            oX = mapOffsetX + mouseOffsetX;
-            oY = mapOffsetY + mouseOffsetY;
-
-            oX *= map.camera[2];
-            oY *= map.camera[2];
+            oX = mapOffsetX + mouseOffsetX * map.camera[2];
+            oY = mapOffsetY + mouseOffsetY * map.camera[2];
 
             tX = parseInt(oX/16);
             tY = parseInt(oY/16);
@@ -137,6 +134,8 @@ var toolLogic = {
                     map.selection.add(tX,tY,1,1);
                 } else {
                     tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
+map.selection.deselect();
+map.selection.add(tX,tY,1,1);
                 }
             }
 
@@ -188,14 +187,11 @@ var toolLogic = {
             var oX, oY, tX, tY, tIdx, selector;
             var mapOffsetX = map.camera[0];
             var mapOffsetY= map.camera[1];
-            var mouseOffsetX = e.offsetX;
-            var mouseOffsetY = e.offsetY;
+            var mouseOffsetX = e.offsetX * map.camera[2];
+            var mouseOffsetY = e.offsetY * map.camera[2];
 
             oX = mapOffsetX + mouseOffsetX;
             oY = mapOffsetY + mouseOffsetY;
-
-            oX *= map.camera[2];
-            oY *= map.camera[2];
 
             tX = parseInt(oX/16);
             tY = parseInt(oY/16);
