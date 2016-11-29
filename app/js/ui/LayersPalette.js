@@ -6,9 +6,26 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
          setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js'
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
 
-
-
 var list;
+
+var _obsVisibility = true;
+var _obsAlpha = 1;
+
+export var setObsVisibility = (val) => {
+  Tools.setObstructionsVisible(val);
+};
+
+export var getObsVisibility = () => {
+  return Tools.shouldShowObstructions();
+};
+
+export var setObsAlpha = (val) => {
+  _obsAlpha = val;
+};
+
+export var getObsAlpha = () => {
+  return _obsAlpha;
+};
 
 var new_layer_click = (evt) => {
   _layer_click(evt);
@@ -173,6 +190,56 @@ function redraw_palette(map) {
   }
 
 
+  function addObstructionSelectHandler($obs_container) {
+      $obs_container.on( "click", function(evt) {
+
+        var selClass = "selected";
+
+        removeAllSelectedLayers(selClass);
+
+        /// TODO: this is disgusting, right?  right.
+        window.selected_layer = {
+          map_tileData_idx: 998,
+          layer: window.$$$currentMap.zoneData,
+          $container: $obs_container
+        };
+
+        $obs_container.addClass( selClass );
+
+        evt.stopPropagation()
+      } );
+  }
+
+  function setup_shitty_obstruction_layer($list) {
+
+    var tmpLayer = { 
+      MAPED_HIDDEN : !getObsVisibility(),
+      alpha: getObsAlpha()
+    };
+    var $eyeball;
+    var newLayerContainer = generateLayerContainer( l, i );
+
+    $eyeball = generateContent(998, tmpLayer, newLayerContainer);
+    newLayerContainer.find(".layer_name").text("Obstructions");
+    newLayerContainer.find(".entity_layer").remove();
+    newLayerContainer.addClass("nosort");
+    newLayerContainer.data("alpha", getObsAlpha()); 
+    newLayerContainer.data("rstring_ref", "ZZZ"); 
+
+    newLayerContainer.find(".layer_parallax").remove();
+
+    addObstructionSelectHandler( newLayerContainer );
+    $eyeball.on( "click", (evt) => {
+      setObsVisibility( !getObsVisibility() );
+
+      tmpLayer.MAPED_HIDDEN = !getObsVisibility();
+      handleEyeball($eyeball, tmpLayer);
+      evt.stopPropagation()
+    } );
+
+    $list.append(newLayerContainer);
+  }
+
 
 
   function addEntitySelectHandler($entity_container) {
@@ -254,6 +321,7 @@ function redraw_palette(map) {
     var node = null;
 
     setup_shitty_zone_layer($list);
+    setup_shitty_obstruction_layer($list);
 
     /// ZONES
 
