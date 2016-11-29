@@ -117,7 +117,22 @@ var finalize_process = (newMap, newLayer) => {
   vsp_map.render();
 };
 
-var initTilesetSelectorWidget = (newMap, newLayer) => {
+var obsLayerData = null;
+
+var initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
+
+  if( optionalTiledata ) {
+    obsLayerData = optionalTiledata;
+
+    for (var k in optionalTiledata) {
+      if( !newLayer[k] ){
+        newLayer[k] = optionalTiledata[k];
+      }
+    }
+
+  } else {
+    obsLayerData = null;
+  }
 
   if( newLayer ) {
     $(".tileset_selector_canvas_container h3.note").hide();
@@ -134,7 +149,7 @@ var initTilesetSelectorWidget = (newMap, newLayer) => {
 
     vsp_mapdata = create_dynamic_map( newLayer.vsp );
     vsp_tiledata = create_dynamic_tiledata( vsp_mapdata, newLayer );
-
+debugger;
     create_map( vsp_mapdata, vsp_tiledata, Tools.updateLocationFunction, newMap, newLayer );
   }
 };

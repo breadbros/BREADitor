@@ -203,6 +203,8 @@ function redraw_palette(map) {
           layer: window.$$$currentMap.zoneData,
           $container: $obs_container
         };
+        
+        TilesetSelectorWidget.initTilesetSelectorWidget( map, map.obsLayerData, window.$$$currentMap.legacyObsData );
 
         $obs_container.addClass( selClass );
 
@@ -234,21 +236,17 @@ function redraw_palette(map) {
 
       tmpLayer.MAPED_HIDDEN = !getObsVisibility();
       handleEyeball($eyeball, tmpLayer);
-      evt.stopPropagation()
+      evt.stopPropagation();
     } );
 
     $list.append(newLayerContainer);
   }
-
-
 
   function addEntitySelectHandler($entity_container) {
     $entity_container.click( (evt) => {
       console.log( "Haha, charade you are." );
     }); 
   };
-
-
 
   function _setup_entity_eyeball(node) {
     var $eyeball = $(node).find('.eyeball_button');

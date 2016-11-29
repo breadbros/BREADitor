@@ -19,6 +19,7 @@ App packaging: https://github.com/electron-userland/electron-builder
 
 TODO
 ====
+* Extract all obs-related things into an appropriate library
 * Fix Layers palette reflow if you initialize it hidden but then show it.  (needs dynamic resize on show)
 * Change mouse cursor to the current tool icon (or crosshairs?)
 * force layernames to be unique

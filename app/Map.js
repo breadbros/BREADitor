@@ -143,9 +143,12 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     if( FILELOAD_MODE ) {
         this.filenames.mapfile = mapfile;
         this.filenames.mapdatafile = mapdatafile;
+        this.dataPath = path.dirname(mapdatafile);
+    } else {
+        this.dataPath = "";
     }
 
-    this.dataPath = path.dirname(mapdatafile);
+    
 
     this.mapedConfigFile = path.join(this.dataPath,"$$$_MAPED.json")
 
@@ -238,15 +241,23 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
     this.vspData = {};
 
     // if( FILELOAD_MODE ) {
-        for (var k in this.filenames.vspfiles) {
-            let tmppath = path.join( this.dataPath, this.filenames.vspfiles[k] );
-            console.info( "Loading '"+tmppath+"'..." );
-            this.vspData[k] = jetpack.read(tmppath, 'json');
-            console.info(k, "->", this.vspData[k]);
+    for (var k in this.filenames.vspfiles) {
+        let tmppath = path.join( this.dataPath, this.filenames.vspfiles[k] );
+        console.info( "Loading '"+tmppath+"'..." );
+        this.vspData[k] = jetpack.read(tmppath, 'json');
+        console.info(k, "->", this.vspData[k]);
+    }
+
+    debugger;
+    /// "if this.dataPath" as a sentinel for only doing this to "real" maps.  This file is garbage.
+    if( this.dataPath && this.mapData.vsp.obstructions ) {
+        let tmppath = path.join( this.dataPath, this.mapData.vsp.obstructions );
+        this.obsLayerData = jetpack.read(tmppath, 'json');
+        if( !this.obsLayerData.vsp ) {
+            this.obsLayerData.vsp = "obstructions";
         }
-    // } else {
-    //     debugger;
-    // }
+        console.info("loaded obsLayerData from " + tmppath);
+    }
 
     // todo: stop being evil
     // todo: that probably won't happen. MWAHAHAHAHHA.

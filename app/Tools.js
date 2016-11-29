@@ -218,6 +218,12 @@ var toolLogic = {
             tX = parseInt(oX/16);
             tY = parseInt(oY/16);
 
+            var doVSPselector = (tX, tY, map) => {
+                tIdx = map.getTile(tX,tY,0);
+                map.selection.deselect();
+                map.selection.add(tX,tY,1,1);
+            }
+
             /// todo: using a valid integer as a sentinel is stupid. using sentinels is stupid. you're stupid, grue.
             if( window.selected_layer.map_tileData_idx > 900 ) {
 
@@ -231,6 +237,10 @@ var toolLogic = {
                         scrollZonePalletteToZone(zIdx);
 
                         return;
+                    case 998:
+                        console.log("OBS!");
+                        doVSPselector(tX,tY,map);
+                        continue;
                     default:
                         throw "SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN";
                 }
@@ -238,9 +248,7 @@ var toolLogic = {
             } else {
 
                 if( map.mapData.isTileSelectorMap ) { /// todo seriously branching code here is not a good idea for complexity reasons.  rework later?
-                    tIdx = map.getTile(tX,tY,0);
-                    map.selection.deselect();
-                    map.selection.add(tX,tY,1,1);
+                    doVSPselector(tX,tY,map);
                 } else {
                     tIdx = map.getTile(tX,tY,window.selected_layer.map_tileData_idx)
 map.selection.deselect();
