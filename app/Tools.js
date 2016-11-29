@@ -595,9 +595,6 @@ var getZonesAlpha = () => {
     return getZoneAlpha();
 };
 
-$('#btn-toggle-obs').on('click', (e) => {
-    setObstructionsVisible(!obstructionsVisible);
-});
 
 export var Tools = {
     setObstructionsVisible: setObstructionsVisible,
