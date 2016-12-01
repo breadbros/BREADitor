@@ -240,7 +240,7 @@ var toolLogic = {
                     case 998:
                         console.log("OBS!");
                         doVSPselector(tX,tY,map);
-                        continue;
+                        break;
                     default:
                         throw "SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN";
                 }

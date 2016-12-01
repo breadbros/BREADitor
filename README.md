@@ -1,5 +1,6 @@
-Maped 4
+BREADitor
 =======
+
 
 How to install:
 1. install node.
@@ -19,6 +20,17 @@ App packaging: https://github.com/electron-userland/electron-builder
 
 TODO
 ====
+* Fill out the website
+* Set up a pipeline for auto-builds
+* Get Jest filled out
+
+The Immediates for Ustor
+========================
+* Make it so you can write out obstructions
+* fill, line, copy+paste
+
+The rest
+=========
 * Extract all obs-related things into an appropriate library
 * Fix Layers palette reflow if you initialize it hidden but then show it.  (needs dynamic resize on show)
 * Change mouse cursor to the current tool icon (or crosshairs?)

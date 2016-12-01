@@ -248,7 +248,6 @@ export var Map = function(mapfile, mapdatafile, updateLocationFunction) {
         console.info(k, "->", this.vspData[k]);
     }
 
-    debugger;
     /// "if this.dataPath" as a sentinel for only doing this to "real" maps.  This file is garbage.
     if( this.dataPath && this.mapData.vsp.obstructions ) {
         let tmppath = path.join( this.dataPath, this.mapData.vsp.obstructions );
