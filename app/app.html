@@ -89,7 +89,8 @@
             body {
                 /* le frog*/
                 background-color: rgb(51, 51, 51);
-                font-family: sans-serif;;
+                font-family: sans-serif;
+                -webkit-user-select: none;
             }
 
             h3.ui-widget-header {
@@ -105,6 +106,7 @@
             h3.ui-widget-header {
                 margin-bottom: 0;
                 height: 1.3em;
+                user-select: none;
             }
 
             .map-palette {
@@ -270,10 +272,6 @@
                 background-image: url("../app/images/icons/svg/zoom-out.svg")
             }
 
-            #btn-toggle-obs {
-                background-image: url("../app/images/icons/svg/obstructions.svg")
-            }
-
             .layers-list button {
                 width: 20px;
                 height: 20px;
@@ -420,10 +418,9 @@
             <button id="btn-tool-drag"></button>
             <button id="btn-tool-eyedropper"></button>
             <button id="btn-tool-draw"></button>
-            <button id="btn-toggle-obs"></button>
             <button id="btn-tool-zoomin"></button>
             <button id="btn-tool-zoomout"></button>
-            <button id="btn-add-tree">+ Tree</button>
+            <!-- <button id="btn-add-tree">+ Tree</button> -->
             <button id="btn-tool-select">Select</button>
             <!--
             <button id="btn-tool-fill" disabled="">Fill</button>
