@@ -1,79 +1,15 @@
 'use strict';
 
-var Q = require('q');
-var electron = require('electron-prebuilt');
-var pathUtil = require('path');
 var childProcess = require('child_process');
-var kill = require('tree-kill');
-var utils = require('./utils');
-var watch;
+var electron = require('electron');
+var gulp = require('gulp');
 
-var gulpPath = pathUtil.resolve('./node_modules/.bin/gulp');
-if (process.platform === 'win32') {
-    gulpPath += '.cmd';
-}
-
-var runBuild = function () {
-    var deferred = Q.defer();
-
-    var build = childProcess.spawn(gulpPath, [
-        'build',
-        '--env=' + utils.getEnvName(),
-        '--color'
-    ], {
+gulp.task('start', ['build', 'watch'], function () {
+    childProcess.spawn(electron, ['.'], {
         stdio: 'inherit'
-    });
-
-    build.on('close', function (code) {
-        deferred.resolve();
-    });
-
-    return deferred.promise;
-};
-
-var runGulpWatch = function () {
-    console.log("runGulpWatch!!!!");
-
-    watch = childProcess.spawn(gulpPath, [
-        'watch',
-        '--env=' + utils.getEnvName(),
-        '--color'
-    ], {
-        stdio: 'inherit'
-    });
-
-    watch.on('error', (err) => {
-        console.log("ERROR IN GULP WATCH!!!");
-        console.log(err);
-        console.log("ERROR IN GULP WATCH!!!");
-    });
-
-    watch.on('close', function (code) {
-        console.log("WE WANT TO RESPAWN HERE?");
-        console.log(code);
-        console.log("WE WANT TO RESPAWN HERE?");
-
-        // Gulp watch exits when error occured during build.
-        // Just respawn it then.
-        // runGulpWatch();
-    });
-};
-
-var runApp = function () {
-    var app = childProcess.spawn(electron, ['./build'], {
-        stdio: 'inherit'
-    });
-
-    app.on('close', function (code) {
+    })
+    .on('close', function () {
         // User closed the app. Kill the host process.
-        kill(watch.pid, 'SIGKILL', function () {
-            process.exit();
-        });
+        process.exit();
     });
-};
-
-runBuild()
-.then(function () {
-    runGulpWatch();
-    runApp();
 });
