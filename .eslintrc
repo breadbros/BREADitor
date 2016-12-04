@@ -1,0 +1,57 @@
+{
+  // babel parser to support ES6/7 features
+  "parser": "babel-eslint",
+  "ecmaFeatures": {
+    "jsx": true
+  },
+  "extends": [
+    "standard"
+  ],
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    // not covered in standard
+    "arrow-parens": [2, "always"],
+    "no-var": 2,
+    "prefer-const": 2,
+    "semi-spacing": [2, { "before": false, "after": true }],
+
+    // overrides of the standard style
+    "curly": [2, "all"],
+    "max-len": [2, 120, 4],
+    "operator-linebreak": [2, "after"],
+    "semi": [2, "always"],
+    "space-before-function-paren": [2, {"anonymous": "always", "named": "never"}],
+    "wrap-iife": [2, "outside"],
+
+    // react
+    "jsx-quotes": [2, "prefer-single"],
+    "react/display-name": 0,
+    "react/jsx-boolean-value": 2,
+    "react/jsx-handler-names": [2, {
+      "eventHandlerPrefix": "_handle"
+    }],
+    "react/jsx-indent": [2, 2],
+    "react/jsx-indent-props": [2, 2],
+    "react/jsx-no-bind": 2,
+    "react/jsx-no-duplicate-props": 2,
+    "react/jsx-no-undef": 2,
+    "react/jsx-pascal-case": 2,
+    "react/jsx-sort-props": 2,
+    "react/jsx-sort-prop-types": 2,
+    "react/jsx-uses-react": 2,
+    "react/jsx-uses-vars": 2,
+    "react/no-did-mount-set-state": 0,
+    "react/no-did-update-set-state": 2,
+    "react/no-direct-mutation-state": 2,
+    "react/no-multi-comp": 0,
+    "react/no-unknown-property": 2,
+    "react/prefer-es6-class": 2,
+    "react/prop-types": 2,
+    "react/react-in-jsx-scope": 0,
+    "react/self-closing-comp": 2,
+    "react/sort-comp": 0,
+    "react/wrap-multilines": 0
+  }
+}
