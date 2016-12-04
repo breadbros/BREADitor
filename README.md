@@ -108,6 +108,17 @@ The rest
   * Facing <- dependent on valid Filename (maybe?)
   * location.layer <- populate
 
+
+RE-ADD
+=======
+* to package.json
+,
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ]
+
 Credits
 =======
 Icons designed by Freepik and distributed by Flaticon

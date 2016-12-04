@@ -5,11 +5,11 @@ var electron = require('electron');
 var gulp = require('gulp');
 
 gulp.task('start', ['build', 'watch'], function () {
-    childProcess.spawn(electron, ['.'], {
-        stdio: 'inherit'
+  childProcess.spawn(electron, ['.'], {
+      stdio: 'inherit'
     })
     .on('close', function () {
         // User closed the app. Kill the host process.
-        process.exit();
+      process.exit();
     });
 });

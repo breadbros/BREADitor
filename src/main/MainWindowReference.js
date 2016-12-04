@@ -1,14 +1,14 @@
 var win;
 
 var set = (w) => {
-    win = w;
-}
+  win = w;
+};
 
 var get = () => {
-    return win;
-}
+  return win;
+};
 
 export var MainWindow = {
-    set: set,
-    get: get
+  set: set,
+  get: get
 };

@@ -13,30 +13,30 @@ import env from './env';
 var mainWindow;
 
 var setApplicationMenu = function () {
-    var menus = prodMenuTemplate;
-    if (env.name !== 'production') {
-        menus.push(devMenuTemplate);
+  var menus = prodMenuTemplate;
+  if (env.name !== 'production') {
+      menus.push(devMenuTemplate);
     }
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
 };
 
 app.on('ready', function () {
-    setApplicationMenu();
+  setApplicationMenu();
 
-    var mainWindow = createWindow('main', {
-        width: 1000,
-        height: 600
+  var mainWindow = createWindow('main', {
+      width: 1000,
+      height: 600
     });
 
-    if (env.name === 'development') {
-        mainWindow.openDevTools();
+  if (env.name === 'development') {
+      mainWindow.openDevTools();
     }
 
-    mainWindow.loadURL('file://' + __dirname + '/app.html');
+  mainWindow.loadURL('file://' + __dirname + '/app.html');
 
-    MainWindow.set(mainWindow);
+  MainWindow.set(mainWindow);
 });
 
 app.on('window-all-closed', function () {
-    app.quit();
+  app.quit();
 });

@@ -4,7 +4,7 @@ import { editMenuTemplate } from './edit_menu_template';
 import { windowMenuTemplate } from './window_menu_template';
 
 export var prodMenuTemplate = [
-    fileMenuTemplate,
-    editMenuTemplate,
-    windowMenuTemplate
+  fileMenuTemplate,
+  editMenuTemplate,
+  windowMenuTemplate
 ];

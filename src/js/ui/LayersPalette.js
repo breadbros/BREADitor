@@ -1,9 +1,9 @@
 import { Tools } from '../../Tools.js';
 import { modal_error } from './Util.js';
-import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js'
-import { setShowEntitiesForLayer, shouldShowEntitiesForLayer, 
-         setNormalEntityVisibility, getNormalEntityVisibility, 
-         setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js'
+import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js';
+import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
+         setNormalEntityVisibility, getNormalEntityVisibility,
+         setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js';
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
 const $ = require('jquery');
 
@@ -42,7 +42,7 @@ function initLayersWidget(_map) {
 };
 
 function redraw_palette(map) {
-  list = $(".layers-palette .layers-list");
+  list = $('.layers-palette .layers-list');
   var newLayerContainer = null;
   var l = null;
   var line = null;
@@ -51,32 +51,32 @@ function redraw_palette(map) {
     layerDiv.removeClass('eye-open');
     layerDiv.removeClass('eye-closed');
 
-    if( !layer.MAPED_HIDDEN ) {
+    if (!layer.MAPED_HIDDEN) {
       layerDiv.addClass('eye-open');
     } else {
       layerDiv.addClass('eye-closed');
     }
   }
 
-  $(".layers-palette #layers-new").click( (evt) => {
+  $('.layers-palette #layers-new').click((evt) => {
     new_layer_click(evt);
   });
 
-  function addLayerEyeballHandler( $eyeball, i ) {
-    $eyeball.on( "click", function(evt) {
+  function addLayerEyeballHandler($eyeball, i) {
+    $eyeball.on( 'click', function (evt) {
       layers[i].MAPED_HIDDEN = !layers[i].MAPED_HIDDEN;
 
       handleEyeball($eyeball, layers[i]);
 
-      evt.stopPropagation()
-    } );
+      evt.stopPropagation();
+    });
   }
 
   function handleEntityEyeball($btn, layerName) {
     $btn.removeClass('showEnts');
     $btn.removeClass('hideEnts');
 
-    if( shouldShowEntitiesForLayer(layerName) ) {
+    if (shouldShowEntitiesForLayer(layerName)) {
       $btn.addClass('showEnts');
     } else {
       $btn.addClass('hideEnts');
@@ -85,49 +85,49 @@ function redraw_palette(map) {
 
   function addLayerEntityEyeballHandler($layerContainer, idx) {
     var layerName = layers[i].name;
-    var $btn = $layerContainer.find(".entity_layer .eyeball_button");
+    var $btn = $layerContainer.find('.entity_layer .eyeball_button');
 
     handleEntityEyeball($btn, layerName);
 
-    $btn.on( "click", function(evt) {
-      setShowEntitiesForLayer(layerName, !shouldShowEntitiesForLayer(layerName))
+    $btn.on( 'click', function (evt) {
+      setShowEntitiesForLayer(layerName, !shouldShowEntitiesForLayer(layerName));
 
       handleEntityEyeball($btn, layerName);
 
       evt.stopPropagation();
-    } );
+    });
   }
 
   function removeAllSelectedLayers(selClass) {
-      if( window && window.selected_layer ) {
+    if (window && window.selected_layer) {
         window.selected_layer.$container.removeClass(selClass);
       }
   }
 
   function addZoneSelectHandler($zone_container) {
-      $zone_container.on( "click", function(evt) {
+    $zone_container.on( 'click', function (evt) {
 
-        var selClass = "selected";
+        var selClass = 'selected';
 
         removeAllSelectedLayers(selClass);
 
-        /// TODO: this is disgusting, right?  right.
+        // / TODO: this is disgusting, right?  right.
         window.selected_layer = {
           map_tileData_idx: 999,
           layer: window.$$$currentMap.zoneData,
           $container: $zone_container
         };
 
-        $zone_container.addClass( selClass );
+        $zone_container.addClass(selClass);
 
-        evt.stopPropagation()
-      } );
+        evt.stopPropagation();
+      });
   }
 
-  function addLayerSelectHandler( $layer_container, i ) {
-      $layer_container.on( "click", function(evt) {
+  function addLayerSelectHandler($layer_container, i) {
+    $layer_container.on( 'click', function (evt) {
 
-        var selClass = "selected";
+        var selClass = 'selected';
 
         removeAllSelectedLayers(selClass);
 
@@ -138,150 +138,150 @@ function redraw_palette(map) {
         };
         $layer_container.addClass(selClass);
 
-        TilesetSelectorWidget.initTilesetSelectorWidget( map, layers[i] )
+        TilesetSelectorWidget.initTilesetSelectorWidget(map, layers[i]);
 
-        evt.stopPropagation()
-      } );
+        evt.stopPropagation();
+      });
   }
 
-  function addLayerEditHandler( $layer_container, i ) {
-      $layer_container.on( "dblclick", function(evt) {
+  function addLayerEditHandler($layer_container, i) {
+    $layer_container.on( 'dblclick', function (evt) {
 
-        console.log( "Allow editing of the layer's name here?" );
+        console.log("Allow editing of the layer's name here?");
 
-        evt.stopPropagation()
-      } );
+        evt.stopPropagation();
+      });
   }
 
 
   function setup_shitty_zone_layer($list) {
 
-    var tmpLayer = { 
+    var tmpLayer = {
       MAPED_HIDDEN : !getZoneVisibility(),
       alpha: getZoneAlpha()
-    }; 
+    };
     var $eyeball;
 
-    var newLayerContainer = generateLayerContainer( l,i );
+    var newLayerContainer = generateLayerContainer(l, i);
 
 
     $eyeball = generateContent(999, tmpLayer, newLayerContainer);
-    newLayerContainer.find(".layer_name").text("Zones");
-    newLayerContainer.find(".entity_layer").remove();
-    newLayerContainer.addClass("nosort");
-    newLayerContainer.data("alpha", getZoneAlpha()); 
-    newLayerContainer.data("rstring_ref", "ZZZ"); 
+    newLayerContainer.find('.layer_name').text('Zones');
+    newLayerContainer.find('.entity_layer').remove();
+    newLayerContainer.addClass('nosort');
+    newLayerContainer.data('alpha', getZoneAlpha());
+    newLayerContainer.data('rstring_ref', 'ZZZ');
 
-    newLayerContainer.find(".layer_parallax").remove();
+    newLayerContainer.find('.layer_parallax').remove();
 
-    addZoneSelectHandler( newLayerContainer );
-    $eyeball.on( "click", function(evt) {
+    addZoneSelectHandler(newLayerContainer);
+    $eyeball.on( 'click', function (evt) {
 
 
-      setZoneVisibility( !getZoneVisibility() );
+      setZoneVisibility(!getZoneVisibility());
 
       tmpLayer.MAPED_HIDDEN = !getZoneVisibility();
 
       handleEyeball($eyeball, tmpLayer);
 
-      evt.stopPropagation()
-    } );
+      evt.stopPropagation();
+    });
 
     $list.append(newLayerContainer);
   }
 
 
   function addObstructionSelectHandler($obs_container) {
-      $obs_container.on( "click", function(evt) {
+    $obs_container.on( 'click', function (evt) {
 
-        var selClass = "selected";
+        var selClass = 'selected';
 
         removeAllSelectedLayers(selClass);
 
-        /// TODO: this is disgusting, right?  right.
+        // / TODO: this is disgusting, right?  right.
         window.selected_layer = {
           map_tileData_idx: 998,
           layer: window.$$$currentMap.zoneData,
           $container: $obs_container
         };
-        
-        TilesetSelectorWidget.initTilesetSelectorWidget( map, map.obsLayerData, window.$$$currentMap.legacyObsData );
 
-        $obs_container.addClass( selClass );
+        TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData);
 
-        evt.stopPropagation()
-      } );
+        $obs_container.addClass(selClass);
+
+        evt.stopPropagation();
+      });
   }
 
   function setup_shitty_obstruction_layer($list) {
 
-    var tmpLayer = { 
+    var tmpLayer = {
       MAPED_HIDDEN : !getObsVisibility(),
       alpha: getObsAlpha()
     };
     var $eyeball;
-    var newLayerContainer = generateLayerContainer( l, i );
+    var newLayerContainer = generateLayerContainer(l, i);
 
     $eyeball = generateContent(998, tmpLayer, newLayerContainer);
-    newLayerContainer.find(".layer_name").text("Obstructions");
-    newLayerContainer.find(".entity_layer").remove();
-    newLayerContainer.addClass("nosort");
-    newLayerContainer.data("alpha", getObsAlpha()); 
-    newLayerContainer.data("rstring_ref", "ZZZ"); 
+    newLayerContainer.find('.layer_name').text('Obstructions');
+    newLayerContainer.find('.entity_layer').remove();
+    newLayerContainer.addClass('nosort');
+    newLayerContainer.data('alpha', getObsAlpha());
+    newLayerContainer.data('rstring_ref', 'ZZZ');
 
-    newLayerContainer.find(".layer_parallax").remove();
+    newLayerContainer.find('.layer_parallax').remove();
 
-    addObstructionSelectHandler( newLayerContainer );
-    $eyeball.on( "click", (evt) => {
-      setObsVisibility( !getObsVisibility() );
+    addObstructionSelectHandler(newLayerContainer);
+    $eyeball.on( 'click', (evt) => {
+      setObsVisibility(!getObsVisibility());
 
       tmpLayer.MAPED_HIDDEN = !getObsVisibility();
       handleEyeball($eyeball, tmpLayer);
       evt.stopPropagation();
-    } );
+    });
 
     $list.append(newLayerContainer);
   }
 
   function addEntitySelectHandler($entity_container) {
-    $entity_container.click( (evt) => {
-      console.log( "Haha, charade you are." );
-    }); 
+    $entity_container.click((evt) => {
+      console.log("Haha, charade you are.");
+    });
   };
 
   function _setup_entity_eyeball(node) {
     var $eyeball = $(node).find('.eyeball_button');
-    var tmpLayer = { 
+    var tmpLayer = {
       MAPED_HIDDEN : !getNormalEntityVisibility(),
       alpha: 1
-    }; 
+    };
 
     handleEyeball($eyeball, tmpLayer);
 
-    $eyeball.click( (evt) => {
-      setNormalEntityVisibility( !getNormalEntityVisibility() );
+    $eyeball.click((evt) => {
+      setNormalEntityVisibility(!getNormalEntityVisibility());
 
       tmpLayer.MAPED_HIDDEN = !getNormalEntityVisibility(); // todo these nouns need to align.   entityVisibile vs HIDDEN wtf
 
       handleEyeball($eyeball, tmpLayer);
 
-      evt.stopPropagation()
-    } ); 
+      evt.stopPropagation();
+    });
   }
 
   function handleEntityExpand(button) {
     button.removeClass('expand');
     button.removeClass('contract');
 
-    if( getEntityLayersExpanded() ) {
+    if (getEntityLayersExpanded()) {
       button.addClass('expand');
 
-      $(".entity_layer").show();
+      $('.entity_layer').show();
 
     } else {
       button.addClass('contract');
 
-      $(".entity_layer").hide();
+      $('.entity_layer').hide();
     }
 
     resizeWindow();
@@ -290,13 +290,13 @@ function redraw_palette(map) {
   function _setup_entity_expand(node) {
     var $expand_entities = $(node).find('.entity_expand_button');
 
-    $expand_entities.click( (evt) => {
-      setEntityLayersExpanded( !getEntityLayersExpanded() ); 
+    $expand_entities.click((evt) => {
+      setEntityLayersExpanded(!getEntityLayersExpanded());
 
       handleEntityExpand($expand_entities);
 
-      evt.stopPropagation()
-    } ); 
+      evt.stopPropagation();
+    });
   }
 
   function setup_shitty_entity_layer(node, $list) {
@@ -311,7 +311,7 @@ function redraw_palette(map) {
 
   function reorder_layers_by_rstring_priority($list, map) {
 
-    var childs = $list.children("li");
+    var childs = $list.children('li');
     childs.detach();
 
     var rstring_ref = null;
@@ -322,7 +322,7 @@ function redraw_palette(map) {
     setup_shitty_zone_layer($list);
     setup_shitty_obstruction_layer($list);
 
-    /// ZONES
+    // / ZONES
 
     // node = $("<li class='layer ui-state-default'><button class='eyeball_button'>?</button>Entities (default)</li>");
     // node.data("rstring_ref", "E");
@@ -333,20 +333,20 @@ function redraw_palette(map) {
       rstring_ref = parseInt(rstring_cur_target, 10);
       if (isNaN(rstring_ref)) {
 
-        /// TODO this is certainly the wrong place to populate "R" and "E" visually.
-        if( rstring_cur_target == "E" ) {
+        // / TODO this is certainly the wrong place to populate "R" and "E" visually.
+        if (rstring_cur_target == "E") {
           node = $("<li class='layer ui-state-default'><button class='eyeball_button'></button><button class='entity_expand_button'></button>Entities (default)</li>");
-          node.data("rstring_ref", "E");
-          node.data("layer_name", "Entity Layer (E)");
+          node.data('rstring_ref', 'E');
+          node.data('layer_name', 'Entity Layer (E)');
 
           setup_shitty_entity_layer(node, $list);
 
-        } else if( rstring_cur_target == "R" ) {
+        } else if (rstring_cur_target == "R") {
           node = $("<li class='layer ui-state-default'><button class='eyeball_button question_mark'>?</button>'Render'</li>");
-          node.data("rstring_ref", "R");
-          $list.append(node); 
+          node.data('rstring_ref', 'R');
+          $list.append(node);
         } else {
-          console.log( "UNKNOWN RSTRING PARTICLE '"+rstring_cur_target+"'" );
+          console.log("UNKNOWN RSTRING PARTICLE '" + rstring_cur_target + "'");
         }
 
         continue;
@@ -354,16 +354,16 @@ function redraw_palette(map) {
 
       for (var j = childs.length - 1; j >= 0; j--) {
         cur_kid = $(childs[j]);
-        if( cur_kid.data("rstring_ref") == rstring_cur_target ) {
+        if (cur_kid.data('rstring_ref') == rstring_cur_target) {
           $list.append(cur_kid); // re-add to list
           childs.splice(j, 1); // remove from childs array
           break;
         }
       };
 
-      $(".eyeball_button.question_mark").click( function() {
-        console.log("unimplemented, weirdo.");
-      } )
+      $('.eyeball_button.question_mark').click(function () {
+        console.log('unimplemented, weirdo.');
+      });
     };
 
     var $expand_entities = $(node).find('.entity_expand_button');
@@ -374,50 +374,50 @@ function redraw_palette(map) {
     var h = 0;
     var w = 0;
 
-    /// hackery of the worst calibur; probably a flaming trashbin.  do not trust.
-    $(".layers-palette").children().each( function(idx, kid) {
-      if( idx >= $(".layers-palette").children().length-3 ) {
-        return; /// the last three are chrome for resizable windows.
+    // / hackery of the worst calibur; probably a flaming trashbin.  do not trust.
+    $('.layers-palette').children().each(function (idx, kid) {
+      if (idx >= $('.layers-palette').children().length - 3) {
+        return; // / the last three are chrome for resizable windows.
       }
 
-      h +=  $(kid).outerHeight(true);
-    })
+      h += $(kid).outerHeight(true);
+    });
 
-    w += $(".layers-palette .window-container").outerWidth(true);
+    w += $('.layers-palette .window-container').outerWidth(true);
 
-    h += 14; //todo fix this - needs to calc from top padding
+    h += 14; // todo fix this - needs to calc from top padding
 
-    $(".layers-palette").width(w);
-    $(".layers-palette").height(h);  
+    $('.layers-palette').width(w);
+    $('.layers-palette').height(h);
   }
 
   function update_lucency(layer, dialog, special_case) {
-    var val = $("#new_layer_lucent").val().trim();
+    var val = $('#new_layer_lucent').val().trim();
 
-    if( !$.isNumeric(val) ) {
-      modal_error("Invalid input: not numeric.");
+    if (!$.isNumeric(val)) {
+      modal_error('Invalid input: not numeric.');
       return;
     }
 
-    if( val.indexOf(".") === -1 ) {
+    if (val.indexOf('.') === -1) {
       val = parseInt(val);
 
-      if(val <0 || val > 100) {
-        modal_error("INVALID PERCENTAGE VALUE, range: [0...100]");
+      if (val < 0 || val > 100) {
+        modal_error('INVALID PERCENTAGE VALUE, range: [0...100]');
         return;
       } else {
-        val = val/100;
+        val = val / 100;
       }
     } else { // parse fraction
       val = parseFloat(val);
-      if( val < 0 || val > 1 ) {
-        modal_error("INVALID FLOAT VALUE, range:  [0...1]");
+      if (val < 0 || val > 1) {
+        modal_error('INVALID FLOAT VALUE, range:  [0...1]');
         return;
-      } 
+      }
     }
 
-    switch(special_case){
-      case "zone":
+    switch (special_case) {
+      case 'zone':
         setZoneAlpha(val);
         break;
       default:
@@ -427,25 +427,25 @@ function redraw_palette(map) {
 
     redrawAllLucentAndParallax();
 
-    dialog.dialog( "close" );
+    dialog.dialog("close");
   }
 
   function lucent_click(evt) {
     var idx, layer, dialog;
-    var $me = $(evt.target).closest("li");
-    var special = "";
+    var $me = $(evt.target).closest('li');
+    var special = '';
 
-    /// TODO: this is special-case and evil.  make more better.
-    if( $me.data("rstring_ref") === "ZZZ" ) {
+    // / TODO: this is special-case and evil.  make more better.
+    if ($me.data('rstring_ref') === "ZZZ") {
       layer = {
-        name: "Zones",
+        name: 'Zones',
         alpha: getZoneAlpha()
-      }
+      };
 
-      special = "zone";
+      special = 'zone';
 
     } else {
-      idx = parseInt($me.data("rstring_ref"))-1;
+      idx = parseInt($me.data('rstring_ref')) - 1;
       layer = window.$$$currentMap.mapData.layers[idx];
     }
 
@@ -454,74 +454,74 @@ function redraw_palette(map) {
 
     $(() => {
 
-      var template = "<div>Layer: " + layer.name + "</div>";
-      template += "<div>Current: " + formatAlphaAsPercentage(layer.alpha) + "</div>"; 
-      template += "<div>New: <input id='new_layer_lucent'>%</div>"; 
+      var template = '<div>Layer: ' + layer.name + '</div>';
+      template += '<div>Current: ' + formatAlphaAsPercentage(layer.alpha) + '</div>';
+      template += "<div>New: <input id='new_layer_lucent'>%</div>";
 
-      $( "#modal-dialog" ).attr("title", "Set layer Opacity");
-      $( "#modal-dialog" ).html(template)
+      $("#modal-dialog").attr('title', 'Set layer Opacity');
+      $("#modal-dialog").html(template);
 
-      $( "#modal-dialog" ).show();
-      dialog = $( "#modal-dialog" ).dialog({
+      $("#modal-dialog").show();
+      dialog = $("#modal-dialog").dialog({
         modal: true,
         buttons: {
-          Save: () => { update_lucency(layer, dialog, special) },
-          "Cancel": function() {
-            dialog.dialog( "close" );
+          Save: () => { update_lucency(layer, dialog, special); },
+          'Cancel': function () {
+            dialog.dialog("close");
           }
         },
-        close: function() {
-          $( "#modal-dialog" ).html("");
+        close: function () {
+          $("#modal-dialog").html('');
         }
       });
     });
   }
 
   function parallax_click(evt) {
-    var idx = parseInt($(this).closest("li").data("rstring_ref"))-1;
+    var idx = parseInt($(this).closest('li').data('rstring_ref')) - 1;
     var layer = window.$$$currentMap.mapData.layers[idx];
 
     evt.stopPropagation();
 
-    //var newLucent = dialog
+    // var newLucent = dialog
     var dialog;
 
     $(() => {
 
-      var template = "<div>Layer: " + layer.name + "</div>";
-      template += "<div>Current (X:Y): " + layer.parallax.X + ":"+layer.parallax.Y+"</div>"; 
-      template += "<div>New: <input id='new_layer_parallax_x' size=3>&nbsp;:&nbsp;<input id='new_layer_parallax_y' size=3></div>"; 
+      var template = '<div>Layer: ' + layer.name + '</div>';
+      template += '<div>Current (X:Y): ' + layer.parallax.X + ":" + layer.parallax.Y+'</div>';
+      template += "<div>New: <input id='new_layer_parallax_x' size=3>&nbsp;:&nbsp;<input id='new_layer_parallax_y' size=3></div>";
 
-      $( "#modal-dialog" ).attr("title", "Set layer Parallax");
-      $( "#modal-dialog" ).html(template)
+      $("#modal-dialog").attr('title', 'Set layer Parallax');
+      $("#modal-dialog").html(template);
 
-      $( "#modal-dialog" ).show();
-      dialog = $( "#modal-dialog" ).dialog({
+      $("#modal-dialog").show();
+      dialog = $("#modal-dialog").dialog({
         modal: true,
         buttons: {
-          Save: () => { update_parallax(layer, dialog) },
-          "Cancel": function() {
-            dialog.dialog( "close" );
+          Save: () => { update_parallax(layer, dialog); },
+          'Cancel': function () {
+            dialog.dialog("close");
           }
         },
-        close: function() {
-          $( "#modal-dialog" ).html("");
+        close: function () {
+          $("#modal-dialog").html('');
         }
       });
     });
   }
 
   function update_parallax(layer, dialog) {
-    var x = $("#new_layer_parallax_x").val().trim();
-    var y = $("#new_layer_parallax_y").val().trim();
+    var x = $('#new_layer_parallax_x').val().trim();
+    var y = $('#new_layer_parallax_y').val().trim();
     var newParallax = {};
 
-    if( !$.isNumeric(x) ) {
-      modal_error("Invalid input: x not numeric.");
+    if (!$.isNumeric(x)) {
+      modal_error('Invalid input: x not numeric.');
       return;
     }
-    if( !$.isNumeric(y) ) {
-      modal_error("Invalid input: y not numeric.");
+    if (!$.isNumeric(y)) {
+      modal_error('Invalid input: y not numeric.');
       return;
     }
 
@@ -535,7 +535,7 @@ function redraw_palette(map) {
 
     redrawAllLucentAndParallax();
 
-    dialog.dialog( "close" );
+    dialog.dialog("close");
   }
 
   function formatAlphaAsPercentage(alpha) {
@@ -544,70 +544,70 @@ function redraw_palette(map) {
 
   function redrawAllLucentAndParallax(map) {
 
-    if(!map) {
+    if (!map) {
       map = window.$$$currentMap;
     }
 
-    $(".layer").each( function(idx,layer) {
+    $('.layer').each(function (idx, layer) {
       var nodeLayer = $(layer);
-      var rstring = nodeLayer.data("rstring_ref");
+      var rstring = nodeLayer.data('rstring_ref');
       var lucentDomNode = null;
       var parallaxDomNode = null;
 
-      var mapLayer = null 
+      var mapLayer = null
 
-      if(nodeLayer.hasClass("nosort")) {
+      if (nodeLayer.hasClass('nosort')) {
 
-        if( nodeLayer.data("rstring_ref") === "ZZZ" ) {
-          lucentDomNode = nodeLayer.find(".layer_lucency");
-          lucentDomNode.text(formatAlphaAsPercentage(getZoneAlpha())+"%")
+        if (nodeLayer.data('rstring_ref') === "ZZZ") {
+          lucentDomNode = nodeLayer.find('.layer_lucency');
+          lucentDomNode.text(formatAlphaAsPercentage(getZoneAlpha())+'%');
         }
 
         return;
       }
 
-      if( !$.isNumeric(rstring) ) {
+      if (!$.isNumeric(rstring)) {
         return;
       } else {
-        mapLayer = map.mapData.layers[parseInt(rstring)-1]; //todo: seperate human-indx from 0-based.
-        lucentDomNode = nodeLayer.find(".layer_lucency");
-        lucentDomNode.text(formatAlphaAsPercentage(mapLayer.alpha)+"%")
+        mapLayer = map.mapData.layers[parseInt(rstring) - 1]; // todo: seperate human-indx from 0-based.
+        lucentDomNode = nodeLayer.find('.layer_lucency');
+        lucentDomNode.text(formatAlphaAsPercentage(mapLayer.alpha)+'%');
 
-        parallaxDomNode = nodeLayer.find(".layer_parallax");
-        parallaxDomNode.text(mapLayer.parallax.X+":"+mapLayer.parallax.Y);
+        parallaxDomNode = nodeLayer.find('.layer_parallax');
+        parallaxDomNode.text(mapLayer.parallax.X + ":" + mapLayer.parallax.Y);
 
-        if(!mapLayer.alpha) {
+        if (!mapLayer.alpha) {
           debugger;
         }
 
-        nodeLayer.data("alpha", mapLayer.alpha) // TODO: remove this, only one source of truth: the data.
+        nodeLayer.data('alpha', mapLayer.alpha); // TODO: remove this, only one source of truth: the data.
       }
 
-    }); 
+    });
   }
 
   function generateContent(i, l, $parent) {
 
-    var normalContainer = $("<div class='normal_layer'></div>")
+    var normalContainer = $("<div class='normal_layer'></div>");
 
     var visible_div = $("<button class='eyeball_button'></button>");
     var name_div = $("<div class='layer_name'></div>");
 
-    var right_div = $("<div class='rightmost_div'></div>")
+    var right_div = $("<div class='rightmost_div'></div>");
 
-    var lucent_div   = $("<div class='layer_lucency'></div>");
+    var lucent_div = $("<div class='layer_lucency'></div>");
     var parallax_div = $("<div class='layer_parallax'>?:?</div>");
 
-    var entityContainer = $("<div class='entity_layer'><button class='eyeball_button'></button><div class='layer_name'></div></div>")
+    var entityContainer = $("<div class='entity_layer'><button class='eyeball_button'></button><div class='layer_name'></div></div>");
 
-    var entity_name_div = entityContainer.find(".layer_name");
+    var entity_name_div = entityContainer.find('.layer_name');
 
     handleEyeball(visible_div, l);
 
-    name_div.text((i+1)+": "+l.name);
-    entity_name_div.text( (i+1)+" (entities)" );
+    name_div.text((i + 1) + ": " + l.name);
+    entity_name_div.text((i + 1) + " (entities)");
 
-    lucent_div.text(formatAlphaAsPercentage(l.alpha)+"%")
+    lucent_div.text(formatAlphaAsPercentage(l.alpha)+'%');
 
     lucent_div.click(lucent_click);
     parallax_div.click(parallax_click);
@@ -618,7 +618,7 @@ function redraw_palette(map) {
     // right div
     right_div.append(lucent_div);
     right_div.append(parallax_div);
-    
+
     normalContainer.append(right_div);
 
     $parent.append(entityContainer);
@@ -626,14 +626,14 @@ function redraw_palette(map) {
 
 
 
-    return visible_div; 
+    return visible_div;
   }
 
   function generateLayerContainer(layer, layer_index) {
     var newLayerContainer = $("<li class='layer ui-state-default'></li>");
-    newLayerContainer.data("alpha", layer.alpha);
-    newLayerContainer.data("rstring_ref", ""+(layer_index+1) );
-    newLayerContainer.data("layer_name", layer.name );
+    newLayerContainer.data('alpha', layer.alpha);
+    newLayerContainer.data('rstring_ref', "" + (layer_index + 1));
+    newLayerContainer.data('layer_name', layer.name);
 
     return newLayerContainer;
   }
@@ -643,67 +643,67 @@ function redraw_palette(map) {
   for (var i = layers.length - 1; i >= 0; i--) {
     l = layers[i];
 
-    newLayerContainer = generateLayerContainer( l,i );
-    eyeballButton = generateContent( i, l, newLayerContainer );
-    
+    newLayerContainer = generateLayerContainer(l, i);
+    eyeballButton = generateContent(i, l, newLayerContainer);
+
     addLayerEntityEyeballHandler(newLayerContainer, i);
     addLayerEyeballHandler(eyeballButton, i);
-    addLayerSelectHandler( newLayerContainer, i );
-    addLayerEditHandler( newLayerContainer, i );
+    addLayerSelectHandler(newLayerContainer, i);
+    addLayerEditHandler(newLayerContainer, i);
 
 
-    list.append( newLayerContainer );
+    list.append(newLayerContainer);
   };
 
-  /// RSTRING is weird and needs to die.
+  // / RSTRING is weird and needs to die.
   reorder_layers_by_rstring_priority(list, map);
   resizeWindow();
 
-  /// make the layers sortable
-  $( ".layers-list" ).sortable({
+  // / make the layers sortable
+  $(".layers-list").sortable({
     revert: true,
     cancel: '.nosort',
   });
-  $( "ul, li" ).disableSelection();
+  $("ul, li").disableSelection();
 
   var skipWeirdThings = (rstring_val) => {
-    if(rstring_val === "ZZZ") {
+    if (rstring_val === 'ZZZ') {
       return true;
     }
 
     return false;
   };
 
-  $( ".layers-list" ).on( "sortupdate", function( event, ui ) {
-    var kids = $( ".layers-list" ).children();
+  $(".layers-list").on( 'sortupdate', function (event, ui) {
+    var kids = $(".layers-list").children();
     var i, val;
 
     var rstring = [];
 
     try {
-      for( i in kids ) {
-        if( kids.hasOwnProperty(i) ) {
-          val = $(kids[i]).data("rstring_ref");
-          if(val && !skipWeirdThings(val)) {
-            rstring.unshift($(kids[i]).data("rstring_ref"));  
+      for (i in kids) {
+        if (kids.hasOwnProperty(i)) {
+          val = $(kids[i]).data('rstring_ref');
+          if (val && !skipWeirdThings(val)) {
+            rstring.unshift($(kids[i]).data('rstring_ref'));
           }
         }
       }
-    } catch(e) {
-      console.log("error")
-      console.log(e)
+    } catch (e) {
+      console.log('error');
+      console.log(e);
       throw e;
     }
 
     window.$$$currentMap.updateRstring(rstring);
-  } );
+  });
 
   redrawAllLucentAndParallax(map);
 };
 
 function get_layernames_by_rstring_order() {
   var ret = [];
-  var childs = list.children("li");
+  var childs = list.children('li');
   var cur_kid;
   var rstring_cur_target;
   var rstring_ref;
@@ -715,12 +715,12 @@ function get_layernames_by_rstring_order() {
     rstring_ref = parseInt(rstring_cur_target, 10);
 
     if (isNaN(rstring_ref)) {
-      switch(rstring_cur_target) {
+      switch (rstring_cur_target) {
         case 'E':
-          ret.push("Entity Layer (E)");
+          ret.push('Entity Layer (E)');
           continue;
 
-        case 'R': //ignore everything else for now
+        case 'R': // ignore everything else for now
         default:
           continue;
       }
@@ -728,8 +728,8 @@ function get_layernames_by_rstring_order() {
 
     for (var j = childs.length - 1; j >= 0; j--) {
       cur_kid = $(childs[j]);
-      if( cur_kid.data("rstring_ref") == rstring_cur_target ) {
-        ret.push(cur_kid.data("layer_name"));
+      if (cur_kid.data('rstring_ref') == rstring_cur_target) {
+        ret.push(cur_kid.data('layer_name'));
         break;
       }
     };
@@ -760,8 +760,8 @@ template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
 function setup_template() {
   var $template = $(template);
 
-  var $dims_x = $template.find("#layer_dims_x");
-  var $dims_y = $template.find("#layer_dims_y");
+  var $dims_x = $template.find('#layer_dims_x');
+  var $dims_y = $template.find('#layer_dims_y');
 
   $dims_x.val(window.$$$currentMap.mapSizeInTiles[0]);
   $dims_y.val(window.$$$currentMap.mapSizeInTiles[1]);
@@ -774,7 +774,7 @@ function _layer_click(evt) {
 
   var dialog;
 
-  //var zone = currentZones[id];
+  // var zone = currentZones[id];
 
   var layer = false;
 
@@ -783,15 +783,15 @@ function _layer_click(evt) {
     var $template = setup_template();
     var newLayerId = window.$$$currentMap.mapData.layers.length + 1;
 
-    if(layer) {
-      $( "#modal-dialog" ).attr("title", "Edit Layer "+id+")");
+    if (layer) {
+      $("#modal-dialog").attr('title', "Edit Layer " + id+')');
     } else {
-      $( "#modal-dialog" ).attr("title", "Add New Layer (id: "+ (newLayerId) +")");
+      $("#modal-dialog").attr('title', "Add New Layer (id: " + (newLayerId) +')');
     }
-    $( "#modal-dialog" ).html("");
-    $( "#modal-dialog" ).append($template);
+    $("#modal-dialog").html('');
+    $("#modal-dialog").append($template);
 
-    if(layer) {
+    if (layer) {
       // console.log("Editing: " + zone.name);
 
       // $template.find("#zone_name").val(zone.name);
@@ -800,20 +800,20 @@ function _layer_click(evt) {
       // $template.find("#zone_can_by_adjacent_activated").prop( "checked", zone.can_by_adjacent_activated );
     }
 
-    $( "#modal-dialog" ).show();
-    dialog = $( "#modal-dialog" ).dialog({
+    $("#modal-dialog").show();
+    dialog = $("#modal-dialog").dialog({
       width: 500,
       modal: true,
       buttons: {
-        Save: () => { 
+        Save: () => {
           update_layer(dialog, newLayerId);
         },
-        "Cancel": function() {
-          dialog.dialog( "close" );
+        'Cancel': function () {
+          dialog.dialog("close");
         }
       },
-      close: function() {
-        $( "#modal-dialog" ).html("");
+      close: function () {
+        $("#modal-dialog").html('');
       }
     });
   });
@@ -829,53 +829,53 @@ template += "<div>Alpha: <input id='layer_opacity' value='1' size=3></div>";
 template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
 */
 
-  var name = dialog.find("#layer_name").val();
-  var par_x = dialog.find("#layer_parallax_x").val();
-  var par_y = dialog.find("#layer_parallax_y").val();
-  var dims_x = dialog.find("#layer_dims_x").val();
-  var dims_y = dialog.find("#layer_dims_y").val();
-  var alpha = dialog.find("#layer_opacity").val();
-  var vsp = dialog.find("#layer_vsp").val();
+  var name = dialog.find('#layer_name').val();
+  var par_x = dialog.find('#layer_parallax_x').val();
+  var par_y = dialog.find('#layer_parallax_y').val();
+  var dims_x = dialog.find('#layer_dims_x').val();
+  var dims_y = dialog.find('#layer_dims_y').val();
+  var alpha = dialog.find('#layer_opacity').val();
+  var vsp = dialog.find('#layer_vsp').val();
   var layer = null;
 
-  if(!$.isNumeric(par_x)) {
-    modal_error("Invalid input: parralax x ("+par_x+") is invalid.");
+  if (!$.isNumeric(par_x)) {
+    modal_error("Invalid input: parralax x (" + par_x+') is invalid.');
     return;
   }
-  if(!$.isNumeric(par_y) ) {
-    modal_error("Invalid input: parralax y ("+par_y+") is invalid.");
+  if (!$.isNumeric(par_y)) {
+    modal_error("Invalid input: parralax y (" + par_y+') is invalid.');
     return;
   }
-  if(!$.isNumeric(dims_x) && dims_x >= 0 ) {
-    modal_error("Invalid input: dimension x ("+dims_x+") is invalid.");
+  if (!$.isNumeric(dims_x) && dims_x >= 0) {
+    modal_error("Invalid input: dimension x (" + dims_x+') is invalid.');
     return;
   }
   dims_x = parseInt(dims_x);
-  if(!$.isNumeric(dims_y) && dims_y >= 0 ) {
-    modal_error("Invalid input: dimension y ("+dims_y+") is invalid.");
+  if (!$.isNumeric(dims_y) && dims_y >= 0) {
+    modal_error("Invalid input: dimension y (" + dims_y+') is invalid.');
     return;
   }
   dims_y = parseInt(dims_y);
-  if(!$.isNumeric(alpha) || alpha < 0 || alpha > 1) {
-    modal_error("Invalid input: alpha ("+alpha+") is invalid.  Try values [0...1]");
+  if (!$.isNumeric(alpha) || alpha < 0 || alpha > 1) {
+    modal_error("Invalid input: alpha (" + alpha+') is invalid.  Try values [0...1]');
     return;
   }
 
-  if(!name) {
-    modal_error("Invalid name: you must define a name.");
+  if (!name) {
+    modal_error('Invalid name: you must define a name.');
     return;
   }
 
-  var nameSet = window.$$$currentMap.mapData.layers.map( (l) => { return l.name } );
-  if( nameSet.indexOf(name) != -1 ) {
-    modal_error("Invalid input: name ("+name+") is not unique on this map.  Try a new, unique name.");
+  var nameSet = window.$$$currentMap.mapData.layers.map((l) => { return l.name; });
+  if (nameSet.indexOf(name) != -1) {
+    modal_error("Invalid input: name (" + name+') is not unique on this map.  Try a new, unique name.');
     return;
   }
 
   alpha = parseFloat(alpha);
 
   layer = {
-    name: name, 
+    name: name,
     alpha: alpha,
     dimensions: {
       X: parseInt(dims_x),
@@ -891,17 +891,17 @@ template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
   var layersLength = 0;
   window.$$$currentMap.mapData.layers.push(layer);
   layersLength = window.$$$currentMap.mapData.layers.length;
-  window.$$$currentMap.layerLookup[name] = window.$$$currentMap.mapData.layers[layersLength-1];
-  window.$$$currentMap.layerRenderOrder.push( ""+(layersLength) );
-  window.$$$currentMap.mapRawTileData.tile_data.push( new Array( (dims_x*dims_y) ).fill(0) );
+  window.$$$currentMap.layerLookup[name] = window.$$$currentMap.mapData.layers[layersLength - 1];
+  window.$$$currentMap.layerRenderOrder.push("" + (layersLength));
+  window.$$$currentMap.mapRawTileData.tile_data.push(new Array((dims_x * dims_y)).fill(0));
 
   redraw_palette(window.$$$currentMap);
   Tools.updateRstringInfo();
 
-  dialog.dialog( "close" );
+  dialog.dialog("close");
 }
 
 export var LayersWidget = {
-    initLayersWidget: initLayersWidget,
-    get_layernames_by_rstring_order: get_layernames_by_rstring_order
+  initLayersWidget: initLayersWidget,
+  get_layernames_by_rstring_order: get_layernames_by_rstring_order
 };
