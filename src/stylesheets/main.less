@@ -22,8 +22,9 @@ h3.ui-widget-header {
 }
 
 .map-palette {
-    width: 500px;
+/*    width: 500px;
     height: 500px;
+*/
 }
 
 .ui-widget-header {
@@ -94,13 +95,12 @@ h3.ui-widget-header {
     bottom: 10px;
 }
 
-/* absolute bullshit for now. */
 .map-palette .map_canvas_container, .tileset-selector-palette .tileset_selector_canvas_container {
-    position: absolute;
-    top: calc(1.3em + 5px);
     left: 0;
     right: 0;
     bottom: 0;
+    background-color: #FF00FF;
+    height: calc(100% - 9px );
 }
 
 .map-palette .map_canvas, .tileset-selector-palette .tileset_selector_canvas {
