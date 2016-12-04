@@ -149,7 +149,7 @@ var initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
 
     vsp_mapdata = create_dynamic_map( newLayer.vsp );
     vsp_tiledata = create_dynamic_tiledata( vsp_mapdata, newLayer );
-debugger;
+
     create_map( vsp_mapdata, vsp_tiledata, Tools.updateLocationFunction, newMap, newLayer );
   }
 };
