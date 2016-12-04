@@ -5,6 +5,7 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
          setNormalEntityVisibility, getNormalEntityVisibility, 
          setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js'
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
+const $ = require('jquery');
 
 var list;
 

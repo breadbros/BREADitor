@@ -52,6 +52,9 @@ The Immediates for Ustor
 
 The rest
 =========
+
+* LINUX/OSX SUPPORT ON FILE ASSETS
+
 * initialize the z-orders of palletes better, and save their order in the save/restore system
 * notifications are broken, https://developer.mozilla.org/en-US/docs/Web/API/notification
 * Extract all obs-related things into an appropriate library

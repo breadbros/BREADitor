@@ -1,6 +1,7 @@
 import { Map, verifyTileData, verifyMap } from '../../Map.js';
 import { modal_error } from './Util.js';
 import { Tools } from '../../Tools.js';
+const $ = require('jquery');
 
 var old_map;
 var old_layer;

@@ -1,5 +1,6 @@
 import { modal_error } from './Util.js';
 import { LayersWidget } from './LayersPalette.js';
+const $ = require('jquery');
 
 var _entityVisibility = true;
 var _entityLayersExpanded = false;

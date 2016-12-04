@@ -20,9 +20,13 @@ function buildTileDataTexture(data) {
 }
 
 var __obsColor = [1, 1, 1, 0.5];
-function setColor(r,g,b,a) {
+export var setObsColor = (r,g,b,a) => {
     __obsColor = [r,g,b,a];
 }
+export var getObsColor = () => {
+    return __obsColor;
+}
+
 
 export var verifyTileData = (mapdatafile) => {
     var promiseResolver;

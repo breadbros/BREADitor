@@ -1,4 +1,5 @@
 import { modal_error } from './Util.js';
+const $ = require('jquery');
 
 var currentZones = null;
 var selectedZoneIdx = null;
