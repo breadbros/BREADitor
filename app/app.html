@@ -16,30 +16,22 @@
         <script>
             window.jQuery = window.$ = require('jquery');
         </script>
-        <script src="vendor/jquery-ui/jquery-ui.js"></script>
+        <script src="js/jquery-ui/jquery-ui-min.js"></script>
+<!--
+        
 
         <script src="vendor/jquery.event.drag-2.2/jquery.event.drag-2.2.js"></script>
-<!--
-        <script>
-            debugger;
-        </script>
--->
+
         <script src="vendor/electron_boilerplate/env_config.js"></script>
         <script src="vendor/electron_boilerplate/context_menu.js"></script>
         <script src="vendor/electron_boilerplate/external_links.js"></script>
+-->
 <!--
 
-<script src="vendor/SlickGrid-master/slick.core.js"></script>
+<script src="vendor/SlickGrid-master/slick.core.js"></script>d
 <script src="vendor/SlickGrid-master/slick.grid.js"></script>
 
 -->
-        <script src="node_modules/keymaster/keymaster.js"></script>
-        <script>
-            window.$KEYMASTER = key;
-
-            key('⌘+d, ctrl+d', function(){ alert("BUTTS!")  });
-        </script>
-
         <script>
             window.$CURRENT_SELECTED_TILES = [0,0,0];
 
@@ -50,8 +42,8 @@
                 $( ".draggable-window" ).draggable({
                     handle: "h3",
                     stop: function(event, ui) {
-                        console.log("draggable STOP");
-                        console.log(event);
+                        // console.log("draggable STOP");
+                        // console.log(event);
                     },
                     start: function(event, ui) {
                         /// map palette is always on bottom.
@@ -62,8 +54,8 @@
                         $(event.target).css("z-index", garbage_zsort);
                         garbage_zsort++;
 
-                        console.log("draggable START");
-                        console.log(event);
+                        // console.log("draggable START");
+                        // console.log(event);
                     }
 
                 });
