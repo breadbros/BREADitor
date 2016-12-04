@@ -9,30 +9,30 @@ import { prodMenuTemplate } from './menu/prod_menu_template';
 import createWindow from './helpers/window';
 import { MainWindow } from './main/MainWindowReference';
 import env from './env';
+const path = require('path');
 
-var mainWindow;
-
-var setApplicationMenu = function () {
-  var menus = prodMenuTemplate;
+const setApplicationMenu = function () {
+  const menus = prodMenuTemplate;
   if (env.name !== 'production') {
-      menus.push(devMenuTemplate);
-    }
+    menus.push(devMenuTemplate);
+  }
   Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
 };
 
 app.on('ready', function () {
   setApplicationMenu();
 
-  var mainWindow = createWindow('main', {
-      width: 1000,
-      height: 600
-    });
+  const mainWindow = createWindow('main', {
+    width: 1000,
+    height: 600
+  });
 
   if (env.name === 'development') {
-      mainWindow.openDevTools();
-    }
+    mainWindow.openDevTools();
+  }
 
-  mainWindow.loadURL('file://' + __dirname + '/app.html');
+  const url = path.join('file://', __dirname, '/app.html');
+  mainWindow.loadURL(url);
 
   MainWindow.set(mainWindow);
 });
