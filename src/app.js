@@ -1,5 +1,6 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
 import { Tools } from './Tools.js';
+import { Palettes } from './Palettes.js';
 import { LayersWidget } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
@@ -100,7 +101,7 @@ function bootstrapMap( mapFile, tiledataFile ) {
         $node.css("top", y+"px");
         $node.css("left", x+"px");
         $node.css("z-index", z);
-
+debugger;
         x += 30;
         y += 30;
         z ++;
@@ -165,8 +166,9 @@ function bootstrapMap( mapFile, tiledataFile ) {
       Tools.savePalettePositions();
     };
 
-    window.appPath = path.dirname(require.main.filename);
+    Palettes.setupPaletteListeners();
 
+    window.appPath = path.dirname(require.main.filename);
     window.$$$load();
 
     //loadByFilename(['../app/map_assets/farmsville.map.json']);
