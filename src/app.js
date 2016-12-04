@@ -66,6 +66,29 @@ ipcRenderer.on( 'main-menu', (event, arg) => {
   }
 } );
 
+ipcRenderer.on( 'window-menu', (event, arg) => {
+
+  switch(arg) {
+    case 'map':
+    case 'tool':
+    case 'info':
+    case 'layers':
+    case 'zones':
+    case 'entity':
+    case 'tileset-selector':
+      window.$$$toggle_pallete(arg);
+      break;
+    case 'all-collect':
+      window.$$$collect_all_windows();
+      break;
+    case 'all-show':
+      window.$$$show_all_windows();
+      break;
+    default:
+      alert(sprintf("Unknown action from window-menu: '%s'.", arg)); 
+  }
+} );
+
 
 /// Setup the rest of the app
 (function() {

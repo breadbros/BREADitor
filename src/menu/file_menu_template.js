@@ -1,5 +1,4 @@
-import { app } from 'electron';
-const { ipcMain } = require('electron')
+import { app, ipcMain } from 'electron';
 import { MainWindow } from '../main/MainWindowReference';
 
 var send = (msg) => {
