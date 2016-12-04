@@ -1,0 +1,1045 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"redo",
+				"redoSet"
+			],
+			[
+				"un",
+				"undoStack"
+			],
+			[
+				"needs",
+				"needsObstructions"
+			],
+			[
+				"obstruction",
+				"obstructions"
+			],
+			[
+				"map",
+				"mapdata"
+			],
+			[
+				"read",
+				"ready"
+			],
+			[
+				"modal",
+				"modal_error"
+			],
+			[
+				"par",
+				"par_x"
+			],
+			[
+				"dims_",
+				"dims_y"
+			],
+			[
+				"dim",
+				"dims_x"
+			],
+			[
+				"ap",
+				"alpha"
+			],
+			[
+				"en",
+				"entity_layer"
+			],
+			[
+				"bacgrou",
+				"background-color"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"con",
+				"container"
+			],
+			[
+				"eyeball",
+				"eyeball_button"
+			],
+			[
+				"zone",
+				"zone_0"
+			],
+			[
+				"set",
+				"setZoneAlpha"
+			],
+			[
+				"get",
+				"getZoneAlpha"
+			],
+			[
+				"obstr",
+				"obstructions"
+			],
+			[
+				"zon",
+				"zone_id"
+			],
+			[
+				"margin-",
+				"margin-top"
+			],
+			[
+				"marg",
+				"margin-top"
+			],
+			[
+				"backgrou",
+				"background-color"
+			],
+			[
+				"pa",
+				"Parallax"
+			],
+			[
+				"padd",
+				"padding"
+			],
+			[
+				"parse",
+				"parseInt"
+			],
+			[
+				"font-s",
+				"font-size"
+			],
+			[
+				"back",
+				"background-image"
+			],
+			[
+				"fon",
+				"font-family"
+			],
+			[
+				"file",
+				"filenames"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "app/app.html",
+			"settings":
+			{
+				"buffer_size": 5711,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/Palettes.js",
+			"settings":
+			{
+				"buffer_size": 1392,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/Tools.js",
+			"settings":
+			{
+				"buffer_size": 18934,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/menu/prod_menu_template.js",
+			"settings":
+			{
+				"buffer_size": 278,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/menu/window_menu_template.js",
+			"settings":
+			{
+				"buffer_size": 1563,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app.js",
+			"settings":
+			{
+				"buffer_size": 6073,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 4882,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 687.0,
+		"last_filter": "package in",
+		"selected_items":
+		[
+			[
+				"package in",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 832.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/grue/Breaditor",
+		"/C/grue/Breaditor/src",
+		"/C/grue/Breaditor/src/js",
+		"/C/grue/Breaditor/src/main",
+		"/C/grue/Breaditor/tasks"
+	],
+	"file_history":
+	[
+		"/C/grue/Breaditor/src/main/MainWindowReference.js",
+		"/C/grue/Breaditor/src/Map.js",
+		"/C/grue/Breaditor/src/background.js",
+		"/C/grue/Breaditor/src/menu/window_menu_template.js",
+		"/C/grue/Breaditor/src/stylesheets/main.less",
+		"/C/grue/Breaditor/src/app.js",
+		"/C/grue/Breaditor/src/menu/file_menu_template.js",
+		"/C/grue/Breaditor/app/background.js",
+		"/C/grue/Breaditor/src/stylesheets/jquery-ui-fixes.less",
+		"/C/grue/Breaditor/README.md",
+		"/C/grue/Breaditor/app/stylesheets/main.css",
+		"/C/grue/Breaditor/app/app.js",
+		"/C/grue/Breaditor/tasks/build_app.js",
+		"/C/grue/Breaditor/app/stylesheets/jquery-ui-fixes.css",
+		"/C/grue/Breaditor/src/shim/Shim.js",
+		"/C/grue/Breaditor/src/ShaderProgram.js",
+		"/C/grue/Breaditor/src/Tools.js",
+		"/C/grue/Breaditor/src/js/ui/TilesetSelectorPalette.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-bottom.json",
+		"/C/grue/Breaditor/package.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.jso",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.json",
+		"/C/tmp/SullyContent/maps/json/$$$_MAPED.json",
+		"/C/Users/grue/Desktop/DUAL setup-maped4-dev.ahk",
+		"/C/grue/electron-boilerplate-5.0.0/src/app.js",
+		"/C/grue/electron-boilerplate-5.0.0/src/hello_world/hello_world.js",
+		"/C/grue/Breaditor-2/.gitignore",
+		"/C/grue/maped4/params.json",
+		"/C/grue/Breaditor-2/README.md",
+		"/C/grue/AUUUUGH/src/app.js",
+		"/C/grue/AUUUUGH/node_modules/jquery/dist/jquery.js",
+		"/C/grue/AUUUUGH/src/background.js.old",
+		"/C/grue/AUUUUGH/src/env.js",
+		"/C/grue/AUUUUGH/app/app.js",
+		"/C/grue/AUUUUGH/app/stylesheets/main.css",
+		"/C/grue/AUUUUGH/app/background.js",
+		"/C/grue/maped4/app/background.js",
+		"/C/grue/maped4/app/js/ui/TilesetSelectorPalette.js",
+		"/C/grue/maped4/app/package.json",
+		"/C/grue/electron-boilerplate/.gitignore",
+		"/C/grue/electron-boilerplate/README.md",
+		"/C/grue/maped4/app/helpers/context_menu.js",
+		"/C/grue/maped4/app/js/ui/ZonesPalette.js",
+		"/C/grue/maped4/app/js/ui/LayersPalette.js",
+		"/C/grue/maped4/app/Map.js",
+		"/C/grue/electron-boilerplate/.babelrc",
+		"/C/grue/maped4/README.md",
+		"/C/grue/maped4/github-sites/stylesheets/stylesheet.css",
+		"/C/grue/maped4/app/Tools.js",
+		"/C/grue/maped4/index.html",
+		"/C/grue/maped4/build/app.js",
+		"/C/grue/maped4/tasks/generate_specs_import.js",
+		"/C/grue/maped4/tasks/build.js",
+		"/C/grue/maped4/build/spec.html",
+		"/C/grue/maped4/node_modules/jest-cli/node_modules/jest-runtime/build/transform.js",
+		"/C/grue/maped4/scripts/test_debug.sh",
+		"/C/grue/maped4/__tests__/app/Tools.test.js",
+		"/C/grue/maped4/.babelrc",
+		"/C/grue/maped4/__tests__/sum.js",
+		"/C/grue/maped4/app/hello_world/hello_universe.spec.js",
+		"/C/grue/maped4/app/Tools.spec.js",
+		"/C/grue/maped4/app/js/ui/TilesetSelectorPalette.spec.js",
+		"/C/Users/grue/Desktop/SMALL setup-maped4-dev - Copy.ahk",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/$$$_MAPED.json",
+		"/C/grue/maped4/app/app.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/underwater_lower.map.data.json",
+		"/C/grue/maped4/app/app.html",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.vsp.json",
+		"/C/Users/grue/Downloads/Win_Sully_20051211/island.vc",
+		"/C/Users/grue/Downloads/Win_Sully_20051211/vc/util/inet_talk.vc",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-water.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/conversations/evil_lab_f2/Teacher_Take_Rod_3a.txt",
+		"/C/grue/maped4/build/app.html",
+		"/C/Users/grue/AppData/Local/Temp/Rar$DIa0.112/jquery-ui.js",
+		"/C/grue/maped4/build/package.json",
+		"/C/grue/maped4/app/node_modules/jquery-ui/jquery-ui.js",
+		"/C/grue/maped4/build/node_modules/jquery/dist/jquery.js",
+		"/C/grue/maped4/build/node_modules/jquery/dist/jquery.min.js",
+		"/C/grue/maped4/build/node_modules/jquery-ui/jquery-ui.js",
+		"/C/grue/maped4/node_modules/rollup/src/Module.js",
+		"/C/grue/maped4/app/js/ui/EntityPalette.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/mt-jujube.json",
+		"/C/grue/maped4/gulpfile.js",
+		"/C/grue/maped4/tasks/start.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/undersea_cave/lower/lower_bg.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/jujubmt-e.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/underwater_lower.map.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/undersea_cave/lower/lower_parallax.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/undersea_cave/lower/lower_fg.json",
+		"/C/grue/maped4/app/map_assets/chrs_map/undersea_cave/lower/lower_fg.json",
+		"/C/grue/maped4/app/map_assets/chrs_map/undersea_cave/lower/lower_parallax.json",
+		"/C/grue/maped4/app/map_assets/underwater_cave.vsp.json",
+		"/C/grue/maped4/app/map_assets/farmsville.map.json",
+		"/C/grue/maped4/app/map_assets/chrs_map/undersea_cave/lower/lower_bg.json",
+		"/C/grue/maped4/app/map_assets/underwater_lower.map.json",
+		"/C/tmp/farmsville.map.json",
+		"/C/grue/maped4/app/map_assets/farmsville.vsp.json",
+		"/C/grue/maped4/app/map_assets/farmsville.obsvsp.json",
+		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_bg.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/underwater_cave.vsp.json",
+		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_parallax.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.data.json",
+		"/C/grue/maped4/app/map_assets/underwater_crystalcaves.map.json",
+		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_fg.json",
+		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_bg - Copy.json",
+		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_fg - Copy.json",
+		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_parallax - Copy.json",
+		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/upper_bg.json",
+		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/red_water.json",
+		"/C/grue/maped4/app/map_assets/chrs_json/object_tree2.json",
+		"/C/grue/maped4/app/map_assets/underwater_lower_green.map.json",
+		"/C/grue/maped4/app/map_assets/underwater_lower_red.map.json",
+		"/C/grue/maped4/app/map_assets/underwater_upper.map.json",
+		"/C/grue/maped4/app/map_assets/farmsville.map.data.json",
+		"/C/tmp/underwater_lower.map.json",
+		"/C/grue/maped4/app/map_assets/underwater_lower_red.map.data.json",
+		"/C/grue/maped4/app/map_assets/underwater_cave_crystal.vsp.json",
+		"/C/grue/maped4/app/js/ui/Util.js",
+		"/C/grue/pokebot/pokemons.py",
+		"/C/grue/gitIssue2/scripts/fetch_wrapper.js",
+		"/C/grue/gitIssue2/gulpfile.js",
+		"/C/grue/gitIssue2/scripts/containers/CommentThread.js",
+		"/C/grue/pokebot/twitter.js",
+		"/C/grue/taco/butt.js",
+		"/C/grue/pokemon-hq/README.md",
+		"/C/grue/gitIssue2/package.json",
+		"/c/tmp/sully/vc/util/icons.vc"
+	],
+	"find":
+	{
+		"height": 64.0
+	},
+	"find_in_files":
+	{
+		"height": 176.0,
+		"where_history":
+		[
+			"<current file>",
+			"C:\\grue\\Breaditor,-*.map,-app\\app.js.-app\\background.js",
+			"<current file>",
+			"C:\\grue\\Breaditor,-*.map,-app\\app.js.-app\\background.js",
+			"C:\\grue\\Breaditor,-*.map",
+			"C:\\grue\\Breaditor",
+			"C:\\grue\\AUUUUGH",
+			"C:\\grue\\AUUUUGH\\src",
+			"C:\\grue\\maped4",
+			"C:\\Users\\grue\\Downloads\\Win_Sully_20051211",
+			"C:\\grue\\maped4\\app,*.js",
+			"C:\\grue\\XNAVERGE\\Examples\\Sully\\SullyContent\\conversations",
+			"C:\\grue\\maped4,*.js",
+			"C:\\grue\\maped4\\app,*.js",
+			"C:\\grue\\maped4\\app,-*node_modules*,-custom.js,-*/jquery-ui/*,-*/vendor/*,*.js,*.html",
+			"C:\\grue\\maped4\\app,-*node_modules*,-custom.js,-*/jquery-ui/*,-*/vendor/*,*.js",
+			"<current file>",
+			"",
+			"C:\\grue\\maped4\\app,-*node_modules*,-custom.js,-*/jquery-ui/*,-*/vendor/*,*.js",
+			"c:\\tmp\\sully\\,*.vc",
+			"C:\\grue\\maped4\\app,-*node_modules*,-custom.js,-*/jquery-ui/*,-*/vendor/*",
+			"C:\\grue\\maped4\\app,-*node_modules*,-custom.js,-*/jquery-ui/*",
+			"C:\\grue\\maped4\\app,-*node_modules*,-custom.js",
+			"C:\\grue\\maped4\\app,-*node_modules*",
+			"C:\\grue\\maped4\\app,-*\\node_modules\\*",
+			"C:\\grue\\maped4\\app,-\\node_modules\\",
+			"C:\\grue\\maped4\\app",
+			"C:\\grue\\maped4",
+			"C:\\Users\\grue\\Downloads\\Win_Sully_20051211,*.vc",
+			"C:\\grue\\maped4\\app",
+			"<current file>",
+			"*.js",
+			"<current file>",
+			"*.js",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"tools",
+			"\");'); ",
+			"mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete(",
+			"Map.js",
+			"'load",
+			"about",
+			"window.$$$load",
+			"sprintf",
+			"ipcRenderer",
+			"$$$",
+			"editMenuTemplate",
+			"menu",
+			"map-",
+			"500",
+			"cont",
+			"map-palette",
+			"z-index",
+			"z-inde",
+			"MAP_WINDOW",
+			"Notification",
+			"myNotification",
+			"garbage_zsort",
+			"order",
+			"z-index",
+			"localSto",
+			"Loca",
+			"localStorage",
+			"updateLocationFunction",
+			"localStor",
+			"../app/images",
+			"../app",
+			"../app/",
+			"lless",
+			"ui-icon-gripsmall-diagonal-se",
+			"map.json",
+			"debug",
+			"debugger",
+			"shim/",
+			"shaders/selection",
+			"shader",
+			"appPath",
+			"dataPath",
+			"jetpac",
+			"../src/shaders/",
+			"src/shaders",
+			"app/shaders",
+			"/app/shaders",
+			"getShaderInfoLog",
+			"dialog",
+			"app.",
+			"app",
+			"verifyMap",
+			"'remote'",
+			"\"remote\"",
+			"install-app-deps",
+			"ipcRenderer",
+			"get shell",
+			"\"get shell\"",
+			"electron",
+			"document",
+			"app.html-inline-3",
+			"app.js",
+			"$$$load",
+			"bootstrapMap",
+			"window.$KEYMASTER",
+			"keymaster",
+			"getDevToolsMenu",
+			"BrowserWindow",
+			"mainWindow",
+			"mainWindow.loadURL",
+			"loadU",
+			"setApplicationMenu",
+			"openDevTools",
+			"mainWindowState",
+			"windowStateKeeper",
+			"Brows",
+			"mainWindowState",
+			"windowStateKeeper",
+			"Browser",
+			"browser-window",
+			"document",
+			"env",
+			"jetpack",
+			"remote",
+			"app",
+			"jquer",
+			"$(\".zones-palette\")",
+			"env",
+			"image",
+			"this.dataPath =",
+			"create_dynamic_map",
+			"create_map",
+			"newLayer",
+			"initTilesetSelectorWidget",
+			"mapData",
+			"jetpac",
+			"LayerSele",
+			"initTilesetSelectorWidget",
+			"obs",
+			"SelectHan",
+			"initTilesetSelectorWidget",
+			"create_map",
+			"cleek",
+			"generateLayerContainer",
+			"setup_shitty_obstruction_layer",
+			"shitty_zon",
+			"setup_shitty_obstruction_layer",
+			"shitty_o",
+			"btn-toggle-obs",
+			"getObsVisibility",
+			"setObstructionsVisible",
+			"btn-toggle-obs",
+			"zones",
+			"shitty_obs",
+			"handleEyeball",
+			"getObst",
+			"getObsVisibility",
+			"getObstructionAlpha",
+			"getObstructionVisibility",
+			"Visibility",
+			"ZoneVisibility",
+			"addZoneSelectHandler",
+			"999",
+			"generateContent",
+			"shitty_zon",
+			"setup_shitty_zone_layer",
+			"Zones",
+			"setup_shitty_entity_layer"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"\"); ",
+			"send(",
+			"../images",
+			"",
+			"shaders/",
+			"src/shaders",
+			"map",
+			"window.$$$currentMap"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 6,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "app/app.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5711,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1038,
+								1038
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 746.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/Palettes.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1392,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								526,
+								526
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/Tools.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 18934,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								18934,
+								18498
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 21306.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/menu/prod_menu_template.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 278,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								278,
+								278
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/menu/window_menu_template.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1563,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								341,
+								341
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6073,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1965,
+								1965
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2199.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4882,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 44.0
+	},
+	"input":
+	{
+		"height": 60.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "Breaditor.sublime-project",
+	"replace":
+	{
+		"height": 84.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"readme",
+				"README.md"
+			],
+			[
+				"app.js",
+				"src\\app.js"
+			],
+			[
+				"window_m",
+				"src\\menu\\window_menu_template.js"
+			],
+			[
+				"app",
+				"src\\app.js"
+			],
+			[
+				"file",
+				"src\\menu\\file_menu_template.js"
+			],
+			[
+				"menu",
+				"src\\menu\\edit_menu_template.js"
+			],
+			[
+				"rea",
+				"README.md"
+			],
+			[
+				"tools",
+				"src\\Tools.js"
+			],
+			[
+				".less",
+				"src\\stylesheets\\jquery-ui-fixes.less"
+			],
+			[
+				"app.html",
+				"app\\app.html"
+			],
+			[
+				"map",
+				"src\\Map.js"
+			],
+			[
+				"tilesele",
+				"src\\js\\ui\\TilesetSelectorPalette.js"
+			],
+			[
+				"backg",
+				"src\\background.js"
+			],
+			[
+				"build_app",
+				"tasks\\build_app.js"
+			],
+			[
+				"map.js",
+				"src\\Map.js"
+			],
+			[
+				"shaderpro",
+				"src\\ShaderProgram.js"
+			],
+			[
+				"map.",
+				"src\\Map.js"
+			],
+			[
+				"background",
+				"src\\background.js"
+			],
+			[
+				"backgrou",
+				"src\\background.js"
+			],
+			[
+				"bac",
+				"app\\background.js"
+			],
+			[
+				"",
+				"app\\Tools.js"
+			],
+			[
+				"tileset",
+				"app\\js\\ui\\TilesetSelectorPalette.js"
+			],
+			[
+				"zone",
+				"app\\js\\ui\\ZonesPalette.js"
+			],
+			[
+				"layer",
+				"app\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"zones",
+				"app\\js\\ui\\ZonesPalette.js"
+			],
+			[
+				"build.js",
+				"tasks\\build.js"
+			],
+			[
+				"node_modules/jest-cli/node_modules/jest-runtime/build/transform.js",
+				"node_modules\\jest-cli\\node_modules\\jest-runtime\\build\\transform.js"
+			],
+			[
+				"tileselec",
+				"app\\js\\ui\\TilesetSelectorPalette.js"
+			],
+			[
+				"lower_fg.json",
+				"chrs_json\\chrs_map\\undersea_cave\\lower\\lower_fg.json"
+			],
+			[
+				"module.js",
+				"node_modules\\rollup\\src\\Module.js"
+			],
+			[
+				"read",
+				"README.md"
+			],
+			[
+				"gulp",
+				"gulpfile.js"
+			],
+			[
+				"lower_bg.",
+				"app\\map_assets\\chrs_map\\undersea_cave\\lower\\lower_bg.json"
+			],
+			[
+				"entity",
+				"app\\js\\ui\\EntityPalette.js"
+			],
+			[
+				"util.",
+				"app\\js\\ui\\Util.js"
+			],
+			[
+				"readm",
+				"README.md"
+			],
+			[
+				"entitypalette",
+				"maped4\\app\\js\\ui\\EntityPalette.js"
+			],
+			[
+				"tilemap-vert.glsl",
+				"maped4\\app\\shaders\\tilemap-vert.glsl"
+			],
+			[
+				"tilemap-frag.glsl",
+				"maped4\\app\\shaders\\tilemapObs-frag.glsl"
+			],
+			[
+				"tilemapobs-frag.glsl",
+				"maped4\\app\\shaders\\tilemapObs-frag.glsl"
+			],
+			[
+				"tols",
+				"app\\Tools.js"
+			],
+			[
+				"re",
+				"README.md"
+			],
+			[
+				"vertex.glsl",
+				"app\\vertex.glsl"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 587.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
