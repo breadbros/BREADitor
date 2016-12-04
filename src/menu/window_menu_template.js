@@ -46,18 +46,18 @@ export var windowMenuTemplate = {
             }
          },
         { type: 'separator' },
-      {
-        label: 'Collect all visible palettes',
-        accelerator: 'CmdOrCtrl+Shift+C',
-        click: function () {
-              send('all-collect');
-            }
-      },
-      {
-        label: 'Show all palettes',
-        accelerator: 'CmdOrCtrl+Shift+Alt+C',
-        click: function () {
-              send('all-show');
-            }
-      },
-    ]};
+    {
+      label: 'Collect all visible palettes',
+      accelerator: 'CmdOrCtrl+Shift+C',
+      click: function () {
+          send('all-collect');
+        }
+    },
+    {
+      label: 'Show all palettes',
+      accelerator: 'CmdOrCtrl+Shift+Alt+C',
+      click: function () {
+          send('all-show');
+        }
+    },
+  ]};

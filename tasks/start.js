@@ -6,8 +6,8 @@ var gulp = require('gulp');
 
 gulp.task('start', ['build', 'watch'], function () {
   childProcess.spawn(electron, ['.'], {
-      stdio: 'inherit'
-    })
+    stdio: 'inherit'
+  })
     .on('close', function () {
         // User closed the app. Kill the host process.
       process.exit();

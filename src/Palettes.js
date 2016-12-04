@@ -5,31 +5,31 @@ var garbage_zsort = 1;
 
 var setupPaletteListeners = () => {
   $(function () {
-      $(".draggable-window").draggable({
-          handle: 'h3',
-          stop: function (event, ui) {
+    $('.draggable-window').draggable({
+        handle: 'h3',
+        stop: function (event, ui) {
                 // console.log("draggable STOP");
                 // console.log(event);
-            },
-          start: function (event, ui) {
+          },
+        start: function (event, ui) {
                 // / map palette is always on bottom.
-              if ($(event.target).hasClass('map-palette')) {
-                  return;
-                }
+            if ($(event.target).hasClass('map-palette')) {
+                return;
+              }
 
-              $(event.target).css('z-index', garbage_zsort);
-              correctResizeWidget(event.target);
+            $(event.target).css('z-index', garbage_zsort);
+            correctResizeWidget(event.target);
 
-              garbage_zsort += 2;
-            }
-        });
+            garbage_zsort += 2;
+          }
+      });
 
-      $(".resizable-window").resizable();
+    $('.resizable-window').resizable();
 
-      window.$MAP_WINDOW = $('.map-palette.resizable-window');
+    window.$MAP_WINDOW = $('.map-palette.resizable-window');
 
-      $('.map .map_canvas').draggable('disable');
-    });
+    $('.map .map_canvas').draggable('disable');
+  });
 };
 
 
@@ -37,8 +37,8 @@ var correctResizeWidget = (node, newZ) => {
   var z;
 
   if (newZ) {
-      $(node).css('z-index', newZ);
-    }
+    $(node).css('z-index', newZ);
+  }
 
   z = $(node).css('z-index');
   if (!z) { z = 0; }

@@ -4,7 +4,7 @@ module.exports = {
   remote: {
     app: {
       getAppPath: () => {
-        return "C:\\tmp\\mock_path";
+        return 'C:\\tmp\\mock_path';
       }
     }
   },

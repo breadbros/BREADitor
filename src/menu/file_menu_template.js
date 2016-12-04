@@ -23,4 +23,4 @@ export var fileMenuTemplate = {
     { label: 'Refresh', accelerator: 'Command+R', click: function () { app.refresh(); }},
     { type: 'separator' },
     { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit(); }}
-]};
+  ]};

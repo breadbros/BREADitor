@@ -4,7 +4,7 @@ module.exports = function (runner, options) {
   mocha.reporters.Base.call(this, runner);
 
   var reporterOpts = { dir: 'coverage' },
-      reporters = ['text-summary', 'html'];
+    reporters = ['text-summary', 'html'];
 
   options = options || {};
   if (options.reporters) reporters = options.reporters.split(',');
@@ -13,14 +13,14 @@ module.exports = function (runner, options) {
   if (process.env.ISTANBUL_REPORT_DIR) reporterOpts.dir = process.env.ISTANBUL_REPORT_DIR;
 
   runner.on('end', function () {
-      var cov = global.__coverage__ || {},
-          collector = new istanbul.Collector();
+    var cov = global.__coverage__ || {},
+        collector = new istanbul.Collector();
 
-      collector.add(cov);
+    collector.add(cov);
 
-      reporters.forEach(function (reporter) {
-          istanbul.Report.create(reporter, reporterOpts).writeReport(collector, true);
-        });
+    reporters.forEach(function (reporter) {
+        istanbul.Report.create(reporter, reporterOpts).writeReport(collector, true);
+      });
 
-    });
+  });
 };

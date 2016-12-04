@@ -22,7 +22,7 @@ function select_zone_by_index(idx) {
     idx = 0;
   }
 
-  $it_me = $(".zone-row[data-index=" + idx+']');
+  $it_me = $('.zone-row[data-index=' + idx + ']');
   _select_zone_ui_inner($it_me);
   return $it_me;
 }
@@ -130,12 +130,12 @@ function _zone_click(evt, id) {
     var $template = setup_template();
 
     if (zone) {
-      $("#modal-dialog").attr('title', "Edit Zone " + id+')');
+      $('#modal-dialog').attr('title', 'Edit Zone ' + id + ')');
     } else {
-      $("#modal-dialog").attr('title', "Add New Zone (id: " + (currentZones.length - 1)+')');
+      $('#modal-dialog').attr('title', 'Add New Zone (id: ' + (currentZones.length - 1) + ')');
     }
-    $("#modal-dialog").html('');
-    $("#modal-dialog").append($template);
+    $('#modal-dialog').html('');
+    $('#modal-dialog').append($template);
 
     if (zone) {
       console.log('Editing: ' + zone.name);
@@ -143,11 +143,11 @@ function _zone_click(evt, id) {
       $template.find('#zone_name').val(zone.name);
       $template.find('#zone_activation_script').val(zone.activation_script);
       $template.find('#zone_activation_chance').val(zone.activation_chance);
-      $template.find('#zone_can_by_adjacent_activated').prop( 'checked', zone.can_by_adjacent_activated);
+      $template.find('#zone_can_by_adjacent_activated').prop('checked', zone.can_by_adjacent_activated);
     }
 
-    $("#modal-dialog").show();
-    dialog = $("#modal-dialog").dialog({
+    $('#modal-dialog').show();
+    dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
       buttons: {
@@ -157,11 +157,11 @@ function _zone_click(evt, id) {
           update_zone(dialog, _id);
         },
         'Cancel': function () {
-          dialog.dialog("close");
+          dialog.dialog('close');
         }
       },
       close: function () {
-        $("#modal-dialog").html('');
+        $('#modal-dialog').html('');
       }
     });
   });
@@ -176,7 +176,7 @@ function update_zone(dialog, zone_id) {
   var zone = null;
 
   if (!$.isNumeric(zone_id) || zone_id < 0) {
-    modal_error("Invalid input: zone_id (" + zone_id+') is invalid.');
+    modal_error('Invalid input: zone_id (' + zone_id + ') is invalid.');
     return;
   }
 
@@ -203,7 +203,7 @@ function update_zone(dialog, zone_id) {
   currentZones[zone_id] = zone;
   redraw_palette();
 
-  dialog.dialog("close");
+  dialog.dialog('close');
 }
 
 function write_zone(id, zone) {
@@ -253,7 +253,7 @@ export var scrollZonePalletteToZone = (zoneToFocus) => {
   }
 
   if (zoneIdx != zoneToFocus) {
-    msg = "unexpected zone index, expected " + zoneToFocus+', got ' + zoneIdx;
+    msg = 'unexpected zone index, expected ' + zoneToFocus + ', got ' + zoneIdx;
     console.log(msg);
     throw msg;
   }

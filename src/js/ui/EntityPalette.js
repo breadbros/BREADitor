@@ -41,7 +41,7 @@ export var setShowEntitiesForLayer = (layername, isVisible) => {
 
   window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS = !isVisible;
 
-  console.log("ents(" + layername+')' + window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS);
+  console.log('ents(' + layername + ')' + window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS);
 };
 
 
@@ -136,9 +136,9 @@ function setup_template(ent, id) {
   var $template = $(template);
 
   if (ent) {
-    $("#modal-dialog").attr('title', "Edit Entity (id: " + id+')');
+    $('#modal-dialog').attr('title', 'Edit Entity (id: ' + id + ')');
   } else {
-    $("#modal-dialog").attr('title', "Add New Entity (id: " + (currentEntities.length - 1)+')');
+    $('#modal-dialog').attr('title', 'Add New Entity (id: ' + (currentEntities.length - 1) + ')');
   }
 
   if (ent) {
@@ -164,9 +164,9 @@ function setup_template(ent, id) {
     // http://regex.info/blog/2006-09-15/247
     $template.find('#entity_wander').val(JSON.stringify(ent.wander).replace(/{/g, '{\n').replace(/}/g, '\n}').replace(/,/g, ',\n').replace(/":/g, '": ').replace(/^"/mg, '\t"'));
 
-    $template.find('#entity_pays_attention_to_obstructions').prop( 'checked', ent.pays_attention_to_obstructions);
-    $template.find('#entity_is_an_obstruction').prop( 'checked', ent.is_an_obstruction);
-    $template.find('#entity_autofaces').prop( 'checked', ent.autofaces);
+    $template.find('#entity_pays_attention_to_obstructions').prop('checked', ent.pays_attention_to_obstructions);
+    $template.find('#entity_is_an_obstruction').prop('checked', ent.is_an_obstruction);
+    $template.find('#entity_autofaces').prop('checked', ent.autofaces);
 
     $template.find('#entity_filename').click(() => {
       alert('Pop up file dialog here.');
@@ -176,7 +176,7 @@ function setup_template(ent, id) {
     if (window.$$$currentMap.entityData[ent.filename]) {
       entData = window.$$$currentMap.entityData[ent.filename];
     } else {
-      console.warn("I DO NOT KNOW HOW TO RENDER [" + ent.filename + "]");
+      console.warn('I DO NOT KNOW HOW TO RENDER [' + ent.filename + ']');
       entData = window.$$$currentMap.entityData['__default__'];
     }
 
@@ -295,17 +295,17 @@ function _entity_click(evt, id) {
 
     var $template = setup_template(ent, id);
 
-    $("#modal-dialog").html('');
-    $("#modal-dialog").append($template);
+    $('#modal-dialog').html('');
+    $('#modal-dialog').append($template);
 
-    $("#modal-dialog").show();
+    $('#modal-dialog').show();
 
     assert_pixel_versus_tile_in_editing();
 
-    dialog = $("#modal-dialog").dialog({
+    dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
-      title: $("#modal-dialog").attr('title'),
+      title: $('#modal-dialog').attr('title'),
       buttons: {
         Save: () => {
           var _id = ($.isNumeric(id) && ent) ? id : currentEntities.length;
@@ -313,21 +313,21 @@ function _entity_click(evt, id) {
           update_entity(dialog, _id);
         },
         'Cancel': function () {
-          dialog.dialog("close");
+          dialog.dialog('close');
         }
       },
       close: function () {
-        $("#modal-dialog").html('');
+        $('#modal-dialog').html('');
       }
     });
   });
 
-  $('div.tile_coordinates input').on( 'change', () => {
+  $('div.tile_coordinates input').on('change', () => {
     assert_tileness();
     assert_pixel_versus_tile_in_editing();
   });
 
-  $('div.pixel_coordinates input').on( 'change', () => {
+  $('div.pixel_coordinates input').on('change', () => {
     assert_pixel_versus_tile_in_editing();
   });
 }
@@ -378,12 +378,12 @@ function update_entity(dialog, ent_id) {
   var ent = null;
 
   if (!$.isNumeric(ent_id) || ent_id < 0) {
-    modal_error("Invalid input: ent_id (" + ent_id+') is invalid.');
+    modal_error('Invalid input: ent_id (' + ent_id + ') is invalid.');
     return;
   }
 
   if (!$.isNumeric(entity_speed)) {
-    modal_error("Invalid input: speed not numeric (" + entity_speed+').');
+    modal_error('Invalid input: speed not numeric (' + entity_speed + ').');
     return;
   }
 
@@ -421,7 +421,7 @@ function update_entity(dialog, ent_id) {
 
   window.$$$currentMap.createEntityRenderData(); // TODO: NO NO NO NO NONONONNONONNONO
 
-  dialog.dialog("close");
+  dialog.dialog('close');
 }
 
 

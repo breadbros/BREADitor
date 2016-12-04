@@ -15,9 +15,9 @@ var destDir = jetpack.cwd('./app');
 
 gulp.task('bundle', function () {
   return Promise.all([
-      bundle(srcDir.path('background.js'), destDir.path('background.js')),
-      bundle(srcDir.path('app.js'), destDir.path('app.js')),
-    ]);
+    bundle(srcDir.path('background.js'), destDir.path('background.js')),
+    bundle(srcDir.path('app.js'), destDir.path('app.js')),
+  ]);
 });
 
 gulp.task('less', function () {
@@ -34,20 +34,20 @@ gulp.task('environment', function () {
 
 gulp.task('watch', function () {
   var beepOnError = function (done) {
-      return function (err) {
-          if (err) {
-              utils.beepSound();
-            }
-          done(err);
-        };
-    };
+    return function (err) {
+        if (err) {
+            utils.beepSound();
+          }
+        done(err);
+      };
+  };
 
   watch('src/**/*.js', batch(function (events, done) {
-      gulp.start('bundle', beepOnError(done));
-    }));
+    gulp.start('bundle', beepOnError(done));
+  }));
   watch('src/**/*.less', batch(function (events, done) {
-      gulp.start('less', beepOnError(done));
-    }));
+    gulp.start('less', beepOnError(done));
+  }));
 });
 
 gulp.task('build', ['bundle', 'less', 'environment']);

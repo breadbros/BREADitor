@@ -10,8 +10,8 @@ const sprintf = require('sprintf-js').sprintf;
 const path = require('path');
 
 function initInfoWidget(map) {
-	  $('#info-mapname').text(map.mapPath);
-	  $('#info-dims').text(map.mapSizeInTiles[0] + "x" + map.mapSizeInTiles[1]);
+	    $('#info-mapname').text(map.mapPath);
+	    $('#info-dims').text(map.mapSizeInTiles[0] + 'x' + map.mapSizeInTiles[1]);
 }
 
 function bootstrapMap(mapFile, tiledataFile) {
@@ -95,56 +95,56 @@ ipcRenderer.on('window-menu', (event, arg) => {
   window.$$$currentMap = null;
 
   var tick = function (timestamp) {
-      if (!!window.$$$currentMap) {
-          window.$$$currentMap.render();
-          TilesetSelectorWidget.renderTilesetSelectorWidget();
-        }
+    if (!!window.$$$currentMap) {
+        window.$$$currentMap.render();
+        TilesetSelectorWidget.renderTilesetSelectorWidget();
+      }
 
-      window.requestAnimationFrame(tick);
-    };
+    window.requestAnimationFrame(tick);
+  };
   window.requestAnimationFrame(tick);
 
   console.log('$$$save should be initialized...');
   window.$$$save = function () {
-      var app = require('electron').remote.app;
-      var jetpack = require('fs-jetpack').cwd(app.getAppPath());
+    var app = require('electron').remote.app;
+    var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
-      var map = window.$$$currentMap;
-      map.compactifyZones(); // / TODO this should probably happen not-here?
+    var map = window.$$$currentMap;
+    map.compactifyZones(); // / TODO this should probably happen not-here?
 
-      jetpack.write(map.filenames.mapfile, map.mapData);
-      jetpack.write(map.filenames.mapdatafile, map.mapRawTileData);
+    jetpack.write(map.filenames.mapfile, map.mapData);
+    jetpack.write(map.filenames.mapdatafile, map.mapRawTileData);
 
-      console.log('HELLO I AM $$$SAVE');
-    };
+    console.log('HELLO I AM $$$SAVE');
+  };
 
   var loadByFilename = (fileNames) => {
-      if (fileNames === undefined) return;
-      var fileName = fileNames[0];
-      var dataName, vspName;
+    if (fileNames === undefined) return;
+    var fileName = fileNames[0];
+    var dataName, vspName;
 
-      dataName = fileName.replace('.map.json', '.map.data.json');
-      vspName = fileName.replace('.map.json', '.vsp.json');
+    dataName = fileName.replace('.map.json', '.map.data.json');
+    vspName = fileName.replace('.map.json', '.vsp.json');
 
       // / todo: verify that all three of these files, you know... exist?
-      bootstrapMap(fileName, dataName);
-    };
+    bootstrapMap(fileName, dataName);
+  };
 
   window.$$$about_breaditor = function () {
-      alert('Breaditor is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.  TODO: make this better.');
-    };
+    alert('Breaditor is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.  TODO: make this better.');
+  };
 
   window.$$$collect_all_windows = function () {
 
-      var x = 0;
-      var y = 0;
-      var z = 0;
+    var x = 0;
+    var y = 0;
+    var z = 0;
 
-      window.$$$palette_registry.map((pal) => {
-        var node_selector = "." + pal;
+    window.$$$palette_registry.map((pal) => {
+        var node_selector = '.' + pal;
         var $node = $(node_selector);
-        $node.css('top', y+'px');
-        $node.css('left', x+'px');
+        $node.css('top', y + 'px');
+        $node.css('left', x + 'px');
         $node.css('z-index', z);
 
         Palettes.correctResizeWidget($node);
@@ -155,46 +155,46 @@ ipcRenderer.on('window-menu', (event, arg) => {
 
       });
 
-      Tools.savePalettePositions();
-    };
+    Tools.savePalettePositions();
+  };
 
   window.$$$show_all_windows = function () {
 
-      window.$$$palette_registry.map((pal) => {
-        var node_selector = "." + pal;
+    window.$$$palette_registry.map((pal) => {
+        var node_selector = '.' + pal;
         var $node = $(node_selector);
         $node.show();
       });
 
-      Tools.savePalettePositions();
-    };
+    Tools.savePalettePositions();
+  };
 
   window.$$$load = function () {
-      const { dialog } = require('electron').remote;
+    const { dialog } = require('electron').remote;
 
-      dialog.showOpenDialog(
+    dialog.showOpenDialog(
         {filters: [{ name: 'text', extensions: ['map.json'] }]},
         loadByFilename
       );
-    };
+  };
 
   window.$$$palette_registry = [
-      'map-palette',
-      'tool-palette',
-      'layers-palette',
-      'zones-palette',
-      'entity-palette',
-      'info-palette',
-      'tileset-selector-palette'
-    ];
+    'map-palette',
+    'tool-palette',
+    'layers-palette',
+    'zones-palette',
+    'entity-palette',
+    'info-palette',
+    'tileset-selector-palette'
+  ];
 
   window.$$$toggle_pallete = function (pal) {
 
-      var node_selector = '';
-      var node = pal + '-palette';
+    var node_selector = '';
+    var node = pal + '-palette';
 
-      if (window.$$$palette_registry.indexOf(node) >= 0) {
-        node_selector = "." + node;
+    if (window.$$$palette_registry.indexOf(node) >= 0) {
+        node_selector = '.' + node;
         node = $(node_selector);
 
         if (!node.length) {
@@ -204,14 +204,14 @@ ipcRenderer.on('window-menu', (event, arg) => {
         throw "Invalid palette name: '" + pal + "'";
       }
 
-      if (node.is(':visible')) {
+    if (node.is(':visible')) {
         node.hide();
       } else {
         node.show();
       }
 
-      Tools.savePalettePositions();
-    };
+    Tools.savePalettePositions();
+  };
 
   Palettes.setupPaletteListeners();
 
