@@ -1,7 +1,6 @@
 var $ = require('jquery');
 var sprintf = require("sprintf-js").sprintf;
-
-var app = require('remote').require('app');
+var app = require('electron').remote.app;
 var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
 import { getZoneVisibility, getZoneAlpha, getActiveZone, setActiveZone, scrollZonePalletteToZone } from "./js/ui/ZonesPalette.js";

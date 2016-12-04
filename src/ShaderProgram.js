@@ -5,14 +5,14 @@ export var ShaderProgram = function(gl, vertexSource, fragmentSource) {
     gl.shaderSource(vertexShader, vertexSource);
     gl.compileShader(vertexShader);
     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-        throw new Error("Failed to compile vertex shader: " + gl.getShaderInfoLog(vertexShader));
+        throw new Error("Failed to compile vertex shader ("+vertexSource+"): " + gl.getShaderInfoLog(vertexShader));
     }
 
     var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(fragmentShader, fragmentSource);
     gl.compileShader(fragmentShader);
     if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-        throw new Error("Failed to compile fragment shader: " + gl.getShaderInfoLog(fragmentShader));
+        throw new Error("Failed to compile fragment shader ("+fragmentShader+"): " + gl.getShaderInfoLog(fragmentShader));
     }
 
     this.program = gl.createProgram();

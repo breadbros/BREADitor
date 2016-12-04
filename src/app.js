@@ -5,7 +5,6 @@ import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
 import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
 
-
 var path = require('path');
 
 function initInfoWidget(map) {
@@ -61,7 +60,7 @@ function bootstrapMap( mapFile, tiledataFile ) {
 
     console.log("$$$save should be initialized...");
     window.$$$save = function() {
-      var app = require('remote').require('app');
+      var app = require('electron').remote.app;
       var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
       var map = window.$$$currentMap;
@@ -123,8 +122,7 @@ function bootstrapMap( mapFile, tiledataFile ) {
     };
 
     window.$$$load = function() {
-      var remote = require('remote');
-      var dialog = remote.require('dialog');
+      const { dialog } = require('electron').remote;
 
       dialog.showOpenDialog(
         {filters: [{ name: 'text', extensions: ['map.json'] }]},

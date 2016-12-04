@@ -9,6 +9,11 @@ import { editMenuTemplate } from './menu/edit_menu_template';
 import createWindow from './helpers/window';
 import env from './env';
 
+import { set_app, set_menu } from './shim/Shim'
+
+set_app(app);
+set_menu(Menu);
+
 var mainWindow;
 
 var setApplicationMenu = function () {

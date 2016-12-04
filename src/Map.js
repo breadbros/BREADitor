@@ -1,6 +1,7 @@
-var app = require('remote').require('app');
+var app = require('electron').remote.app;
 var path = require('path');
-var jetpack = require('fs-jetpack').cwd(app.getAppPath());
+const appPath = app.getAppPath();
+var jetpack = require('fs-jetpack').cwd(appPath);
 import { ShaderProgram } from "./ShaderProgram.js";
 import { Tools } from "./Tools.js";
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js'
@@ -39,8 +40,9 @@ export var verifyTileData = (mapdatafile) => {
 };
 
 var saveData = (mapFile, mapData) => {
-    var app = require('remote').require('app');
-    var jetpack = require('fs-jetpack').cwd(app.getAppPath());
+    // TODO these lines shouldnt be necessary.  delete?
+    // var app = require('electron').remote.app;
+    // var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
     var map = window.$$$currentMap;
 
@@ -52,8 +54,9 @@ var verifyPromiseResolver;
 var verifyPromiseRejecter;
 
 export var verifyMap = (mapfile) => {
-    var remote = require('remote');
-    var dialog = remote.require('dialog');
+    var app = require('electron').remote.app;
+    const { dialog } = require('electron').remote;
+
 
     var readyPromise = new Promise(function(resolve, reject) {
         verifyPromiseResolver = resolve;
@@ -460,6 +463,7 @@ Map.prototype = {
             var data;
 
             try {
+                // TODO: use aen's loaders in MAPPO and convert binary chrs to images and json files, motherfucker!
                 data = jetpack.read(datafile, 'json');
             } catch(e) {
                 console.log( "Totally couldnt read datafile: '"+datafile+"'" );
@@ -658,12 +662,18 @@ Map.prototype = {
         this.renderContainer = $canvas;
         this.gl = this.renderContainer[0].getContext('webgl'); // we're targeting Electron not the Internet at large so don't worry about failing to get a GL context
         this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
-        this.tilemapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemap-frag.glsl"));
-        this.spriteShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/sprite-vert.glsl"), jetpack.read("../app/shaders/sprite-frag.glsl"));
-        this.obstructionmapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemapObs-frag.glsl"));
-        this.zonemapShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/tilemap-vert.glsl"), jetpack.read("../app/shaders/tilemap-frag.glsl"));
 
-        this.selectionShader = new ShaderProgram(this.gl, jetpack.read("../app/shaders/selection-vert.glsl"), jetpack.read("../app/shaders/selection-frag.glsl"));
+        var readShader = (path) => {
+            const p = jetpack.path(appPath, "app", path);
+            const res = jetpack.read(p); 
+            return res;
+        };
+        
+        this.tilemapShader = new ShaderProgram(this.gl, readShader("shaders/tilemap-vert.glsl"), readShader("shaders/tilemap-frag.glsl"));
+        this.spriteShader = new ShaderProgram(this.gl, readShader("shaders/sprite-vert.glsl"), readShader("shaders/sprite-frag.glsl"));
+        this.obstructionmapShader = new ShaderProgram(this.gl, readShader("shaders/tilemap-vert.glsl"), readShader("shaders/tilemapObs-frag.glsl"));
+        this.zonemapShader = new ShaderProgram(this.gl, readShader("shaders/tilemap-vert.glsl"), readShader("shaders/tilemap-frag.glsl"));
+        this.selectionShader = new ShaderProgram(this.gl, readShader("shaders/selection-vert.glsl"), readShader("shaders/selection-frag.glsl"));
 
         this.tileLibraryTextures = {};
         for (var k in this.vspImages) {
