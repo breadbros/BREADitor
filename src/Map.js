@@ -623,8 +623,8 @@ Map.prototype = {
                 }
             }
         }
-
-        if( localStorage[key] ) {
+debugger;
+        if( localStorage[key]+'-mapx' ) {
 
             /// TODO This is weird.  Why is the map palette being set here and then again in setPaletteLocations?
             if( localStorage[key+'-width'] )  { $cont.width(localStorage[key+'-width']); }
