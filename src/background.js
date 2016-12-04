@@ -5,14 +5,15 @@
 
 import { app, Menu } from 'electron';
 import { devMenuTemplate } from './menu/dev_menu_template';
-import { editMenuTemplate } from './menu/edit_menu_template';
+import { prodMenuTemplate } from './menu/prod_menu_template';
 import createWindow from './helpers/window';
+import { MainWindow } from './main/MainWindowReference';
 import env from './env';
 
 var mainWindow;
 
 var setApplicationMenu = function () {
-    var menus = [editMenuTemplate];
+    var menus = prodMenuTemplate;
     if (env.name !== 'production') {
         menus.push(devMenuTemplate);
     }
@@ -32,6 +33,8 @@ app.on('ready', function () {
     }
 
     mainWindow.loadURL('file://' + __dirname + '/app.html');
+
+    MainWindow.set(mainWindow);
 });
 
 app.on('window-all-closed', function () {

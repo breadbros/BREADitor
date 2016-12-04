@@ -5,8 +5,9 @@ import { LayersWidget } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
 import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
-
-var path = require('path');
+const { ipcRenderer } = require('electron')
+const sprintf = require("sprintf-js").sprintf;
+const path = require('path');
 
 function initInfoWidget(map) {
 	$("#info-mapname").text( map.mapPath );
@@ -46,6 +47,27 @@ function bootstrapMap( mapFile, tiledataFile ) {
   )
 }
 
+
+/// Setup IPC
+ipcRenderer.on( 'main-menu', (event, arg) => {
+
+  switch(arg) {
+    case 'save':
+      window.$$$save();
+      break;
+    case 'load':
+      window.$$$load();
+      break;
+    case 'about':
+      window.$$$about_breaditor();
+      break;
+    default:
+      alert(sprintf("Unknown action from main-menu: '%s'.", arg)); 
+  }
+} );
+
+
+/// Setup the rest of the app
 (function() {
     window.$$$currentMap = null;
 
@@ -85,8 +107,8 @@ function bootstrapMap( mapFile, tiledataFile ) {
       bootstrapMap(fileName, dataName);
     };
 
-    window.$$$about_maped4 = function() {
-      alert("Maped4 is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.  TODO: make this better.");
+    window.$$$about_breaditor = function() {
+      alert("Breaditor is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.  TODO: make this better.");
     };
 
     window.$$$collect_all_windows = function() {
