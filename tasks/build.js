@@ -20,6 +20,7 @@ var paths = {
         './vendor/**',
         './**/*.html',
         './images/**',
+        './themes/**',
     ],
 }
 
