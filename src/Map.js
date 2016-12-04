@@ -462,10 +462,24 @@ Map.prototype = {
             var datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
             var data;
 
+
+            if( entity.filename.endsWith("chr") ) {
+                console.warn( "entity ('"+entity.filename+"') is binary in format.  Skipping for now." );
+                return;
+            }
+
+            if( !entity.filename.endsWith("chr") && !entity.filename.endsWith("json") ) {
+                console.warn( "entity ('"+entity.filename+"') has an unknown format.  Skipping for now." );
+                return;
+            }
+
             try {
                 // TODO: use aen's loaders in MAPPO and convert binary chrs to images and json files, motherfucker!
                 data = jetpack.read(datafile, 'json');
             } catch(e) {
+                if( entity.filename.endsWith("json") ) {
+                    debugger;
+                }
                 console.log( "Totally couldnt read datafile: '"+datafile+"'" );
             }
 
@@ -497,6 +511,7 @@ Map.prototype = {
                         return;
                     }
 
+                    console.info("Adding '"+imagePath+"' to entityTextures cache...");
                     this.toLoad++;
                     this.entityTextures[data.image] = {};
                     this.entityTextures[data.image].img = new Image();
