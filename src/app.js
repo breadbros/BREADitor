@@ -101,10 +101,12 @@ function bootstrapMap( mapFile, tiledataFile ) {
         $node.css("top", y+"px");
         $node.css("left", x+"px");
         $node.css("z-index", z);
-debugger;
+
+        Palettes.correctResizeWidget($node);
+
         x += 30;
         y += 30;
-        z ++;
+        z += 2;
 
       } );
 
