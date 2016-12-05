@@ -13,10 +13,8 @@ export const MakeUndoRedoStack = (_map) => {
   ) => {
     const was = map.getTile(tileX, tileY, layerIdx);
 
-    console.log(sprintf('WAS %s, IS %s', was, tileIdx));
-
     if (was === tileIdx) {
-      console.log('skip draw of duplicate tile.');
+      // console.log('skip draw of duplicate tile.');
       return;
     }
 
@@ -26,9 +24,8 @@ export const MakeUndoRedoStack = (_map) => {
       tileX, tileY,
       layerIdx, tileIdx
     );
-    redoStack = [];
 
-    undolog();
+    //undolog();
   };
 
   const undolog = () => {
@@ -39,17 +36,16 @@ export const MakeUndoRedoStack = (_map) => {
   };
 
   const undo = () => {
-    undolog();
 
     if (undoStack.length <= 0) {
+// console.log("aborting undo")
       return;
     }
 
     const changes = undoStack.pop();
-    // redoStack.push(changes);
 
     const redoSet = [];
-
+// console.log("changes.length: " + changes.length)
     for (let i = changes.length - 1; i >= 0; i--) {
       // todo: undostacks should be a child of Map objects.  This is a poor temporary solution
       const was = map.getTile(changes[i][0], changes[i][1], changes[i][2]);
@@ -63,10 +59,19 @@ export const MakeUndoRedoStack = (_map) => {
         changes[i][2], changes[i][3]
       );
 
-      redoSet.push([changes[i][0], changes[i][1], changes[i][2], was]);
+      changes[i][3] = was;
+
+      redoSet.push(changes[i]);
+      // console.log( "REDOSET: " )
+      // console.log( JSON.stringify(redoSet) );
     }
 
+    // console.log( "redostack length BEFORE: " + redoStack.length );
     redoStack.push(redoSet);
+    // console.log( "redostack length AFTER: " + redoStack.length );
+    // console.log("pushing redoSet on redoStack");
+    // console.log( "REDOSTACK: " );
+    // console.log( JSON.stringify(redoStack) );
   };
 
   const redo = () => {
@@ -74,18 +79,28 @@ export const MakeUndoRedoStack = (_map) => {
       return;
     }
 
-    undolog();
+    //undolog();
 
     const changes = redoStack.pop();
-    undoStack.push(changes);
-
+    const undoSet = [];
     for (let i = changes.length - 1; i >= 0; i--) {
-          // / undostacks should be a child of Map objects.  This is a poor temporary solution
+      const was = map.getTile(changes[i][0], changes[i][1], changes[i][2]);
+
+      if (was === changes[i][3]) {
+        throw new Error("undo/redo 'was' and 'is' are the same.  this should never happen.");
+      }
+
       map.setTile(
           changes[i][0], changes[i][1],
           changes[i][2], changes[i][3]
       );
+
+      changes[i][3] = was;
+
+      undoSet.push(changes[i]);
     }
+
+    undoStack.push(undoSet);
   };
 
   const UndoRedo = {

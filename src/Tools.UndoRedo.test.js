@@ -1,41 +1,100 @@
-/*eslint no-undef: 1*/
+/*eslint no-undef: 0*/
 import { MakeUndoRedoStack } from './UndoRedo';
 import { FakeMap } from './helpers/FakeMap';
 
-let map, oldTile;
+let map, oldTile, ur, UNDO_stack, REDO_stack;
 
-const tileX = 1, tileY = 2, layerIdx = 0, tileIdx = 42;
+const tileX = 1;
+const tileY = 2;
+const layerIdx = 0;
+const tileIdx = 42;
 
 beforeEach(() => {
   map = FakeMap();
   map.UndoRedo = MakeUndoRedoStack(map);
+  ur = map.UndoRedo;
+  UNDO_stack = ur._undoStack;
+  REDO_stack = ur._redoStack;
 
   map.setTile(tileX, tileY, layerIdx, tileIdx); // coordinate 1,2 on layer 0 will be tile 99.
   oldTile = map.getTile(tileX, tileY, layerIdx);
   expect(oldTile).toEqual(42);
 });
 
-test( 'change_one_tile adds an item to the undo stack', () => {
+test('change_one_tile adds an item to the undo stack', () => {
+  expect(UNDO_stack.length).toEqual(0);
 
-  expect(map.UndoRedo._undoStack.length).toEqual(0);
+  ur.change_one_tile(tileX, tileY, layerIdx, 99);
 
-  map.UndoRedo.change_one_tile(tileX, tileY, layerIdx, 99);
-
-  expect(map.UndoRedo._undoStack.length).toEqual(1);
+  expect(UNDO_stack.length).toEqual(1);
 });
 
-test( 'undostack frames are arrays of arrays of [tileX, tileY, layerIdx, oldTile]', () => {
+test('change_one_tile... changes the tile (no, really guys)', () => {
+  ur.change_one_tile(tileX, tileY, layerIdx, 90210);
 
-  map.UndoRedo.change_one_tile(tileX, tileY, layerIdx, 1942);
-
-  expect(map.UndoRedo._undoStack[0]).toEqual([[tileX, tileY, layerIdx, oldTile]]);
+  expect(90210).toEqual(map.getTile(tileX, tileY, layerIdx));
 });
 
-test( 'change_one_tile does not add an item to the undo stack if nothing would have changed', () => {
+test('undostack frames are arrays of arrays of [tileX, tileY, layerIdx, oldTile]', () => {
+  ur.change_one_tile(tileX, tileY, layerIdx, 1942);
 
-  expect(map.UndoRedo._undoStack.length).toEqual(0);
+  expect(UNDO_stack[0]).toEqual([[tileX, tileY, layerIdx, oldTile]]);
+  expect(UNDO_stack[0][0][3]).not.toEqual(1942);
+});
 
-  map.UndoRedo.change_one_tile(tileX, tileY, layerIdx, oldTile);
+test('change_one_tile does not add an item to the undo stack if nothing would have changed', () => {
+  expect(UNDO_stack.length).toEqual(0);
 
-  expect(map.UndoRedo._undoStack.length).toEqual(0);
+  ur.change_one_tile(tileX, tileY, layerIdx, oldTile);
+
+  expect(UNDO_stack.length).toEqual(0);
+});
+
+test('undo does nothing (specifically, doesnt crash) if there is no redostack', () => {
+  expect(UNDO_stack.length).toEqual(0);
+  ur.undo();
+});
+
+test('redo does nothing (specifically, doesnt crash) if there is no redostack', () => {
+  expect(REDO_stack.length).toEqual(0);
+  ur.redo();
+});
+
+test('draw. undo.', () => {
+  ur.change_one_tile(tileX, tileY, layerIdx, 666);
+  expect(666).toEqual(map.getTile(tileX, tileY, layerIdx));
+  ur.undo();
+  expect(42).toEqual(map.getTile(tileX, tileY, layerIdx));
+});
+
+test('draw. undo. redo.', () => {
+  ur.change_one_tile(tileX, tileY, layerIdx, 777);
+  expect(777).toEqual(map.getTile(tileX, tileY, layerIdx));
+  ur.undo();
+  expect(42).toEqual(map.getTile(tileX, tileY, layerIdx));
+  ur.redo();
+  expect(777).toEqual(map.getTile(tileX, tileY, layerIdx));
+});
+
+test('draw. undo. redo. undo. redo.', () => {
+  ur.change_one_tile(tileX, tileY, layerIdx, 888);
+  expect(888).toEqual(map.getTile(tileX, tileY, layerIdx));
+  expect(UNDO_stack.length).toEqual(1);
+  expect(REDO_stack.length).toEqual(0);
+  ur.undo();
+  expect(UNDO_stack.length).toEqual(0);
+  expect(REDO_stack.length).toEqual(1);
+  expect(42).toEqual(map.getTile(tileX, tileY, layerIdx));
+  ur.redo();
+  expect(UNDO_stack.length).toEqual(1);
+  expect(REDO_stack.length).toEqual(0);
+  expect(888).toEqual(map.getTile(tileX, tileY, layerIdx));
+  ur.undo();
+  expect(UNDO_stack.length).toEqual(0);
+  expect(REDO_stack.length).toEqual(1);
+  expect(42).toEqual(map.getTile(tileX, tileY, layerIdx));
+  ur.redo();
+  expect(UNDO_stack.length).toEqual(1);
+  expect(REDO_stack.length).toEqual(0);
+  expect(888).toEqual(map.getTile(tileX, tileY, layerIdx));
 });
