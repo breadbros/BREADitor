@@ -8,49 +8,46 @@ import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
 const { ipcRenderer } = require('electron');
 const sprintf = require('sprintf-js').sprintf;
 const path = require('path');
+const $ = require('jquery');
 
-function initInfoWidget(map) {
-	        $('#info-mapname').text(map.mapPath);
-	        $('#info-dims').text(map.mapSizeInTiles[0] + 'x' + map.mapSizeInTiles[1]);
+const initInfoWidget = (map) => {
+  $('#info-mapname').text(map.mapPath);
+  $('#info-dims').text(map.mapSizeInTiles[0] + 'x' + map.mapSizeInTiles[1]);
 }
 
-function bootstrapMap(mapFile, tiledataFile) {
+const bootstrapMap = (mapFile, tiledataFile) => {
 
   verifyTileData(tiledataFile)
     .then(() => {
       console.log('verify map?');
       verifyMap(mapFile)
-    .then(() => {
-      console.log('create map?');
-      new Map(
-          mapFile, tiledataFile,
-          Tools.updateLocationFunction
-      ).ready()
-          .then(function (m) {
-            var currentMap = m;
-            m.setCanvas($('.map_canvas'));
+        .then(() => {
+          console.log('create map?');
+          new Map(
+              mapFile, tiledataFile,
+              Tools.updateLocationFunction
+          ).ready()
+              .then(function (m) {
+                const currentMap = m;
+                m.setCanvas($('.map_canvas'));
 
-            window.$$$currentMap = currentMap;
+                window.$$$currentMap = currentMap;
 
-            LayersWidget.initLayersWidget(currentMap);
-            initInfoWidget(currentMap);
-            ZonesWidget.initZonesWidget(currentMap);
-            EntitiesWidget.initEntitiesWidget(currentMap);
+                LayersWidget.initLayersWidget(currentMap);
+                initInfoWidget(currentMap);
+                ZonesWidget.initZonesWidget(currentMap);
+                EntitiesWidget.initEntitiesWidget(currentMap);
 
-            Tools.initToolsToMapContainer($('.map_canvas'), window.$$$currentMap);
+                Tools.initToolsToMapContainer($('.map_canvas'), window.$$$currentMap);
 
-            Tools.updateRstringInfo();
-          });
-    }
-      );
-    }
-  );
-}
+                Tools.updateRstringInfo();
+              });
+        });
+    });
+};
 
-
-// / Setup IPC
+// Setup IPC
 ipcRenderer.on('main-menu', (event, arg) => {
-
   switch (arg) {
     case 'save':
       window.$$$save();
@@ -62,7 +59,7 @@ ipcRenderer.on('main-menu', (event, arg) => {
       window.$$$about_breaditor();
       break;
     default:
-      alert(sprintf("Unknown action from main-menu: '%s'.", arg));
+      console.error(sprintf("Unknown action from main-menu: '%s'.", arg));
   }
 });
 
@@ -85,12 +82,11 @@ ipcRenderer.on('window-menu', (event, arg) => {
       window.$$$show_all_windows();
       break;
     default:
-      alert(sprintf("Unknown action from window-menu: '%s'.", arg));
+      console.error(sprintf("Unknown action from window-menu: '%s'.", arg));
   }
 });
 
-
-// / Setup the rest of the app
+// Setup the rest of the app
 (function () {
   window.$$$currentMap = null;
 
@@ -104,13 +100,20 @@ ipcRenderer.on('window-menu', (event, arg) => {
   };
   window.requestAnimationFrame(tick);
 
+  $('#btn-tool-undo').click(() => {
+    window.$$$currentMap.UndoRedo.undo();
+  });
+  $('#btn-tool-redo').click(() => {
+    window.$$$currentMap.UndoRedo.redo();
+  });
+
   console.log('$$$save should be initialized...');
   window.$$$save = function () {
-    var app = require('electron').remote.app;
-    var jetpack = require('fs-jetpack').cwd(app.getAppPath());
+    const app = require('electron').remote.app;
+    const jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
-    var map = window.$$$currentMap;
-    map.compactifyZones(); // / TODO this should probably happen not-here?
+    const map = window.$$$currentMap;
+    map.compactifyZones(); // TODO this should probably happen not-here?
 
     jetpack.write(map.filenames.mapfile, map.mapData);
     jetpack.write(map.filenames.mapdatafile, map.mapRawTileData);
@@ -118,31 +121,35 @@ ipcRenderer.on('window-menu', (event, arg) => {
     console.log('HELLO I AM $$$SAVE');
   };
 
-  var loadByFilename = (fileNames) => {
-    if (fileNames === undefined) return;
-    var fileName = fileNames[0];
-    var dataName, vspName;
+  const loadByFilename = (fileNames) => {
+    if (fileNames === undefined) {
+      return;
+    }
 
-    dataName = fileName.replace('.map.json', '.map.data.json');
-    vspName = fileName.replace('.map.json', '.vsp.json');
+    const fileName = fileNames[0];
 
-      // / todo: verify that all three of these files, you know... exist?
+    const dataName = fileName.replace('.map.json', '.map.data.json');
+    // const vspName = fileName.replace('.map.json', '.vsp.json');
+
+    // TODO: verify that all three of these files, you know... exist?
     bootstrapMap(fileName, dataName);
   };
 
   window.$$$about_breaditor = function () {
-    alert('Breaditor is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.  TODO: make this better.');
+    window.alert(
+      'Breaditor is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.' +
+      'TODO: make this better.'
+    );
   };
 
   window.$$$collect_all_windows = function () {
-
-    var x = 0;
-    var y = 0;
-    var z = 0;
+    let x = 0;
+    let y = 0;
+    let z = 0;
 
     window.$$$palette_registry.map((pal) => {
-      var node_selector = '.' + pal;
-      var $node = $(node_selector);
+      const node_selector = '.' + pal;
+      const $node = $(node_selector);
       $node.css('top', y + 'px');
       $node.css('left', x + 'px');
       $node.css('z-index', z);
@@ -152,17 +159,15 @@ ipcRenderer.on('window-menu', (event, arg) => {
       x += 30;
       y += 30;
       z += 2;
-
     });
 
     Tools.savePalettePositions();
   };
 
   window.$$$show_all_windows = function () {
-
     window.$$$palette_registry.map((pal) => {
-      var node_selector = '.' + pal;
-      var $node = $(node_selector);
+      const node_selector = '.' + pal;
+      const $node = $(node_selector);
       $node.show();
     });
 

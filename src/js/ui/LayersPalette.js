@@ -111,7 +111,7 @@ function redraw_palette(map) {
 
       removeAllSelectedLayers(selClass);
 
-        // / TODO: this is disgusting, right?  right.
+        // TODO: this is disgusting, right?  right.
       window.selected_layer = {
         map_tileData_idx: 999,
         layer: window.$$$currentMap.zoneData,
@@ -198,7 +198,7 @@ function redraw_palette(map) {
 
       removeAllSelectedLayers(selClass);
 
-        // / TODO: this is disgusting, right?  right.
+        // TODO: this is disgusting, right?  right.
       window.selected_layer = {
         map_tileData_idx: 998,
         layer: window.$$$currentMap.zoneData,
@@ -333,7 +333,7 @@ function redraw_palette(map) {
       rstring_ref = parseInt(rstring_cur_target, 10);
       if (isNaN(rstring_ref)) {
 
-        // / TODO this is certainly the wrong place to populate "R" and "E" visually.
+        // TODO this is certainly the wrong place to populate "R" and "E" visually.
         if (rstring_cur_target == 'E') {
           node = $("<li class='layer ui-state-default'><button class='eyeball_button'></button><button class='entity_expand_button'></button>Entities (default)</li>");
           node.data('rstring_ref', 'E');
@@ -435,7 +435,7 @@ function redraw_palette(map) {
     var $me = $(evt.target).closest('li');
     var special = '';
 
-    // / TODO: this is special-case and evil.  make more better.
+    // TODO: this is special-case and evil.  make more better.
     if ($me.data('rstring_ref') === 'ZZZ') {
       layer = {
         name: 'Zones',

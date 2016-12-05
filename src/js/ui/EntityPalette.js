@@ -425,8 +425,8 @@ function update_entity(dialog, ent_id) {
 }
 
 
-// / todo: ent_name should be a uuid
-// / todo: until then, make sure ent_name is verified unique
+// TODO: ent_name should be a uuid
+// TODO: until then, make sure ent_name is verified unique
 var relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {
   var myboy;
   var ents = window.$$$currentMap.entities;

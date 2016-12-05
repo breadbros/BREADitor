@@ -1,16 +1,17 @@
-var app = require('electron').remote.app;
-var path = require('path');
+import { MakeUndoRedoStack } from './UndoRedo';
+const app = require('electron').remote.app;
+const path = require('path');
 const appPath = app.getAppPath();
-var jetpack = require('fs-jetpack').cwd(appPath);
+const jetpack = require('fs-jetpack').cwd(appPath);
 import { ShaderProgram } from './ShaderProgram.js';
 import { Tools } from './Tools.js';
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js';
-var sprintf = require('sprintf-js').sprintf;
+const sprintf = require('sprintf-js').sprintf;
 
 function buildTileDataTexture(data) {
-  var out = new Uint8Array(data.length * 4);
-  for (var i = 0; i < data.length; i++) {
-    var t = data[i];
+  const out = new Uint8Array(data.length * 4);
+  for (let i = 0; i < data.length; i++) {
+    const t = data[i];
     out[i * 4 + 0] = t % 256;
     out[i * 4 + 1] = (t >> 8) % 256;
     out[i * 4 + 2] = (t >> 16) % 256;
@@ -19,21 +20,21 @@ function buildTileDataTexture(data) {
   return out;
 }
 
-var __obsColor = [1, 1, 1, 0.5];
-export var setObsColor = (r, g, b, a) => {
+let __obsColor = [1, 1, 1, 0.5];
+export const setObsColor = (r, g, b, a) => {
   __obsColor = [r, g, b, a];
 };
-export var getObsColor = () => {
+export const getObsColor = () => {
   return __obsColor;
 };
 
-
-export var verifyTileData = (mapdatafile) => {
-  var promiseResolver;
-  var promiseRejecter;
-  var readyPromise = new Promise(function (resolve, reject) {
+export const verifyTileData = (mapdatafile) => {
+  let promiseResolver = null;
+  // let promiseRejecter = null;
+  const readyPromise = new Promise(function (resolve, reject) {
     promiseResolver = resolve;
-    promiseRejecter = reject;
+    // promiseRejecter = reject;
+    // TODO add promise rejection here
   });
 
   console.log('No verification done on tile data yet...');
@@ -43,37 +44,37 @@ export var verifyTileData = (mapdatafile) => {
   return readyPromise;
 };
 
-var saveData = (mapFile, mapData) => {
-    // TODO these lines shouldnt be necessary.  delete?
-    // var app = require('electron').remote.app;
-    // var jetpack = require('fs-jetpack').cwd(app.getAppPath());
+const saveData = (mapFile, mapData) => {
+  // TODO these lines shouldnt be necessary.  delete?
+  // var app = require('electron').remote.app;
+  // var jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
-  var map = window.$$$currentMap;
+  // var map = window.$$$currentMap;
 
   jetpack.write(mapFile, mapData);
 };
 
+let verifyPromiseResolver;
+let verifyPromiseRejecter;
 
-var verifyPromiseResolver;
-var verifyPromiseRejecter;
-
-export var verifyMap = (mapfile) => {
-  var app = require('electron').remote.app;
+export const verifyMap = (mapfile) => {
+  const app = require('electron').remote.app;
   const { dialog } = require('electron').remote;
 
-
-  var readyPromise = new Promise(function (resolve, reject) {
+  const readyPromise = new Promise(function (resolve, reject) {
     verifyPromiseResolver = resolve;
     verifyPromiseRejecter = reject;
   });
 
-  var mapData = jetpack.read(mapfile, 'json');
+  const mapData = jetpack.read(mapfile, 'json');
 
-  var needsDefault = false;
-  var needsObstructions = false;
+  let needsDefault = false;
+  let needsObstructions = false;
 
-  if (typeof mapData.vsp == 'string') {
-        // alert("Detected old format vsps: '"+mapdata.vsp+"'.\n\nPlease select a json vsp for the map's default and a second one for the obstructions.");
+  if (typeof mapData.vsp === 'string') {
+    window.alert(
+      "Detected old format vsps: '" + mapData.vsp + "'.\n\nPlease select a json vsp for the map's default and" +
+      ' a second one for the obstructions.');
     needsDefault = true;
     needsObstructions = true;
   } else {
@@ -86,7 +87,7 @@ export var verifyMap = (mapfile) => {
     }
   }
 
-  if (typeof mapData.vsp != 'object') {
+  if (typeof mapData.vsp !== 'object') {
     mapData.vsp = {};
   }
 
@@ -135,15 +136,20 @@ export var verifyMap = (mapfile) => {
   return readyPromise;
 };
 
-export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
-  var i;
+export function Map(mapfile, mapdatafile, updateLocationFunction) {
+  let i;
   console.info('Loading map', mapfile);
 
-  if (typeof mapfile != typeof mapdatafile) {
-    throw sprintf("type mismatch on mapfile and mapdatafile.  both must be object or string. got: '%s', '%s'", typeof mapfile, typeof mapdatafile);
+  if (typeof mapfile !== typeof mapdatafile) {
+    throw new Error(
+      sprintf(
+        "type mismatch on mapfile and mapdatafile.  both must be object or string. got: '%s', '%s'",
+        typeof mapfile, typeof mapdatafile
+      )
+    );
   }
 
-  var FILELOAD_MODE = (typeof mapfile == 'string');
+  const FILELOAD_MODE = (typeof mapfile === 'string');
 
   this.filenames = {};
 
@@ -154,8 +160,6 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
   } else {
     this.dataPath = '';
   }
-
-
 
   this.mapedConfigFile = path.join(this.dataPath, '$$$_MAPED.json');
 
@@ -177,6 +181,9 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
   this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
 
   this.filenames.vspfiles = this.mapData.vsp;
+
+  // Initialize an undo/redostack just for this map!
+  this.UndoRedo = MakeUndoRedoStack(this);
 
     // for "E" layer rendering
   this.fakeEntityLayer = {
@@ -351,8 +358,8 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
       if (this.entities[i]) {
         console.info('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
         this.entities[i].sort(function (a, b) {
-            return a.location.ty - b.location.ty;
-          });
+          return a.location.ty - b.location.ty;
+        });
       }
     }
   };
@@ -371,9 +378,9 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
       var ix, iy, i;
       for (iy = 0; iy < h; iy++) {
         for (ix = 0; ix < w; ix++) {
-            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
-            this.tiles[i] = true;
-          }
+          i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+          this.tiles[i] = true;
+        }
       }
 
       this.recalculateLines();
@@ -384,9 +391,9 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
       var ix, iy, i;
       for (iy = 0; iy < h; iy++) {
         for (ix = 0; ix < w; ix++) {
-            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
-            this.tiles[i] = false;
-          }
+          i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+          this.tiles[i] = false;
+        }
       }
 
       this.recalculateLines();
@@ -409,10 +416,10 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
       var x, y, i;
       for (y = this.hull.y; y < this.hull.y + this.hull.h; y++) {
         for (x = this.hull.x; x < this.hull.x + this.hull.w; x++) {
-            i = getFlatIdx(x, y, mapWidth);
-            if (this.tiles[i] != this.tiles[i - 1]) this.lines.push(x, y, x, y + 1);
-            if (this.tiles[i] != this.tiles[i - mapWidth]) this.lines.push(x, y, x + 1, y);
-          }
+          i = getFlatIdx(x, y, mapWidth);
+          if (this.tiles[i] != this.tiles[i - 1]) this.lines.push(x, y, x, y + 1);
+          if (this.tiles[i] != this.tiles[i - mapWidth]) this.lines.push(x, y, x + 1, y);
+        }
       }
 
       console.info('Recalculated lines:');
@@ -481,47 +488,47 @@ Map.prototype = {
                 // TODO: use aen's loaders in MAPPO and convert binary chrs to images and json files, motherfucker!
         data = jetpack.read(datafile, 'json');
       } catch (e) {
-          if (entity.filename.endsWith('json')) {
-              debugger;
-            }
-          console.log("Totally couldnt read datafile: '" + datafile + "'");
-        }
+        if (entity.filename.endsWith('json')) {
+            debugger;
+          }
+        console.log("Totally couldnt read datafile: '" + datafile + "'");
+      }
 
       if (data) {
         this.entityData[entity.filename] = data;
 
         for (var name in data.animations) {
                     // convert short-hand to useful-hand
-            if (typeof data.animations[name][0] === 'string') {
-                var chunks = data.animations[name][0].split(' ');
-                var t = parseInt(chunks.shift().substring(1), 10);
+          if (typeof data.animations[name][0] === 'string') {
+              var chunks = data.animations[name][0].split(' ');
+              var t = parseInt(chunks.shift().substring(1), 10);
 
-                data.animations[name][0] = [];
-                for (var f = 0; f < chunks.length; f++) {
-                    data.animations[name][0].push([parseInt(chunks[f], 10), t]);
-                  }
-              }
-          }
+              data.animations[name][0] = [];
+              for (var f = 0; f < chunks.length; f++) {
+                  data.animations[name][0].push([parseInt(chunks[f], 10), t]);
+                }
+            }
+        }
 
         if (!this.entityTextures[data.image]) {
-            var imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image); // TODO maybe make this definable in this.mapedConfigData too?
-            if (!jetpack.inspect(imagePath)) {
-                imagePath += '.png'; // TODO this is stupid and bad and wrong.
-              }
-            if (!jetpack.inspect(imagePath)) {
-                console.warn("Couldn't load image", data.image, 'for entity', entity.filename, '; falling back.');
+          var imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image); // TODO maybe make this definable in this.mapedConfigData too?
+          if (!jetpack.inspect(imagePath)) {
+              imagePath += '.png'; // TODO this is stupid and bad and wrong.
+            }
+          if (!jetpack.inspect(imagePath)) {
+              console.warn("Couldn't load image", data.image, 'for entity', entity.filename, '; falling back.');
                         // this.entityData[entity.filename].image = '__default__';
-                entity.MAPED_USEDEFAULT = true;
-                return;
-              }
+              entity.MAPED_USEDEFAULT = true;
+              return;
+            }
 
-            console.info("Adding '" + imagePath + "' to entityTextures cache...");
-            this.toLoad++;
-            this.entityTextures[data.image] = {};
-            this.entityTextures[data.image].img = new Image();
-            this.entityTextures[data.image].img.onload = this.doneLoading;
-            this.entityTextures[data.image].img.src = imagePath;
-          }
+          console.info("Adding '" + imagePath + "' to entityTextures cache...");
+          this.toLoad++;
+          this.entityTextures[data.image] = {};
+          this.entityTextures[data.image].img = new Image();
+          this.entityTextures[data.image].img.onload = this.doneLoading;
+          this.entityTextures[data.image].img.src = imagePath;
+        }
 
         entity.MAPED_USEDEFAULT = false;
       } else {
@@ -567,70 +574,67 @@ Map.prototype = {
     };
   },
 
-
   getZone: function (tileX, tileY) {
-    var idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
 
     return this.zoneData[idx];
   },
 
   setZone: function (tileX, tileY, zoneIdx) {
-    var idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
 
     this.zoneData[idx] = zoneIdx;
   },
 
   getTile: function (tileX, tileY, layerIdx) {
-    var idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
 
     return this.tileData[layerIdx][idx];
   },
 
   setTile: function (tileX, tileY, layerIdx, tileIdx) {
-    var idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
 
     this.tileData[layerIdx][idx] = tileIdx;
   },
 
   ready: function () {
 
-    var key = 'map-' + this.mapData.name;
-    var $cont = $('.map-palette');
+    const key = 'map-' + this.mapData.name;
+    const $cont = $('.map-palette');
 
-    var setPaletteLocations = function (paletteDict) {
-      var $pal = null;
-      var configVar = null;
-      var obj = null;
-      var k = null;
+    const setPaletteLocations = function (paletteDict) {
+      let configVar = null;
+      let obj = null;
 
-      for (k in paletteDict) {
+      for (const k in paletteDict) {
         console.info('paletteDict.' + k);
         configVar = k + ' settings'; // this should be CONST'd somewhere and referenced in both places
-        $pal = $('.' + k);
+        const $pal = $('.' + k);
 
         console.info('configVar: ' + configVar);
         console.info('$pal: ' + $pal);
         console.info('localStorage[configVar]: ' + localStorage[configVar]);
 
         if (localStorage[configVar] && $pal) {
-            obj = JSON.parse(localStorage[configVar]);
+          obj = JSON.parse(localStorage[configVar]);
 
-            console.info('oh yeah: ' + obj);
+          console.info('oh yeah: ' + obj);
 
-            if (obj.w) { $pal.width(obj.w); }
-            if (obj.h) { $pal.height(obj.h); }
-            if (obj.x) { $pal.css('left', obj.x); }
-            if (obj.y) { $pal.css('top', obj.y); }
-            obj.hide ? $pal.hide() : $pal.show();
-          } else {
-            console.info('lol, no');
-          }
+          if (obj.w) { $pal.width(obj.w); }
+          if (obj.h) { $pal.height(obj.h); }
+          if (obj.x) { $pal.css('left', obj.x); }
+          if (obj.y) { $pal.css('top', obj.y); }
+          obj.hide ? $pal.hide() : $pal.show();
+        } else {
+          console.info('lol, no');
+        }
       }
     };
 
     if (localStorage[key] + '-mapx') {
 
-            // / TODO This is weird.  Why is the map palette being set here and then again in setPaletteLocations?
+            // TODO This is weird.  Why is the map palette being set here and then again in setPaletteLocations?
       if (localStorage[key + '-width']) { $cont.width(localStorage[key + '-width']); }
       if (localStorage[key + '-height']) { $cont.height(localStorage[key + '-height']); }
       if (localStorage[key + '-top']) { $cont.css('top', localStorage[key + '-top']); }
@@ -761,28 +765,28 @@ Map.prototype = {
         map.spriteShader.use();
 
         for (var e = 0; e < entities.length; e++) {
-            if (showEntityPreview &&
+          if (showEntityPreview &&
                         map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
                         (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
                     ) {
-                map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
-              }
-            map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
-            if (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw']) {
-                tallEntities.push(entities[e]);
-              }
-          }
-      } else if (map.entityPreview) {
-          map.spriteShader.use();
-          map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
+              map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
+            }
+          map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
+          if (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw']) {
+              tallEntities.push(entities[e]);
+            }
         }
+      } else if (map.entityPreview) {
+        map.spriteShader.use();
+        map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
+      }
 
       if (map.mapData.tallentitylayer === i) {
         map.spriteShader.use();
         for (var e in tallEntities) {
-            var entity = tallEntities[e];
-            map.renderEntity(entity, layer, [1, 1, 1, 1], map.entityData[entity.filename].regions['Tall_Redraw']);
-          }
+          var entity = tallEntities[e];
+          map.renderEntity(entity, layer, [1, 1, 1, 1], map.entityData[entity.filename].regions['Tall_Redraw']);
+        }
       }
     }
   },

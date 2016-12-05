@@ -33,8 +33,8 @@
         shell.openExternal(href);
         e.preventDefault();
       } else if (element.parentElement) {
-          checkDomElement(element.parentElement);
-        }
+        checkDomElement(element.parentElement);
+      }
     };
 
     checkDomElement(e.target);

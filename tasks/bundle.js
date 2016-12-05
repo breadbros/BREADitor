@@ -13,7 +13,7 @@ const nodeBuiltInModules = ['assert', 'buffer', 'child_process', 'cluster',
 const electronBuiltInModules = ['electron'];
 
 const generateExternalModulesList = function () {
-  var appManifest = jetpack.read('./package.json', 'json');
+  const appManifest = jetpack.read('./package.json', 'json');
   return [].concat(
         nodeBuiltInModules,
         electronBuiltInModules,

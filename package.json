@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "fs-jetpack": "^0.10.2",
+    "lodash": "^4.17.2",
     "sprintf-js": "^1.0.3"
   },
   "devDependencies": {

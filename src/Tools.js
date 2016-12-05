@@ -1,122 +1,15 @@
-var $ = require('jquery');
-var sprintf = require('sprintf-js').sprintf;
-var app = require('electron').remote.app;
-var jetpack = require('fs-jetpack').cwd(app.getAppPath());
+const $ = require('jquery');
+const sprintf = require('sprintf-js').sprintf;
+const app = require('electron').remote.app;
+const jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
-import { getZoneVisibility, getZoneAlpha, getActiveZone, setActiveZone, scrollZonePalletteToZone } from './js/ui/ZonesPalette.js';
+import { getZoneVisibility, getZoneAlpha, getActiveZone,
+         setActiveZone, scrollZonePalletteToZone } from './js/ui/ZonesPalette.js';
 
-
-// / todo: definitely need to wipeout undo stack on map change.  Probably should make it a child object of Maps, really....
-var undoStack = [];
-var redoStack = [];
-var undoredo_map = null;
-
-var change_one_tile = (
-    map,
-    tileX, tileY,
-    layerIdx, tileIdx
-) => {
-
-    // / TODO: terrible place for this.  find a better init location, nub
-  if (!undoStack.length) {
-    $('#btn-tool-undo').click(undo);
-    $('#btn-tool-redo').click(redo);
-  }
-
-  var was = map.getTile(tileX, tileY, layerIdx);
-
-  if (was == tileIdx) {
-    console.log('skip draw of duplicate tile.');
-    return;
-  }
-
-  undoStack.push([[tileX, tileY, layerIdx, was]]);
-  undoredo_map = map;
-
-  map.setTile(
-        tileX, tileY,
-        layerIdx, tileIdx
-    );
-  redoStack = [];
-
-  undolog();
-};
-
-var undolog = () => {
-  console.log('undoStack: ');
-  console.log(undoStack);
-  console.log('redoStack: ');
-  console.log(redoStack);
-};
-
-var undo = () => {
-  var changes;
-
-  undolog();
-
-  if (undoStack.length <= 0) {
-    return;
-  }
-
-  changes = undoStack.pop();
-    // redoStack.push(changes);
-
-  var redoSet = [];
-
-  var was;
-
-  for (var i = changes.length - 1; i >= 0; i--) {
-        // / undostacks should be a child of Map objects.  This is a poor temporary solution
-    was = undoredo_map.getTile(changes[i][0], changes[i][1], changes[i][2]);
-
-    if (was === changes[i][3]) {
-      throw "undo/redo 'was' and 'is' are the same.  this should never happen.";
-    }
-
-    undoredo_map.setTile(
-            changes[i][0], changes[i][1],
-            changes[i][2], changes[i][3]
-        );
-
-    redoSet.push([changes[i][0], changes[i][1], changes[i][2], was]);
-  }
-
-  redoStack.push(redoSet);
-};
-
-var redo = () => {
-  var changes;
-
-  if (redoStack.length <= 0) {
-    return;
-  }
-
-  undolog();
-
-  changes = redoStack.pop();
-  undoStack.push(changes);
-
-  for (var i = changes.length - 1; i >= 0; i--) {
-        // / undostacks should be a child of Map objects.  This is a poor temporary solution
-    undoredo_map.setTile(
-            changes[i][0], changes[i][1],
-            changes[i][2], changes[i][3]
-        );
-  }
-};
-
-var UndoRedo = {
-  undo: undo,
-  redo: redo,
-  _undoStack: undoStack,
-  _redoStack: redoStack,
-  change_one_tile: change_one_tile
-};
-
-var updateLocationFunction = (map) => {
-  var x = map.camera[0];
-  var y = map.camera[1];
-  var key = 'map-' + map.mapData.name;
+const updateLocationFunction = (map) => {
+  const x = map.camera[0];
+  const y = map.camera[1];
+  const key = 'map-' + map.mapData.name;
 
   $('#info-location').text(x + ',' + y);
 
@@ -124,9 +17,9 @@ var updateLocationFunction = (map) => {
   localStorage[key + '-mapy'] = y;
 };
 
-var zoomFn = function (map, e, zoomout) {
-  var mouseX = map.camera[0] + e.clientX * map.camera[2];
-  var mouseY = map.camera[1] + e.clientY * map.camera[2];
+const zoomFn = function (map, e, zoomout) {
+  const mouseX = map.camera[0] + e.clientX * map.camera[2];
+  const mouseY = map.camera[1] + e.clientY * map.camera[2];
   if (!zoomout) {
     map.camera[2] = Math.max(map.camera[2] / 2, 0.125);
   } else {
@@ -149,8 +42,7 @@ var grue_zoom = function (zoomout, map, evt) {
   zoomFn(map, evt, zoomout);
 };
 
-var toolLogic = {
-
+const toolLogic = {
   'DRAG' : {
     'dragging': false,
     'last_mouse': [0, 0],
@@ -162,10 +54,10 @@ var toolLogic = {
     },
     'mousemove': function (map, e) {
       if (toolLogic.DRAG.dragging) {
-          map.camera[0] += (toolLogic.DRAG.last_mouse[0] - e.clientX) * map.camera[2];
-          map.camera[1] += (toolLogic.DRAG.last_mouse[1] - e.clientY) * map.camera[2];
-          toolLogic.DRAG.last_mouse = [ e.clientX, e.clientY ];
-        }
+        map.camera[0] += (toolLogic.DRAG.last_mouse[0] - e.clientX) * map.camera[2];
+        map.camera[1] += (toolLogic.DRAG.last_mouse[1] - e.clientY) * map.camera[2];
+        toolLogic.DRAG.last_mouse = [ e.clientX, e.clientY ];
+      }
     },
     'mouseup': function (map, e) {
       toolLogic.DRAG.dragging = false;
@@ -174,86 +66,81 @@ var toolLogic = {
     },
 
     'button_element': '#btn-tool-drag',
-    'human_name': 'Drag',
-
-        /*,
-        "mousewheel": function(map, e) {
-            zoomFn(map, e, e.originalEvent.deltaY < 0);
-        }*/
+    'human_name': 'Drag'
+    /*,
+    "mousewheel": function(map, e) {
+        zoomFn(map, e, e.originalEvent.deltaY < 0);
+    }*/
   },
-
-  'SELECT' : {
+  'SELECT': {
     'mousedown': function (map, e) {},
     'mousemove': function (map, e) {},
     'mouseup': function (map, e) {},
     'button_element': '#btn-tool-select',
     'human_name': 'Select'
   },
-
-  'EYEDROPPER' : {
+  'EYEDROPPER': {
     'mousedown': function (map, e) {
       console.log('EYEDROPPER->mousedown...');
-
       if (!window.selected_layer) {
-          console.log('You havent selected a layer yet.');
-          alert('You havent selected a layer yet.');
-          return;
-        }
+        console.log('You havent selected a layer yet.');
+        window.alert('You havent selected a layer yet.');
+        return;
+      }
 
       if (!(e.button === 0 || e.button === 2)) {
-          console.log("Unknown eyedropper button: we know left/right (0/2), got: '" + e.button + "'.");
-          return;
+        console.log("Unknown eyedropper button: we know left/right (0/2), got: '" + e.button + "'.");
+        return;
+      }
+
+      let tIdx;
+      let zIdx = -1;
+      let selector;
+      const mapOffsetX = map.camera[0];
+      const mapOffsetY = map.camera[1];
+      const mouseOffsetX = e.offsetX;
+      const mouseOffsetY = e.offsetY;
+
+      const oX = mapOffsetX + mouseOffsetX * map.camera[2];
+      const oY = mapOffsetY + mouseOffsetY * map.camera[2];
+
+      const tX = parseInt(oX / 16);
+      const tY = parseInt(oY / 16);
+
+      const doVSPselector = (tX, tY, map) => {
+        tIdx = map.getTile(tX, tY, 0);
+        map.selection.deselect();
+        map.selection.add(tX, tY, 1, 1);
+      };
+
+      // TODO: using a valid integer as a sentinel is stupid. using sentinels is stupid. you're stupid, grue.
+      if (window.selected_layer.map_tileData_idx > 900) {
+        switch (window.selected_layer.map_tileData_idx) {
+          case 999:
+            zIdx = map.getZone(tX, tY);
+            console.log('ZONES!: ' + zIdx);
+            setActiveZone(zIdx);
+
+            scrollZonePalletteToZone(zIdx);
+
+            return;
+          case 998:
+            console.log('OBS!');
+            doVSPselector(tX, tY, map);
+            break;
+          default:
+            throw new Error('SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN');
         }
-
-      var oX, oY, tX, tY, tIdx, zIdx, selector;
-      var mapOffsetX = map.camera[0];
-      var mapOffsetY = map.camera[1];
-      var mouseOffsetX = e.offsetX;
-      var mouseOffsetY = e.offsetY;
-
-      oX = mapOffsetX + mouseOffsetX * map.camera[2];
-      oY = mapOffsetY + mouseOffsetY * map.camera[2];
-
-      tX = parseInt(oX / 16);
-      tY = parseInt(oY / 16);
-
-      var doVSPselector = (tX, tY, map) => {
-          tIdx = map.getTile(tX, tY, 0);
+      } else {
+        // TODO seriously branching code here is not a good idea for complexity reasons.  rework later?
+        if (map.mapData.isTileSelectorMap) { 
+          doVSPselector(tX, tY, map);
+        } else {
+          tIdx = map.getTile(tX, tY, window.selected_layer.map_tileData_idx);
           map.selection.deselect();
           map.selection.add(tX, tY, 1, 1);
-        };
-
-            // / todo: using a valid integer as a sentinel is stupid. using sentinels is stupid. you're stupid, grue.
-      if (window.selected_layer.map_tileData_idx > 900) {
-
-          switch (window.selected_layer.map_tileData_idx) {
-              case 999:
-                console.log('ZONES!');
-                zIdx = map.getZone(tX, tY);
-                console.log('ZONES: ' + zIdx);
-                setActiveZone(zIdx);
-
-                scrollZonePalletteToZone(zIdx);
-
-                return;
-              case 998:
-                console.log('OBS!');
-                doVSPselector(tX, tY, map);
-                break;
-              default:
-                throw 'SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN';
-            }
-
-        } else {
-
-          if (map.mapData.isTileSelectorMap) { // / todo seriously branching code here is not a good idea for complexity reasons.  rework later?
-              doVSPselector(tX, tY, map);
-            } else {
-              tIdx = map.getTile(tX, tY, window.selected_layer.map_tileData_idx);
-              map.selection.deselect();
-              map.selection.add(tX, tY, 1, 1);
-            }
         }
+      }
 
       window.$CURRENT_SELECTED_TILES[e.button] = tIdx;
       $('#info-selected-tiles').text(
@@ -263,16 +150,16 @@ var toolLogic = {
             );
 
       if (e.button === 2) {
-          selector = '#right-palette';
-        } else {
-          selector = '#left-palette';
-        }
+        selector = '#right-palette';
+      } else {
+        selector = '#left-palette';
+      }
 
       setTileSelectorUI(selector, tIdx, map);
 
-            // map.dragging = true;
-            // window.$MAP_WINDOW.draggable('disable');
-            // map.lastMouse = [ e.clientX, e.clientY ];
+      // map.dragging = true;
+      // window.$MAP_WINDOW.draggable('disable');
+      // map.lastMouse = [ e.clientX, e.clientY ];
     },
     'mouseup': function (map, e) {
       console.log('EYEDROPPER->mouseup: NOTHING');
@@ -282,74 +169,65 @@ var toolLogic = {
     },
 
     'button_element': '#btn-tool-eyedropper',
-    'human_name': 'Eyedropper',
+    'human_name': 'Eyedropper'
   },
 
-  'DRAW' : {
+  'DRAW': {
     'mousedown': function (map, e) {
       console.log('DRAW->mousedown...');
 
       if (!window.selected_layer) {
-          console.log('You havent selected a layer yet.');
-          alert('You havent selected a layer yet.');
-          return;
-        }
+        console.log('You havent selected a layer yet.');
+        window.alert('You havent selected a layer yet.');
+        return;
+      }
 
       if (!(e.button === 0 || e.button === 2)) {
-          console.log("Unknown draw button: we know left/right (0/2), got: '" + e.button + "'.");
-          return;
-        }
+        console.log("Unknown draw button: we know left/right (0/2), got: '" + e.button + "'.");
+        return;
+      }
 
-      var oX, oY, tX, tY, tIdx, selector;
-      var mapOffsetX = map.camera[0];
-      var mapOffsetY = map.camera[1];
-      var mouseOffsetX = e.offsetX * map.camera[2];
-      var mouseOffsetY = e.offsetY * map.camera[2];
+      const mapOffsetX = map.camera[0];
+      const mapOffsetY = map.camera[1];
+      const mouseOffsetX = e.offsetX * map.camera[2];
+      const mouseOffsetY = e.offsetY * map.camera[2];
 
-      oX = mapOffsetX + mouseOffsetX;
-      oY = mapOffsetY + mouseOffsetY;
+      const oX = mapOffsetX + mouseOffsetX;
+      const oY = mapOffsetY + mouseOffsetY;
 
-      tX = parseInt(oX / 16);
-      tY = parseInt(oY / 16);
+      const tX = parseInt(oX / 16);
+      const tY = parseInt(oY / 16);
 
-            // / TODO: Again, this is dumb.  LALALA.
+      // TODO: Again, this is dumb.  LALALA.
       if (window.selected_layer.map_tileData_idx > 900) {
-
-          switch (window.selected_layer.map_tileData_idx) {
-              case 999:
-                map.setZone(
-                            tX, tY, getActiveZone()
-                        );
-                return;
-              default:
-                throw 'WHAT ARE YOU EVEN DOING, MAN? ' + window.selected_layer;
-                return;
-            }
-
-        } else {
-
-          change_one_tile(
-                    map,
-                    tX, tY,
-                    window.selected_layer.map_tileData_idx,
-                    window.$CURRENT_SELECTED_TILES[e.button]
-                );
+        switch (window.selected_layer.map_tileData_idx) {
+          case 999:
+            map.setZone(tX, tY, getActiveZone());
+            return;
+          default:
+            throw new Error('WHAT ARE YOU EVEN DOING, MAN? ' + window.selected_layer);
         }
+      } else {
+        map.UndoRedo.change_one_tile(
+            tX, tY,
+            window.selected_layer.map_tileData_idx,
+            window.$CURRENT_SELECTED_TILES[e.button]
+        );
+      }
     },
     'mouseup': function (map, e) {
       console.log('DRAW->mouseup: NOTHING');
     },
 
-        // / todo this doesn't seem to drag correctly for rightmouse...
-        // / todo this doesn't perform correctly if you move the mouse too quickly.  Should keep track of position-1, draw a line between points, and change all those on this layer?
+    // TODO this doesn't seem to drag correctly for rightmouse...
+    // TODO this doesn't perform correctly if you move the mouse too quickly.  Should keep track of
+    //      position-1, draw a line between points, and change all those on this layer?
     'mousemove': function (map, e) {
-
-            // / if there's one button pressed and it's the left or right button...
+      // / if there's one button pressed and it's the left or right button...
       if (e.buttons === 1 && (e.button === 0 || e.button === 2)) {
-
-                // TODO this duplicates work. if it's costly, check before everything.  I doubt it'll matter.
-          toolLogic['DRAW']['mousedown'](map, e); // let's be lazy.
-        }
+        // TODO this duplicates work. if it's costly, check before everything.  I doubt it'll matter.
+        toolLogic['DRAW']['mousedown'](map, e); // let's be lazy.
+      }
     },
 
     'button_element': '#btn-tool-draw',
@@ -357,22 +235,21 @@ var toolLogic = {
 
     'extra_setup_fn': function (e, name, obj) {
       console.log(name, 'had an extra setup function', obj);
-    },
+    }
   }
 };
 
-function updateRstringInfo() {
-
+const updateRstringInfo = () => {
   if (!window.$$$currentMap) {
     console.log('lol, no window.$$$currentMap yet.');
     return;
   }
 
   $('#info-rstring').text(window.$$$currentMap.layerRenderOrder.join(','));
-}
+};
 
 
-function setupToolClick(toolObj, toolName) {
+const setupToolClick = (toolObj, toolName) => {
   $(toolObj.button_element).click(function (e) {
     $('#tool-title').text(toolObj.human_name);
 
@@ -386,14 +263,14 @@ function setupToolClick(toolObj, toolName) {
       toolObj.extra_setup_fn(e, toolName, toolObj);
     }
   });
-}
+};
 
-function setupTools() {
-  for (var prop in toolLogic) {
+const setupTools = () => {
+  for (const prop in toolLogic) {
     if (toolLogic.hasOwnProperty(prop)) {
 
       // or if (Object.prototype.hasOwnProperty.call(obj,prop)) for safety...
-      console.log('Initializing tool: ', prop, '...');
+      // console.info('Initializing tool: ', prop, '...');
 
       setupToolClick(toolLogic[prop], prop);
 
@@ -409,7 +286,7 @@ function setupTools() {
         */
     }
   }
-}
+};
 setupTools();
 
 var tools = function (action, map, evt) {
@@ -526,7 +403,7 @@ var savePalettePositions = () => {
   });
 };
 
-// / todo: currently this isn't allowing the multiple-vsp thing to really be "right".
+// TODO: currently this isn't allowing the multiple-vsp thing to really be "right".
 // / we need to have virtual palletes per vsp, and switch between them when you switch to a layer with a different palette.
 function initializeTileSelectorsForMap(imageFile) {
   imageFile = jetpack.path($$$currentMap.dataPath, imageFile);
@@ -612,6 +489,5 @@ export var Tools = {
   savePalettePositions: savePalettePositions,
   updateLocationFunction: updateLocationFunction,
   initToolsToMapContainer: initToolsToMapContainer,
-  grue_zoom: grue_zoom,
-  undo: undo
+  grue_zoom: grue_zoom
 };

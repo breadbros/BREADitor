@@ -14,8 +14,8 @@ var setupPaletteListeners = () => {
       start: function (event, ui) {
                 // / map palette is always on bottom.
         if ($(event.target).hasClass('map-palette')) {
-            return;
-          }
+          return;
+        }
 
         $(event.target).css('z-index', garbage_zsort);
         correctResizeWidget(event.target);
