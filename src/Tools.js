@@ -161,7 +161,6 @@ const toolLogic = {
     'button_element': '#btn-tool-eyedropper',
     'human_name': 'Eyedropper'
   },
-
   'DRAW': {
     'mousedown': function (map, e) {
       console.log('DRAW->mousedown...');
@@ -238,6 +237,13 @@ const updateRstringInfo = () => {
   $('#info-rstring').text(window.$$$currentMap.layerRenderOrder.join(','));
 };
 
+export const clickEyedropper = () => {
+  $(toolLogic['EYEDROPPER'].button_element).click();
+};
+
+export const clickDrawBrush = () => {
+  $(toolLogic['DRAW'].button_element).click();
+};
 
 const setupToolClick = (toolObj, toolName) => {
   $(toolObj.button_element).click(function (e) {

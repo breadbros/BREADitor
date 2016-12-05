@@ -1,5 +1,5 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
-import { Tools } from './Tools.js';
+import { Tools, clickEyedropper,clickDrawBrush } from './Tools.js';
 import { Palettes } from './Palettes.js';
 import { LayersWidget } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
@@ -66,6 +66,12 @@ ipcRenderer.on('main-menu', (event, arg) => {
     case 'tile-swap':
       // TODO don't do this if you're in a text-editing field
       toggleSelectedTiles(window.$$$currentMap);
+      break;
+    case 'tool-brush':
+      clickDrawBrush();
+      break;
+    case 'tool-eyedropper':
+      clickEyedropper();
       break;
     case 'about':
       window.$$$about_breaditor();
