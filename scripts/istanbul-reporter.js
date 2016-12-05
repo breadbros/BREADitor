@@ -14,13 +14,13 @@ module.exports = function (runner, options) {
 
   runner.on('end', function () {
     var cov = global.__coverage__ || {},
-        collector = new istanbul.Collector();
+      collector = new istanbul.Collector();
 
     collector.add(cov);
 
     reporters.forEach(function (reporter) {
-        istanbul.Report.create(reporter, reporterOpts).writeReport(collector, true);
-      });
+      istanbul.Report.create(reporter, reporterOpts).writeReport(collector, true);
+    });
 
   });
 };

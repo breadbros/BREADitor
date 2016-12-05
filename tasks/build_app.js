@@ -35,11 +35,11 @@ gulp.task('environment', function () {
 gulp.task('watch', function () {
   var beepOnError = function (done) {
     return function (err) {
-        if (err) {
-            utils.beepSound();
-          }
-        done(err);
-      };
+      if (err) {
+        utils.beepSound();
+      }
+      done(err);
+    };
   };
 
   watch('src/**/*.js', batch(function (events, done) {

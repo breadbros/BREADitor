@@ -78,12 +78,12 @@ export var verifyMap = (mapfile) => {
     needsObstructions = true;
   } else {
     if (!mapData.vsp['default']) {
-        needsDefault = true;
-      }
+      needsDefault = true;
+    }
 
     if (!mapData.vsp['obstructions']) {
-        needsObstructions = true;
-      }
+      needsObstructions = true;
+    }
   }
 
   if (typeof mapData.vsp != 'object') {
@@ -97,9 +97,9 @@ export var verifyMap = (mapfile) => {
     alert('Due to sins (surely on your part) you do not have a default tile vsp set.  Please select the correct one.');
 
     filenames = dialog.showOpenDialog({
-        title:'Choose a default tileset',
-        filters: [{ name: 'tileset', extensions: ['vsp.json'] }]
-      }
+      title:'Choose a default tileset',
+      filters: [{ name: 'tileset', extensions: ['vsp.json'] }]
+    }
         );
 
     filename = filenames[0].replace(path.dirname(mapfile) + path.sep, '');
@@ -111,9 +111,9 @@ export var verifyMap = (mapfile) => {
     alert('Please select the obstruction tileset for this map.');
 
     filenames = dialog.showOpenDialog({
-        title:'Choose an obstruction tileset',
-        filters: [{ name: 'tileset', extensions: ['obsvsp.json'] }]
-      }
+      title:'Choose an obstruction tileset',
+      filters: [{ name: 'tileset', extensions: ['obsvsp.json'] }]
+    }
         );
 
     filename = filenames[0].replace(path.dirname(mapfile) + path.sep, '');
@@ -123,9 +123,9 @@ export var verifyMap = (mapfile) => {
 
   for (var i = mapData.layers.length - 1; i >= 0; i--) {
     if (!mapData.layers[i].vsp) { f;
-        console.log('setting layer[' + i + ']s vsp to default...');
-        mapData.layers[i].vsp = 'default';
-      }
+      console.log('setting layer[' + i + ']s vsp to default...');
+      mapData.layers[i].vsp = 'default';
+    }
   }
 
   saveData(mapfile, mapData);
@@ -182,25 +182,25 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
   this.fakeEntityLayer = {
     name: 'Entity Layer (E)',
     parallax: {
-        X: 1,
-        Y: 1,
-      },
+      X: 1,
+      Y: 1,
+    },
     vsp: 'default'
   };
 
   this.updateRstring = (rstring) => {
 
     if (typeof rstring === 'string') {
-        console.log("Setting new rstring: '" + rstring + "'");
-        this.layerRenderOrder = rstring.split(',');
-      } else if (typeof rstring.length == 'number') {
-          console.log("Setting new rstring: '");
-          console.log(rstring);
+      console.log("Setting new rstring: '" + rstring + "'");
+      this.layerRenderOrder = rstring.split(',');
+    } else if (typeof rstring.length == 'number') {
+      console.log("Setting new rstring: '");
+      console.log(rstring);
 
-          this.layerRenderOrder = rstring;
-        } else {
-          throw 'What fresh hell is this.  What are you throwing at updateRstring?!';
-        }
+      this.layerRenderOrder = rstring;
+    } else {
+      throw 'What fresh hell is this.  What are you throwing at updateRstring?!';
+    }
 
     this.mapData.renderstring = this.layerRenderOrder.join(',');
 
@@ -260,8 +260,8 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
     let tmppath = path.join(this.dataPath, this.mapData.vsp.obstructions);
     this.obsLayerData = jetpack.read(tmppath, 'json');
     if (!this.obsLayerData.vsp) {
-        this.obsLayerData.vsp = 'obstructions';
-      }
+      this.obsLayerData.vsp = 'obstructions';
+    }
     console.info('loaded obsLayerData from ' + tmppath);
   }
 
@@ -279,11 +279,11 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
 
         // walk the in-memory zoneData layer, anything with zone >0, add.
     $.each(this.zoneData, (idx) => {
-        if (this.zoneData[idx] > 0) {
-            x = getXfromFlat(idx, 20); // todo : variable vsp width for zones.
-            y = getYfromFlat(idx, 20); // todo : variable vsp width for zones.
-          }
-      });
+      if (this.zoneData[idx] > 0) {
+        x = getXfromFlat(idx, 20); // todo : variable vsp width for zones.
+        y = getYfromFlat(idx, 20); // todo : variable vsp width for zones.
+      }
+    });
   };
 
   this.toLoad = 1;
@@ -307,10 +307,10 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
 
 
     if (k != 'zones') { // TODO: a better solution to map-relative assets versus app-relative assets.  THIS IS SAD AND PATHETIC AND SADTHETIC
-        this.vspImages[k].src = tmppath;
-      } else {
-        this.vspImages[k].src = this.vspData[k].source_image;
-      }
+      this.vspImages[k].src = tmppath;
+    } else {
+      this.vspImages[k].src = this.vspData[k].source_image;
+    }
   }
 
   this.toLoad++;
@@ -324,37 +324,37 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
 
   this.entityData = {
     '__default__': {
-        animations: { 'Idle Down': [ [ [ 0, 100 ] ], 'Looping' ] },
-        animation: 'Idle Down',
-        dims: [ 16, 32 ],
-        hitbox: [ 0, 16, 16, 16 ],
-        regions: {},
-        frames: 1,
-        image: '__default__',
-        inner_pad: 0,
-        outer_pad: 0,
-        per_row: 1
-      }
+      animations: { 'Idle Down': [ [ [ 0, 100 ] ], 'Looping' ] },
+      animation: 'Idle Down',
+      dims: [ 16, 32 ],
+      hitbox: [ 0, 16, 16, 16 ],
+      regions: {},
+      frames: 1,
+      image: '__default__',
+      inner_pad: 0,
+      outer_pad: 0,
+      per_row: 1
+    }
   };
 
   this.createEntityRenderData = () => {
     this.entities = {};
     for (i = 0; i < this.mapData.entities.length; i++) {
-        var entity = this.mapData.entities[i];
+      var entity = this.mapData.entities[i];
             // console.log(entity);
 
-        entity.location.layer = entity.location.layer || defaultEntityLayer;
-        this.addEntityWithoutSort(entity, entity.location, false);
-      }
+      entity.location.layer = entity.location.layer || defaultEntityLayer;
+      this.addEntityWithoutSort(entity, entity.location, false);
+    }
 
     for (var i in this.entities) {
-        if (this.entities[i]) {
-            console.info('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
-            this.entities[i].sort(function (a, b) {
-                return a.location.ty - b.location.ty;
-              });
-          }
+      if (this.entities[i]) {
+        console.info('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
+        this.entities[i].sort(function (a, b) {
+            return a.location.ty - b.location.ty;
+          });
       }
+    }
   };
 
   this.createEntityRenderData();
@@ -363,63 +363,63 @@ export var Map = function (mapfile, mapdatafile, updateLocationFunction) {
 
   this.selection = {
     add: function (x, y, w, h) {
-        if (x < this.hull.x || this.hull.x === null) this.hull.x = x;
-        if (y < this.hull.y || this.hull.y === null) this.hull.y = y;
-        if (x + w > this.hull.x + this.hull.w) this.hull.w = x + w;
-        if (y + h > this.hull.y + this.hull.h) this.hull.h = y + h;
+      if (x < this.hull.x || this.hull.x === null) this.hull.x = x;
+      if (y < this.hull.y || this.hull.y === null) this.hull.y = y;
+      if (x + w > this.hull.x + this.hull.w) this.hull.w = x + w;
+      if (y + h > this.hull.y + this.hull.h) this.hull.h = y + h;
 
-        var ix, iy, i;
-        for (iy = 0; iy < h; iy++) {
-            for (ix = 0; ix < w; ix++) {
-                i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
-                this.tiles[i] = true;
-              }
+      var ix, iy, i;
+      for (iy = 0; iy < h; iy++) {
+        for (ix = 0; ix < w; ix++) {
+            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+            this.tiles[i] = true;
           }
+      }
 
-        this.recalculateLines();
-      },
+      this.recalculateLines();
+    },
     remove: function (x, y, w, h) {
             // TODO update hull -- it's much harder to recalc the hull on subtraction
 
-        var ix, iy, i;
-        for (iy = 0; iy < h; iy++) {
-            for (ix = 0; ix < w; ix++) {
-                i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
-                this.tiles[i] = false;
-              }
+      var ix, iy, i;
+      for (iy = 0; iy < h; iy++) {
+        for (ix = 0; ix < w; ix++) {
+            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+            this.tiles[i] = false;
           }
+      }
 
-        this.recalculateLines();
-      },
+      this.recalculateLines();
+    },
     deselect: function () {
-        this.hull.x = null;
-        this.hull.y = null;
-        this.hull.w = 0;
-        this.hull.h = 0;
+      this.hull.x = null;
+      this.hull.y = null;
+      this.hull.w = 0;
+      this.hull.h = 0;
 
-        this.tiles = [];
-        this.lines = [];
-      },
+      this.tiles = [];
+      this.lines = [];
+    },
 
         // "private"
     recalculateLines: function () {
-        this.lines = [];
+      this.lines = [];
 
-        var mapWidth = this.map.mapSizeInTiles[0];
-        var x, y, i;
-        for (y = this.hull.y; y < this.hull.y + this.hull.h; y++) {
-            for (x = this.hull.x; x < this.hull.x + this.hull.w; x++) {
-                i = getFlatIdx(x, y, mapWidth);
-                if (this.tiles[i] != this.tiles[i - 1]) this.lines.push(x, y, x, y + 1);
-                if (this.tiles[i] != this.tiles[i - mapWidth]) this.lines.push(x, y, x + 1, y);
-              }
+      var mapWidth = this.map.mapSizeInTiles[0];
+      var x, y, i;
+      for (y = this.hull.y; y < this.hull.y + this.hull.h; y++) {
+        for (x = this.hull.x; x < this.hull.x + this.hull.w; x++) {
+            i = getFlatIdx(x, y, mapWidth);
+            if (this.tiles[i] != this.tiles[i - 1]) this.lines.push(x, y, x, y + 1);
+            if (this.tiles[i] != this.tiles[i - mapWidth]) this.lines.push(x, y, x + 1, y);
           }
+      }
 
-        console.info('Recalculated lines:');
-        console.info(this.hull);
-        console.info(this.tiles);
-        console.info(this.lines);
-      },
+      console.info('Recalculated lines:');
+      console.info(this.hull);
+      console.info(this.tiles);
+      console.info(this.lines);
+    },
 
     hull: { x:null, y:null, w:0, h:0 },
     tiles: [],
@@ -458,98 +458,98 @@ function getYfromFlat(idx, numColumns) {
 Map.prototype = {
   addEntityWithoutSort(entity, location) {
     if (!this.entities[location.layer]) {
-        this.entities[location.layer] = [];
-      }
+      this.entities[location.layer] = [];
+    }
     this.entities[location.layer].push(entity);
 
     if (!this.entityData[entity.filename]) {
-        var datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
-        var data;
+      var datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
+      var data;
 
 
-        if (entity.filename.endsWith('chr')) {
-            console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
-            return;
-          }
-
-        if (!entity.filename.endsWith('chr') && !entity.filename.endsWith('json')) {
-            console.warn("entity ('" + entity.filename + "') has an unknown format.  Skipping for now.");
-            return;
-          }
-
-        try {
-                // TODO: use aen's loaders in MAPPO and convert binary chrs to images and json files, motherfucker!
-            data = jetpack.read(datafile, 'json');
-          } catch (e) {
-              if (entity.filename.endsWith('json')) {
-                debugger;
-              }
-              console.log("Totally couldnt read datafile: '" + datafile + "'");
-            }
-
-        if (data) {
-            this.entityData[entity.filename] = data;
-
-            for (var name in data.animations) {
-                    // convert short-hand to useful-hand
-                if (typeof data.animations[name][0] === 'string') {
-                    var chunks = data.animations[name][0].split(' ');
-                    var t = parseInt(chunks.shift().substring(1), 10);
-
-                    data.animations[name][0] = [];
-                    for (var f = 0; f < chunks.length; f++) {
-                        data.animations[name][0].push([parseInt(chunks[f], 10), t]);
-                      }
-                  }
-              }
-
-            if (!this.entityTextures[data.image]) {
-                var imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image); // TODO maybe make this definable in this.mapedConfigData too?
-                if (!jetpack.inspect(imagePath)) {
-                    imagePath += '.png'; // TODO this is stupid and bad and wrong.
-                  }
-                if (!jetpack.inspect(imagePath)) {
-                    console.warn("Couldn't load image", data.image, 'for entity', entity.filename, '; falling back.');
-                        // this.entityData[entity.filename].image = '__default__';
-                    entity.MAPED_USEDEFAULT = true;
-                    return;
-                  }
-
-                console.info("Adding '" + imagePath + "' to entityTextures cache...");
-                this.toLoad++;
-                this.entityTextures[data.image] = {};
-                this.entityTextures[data.image].img = new Image();
-                this.entityTextures[data.image].img.onload = this.doneLoading;
-                this.entityTextures[data.image].img.src = imagePath;
-              }
-
-            entity.MAPED_USEDEFAULT = false;
-          } else {
-            console.warn("Could not find '" + entity.filename + "', using the default. Path: ", datafile);
-            entity.MAPED_USEDEFAULT = true;
-          }
+      if (entity.filename.endsWith('chr')) {
+        console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
+        return;
       }
+
+      if (!entity.filename.endsWith('chr') && !entity.filename.endsWith('json')) {
+        console.warn("entity ('" + entity.filename + "') has an unknown format.  Skipping for now.");
+        return;
+      }
+
+      try {
+                // TODO: use aen's loaders in MAPPO and convert binary chrs to images and json files, motherfucker!
+        data = jetpack.read(datafile, 'json');
+      } catch (e) {
+          if (entity.filename.endsWith('json')) {
+              debugger;
+            }
+          console.log("Totally couldnt read datafile: '" + datafile + "'");
+        }
+
+      if (data) {
+        this.entityData[entity.filename] = data;
+
+        for (var name in data.animations) {
+                    // convert short-hand to useful-hand
+            if (typeof data.animations[name][0] === 'string') {
+                var chunks = data.animations[name][0].split(' ');
+                var t = parseInt(chunks.shift().substring(1), 10);
+
+                data.animations[name][0] = [];
+                for (var f = 0; f < chunks.length; f++) {
+                    data.animations[name][0].push([parseInt(chunks[f], 10), t]);
+                  }
+              }
+          }
+
+        if (!this.entityTextures[data.image]) {
+            var imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image); // TODO maybe make this definable in this.mapedConfigData too?
+            if (!jetpack.inspect(imagePath)) {
+                imagePath += '.png'; // TODO this is stupid and bad and wrong.
+              }
+            if (!jetpack.inspect(imagePath)) {
+                console.warn("Couldn't load image", data.image, 'for entity', entity.filename, '; falling back.');
+                        // this.entityData[entity.filename].image = '__default__';
+                entity.MAPED_USEDEFAULT = true;
+                return;
+              }
+
+            console.info("Adding '" + imagePath + "' to entityTextures cache...");
+            this.toLoad++;
+            this.entityTextures[data.image] = {};
+            this.entityTextures[data.image].img = new Image();
+            this.entityTextures[data.image].img.onload = this.doneLoading;
+            this.entityTextures[data.image].img.src = imagePath;
+          }
+
+        entity.MAPED_USEDEFAULT = false;
+      } else {
+        console.warn("Could not find '" + entity.filename + "', using the default. Path: ", datafile);
+        entity.MAPED_USEDEFAULT = true;
+      }
+    }
 
     if (!entity.MAPED_USEDEFAULT) {
-        if (this.entityData[entity.filename].regions && this.entityData[entity.filename].regions['Tall_Redraw'] && !this.mapData.tallentitylayer) {
-            alert('ERROR: Loading tall entity ' + entity.filename + ' with no tallentitylayer in map!');
-          }
-
-        entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
-      } else {
-        entity.animation = 'Idle Down'; // / m-m-m-magick (__default__ has this)
+      if (this.entityData[entity.filename].regions && this.entityData[entity.filename].regions['Tall_Redraw'] && !this.mapData.tallentitylayer) {
+        alert('ERROR: Loading tall entity ' + entity.filename + ' with no tallentitylayer in map!');
       }
+
+      entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
+    } else {
+      entity.animation = 'Idle Down'; // / m-m-m-magick (__default__ has this)
+    }
 
   },
 
   addEntity: function (filename, location) {
     this.addEntityWithoutSort(filename, location);
     this.entities[location.layer].sort(function (a, b) {
-        if (a.location.py && b.location.py) {
-            returna.location.py - b.location.py; // TODO almost certainly wrong; probably should convery from ty -> py if no py and then compare py.
-          }
-        return a.location.ty - b.location.ty;
-      });
+      if (a.location.py && b.location.py) {
+        returna.location.py - b.location.py; // TODO almost certainly wrong; probably should convery from ty -> py if no py and then compare py.
+      }
+      return a.location.ty - b.location.ty;
+    });
   },
 
   getVSPTileLocation: function (vsp, idx) {
@@ -562,9 +562,9 @@ Map.prototype = {
     x *= this.vspData[vsp].tilesize.width;
 
     return {
-        x: x,
-        y: y
-      };
+      x: x,
+      y: y
+    };
   },
 
 
@@ -598,55 +598,55 @@ Map.prototype = {
     var $cont = $('.map-palette');
 
     var setPaletteLocations = function (paletteDict) {
-        var $pal = null;
-        var configVar = null;
-        var obj = null;
-        var k = null;
+      var $pal = null;
+      var configVar = null;
+      var obj = null;
+      var k = null;
 
-        for (k in paletteDict) {
-            console.info('paletteDict.' + k);
-            configVar = k + ' settings'; // this should be CONST'd somewhere and referenced in both places
-            $pal = $('.' + k);
+      for (k in paletteDict) {
+        console.info('paletteDict.' + k);
+        configVar = k + ' settings'; // this should be CONST'd somewhere and referenced in both places
+        $pal = $('.' + k);
 
-            console.info('configVar: ' + configVar);
-            console.info('$pal: ' + $pal);
-            console.info('localStorage[configVar]: ' + localStorage[configVar]);
+        console.info('configVar: ' + configVar);
+        console.info('$pal: ' + $pal);
+        console.info('localStorage[configVar]: ' + localStorage[configVar]);
 
-            if (localStorage[configVar] && $pal) {
-                obj = JSON.parse(localStorage[configVar]);
+        if (localStorage[configVar] && $pal) {
+            obj = JSON.parse(localStorage[configVar]);
 
-                console.info('oh yeah: ' + obj);
+            console.info('oh yeah: ' + obj);
 
-                if (obj.w) { $pal.width(obj.w); }
-                if (obj.h) { $pal.height(obj.h); }
-                if (obj.x) { $pal.css('left', obj.x); }
-                if (obj.y) { $pal.css('top', obj.y); }
-                obj.hide ? $pal.hide() : $pal.show();
-              } else {
-                console.info('lol, no');
-              }
+            if (obj.w) { $pal.width(obj.w); }
+            if (obj.h) { $pal.height(obj.h); }
+            if (obj.x) { $pal.css('left', obj.x); }
+            if (obj.y) { $pal.css('top', obj.y); }
+            obj.hide ? $pal.hide() : $pal.show();
+          } else {
+            console.info('lol, no');
           }
-      };
+      }
+    };
 
     if (localStorage[key] + '-mapx') {
 
             // / TODO This is weird.  Why is the map palette being set here and then again in setPaletteLocations?
-        if (localStorage[key + '-width']) { $cont.width(localStorage[key + '-width']); }
-        if (localStorage[key + '-height']) { $cont.height(localStorage[key + '-height']); }
-        if (localStorage[key + '-top']) { $cont.css('top', localStorage[key + '-top']); }
-        if (localStorage[key + '-left']) { $cont.css('left', localStorage[key + '-left']); }
-        if (localStorage[key + '-mapx']) { this.camera[0] = parseInt(localStorage[key + '-mapx']); }
-        if (localStorage[key + '-mapy']) { this.camera[1] = parseInt(localStorage[key + '-mapy']); }
+      if (localStorage[key + '-width']) { $cont.width(localStorage[key + '-width']); }
+      if (localStorage[key + '-height']) { $cont.height(localStorage[key + '-height']); }
+      if (localStorage[key + '-top']) { $cont.css('top', localStorage[key + '-top']); }
+      if (localStorage[key + '-left']) { $cont.css('left', localStorage[key + '-left']); }
+      if (localStorage[key + '-mapx']) { this.camera[0] = parseInt(localStorage[key + '-mapx']); }
+      if (localStorage[key + '-mapy']) { this.camera[1] = parseInt(localStorage[key + '-mapy']); }
 
-        if (localStorage[key + '-layerspallete']) { this.camera[1] = parseInt(localStorage[key + '-mapy']); }
+      if (localStorage[key + '-layerspallete']) { this.camera[1] = parseInt(localStorage[key + '-mapy']); }
 
-        if (localStorage['palettes']) {
-            console.info('palletes found...');
-            setPaletteLocations(JSON.parse(localStorage['palettes']));
-          } else {
-            console.warn('no palettes registered.');
-          }
+      if (localStorage['palettes']) {
+        console.info('palletes found...');
+        setPaletteLocations(JSON.parse(localStorage['palettes']));
+      } else {
+        console.warn('no palettes registered.');
       }
+    }
 
     return this.readyPromise;
   },
@@ -663,9 +663,9 @@ Map.prototype = {
     name = stem + num;
 
     while (this.layerLookup[name]) {
-        num++;
-        name = stem + num;
-      }
+      num++;
+      name = stem + num;
+    }
 
     return name;
   },
@@ -683,10 +683,10 @@ Map.prototype = {
     this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
 
     var readShader = (path) => {
-        const p = jetpack.path(appPath, 'app', path);
-        const res = jetpack.read(p);
-        return res;
-      };
+      const p = jetpack.path(appPath, 'app', path);
+      const res = jetpack.read(p);
+      return res;
+    };
 
     this.tilemapShader = new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemap-frag.glsl'));
     this.spriteShader = new ShaderProgram(this.gl, readShader('shaders/sprite-vert.glsl'), readShader('shaders/sprite-frag.glsl'));
@@ -696,15 +696,15 @@ Map.prototype = {
 
     this.tileLibraryTextures = {};
     for (var k in this.vspImages) {
-        if (!this.vspImages[k]) return;
-        this.tileLibraryTextures[k] = this.gl.createTexture();
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLibraryTextures[k]);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
-        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.vspImages[k]);
-      }
+      if (!this.vspImages[k]) return;
+      this.tileLibraryTextures[k] = this.gl.createTexture();
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLibraryTextures[k]);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.vspImages[k]);
+    }
 
     this.tileLayoutTexture = this.gl.createTexture();
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLayoutTexture);
@@ -724,67 +724,67 @@ Map.prototype = {
     this.selectionVertexBuffer = this.gl.createBuffer();
 
     for (var k in this.entityTextures) {
-        var texture = this.entityTextures[k];
+      var texture = this.entityTextures[k];
 
-        texture.tex = this.gl.createTexture();
-        this.gl.bindTexture(this.gl.TEXTURE_2D, texture.tex);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
-        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, texture.img);
-      }
+      texture.tex = this.gl.createTexture();
+      this.gl.bindTexture(this.gl.TEXTURE_2D, texture.tex);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, texture.img);
+    }
 
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-        0.0, 0.0,
-        this.mapSizeInTiles[0], 0.0,
-        0.0, -this.mapSizeInTiles[1],
-        0.0, -this.mapSizeInTiles[1],
-        this.mapSizeInTiles[0], 0.0,
-        this.mapSizeInTiles[0], -this.mapSizeInTiles[1]
-      ]), this.gl.STATIC_DRAW);
+      0.0, 0.0,
+      this.mapSizeInTiles[0], 0.0,
+      0.0, -this.mapSizeInTiles[1],
+      0.0, -this.mapSizeInTiles[1],
+      this.mapSizeInTiles[0], 0.0,
+      this.mapSizeInTiles[0], -this.mapSizeInTiles[1]
+    ]), this.gl.STATIC_DRAW);
 
         // make sure the size is right
     this.resize();
 
     if (this.onLoad) {
-        this.onLoad(this);
-      }
+      this.onLoad(this);
+    }
   },
 
   drawEntities: function (i, map, layer, tallEntities) {
         // / Layered Entities
     if (getNormalEntityVisibility()) {
-        if (map.entities[layer.name] && map.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name)) {
-            var entities = map.entities[layer.name];
-            var showEntityPreview = (window.selected_layer && layer === window.selected_layer.layer && map.entityPreview);
-            map.spriteShader.use();
+      if (map.entities[layer.name] && map.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name)) {
+        var entities = map.entities[layer.name];
+        var showEntityPreview = (window.selected_layer && layer === window.selected_layer.layer && map.entityPreview);
+        map.spriteShader.use();
 
-            for (var e = 0; e < entities.length; e++) {
-                if (showEntityPreview &&
+        for (var e = 0; e < entities.length; e++) {
+            if (showEntityPreview &&
                         map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
                         (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
                     ) {
-                    map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
-                  }
-                map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
-                if (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw']) {
-                    tallEntities.push(entities[e]);
-                  }
+                map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
               }
-          } else if (map.entityPreview) {
-              map.spriteShader.use();
-              map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
-            }
-
-        if (map.mapData.tallentitylayer === i) {
-            map.spriteShader.use();
-            for (var e in tallEntities) {
-                var entity = tallEntities[e];
-                map.renderEntity(entity, layer, [1, 1, 1, 1], map.entityData[entity.filename].regions['Tall_Redraw']);
+            map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
+            if (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw']) {
+                tallEntities.push(entities[e]);
               }
           }
+      } else if (map.entityPreview) {
+          map.spriteShader.use();
+          map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
+        }
+
+      if (map.mapData.tallentitylayer === i) {
+        map.spriteShader.use();
+        for (var e in tallEntities) {
+            var entity = tallEntities[e];
+            map.renderEntity(entity, layer, [1, 1, 1, 1], map.entityData[entity.filename].regions['Tall_Redraw']);
+          }
       }
+    }
   },
 
   render: function () {
@@ -796,183 +796,183 @@ Map.prototype = {
     var tallEntities = [];
 
     for (i = 0; i < (this.layerRenderOrder.length); i++) {
-        var layerIndex;
-        var layer;
+      var layerIndex;
+      var layer;
 
-        layerIndex = parseInt(this.layerRenderOrder[i], 10) - 1;
-        layer = this.mapData.layers[layerIndex];
+      layerIndex = parseInt(this.layerRenderOrder[i], 10) - 1;
+      layer = this.mapData.layers[layerIndex];
 
-        if (this.layerRenderOrder[i] == 'E') {
-            this.drawEntities(i, this, this.fakeEntityLayer, tallEntities);
-            continue;
-          }
-        if (isNaN(layerIndex)) continue;
-        if (layer.MAPED_HIDDEN) continue;
+      if (this.layerRenderOrder[i] == 'E') {
+        this.drawEntities(i, this, this.fakeEntityLayer, tallEntities);
+        continue;
+      }
+      if (isNaN(layerIndex)) continue;
+      if (layer.MAPED_HIDDEN) continue;
 
-        var vsp = layer.vsp;
+      var vsp = layer.vsp;
 
-        this.tilemapShader.use();
+      this.tilemapShader.use();
 
-        gl.uniform4f(this.tilemapShader.uniform('u_camera'),
+      gl.uniform4f(this.tilemapShader.uniform('u_camera'),
                 Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
                 Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
                 this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
                 this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
             );
 
-        gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
+      gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
                 layer.dimensions.X,
                 layer.dimensions.Y,
                 this.vspData[vsp].tiles_per_row,
                 this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
             );
 
-        gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
+      gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
 
-        var u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
-        gl.uniform1i(u_tileLibrary, 0);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
+      var u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
+      gl.uniform1i(u_tileLibrary, 0);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
 
-        var u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
-        gl.uniform1i(u_tileLayout, 1);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex]));
+      var u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
+      gl.uniform1i(u_tileLayout, 1);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex]));
 
-        var a_position = this.tilemapShader.attribute('a_position');
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-        gl.enableVertexAttribArray(a_position);
-        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+      var a_position = this.tilemapShader.attribute('a_position');
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+      gl.enableVertexAttribArray(a_position);
+      gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        this.drawEntities(i, this, layer, tallEntities);
-      }
+      this.drawEntities(i, this, layer, tallEntities);
+    }
 
         // / OBSTRUCTIONS
     if (Tools.shouldShowObstructions() && this.legacyObsData) {
-        var vsp = 'obstructions';
+      var vsp = 'obstructions';
             // TODO obstruction layer shouldn't just default like this
-        var layer = {
-            parallax: { X: 1, Y: 1 },
-            dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
-          };
+      var layer = {
+        parallax: { X: 1, Y: 1 },
+        dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
+      };
 
-        this.obstructionmapShader.use();
+      this.obstructionmapShader.use();
 
-        gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
+      gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
                 Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
                 Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
                 this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
                 this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
             );
 
-        gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
+      gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
                 layer.dimensions.X,
                 layer.dimensions.Y,
                 this.vspData[vsp].tiles_per_row,
                 this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
             );
 
-        gl.uniform4f(this.obstructionmapShader.uniform('u_color'), __obsColor[0], __obsColor[1], __obsColor[2], __obsColor[3]);
+      gl.uniform4f(this.obstructionmapShader.uniform('u_color'), __obsColor[0], __obsColor[1], __obsColor[2], __obsColor[3]);
 
-        var u_tileLibrary = this.obstructionmapShader.uniform('u_tileLibrary');
-        gl.uniform1i(u_tileLibrary, 0);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
+      var u_tileLibrary = this.obstructionmapShader.uniform('u_tileLibrary');
+      gl.uniform1i(u_tileLibrary, 0);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
 
-        var u_tileLayout = this.obstructionmapShader.uniform('u_tileLayout');
-        gl.uniform1i(u_tileLayout, 1);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData));
+      var u_tileLayout = this.obstructionmapShader.uniform('u_tileLayout');
+      gl.uniform1i(u_tileLayout, 1);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData));
 
-        var a_position = this.obstructionmapShader.attribute('a_position');
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-        gl.enableVertexAttribArray(a_position);
-        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+      var a_position = this.obstructionmapShader.attribute('a_position');
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+      gl.enableVertexAttribArray(a_position);
+      gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-      }
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
 
         // / ZONES
     if (Tools.shouldShowZones() && this.zoneData.length > 1) {
-        var vsp = 'zones';
+      var vsp = 'zones';
             // TODO zones layer shouldn't just default like this
-        var layer = {
-            parallax: { X: 1, Y: 1 },
-            alpha: Tools.getZonesAlpha(),
-            dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
-          };
+      var layer = {
+        parallax: { X: 1, Y: 1 },
+        alpha: Tools.getZonesAlpha(),
+        dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
+      };
 
-        this.tilemapShader.use();
+      this.tilemapShader.use();
 
-        gl.uniform4f(this.tilemapShader.uniform('u_camera'),
+      gl.uniform4f(this.tilemapShader.uniform('u_camera'),
                 Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
                 Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
                 this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
                 this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
             );
 
-        gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
+      gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
                 layer.dimensions.X,
                 layer.dimensions.Y,
                 this.vspData[vsp].tiles_per_row,
                 this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
             );
 
-        gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
+      gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
 
-        var u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
-        gl.uniform1i(u_tileLibrary, 0);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
+      var u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
+      gl.uniform1i(u_tileLibrary, 0);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
 
-        var u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
-        gl.uniform1i(u_tileLayout, 1);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.zoneData));
+      var u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
+      gl.uniform1i(u_tileLayout, 1);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0, gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.zoneData));
 
-        var a_position = this.tilemapShader.attribute('a_position');
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-        gl.enableVertexAttribArray(a_position);
-        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+      var a_position = this.tilemapShader.attribute('a_position');
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+      gl.enableVertexAttribArray(a_position);
+      gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-      }
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
 
         // / MARCHING ANTS
     if (this.selection.lines.length > 0) {
-        var layer = window.selected_layer ? window.selected_layer.layer : {
-            parallax: { X: 1, Y: 1 },
-            dimensions: this.mapData.layers[0].dimensions
-          };
+      var layer = window.selected_layer ? window.selected_layer.layer : {
+        parallax: { X: 1, Y: 1 },
+        dimensions: this.mapData.layers[0].dimensions
+      };
 
-        this.selectionShader.use();
-        gl.uniform4f(this.selectionShader.uniform('u_camera'),
+      this.selectionShader.use();
+      gl.uniform4f(this.selectionShader.uniform('u_camera'),
                 Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
                 Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
                 this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
                 this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
             );
-        gl.uniform4f(this.selectionShader.uniform('u_dimensions'),
+      gl.uniform4f(this.selectionShader.uniform('u_dimensions'),
                 layer.dimensions.X,
                 layer.dimensions.Y,
                 this.vspData[vsp].tiles_per_row,
                 this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
             );
-        gl.uniform1i(this.selectionShader.uniform('u_time'), Date.now());
+      gl.uniform1i(this.selectionShader.uniform('u_time'), Date.now());
 
-        var a_position = this.selectionShader.attribute('a_position');
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.selectionVertexBuffer);
-        gl.enableVertexAttribArray(a_position);
-        gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.selection.lines), this.gl.STATIC_DRAW);
+      var a_position = this.selectionShader.attribute('a_position');
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.selectionVertexBuffer);
+      gl.enableVertexAttribArray(a_position);
+      gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.selection.lines), this.gl.STATIC_DRAW);
 
-        gl.drawArrays(gl.LINES, 0, this.selection.lines.length / 2);
-      }
+      gl.drawArrays(gl.LINES, 0, this.selection.lines.length / 2);
+    }
   },
 
   renderEntity: function (entity, layer, tint, clip) {
@@ -991,12 +991,12 @@ Map.prototype = {
     var tx, ty;
 
     if (entity.location.px && entity.location.px) {
-        tx = entity.location.px / tilesize.width;
-        ty = entity.location.py / tilesize.height;
-      } else {
-        tx = entity.location.tx;
-        ty = entity.location.ty;
-      }
+      tx = entity.location.px / tilesize.width;
+      ty = entity.location.py / tilesize.height;
+    } else {
+      tx = entity.location.tx;
+      ty = entity.location.ty;
+    }
 
     tx -= (entityData.hitbox[0] / tilesize.width);
     ty -= (entityData.hitbox[1] / tilesize.height);
@@ -1014,13 +1014,13 @@ Map.prototype = {
     fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
 
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-        tx, -ty, fx, fy,
-        tx + tw, -ty, fx + fw, fy,
-        tx, -ty - th, fx, fy + fh,
-        tx + tw, -ty - th, fx + fw, fy + fh,
-        tx, -ty - th, fx, fy + fh,
-        tx + tw, -ty, fx + fw, fy
-      ]), this.gl.STATIC_DRAW);
+      tx, -ty, fx, fy,
+      tx + tw, -ty, fx + fw, fy,
+      tx, -ty - th, fx, fy + fh,
+      tx + tw, -ty - th, fx + fw, fy + fh,
+      tx, -ty - th, fx, fy + fh,
+      tx + tw, -ty, fx + fw, fy
+    ]), this.gl.STATIC_DRAW);
 
     gl.uniform4f(this.spriteShader.uniform('u_camera'),
             Math.floor(layer.parallax.X * this.camera[0]) / tilesize.width,

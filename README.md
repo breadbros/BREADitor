@@ -22,7 +22,6 @@ TODO
 ====
 * Fill out the website
 * Set up a pipeline for auto-builds
-* Get Jest filled out
 
 The Immediates for Ustor
 ========================

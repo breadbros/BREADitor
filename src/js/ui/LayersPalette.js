@@ -113,10 +113,10 @@ function redraw_palette(map) {
 
         // / TODO: this is disgusting, right?  right.
       window.selected_layer = {
-          map_tileData_idx: 999,
-          layer: window.$$$currentMap.zoneData,
-          $container: $zone_container
-        };
+        map_tileData_idx: 999,
+        layer: window.$$$currentMap.zoneData,
+        $container: $zone_container
+      };
 
       $zone_container.addClass(selClass);
 
@@ -132,10 +132,10 @@ function redraw_palette(map) {
       removeAllSelectedLayers(selClass);
 
       window.selected_layer = {
-          map_tileData_idx: i,
-          layer: layers[i],
-          $container: $layer_container
-        };
+        map_tileData_idx: i,
+        layer: layers[i],
+        $container: $layer_container
+      };
       $layer_container.addClass(selClass);
 
       TilesetSelectorWidget.initTilesetSelectorWidget(map, layers[i]);
@@ -200,10 +200,10 @@ function redraw_palette(map) {
 
         // / TODO: this is disgusting, right?  right.
       window.selected_layer = {
-          map_tileData_idx: 998,
-          layer: window.$$$currentMap.zoneData,
-          $container: $obs_container
-        };
+        map_tileData_idx: 998,
+        layer: window.$$$currentMap.zoneData,
+        $container: $obs_container
+      };
 
       TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData);
 

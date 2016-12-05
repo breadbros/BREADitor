@@ -50,14 +50,14 @@ export var windowMenuTemplate = {
       label: 'Collect all visible palettes',
       accelerator: 'CmdOrCtrl+Shift+C',
       click: function () {
-          send('all-collect');
-        }
+        send('all-collect');
+      }
     },
     {
       label: 'Show all palettes',
       accelerator: 'CmdOrCtrl+Shift+Alt+C',
       click: function () {
-          send('all-show');
-        }
+        send('all-show');
+      }
     },
   ]};

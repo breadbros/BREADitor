@@ -15,22 +15,22 @@
   var cut = new MenuItem({
     label: 'Cut',
     click: function () {
-        document.execCommand('cut');
-      }
+      document.execCommand('cut');
+    }
   });
 
   var copy = new MenuItem({
     label: 'Copy',
     click: function () {
-        document.execCommand('copy');
-      }
+      document.execCommand('copy');
+    }
   });
 
   var paste = new MenuItem({
     label: 'Paste',
     click: function () {
-        document.execCommand('paste');
-      }
+      document.execCommand('paste');
+    }
   });
 
   var normalMenu = new Menu();
@@ -43,17 +43,17 @@
 
   document.addEventListener('contextmenu', function (e) {
     switch (e.target.nodeName) {
-        case 'TEXTAREA':
-        case 'INPUT':
+      case 'TEXTAREA':
+      case 'INPUT':
+        e.preventDefault();
+        textEditingMenu.popup(remote.getCurrentWindow());
+        break;
+      default:
+        if (isAnyTextSelected()) {
           e.preventDefault();
-          textEditingMenu.popup(remote.getCurrentWindow());
-          break;
-        default:
-          if (isAnyTextSelected()) {
-              e.preventDefault();
-              normalMenu.popup(remote.getCurrentWindow());
-            }
-      }
+          normalMenu.popup(remote.getCurrentWindow());
+        }
+    }
   }, false);
 
 }());

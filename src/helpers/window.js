@@ -20,11 +20,11 @@ export default function (name, options) {
   var restore = function () {
     var restoredState = {};
     try {
-        restoredState = userDataDir.read(stateStoreFile, 'json');
-      } catch (err) {
+      restoredState = userDataDir.read(stateStoreFile, 'json');
+    } catch (err) {
             // For some reason json can't be read (might be corrupted).
             // No worries, we have defaults.
-        }
+    }
     return Object.assign({}, defaultSize, restoredState);
   };
 
@@ -32,11 +32,11 @@ export default function (name, options) {
     var position = win.getPosition();
     var size = win.getSize();
     return {
-        x: position[0],
-        y: position[1],
-        width: size[0],
-        height: size[1]
-      };
+      x: position[0],
+      y: position[1],
+      width: size[0],
+      height: size[1]
+    };
   };
 
   var windowWithinBounds = function (windowState, bounds) {
@@ -49,27 +49,27 @@ export default function (name, options) {
   var resetToDefaults = function (windowState) {
     var bounds = screen.getPrimaryDisplay().bounds;
     return Object.assign({}, defaultSize, {
-        x: (bounds.width - defaultSize.width) / 2,
-        y: (bounds.height - defaultSize.height) / 2
-      });
+      x: (bounds.width - defaultSize.width) / 2,
+      y: (bounds.height - defaultSize.height) / 2
+    });
   };
 
   var ensureVisibleOnSomeDisplay = function (windowState) {
     var visible = screen.getAllDisplays().some(function (display) {
-        return windowWithinBounds(windowState, display.bounds);
-      });
+      return windowWithinBounds(windowState, display.bounds);
+    });
     if (!visible) {
             // Window is partially or fully not visible now.
             // Reset it to safe defaults.
-        return resetToDefaults(windowState);
-      }
+      return resetToDefaults(windowState);
+    }
     return windowState;
   };
 
   var saveState = function () {
     if (!win.isMinimized() && !win.isMaximized()) {
-        Object.assign(state, getCurrentPosition());
-      }
+      Object.assign(state, getCurrentPosition());
+    }
     userDataDir.write(stateStoreFile, state, { atomic: true });
   };
 

@@ -6,23 +6,23 @@ var garbage_zsort = 1;
 var setupPaletteListeners = () => {
   $(function () {
     $('.draggable-window').draggable({
-        handle: 'h3',
-        stop: function (event, ui) {
+      handle: 'h3',
+      stop: function (event, ui) {
                 // console.log("draggable STOP");
                 // console.log(event);
-          },
-        start: function (event, ui) {
+      },
+      start: function (event, ui) {
                 // / map palette is always on bottom.
-            if ($(event.target).hasClass('map-palette')) {
-                return;
-              }
-
-            $(event.target).css('z-index', garbage_zsort);
-            correctResizeWidget(event.target);
-
-            garbage_zsort += 2;
+        if ($(event.target).hasClass('map-palette')) {
+            return;
           }
-      });
+
+        $(event.target).css('z-index', garbage_zsort);
+        correctResizeWidget(event.target);
+
+        garbage_zsort += 2;
+      }
+    });
 
     $('.resizable-window').resizable();
 

@@ -10,8 +10,8 @@ const sprintf = require('sprintf-js').sprintf;
 const path = require('path');
 
 function initInfoWidget(map) {
-	    $('#info-mapname').text(map.mapPath);
-	    $('#info-dims').text(map.mapSizeInTiles[0] + 'x' + map.mapSizeInTiles[1]);
+	        $('#info-mapname').text(map.mapPath);
+	        $('#info-dims').text(map.mapSizeInTiles[0] + 'x' + map.mapSizeInTiles[1]);
 }
 
 function bootstrapMap(mapFile, tiledataFile) {
@@ -96,9 +96,9 @@ ipcRenderer.on('window-menu', (event, arg) => {
 
   var tick = function (timestamp) {
     if (!!window.$$$currentMap) {
-        window.$$$currentMap.render();
-        TilesetSelectorWidget.renderTilesetSelectorWidget();
-      }
+      window.$$$currentMap.render();
+      TilesetSelectorWidget.renderTilesetSelectorWidget();
+    }
 
     window.requestAnimationFrame(tick);
   };
@@ -141,19 +141,19 @@ ipcRenderer.on('window-menu', (event, arg) => {
     var z = 0;
 
     window.$$$palette_registry.map((pal) => {
-        var node_selector = '.' + pal;
-        var $node = $(node_selector);
-        $node.css('top', y + 'px');
-        $node.css('left', x + 'px');
-        $node.css('z-index', z);
+      var node_selector = '.' + pal;
+      var $node = $(node_selector);
+      $node.css('top', y + 'px');
+      $node.css('left', x + 'px');
+      $node.css('z-index', z);
 
-        Palettes.correctResizeWidget($node);
+      Palettes.correctResizeWidget($node);
 
-        x += 30;
-        y += 30;
-        z += 2;
+      x += 30;
+      y += 30;
+      z += 2;
 
-      });
+    });
 
     Tools.savePalettePositions();
   };
@@ -161,10 +161,10 @@ ipcRenderer.on('window-menu', (event, arg) => {
   window.$$$show_all_windows = function () {
 
     window.$$$palette_registry.map((pal) => {
-        var node_selector = '.' + pal;
-        var $node = $(node_selector);
-        $node.show();
-      });
+      var node_selector = '.' + pal;
+      var $node = $(node_selector);
+      $node.show();
+    });
 
     Tools.savePalettePositions();
   };
@@ -194,21 +194,21 @@ ipcRenderer.on('window-menu', (event, arg) => {
     var node = pal + '-palette';
 
     if (window.$$$palette_registry.indexOf(node) >= 0) {
-        node_selector = '.' + node;
-        node = $(node_selector);
+      node_selector = '.' + node;
+      node = $(node_selector);
 
-        if (!node.length) {
-          throw "Invalid palette node selector: '" + node_selector + "'";
-        }
-      } else {
-        throw "Invalid palette name: '" + pal + "'";
+      if (!node.length) {
+        throw "Invalid palette node selector: '" + node_selector + "'";
       }
+    } else {
+      throw "Invalid palette name: '" + pal + "'";
+    }
 
     if (node.is(':visible')) {
-        node.hide();
-      } else {
-        node.show();
-      }
+      node.hide();
+    } else {
+      node.show();
+    }
 
     Tools.savePalettePositions();
   };
