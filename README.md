@@ -23,6 +23,8 @@ TODO
 * Fill out the website
 * Set up a pipeline for auto-builds
 
+* If you have an active eyedropper selection and you hide the all layers, then it stops The eyedropper selection bounds draw when its layer is hidden, but when you hide the last layer (regardless of which) the selection stops rendering and the window stops responding.
+
 The Immediates for Ustor
 ========================
 * Make it so you can write out obstructions
