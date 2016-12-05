@@ -1,5 +1,17 @@
 const sprintf = require('sprintf-js').sprintf;
 
+export const handleUndo = () => {
+  if (window.$$$currentMap) {
+    window.$$$currentMap.UndoRedo.undo();
+  }
+};
+
+export const handleRedo = () => {
+  if (window.$$$currentMap) {
+    window.$$$currentMap.UndoRedo.redo();
+  }
+};
+
 export const MakeUndoRedoStack = (_map) => {
   // todo: definitely need to wipeout undo stack on map change.
   // Probably should make it a child object of Maps, really....

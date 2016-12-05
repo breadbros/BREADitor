@@ -5,7 +5,8 @@ import { LayersWidget } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
 import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
-const { ipcRenderer } = require('electron');
+import { handleUndo, handleRedo } from './UndoRedo';
+import { ipcRenderer } from 'electron';
 const sprintf = require('sprintf-js').sprintf;
 const path = require('path');
 const $ = require('jquery');
@@ -16,7 +17,6 @@ const initInfoWidget = (map) => {
 };
 
 const bootstrapMap = (mapFile, tiledataFile) => {
-
   verifyTileData(tiledataFile)
     .then(() => {
       console.log('verify map?');
@@ -55,6 +55,13 @@ ipcRenderer.on('main-menu', (event, arg) => {
     case 'load':
       window.$$$load();
       break;
+    case 'undo':
+      handleUndo();
+      break;
+    case 'redo':
+      handleRedo();
+      break;
+
     case 'about':
       window.$$$about_breaditor();
       break;
@@ -64,7 +71,6 @@ ipcRenderer.on('main-menu', (event, arg) => {
 });
 
 ipcRenderer.on('window-menu', (event, arg) => {
-
   switch (arg) {
     case 'map':
     case 'tool':
@@ -90,8 +96,8 @@ ipcRenderer.on('window-menu', (event, arg) => {
 (function () {
   window.$$$currentMap = null;
 
-  var tick = function (timestamp) {
-    if (!!window.$$$currentMap) {
+  const tick = function (timestamp) {
+    if (window.$$$currentMap) {
       window.$$$currentMap.render();
       TilesetSelectorWidget.renderTilesetSelectorWidget();
     }
@@ -101,10 +107,10 @@ ipcRenderer.on('window-menu', (event, arg) => {
   window.requestAnimationFrame(tick);
 
   $('#btn-tool-undo').click(() => {
-    window.$$$currentMap.UndoRedo.undo();
+    handleUndo();
   });
   $('#btn-tool-redo').click(() => {
-    window.$$$currentMap.UndoRedo.redo();
+    handleRedo();
   });
 
   console.log('$$$save should be initialized...');
@@ -194,19 +200,18 @@ ipcRenderer.on('window-menu', (event, arg) => {
   ];
 
   window.$$$toggle_pallete = function (pal) {
-
-    var node_selector = '';
-    var node = pal + '-palette';
+    let node_selector = '';
+    let node = pal + '-palette';
 
     if (window.$$$palette_registry.indexOf(node) >= 0) {
       node_selector = '.' + node;
       node = $(node_selector);
 
       if (!node.length) {
-        throw "Invalid palette node selector: '" + node_selector + "'";
+        throw new Error("Invalid palette node selector: '" + node_selector + "'");
       }
     } else {
-      throw "Invalid palette name: '" + pal + "'";
+      throw new Error("Invalid palette name: '" + pal + "'");
     }
 
     if (node.is(':visible')) {
