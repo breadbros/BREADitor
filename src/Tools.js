@@ -1,7 +1,7 @@
 const $ = require('jquery');
 const sprintf = require('sprintf-js').sprintf;
 const app = require('electron').remote.app;
-const jetpack = require('fs-jetpack').cwd(app.getAppPath());
+import { setTileSelectorUI, getCurrentlySelectedTile } from './TileSelector';
 
 import { getZoneVisibility, getZoneAlpha, getActiveZone,
          setActiveZone, scrollZonePalletteToZone } from './js/ui/ZonesPalette.js';
@@ -144,16 +144,8 @@ const toolLogic = {
         }
       }
 
-      window.$CURRENT_SELECTED_TILES[e.button] = tIdx;
-      $('#info-selected-tiles').text(
-          window.$CURRENT_SELECTED_TILES[0] +
-          ',' +
-          window.$CURRENT_SELECTED_TILES[2]
-      );
-
       selector = '#left-palette';
-
-      setTileSelectorUI(selector, tIdx, map);
+      setTileSelectorUI(selector, tIdx, map, 0);
 
       // map.dragging = true;
       // window.$MAP_WINDOW.draggable('disable');
@@ -209,7 +201,7 @@ const toolLogic = {
         map.UndoRedo.change_one_tile(
             tX, tY,
             window.selected_layer.map_tileData_idx,
-            window.$CURRENT_SELECTED_TILES[e.button]
+            getCurrentlySelectedTile()
         );
       }
     },
@@ -373,63 +365,32 @@ function capturePaletteMovementForRestore($node) {
   localStorage[key + ' settings'] = JSON.stringify(obj);
 };
 
-var paletteCloseListener = ($pal_close_button) => {
+const paletteCloseListener = ($pal_close_button) => {
   $pal_close_button.closest('.ui-widget-content').hide();
 };
 
 // / setup palette listeners
 $(document).ready(() => {
   window.$$$palette_registry.map((pal) => {
-    var node_selector = '.' + pal;
-    var $node = $(node_selector);
-    var $node2;
-        // / palette motion save listener
+    const node_selector = '.' + pal;
+    const $node = $(node_selector);
+    // / palette motion save listener
     $node.mouseup(() => { capturePaletteMovementForRestore($node); });
 
-        // / palette "X" button listener
-    $node2 = $(node_selector + ' button.close-palette');
+    // / palette "X" button listener
+    const $node2 = $(node_selector + ' button.close-palette');
     $node2.click(() => { paletteCloseListener($node2); });
   });
 });
 
-var savePalettePositions = () => {
+const savePalettePositions = () => {
   window.$$$palette_registry.map((pal) => {
-    var node_selector = '.' + pal;
-    var $node = $(node_selector);
+    const node_selector = '.' + pal;
+    const $node = $(node_selector);
 
     capturePaletteMovementForRestore($node);
   });
 };
-
-// TODO: currently this isn't allowing the multiple-vsp thing to really be "right".
-// / we need to have virtual palletes per vsp, and switch between them when you switch to a layer with a different palette.
-function initializeTileSelectorsForMap(imageFile) {
-  imageFile = jetpack.path($$$currentMap.dataPath, imageFile);
-  imageFile = 'file:///' + imageFile.replace(new RegExp('\\\\', 'g'), '/'); // TODO this is incredibly dirty, right?
-
-  $('#left-palette').removeAttr('style');
-  $('#right-palette').removeAttr('style');
-
-  $('#left-palette').css('background-image', 'url(' + imageFile + ')');
-  $('#right-palette').css('background-image', 'url(' + imageFile + ')');
-
-  $('#left-palette').css('background-position', '0px 0px');
-  $('#right-palette').css('background-position', '0px 0px');
-
-  $('#left-palette').css('background-size', '2000%');
-  $('#right-palette').css('background-size', '2000%');
-}
-
-var _last_map = null;
-function setTileSelectorUI(whichOne, vspIDX, map) {
-  if (_last_map != map) {
-    initializeTileSelectorsForMap(map.vspData['default'].source_image);
-    _last_map = map;
-  }
-
-  var loc = map.getVSPTileLocation(window.selected_layer.layer.vsp, vspIDX);
-  $(whichOne).css('background-position', '-' + (loc.x * 2) + 'px -' + (loc.y * 2) + 'px'); // (offset *2)
-}
 
 $('#btn-add-tree').on('click', (e) => {
   window.TOOLMODE = 'TREE';
@@ -441,11 +402,11 @@ $('#btn-add-tree').on('click', (e) => {
 
   toolLogic.TREE = {
     mousemove: (map, evt) => {
-      var mapOffsetX = map.camera[0];
-      var mapOffsetY = map.camera[1];
-      var mouseOffsetX = evt.offsetX;
-      var mouseOffsetY = evt.offsetY;
-      var tilesize = map.vspData[window.selected_layer.layer.vsp].tilesize;
+      const mapOffsetX = map.camera[0];
+      const mapOffsetY = map.camera[1];
+      const mouseOffsetX = evt.offsetX;
+      const mouseOffsetY = evt.offsetY;
+      const tilesize = map.vspData[window.selected_layer.layer.vsp].tilesize;
 
       map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX * map.camera[2])) / tilesize.width);
       map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY * map.camera[2])) / tilesize.height);
@@ -461,24 +422,24 @@ $('#btn-add-tree').on('click', (e) => {
   };
 });
 
-var obstructionsVisible = true;
-function setObstructionsVisible(visible) {
+let obstructionsVisible = true;
+const setObstructionsVisible = (visible) => {
   obstructionsVisible = visible;
-}
+};
 
-function shouldShowObstructions() {
+const shouldShowObstructions = () => {
   return obstructionsVisible;
-}
+};
 
-var shouldShowZones = () => {
+const shouldShowZones = () => {
   return getZoneVisibility();
 };
-var getZonesAlpha = () => {
+
+const getZonesAlpha = () => {
   return getZoneAlpha();
 };
 
-
-export var Tools = {
+export const Tools = {
   setObstructionsVisible: setObstructionsVisible,
   shouldShowObstructions: shouldShowObstructions,
   shouldShowZones: shouldShowZones,

@@ -7,6 +7,8 @@ import { EntitiesWidget } from './js/ui/EntityPalette.js';
 import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
 import { handleUndo, handleRedo } from './UndoRedo';
 import { ipcRenderer } from 'electron';
+import { toggleSelectedTiles } from './TileSelector';
+
 const sprintf = require('sprintf-js').sprintf;
 const path = require('path');
 const $ = require('jquery');
@@ -63,9 +65,7 @@ ipcRenderer.on('main-menu', (event, arg) => {
       break;
     case 'tile-swap':
       // TODO don't do this if you're in a text-editing field
-      const tmp = window.$CURRENT_SELECTED_TILES[0];
-      window.$CURRENT_SELECTED_TILES[0] = window.$CURRENT_SELECTED_TILES[2];
-      window.$CURRENT_SELECTED_TILES[2] = tmp;
+      toggleSelectedTiles(window.$$$currentMap);
       break;
     case 'about':
       window.$$$about_breaditor();
