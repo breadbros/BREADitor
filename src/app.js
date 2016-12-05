@@ -13,7 +13,7 @@ const $ = require('jquery');
 const initInfoWidget = (map) => {
   $('#info-mapname').text(map.mapPath);
   $('#info-dims').text(map.mapSizeInTiles[0] + 'x' + map.mapSizeInTiles[1]);
-}
+};
 
 const bootstrapMap = (mapFile, tiledataFile) => {
 

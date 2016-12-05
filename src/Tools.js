@@ -133,7 +133,7 @@ const toolLogic = {
         }
       } else {
         // TODO seriously branching code here is not a good idea for complexity reasons.  rework later?
-        if (map.mapData.isTileSelectorMap) { 
+        if (map.mapData.isTileSelectorMap) {
           doVSPselector(tX, tY, map);
         } else {
           tIdx = map.getTile(tX, tY, window.selected_layer.map_tileData_idx);

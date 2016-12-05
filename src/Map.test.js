@@ -1,4 +1,4 @@
-/*eslint no-undef: "error"*/
+/*eslint no-undef: 1*/
 import { setObsColor, getObsColor } from './Map.js';
 
 test('Get and Set obs color works', () => {

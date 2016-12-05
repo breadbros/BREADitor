@@ -489,8 +489,8 @@ Map.prototype = {
         data = jetpack.read(datafile, 'json');
       } catch (e) {
         if (entity.filename.endsWith('json')) {
-            debugger;
-          }
+          debugger;
+        }
         console.log("Totally couldnt read datafile: '" + datafile + "'");
       }
 
@@ -500,27 +500,27 @@ Map.prototype = {
         for (var name in data.animations) {
                     // convert short-hand to useful-hand
           if (typeof data.animations[name][0] === 'string') {
-              var chunks = data.animations[name][0].split(' ');
-              var t = parseInt(chunks.shift().substring(1), 10);
+            var chunks = data.animations[name][0].split(' ');
+            var t = parseInt(chunks.shift().substring(1), 10);
 
-              data.animations[name][0] = [];
-              for (var f = 0; f < chunks.length; f++) {
-                  data.animations[name][0].push([parseInt(chunks[f], 10), t]);
-                }
-            }
+            data.animations[name][0] = [];
+            for (var f = 0; f < chunks.length; f++) {
+                data.animations[name][0].push([parseInt(chunks[f], 10), t]);
+              }
+          }
         }
 
         if (!this.entityTextures[data.image]) {
           var imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image); // TODO maybe make this definable in this.mapedConfigData too?
           if (!jetpack.inspect(imagePath)) {
-              imagePath += '.png'; // TODO this is stupid and bad and wrong.
-            }
+            imagePath += '.png'; // TODO this is stupid and bad and wrong.
+          }
           if (!jetpack.inspect(imagePath)) {
-              console.warn("Couldn't load image", data.image, 'for entity', entity.filename, '; falling back.');
+            console.warn("Couldn't load image", data.image, 'for entity', entity.filename, '; falling back.');
                         // this.entityData[entity.filename].image = '__default__';
-              entity.MAPED_USEDEFAULT = true;
-              return;
-            }
+            entity.MAPED_USEDEFAULT = true;
+            return;
+          }
 
           console.info("Adding '" + imagePath + "' to entityTextures cache...");
           this.toLoad++;
@@ -769,12 +769,12 @@ Map.prototype = {
                         map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
                         (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
                     ) {
-              map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
-            }
+            map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
+          }
           map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
           if (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw']) {
-              tallEntities.push(entities[e]);
-            }
+            tallEntities.push(entities[e]);
+          }
         }
       } else if (map.entityPreview) {
         map.spriteShader.use();
