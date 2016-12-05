@@ -73,7 +73,9 @@ const toolLogic = {
     }*/
   },
   'SELECT': {
-    'mousedown': function (map, e) {},
+    'mousedown': function (map, e) {
+    debugger;
+    },
     'mousemove': function (map, e) {},
     'mouseup': function (map, e) {},
     'button_element': '#btn-tool-select',
@@ -88,7 +90,7 @@ const toolLogic = {
         return;
       }
 
-      if (!(e.button === 0 || e.button === 2)) {
+      if (!(e.button === 0)) {
         console.log("Unknown eyedropper button: we know left/right (0/2), got: '" + e.button + "'.");
         return;
       }
@@ -144,16 +146,12 @@ const toolLogic = {
 
       window.$CURRENT_SELECTED_TILES[e.button] = tIdx;
       $('#info-selected-tiles').text(
-                window.$CURRENT_SELECTED_TILES[0] +
-                ',' +
-                window.$CURRENT_SELECTED_TILES[2]
-            );
+          window.$CURRENT_SELECTED_TILES[0] +
+          ',' +
+          window.$CURRENT_SELECTED_TILES[2]
+      );
 
-      if (e.button === 2) {
-        selector = '#right-palette';
-      } else {
-        selector = '#left-palette';
-      }
+      selector = '#left-palette';
 
       setTileSelectorUI(selector, tIdx, map);
 
@@ -182,8 +180,8 @@ const toolLogic = {
         return;
       }
 
-      if (!(e.button === 0 || e.button === 2)) {
-        console.log("Unknown draw button: we know left/right (0/2), got: '" + e.button + "'.");
+      if (!(e.button === 0)) {
+        console.log("Unknown draw button: we know left (0), got: '" + e.button + "'.");
         return;
       }
 
@@ -223,8 +221,8 @@ const toolLogic = {
     // TODO this doesn't perform correctly if you move the mouse too quickly.  Should keep track of
     //      position-1, draw a line between points, and change all those on this layer?
     'mousemove': function (map, e) {
-      // / if there's one button pressed and it's the left or right button...
-      if (e.buttons === 1 && (e.button === 0 || e.button === 2)) {
+      // / if there's one button pressed and it's the left button...
+      if (e.buttons === 1 && (e.button === 0)) {
         // TODO this duplicates work. if it's costly, check before everything.  I doubt it'll matter.
         toolLogic['DRAW']['mousedown'](map, e); // let's be lazy.
       }

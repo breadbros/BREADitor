@@ -61,7 +61,12 @@ ipcRenderer.on('main-menu', (event, arg) => {
     case 'redo':
       handleRedo();
       break;
-
+    case 'tile-swap':
+      // TODO don't do this if you're in a text-editing field
+      const tmp = window.$CURRENT_SELECTED_TILES[0];
+      window.$CURRENT_SELECTED_TILES[0] = window.$CURRENT_SELECTED_TILES[2];
+      window.$CURRENT_SELECTED_TILES[2] = tmp;
+      break;
     case 'about':
       window.$$$about_breaditor();
       break;

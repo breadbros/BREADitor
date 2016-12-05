@@ -29,11 +29,12 @@ The Immediates for Ustor
 * fill, line, copy+paste
 
 * ME4 bugs / improvements
+
   - tileset
     * must use eyedropper to select from tileset. should work regardless of tool
-    * cannnot scroll tileset
     * selecting from tileset forces opposite click to empty/magenta tile in UI,     but retains actual tile index using eyedropper on map with click opposite of the one set by tileset does the same
     * tileset +/- zoom seems to lose its "middle range" levels after a few uses
+    * If you've selected a parallax layer, the parallax offsets will apply to the tileset (???)
 
   - general
     * often, canvas will stop updating
@@ -41,7 +42,6 @@ The Immediates for Ustor
     * tools can be selected, but either cannot be used, or their effect not visible
     * toggling layer visibility has no effect either
     * loading a different map also has no effect: all palettes retain their prior state
-    * no obvious cause
     * have to restart to fix
     * Some kind of indicator of the cursor / selection's tile coordinates (setting up scripts that reference positions on the map is really painful without this)
   - zones
