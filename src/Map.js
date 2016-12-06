@@ -91,17 +91,17 @@ export const verifyMap = (mapfile) => {
     mapData.vsp = {};
   }
 
-  var filenames;
-  var filename;
+  let filenames;
+  let filename;
 
   if (needsDefault) {
-    alert('Due to sins (surely on your part) you do not have a default tile vsp set.  Please select the correct one.');
+    window.alert('Due to sins (surely on your part) you do not have a default tile vsp set.' +
+                 'Please select the correct one.');
 
     filenames = dialog.showOpenDialog({
-      title:'Choose a default tileset',
+      title: 'Choose a default tileset',
       filters: [{ name: 'tileset', extensions: ['vsp.json'] }]
-    }
-        );
+    });
 
     filename = filenames[0].replace(path.dirname(mapfile) + path.sep, '');
 
@@ -109,21 +109,20 @@ export const verifyMap = (mapfile) => {
   }
 
   if (needsObstructions) {
-    alert('Please select the obstruction tileset for this map.');
+    window.alert('Please select the obstruction tileset for this map.');
 
     filenames = dialog.showOpenDialog({
-      title:'Choose an obstruction tileset',
+      title: 'Choose an obstruction tileset',
       filters: [{ name: 'tileset', extensions: ['obsvsp.json'] }]
-    }
-        );
+    });
 
     filename = filenames[0].replace(path.dirname(mapfile) + path.sep, '');
 
     mapData.vsp['obstructions'] = filename;
   }
 
-  for (var i = mapData.layers.length - 1; i >= 0; i--) {
-    if (!mapData.layers[i].vsp) { f;
+  for (let i = mapData.layers.length - 1; i >= 0; i--) {
+    if (!mapData.layers[i].vsp) {
       console.log('setting layer[' + i + ']s vsp to default...');
       mapData.layers[i].vsp = 'default';
     }

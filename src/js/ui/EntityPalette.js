@@ -2,39 +2,36 @@ import { modal_error } from './Util.js';
 import { LayersWidget } from './LayersPalette.js';
 const $ = require('jquery');
 
-var _entityVisibility = true;
-var _entityLayersExpanded = false;
+let _entityVisibility = true;
+let _entityLayersExpanded = false;
 
-export var setNormalEntityVisibility = (val) => {
+export const setNormalEntityVisibility = (val) => {
   _entityVisibility = !!val;
 };
 
-export var getNormalEntityVisibility = () => {
-
+export const getNormalEntityVisibility = () => {
   return _entityVisibility;
 };
 
-export var setEntityLayersExpanded = (val) => {
+export const setEntityLayersExpanded = (val) => {
   _entityLayersExpanded = !!val;
 };
 
-export var getEntityLayersExpanded = () => {
-
+export const getEntityLayersExpanded = () => {
   return _entityLayersExpanded;
 };
 
-export var shouldShowEntitiesForLayer = (layername) => {
-
+export const shouldShowEntitiesForLayer = (layername) => {
   if (!window.$$$currentMap.layerLookup[layername]) {
     modal_error("cannot shouldShowEntitiesForLayer, '" + layername + "' is not a layer");
   }
 
-  let shouldHide = window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS;
+  const shouldHide = window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS;
 
   return !shouldHide;
 };
 
-export var setShowEntitiesForLayer = (layername, isVisible) => {
+export const setShowEntitiesForLayer = (layername, isVisible) => {
   if (!window.$$$currentMap.layerLookup[layername]) {
     modal_error("cannot setShowEntitiesForLayer, '" + layername + "' is not a layer");
   }
@@ -44,44 +41,43 @@ export var setShowEntitiesForLayer = (layername, isVisible) => {
   console.log('ents(' + layername + ')' + window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS);
 };
 
+let currentEntities = null;
 
-var currentEntities = null;
-var selectedEntityIdx = null;
-
-function initEntitiesWidget(map) {
+const initEntitiesWidget = (map) => {
   currentEntities = map.mapData.entities;
 
   redraw_palette();
-}
+};
 
-function _select_entity_ui_inner($node) {
+const _select_entity_ui_inner = ($node) => {
   $('.entity-row').removeClass('highlighted');
   $node.addClass('highlighted');
-}
+};
 
-function select_entity_from_pallete(evt) {
-  var $it_me = $(evt.target).closest('.entity-row');
+const select_entity_from_pallete = (evt) => {
+  const $it_me = $(evt.target).closest('.entity-row');
   _select_entity_ui_inner($it_me);
   return $it_me;
-}
+};
 
-function redraw_palette() {
-  var $list = $('.entity-list');
+const redraw_palette = () => {
+  const $list = $('.entity-list');
   $list.html('');
-  var $tmp;
+
   $('#entity-number').text(currentEntities.length);
 
-  var singleclick_handler = (evt) => {
+  const singleclick_handler = (evt) => {
     select_entity_from_pallete(evt);
   };
 
-  var doubleclick_handler = (evt) => {
-    var $it_me = select_entity_from_pallete(evt);
+  const doubleclick_handler = (evt) => {
+    const $it_me = select_entity_from_pallete(evt);
     edit_entity_click(evt, $it_me.data('index'));
   };
 
   for (let i = 0; i < currentEntities.length; i++) {
-    $tmp = $("<li class='entity-row' data-index='" + i + "'><span class='entity-index'></span><span class='entity-name'></span></li>");
+    const $tmp = $("<li class='entity-row' data-index='" + i +
+             "'><span class='entity-index'></span><span class='entity-name'></span></li>");
     $tmp.find('.entity-index').text(i);
     $tmp.find('.entity-name').text(currentEntities[i].name);
 
@@ -93,11 +89,11 @@ function redraw_palette() {
   }
 
   fixContainerSize();
-}
+};
 
-var fixContainerSize = function () {
-  var palette = $('.entity-palette');
-  var container = $('.entity-palette .window-container');
+const fixContainerSize = () => {
+  const palette = $('.entity-palette');
+  const container = $('.entity-palette .window-container');
 
   container.height(palette.height() - 70);
 };
@@ -111,15 +107,16 @@ $('.entity-palette #entity-new').click((evt) => {
 });
 
 $('.entity-palette #entity-spreadsheet').click(() => {
-  alert('SPREAD THAT SHEET entity SHEIT');
+  window.alert('SPREAD THAT SHEET entity SHEIT');
 });
 
-var template = "<div>Name: <input id='entity_name'></div>";
+let template = "<div>Name: <input id='entity_name'></div>";
 template += "<div>Filename: <input id='entity_filename'></div>";
 template += "<div>Animation: <select id='entity_animation'></select>";
 template += "<div>Facing: <select id='entity_facing'></select></div>";
 template += "<div>Activation Script: <input id='entity_activation_script'></div>";
-template += "<div>Pays attention to obstructions?: <input type='checkbox' id='entity_pays_attention_to_obstructions'></div>";
+template += "<div>Pays attention to obstructions?: <input type='checkbox' " +
+            "id='entity_pays_attention_to_obstructions'></div>";
 template += "<div>Is an obstructions?: <input type='checkbox' id='entity_is_an_obstruction'></div>";
 template += "<div>Autofaces when activated?: <input type='checkbox' id='entity_autofaces'></div>";
 template += "<div>Speed: <input id='entity_speed'></div>";
@@ -131,9 +128,8 @@ template += "<div class='pixel_coordinates'>Location.py: <input id='entity_locat
 template += "<div>Location.layer: <select id='entity_location_layer'></select></div>";
 template += "<div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly></textarea></div>";
 
-
-function setup_template(ent, id) {
-  var $template = $(template);
+const setup_template = (ent, id) => {
+  const $template = $(template);
 
   if (ent) {
     $('#modal-dialog').attr('title', 'Edit Entity (id: ' + id + ')');
@@ -153,7 +149,7 @@ function setup_template(ent, id) {
     $template.find('#entity_location_tx').val(ent.location.tx);
     $template.find('#entity_location_ty').val(ent.location.ty);
 
-    if (typeof ent.location.px == 'undefined') {
+    if (typeof ent.location.px === 'undefined') {
       ent.location.px = ent.location.tx * 16; // TODO: should be based on tilesize
       ent.location.py = ent.location.ty * 16; // TODO: should be based on tilesize
     }
@@ -162,17 +158,18 @@ function setup_template(ent, id) {
     $template.find('#entity_location_py').val(ent.location.py);
 
     // http://regex.info/blog/2006-09-15/247
-    $template.find('#entity_wander').val(JSON.stringify(ent.wander).replace(/{/g, '{\n').replace(/}/g, '\n}').replace(/,/g, ',\n').replace(/":/g, '": ').replace(/^"/mg, '\t"'));
+    $template.find('#entity_wander').val(JSON.stringify(ent.wander).replace(/{/g, '{\n').replace(/}/g, '\n}')
+      .replace(/,/g, ',\n').replace(/":/g, '": ').replace(/^"/mg, '\t"'));
 
     $template.find('#entity_pays_attention_to_obstructions').prop('checked', ent.pays_attention_to_obstructions);
     $template.find('#entity_is_an_obstruction').prop('checked', ent.is_an_obstruction);
     $template.find('#entity_autofaces').prop('checked', ent.autofaces);
 
     $template.find('#entity_filename').click(() => {
-      alert('Pop up file dialog here.');
+      window.alert('Pop up file dialog here.');
     });
 
-    var entData;
+    let entData;
     if (window.$$$currentMap.entityData[ent.filename]) {
       entData = window.$$$currentMap.entityData[ent.filename];
     } else {
@@ -181,9 +178,8 @@ function setup_template(ent, id) {
     }
 
     // = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];
-    var animationKeyset = Object.keys(entData.animations);
-
-    var $entAnim = $template.find('#entity_animation');
+    const animationKeyset = Object.keys(entData.animations);
+    const $entAnim = $template.find('#entity_animation');
 
     // / repopulate animation select
     $entAnim.empty();
@@ -213,7 +209,6 @@ function setup_template(ent, id) {
 
     // / set value.
     $entFace.val(ent.facing);
-
 
     var $entLocLay = $template.find('#entity_location_layer');
     var locLayKeyset = LayersWidget.get_layernames_by_rstring_order();
@@ -332,42 +327,39 @@ function _entity_click(evt, id) {
   });
 }
 
-function update_entity(dialog, ent_id) {
+const update_entity = (dialog, ent_id) => {
+  const entity_name = $('#entity_name').val(); // TODO: validate uniqueness
+  const entity_filename = $('#entity_filename').val(); // TODO: validate existance
+  const entity_activation_script = $('#entity_activation_script').val();
+  const entity_speed = parseInt($('#entity_speed').val());
 
-  var entity_name = $('#entity_name').val(); // TODO: validate uniqueness
-  var entity_filename = $('#entity_filename').val(); // TODO: validate existance
-  var entity_activation_script = $('#entity_activation_script').val();
-  var entity_speed = parseInt($('#entity_speed').val());
+  const entity_pays_attention_to_obstructions = $('#entity_pays_attention_to_obstructions').is(':checked');
+  const entity_is_an_obstruction = $('#entity_is_an_obstruction').is(':checked');
+  const entity_autofaces = $('#entity_autofaces').is(':checked');
 
-  var entity_pays_attention_to_obstructions = $('#entity_pays_attention_to_obstructions').is(':checked');
-  var entity_is_an_obstruction = $('#entity_is_an_obstruction').is(':checked');
-  var entity_autofaces = $('#entity_autofaces').is(':checked');
-
-
-  var entity_wander;
+  let entity_wander;
 
   if (ent_id < currentEntities.length) { // edit
     entity_wander = currentEntities[ent_id].wander; // TODO: allow actual editing of wander.
     console.log('YOU REALLY NEED TO IMPLEMENT WANDER-EDITING');
   } else { // add
     entity_wander = {mode: 'Scripted', delay: 0, initial_movestring: ''};
-    alert("Creating new entity with bullshit wander because you haven't actually added it. Dick.");
+    window.alert("Creating new entity with bullshit wander because you haven't actually added it. Dick.");
   }
 
+  const entity_animation = $('#entity_animation').val();
+  const entity_facing = $('#entity_facing').val();
 
-  var entity_animation = $('#entity_animation').val();
-  var entity_facing = $('#entity_facing').val();
+  const loc_tx = parseInt($('#entity_location_tx').val());
+  const loc_ty = parseInt($('#entity_location_ty').val());
 
-  var loc_tx = parseInt($('#entity_location_tx').val());
-  var loc_ty = parseInt($('#entity_location_ty').val());
+  const loc_px = parseInt($('#entity_location_px').val());
+  const loc_py = parseInt($('#entity_location_py').val());
 
-  var loc_px = parseInt($('#entity_location_px').val());
-  var loc_py = parseInt($('#entity_location_py').val());
-
-  var loc_l = $('#entity_location_layer').val();
+  const loc_l = $('#entity_location_layer').val();
 
   // TODO : PX/PY?
-  var loc = {
+  const loc = {
     tx: loc_tx,
     ty: loc_ty,
     px: loc_px,
@@ -375,7 +367,7 @@ function update_entity(dialog, ent_id) {
     layer: loc_l
   };
 
-  var ent = null;
+  let ent = null;
 
   if (!$.isNumeric(ent_id) || ent_id < 0) {
     modal_error('Invalid input: ent_id (' + ent_id + ') is invalid.');
@@ -403,9 +395,18 @@ function update_entity(dialog, ent_id) {
     'location': loc
   };
 
-  var old_layer;
-  var new_layer;
-  currentEntities[ent_id] = ent;
+  let old_layer;
+  let new_layer;
+
+  let k;
+  for (k in ent) {
+    if (ent.hasOwnProperty(k)) {
+      currentEntities[ent_id][k] = ent[k];
+    }
+  }
+
+  // maaaybe?
+  // currentEntities[ent_id] = ent;
 
   if (currentEntities[ent_id] && currentEntities[ent_id].location) {
     old_layer = currentEntities[ent_id].location.layer;
