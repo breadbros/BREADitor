@@ -23,6 +23,8 @@ TODO
 * Fill out the website
 * Set up a pipeline for auto-builds
 
+* Re Entity Editing: Although it still has the pixel vs tile issue (e.g. changing tx does not update px, so the old px value is retained (and prioritized when loading), effectively nullifying the change)
+
 * If you have an active eyedropper selection and you hide the all layers, then it stops The eyedropper selection bounds draw when its layer is hidden, but when you hide the last layer (regardless of which) the selection stops rendering and the window stops responding.
 
 The Immediates for Ustor
