@@ -41,7 +41,12 @@ export const setShowEntitiesForLayer = (layername, isVisible) => {
   console.log('ents(' + layername + ')' + window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS);
 };
 
-let currentEntities = null;
+export let currentEntities = null;
+
+// TODO test-only atm.  bad.
+export const setCurrentEntities = (ce) => {
+  return currentEntities = ce;
+};
 
 const initEntitiesWidget = (map) => {
   currentEntities = map.mapData.entities;
@@ -194,8 +199,8 @@ const setup_template = (ent, id) => {
     // / set value.
     $entAnim.val(ent.animation);
 
-    var $entFace = $template.find('#entity_facing');
-    var faceKeyset = ['Up', 'Down', 'Left', 'Right'];
+    const $entFace = $template.find('#entity_facing');
+    const faceKeyset = ['Up', 'Down', 'Left', 'Right'];
 
     // / repopulate animation select
     $entFace.empty();
@@ -210,8 +215,8 @@ const setup_template = (ent, id) => {
     // / set value.
     $entFace.val(ent.facing);
 
-    var $entLocLay = $template.find('#entity_location_layer');
-    var locLayKeyset = LayersWidget.get_layernames_by_rstring_order();
+    const $entLocLay = $template.find('#entity_location_layer');
+    const locLayKeyset = LayersWidget.get_layernames_by_rstring_order();
     $entLocLay.empty();
     $.each(locLayKeyset, (key, value) => {
       $entLocLay.append(
@@ -225,28 +230,28 @@ const setup_template = (ent, id) => {
   }
 
   return $template;
-}
+};
 
 function assert_tileness() {
-  var loc_tx = parseInt($('#entity_location_tx').val());
-  var loc_ty = parseInt($('#entity_location_ty').val());
+  const loc_tx = parseInt($('#entity_location_tx').val());
+  const loc_ty = parseInt($('#entity_location_ty').val());
 
   $('#entity_location_px').val(loc_tx * 16);  // TODO should be tilesize not 16
   $('#entity_location_py').val(loc_ty * 16);  // TODO should be tilesize not 16
 }
 
 function assert_pixel_versus_tile_in_editing() {
-  var loc_tx = parseInt($('#entity_location_tx').val());
-  var loc_ty = parseInt($('#entity_location_ty').val());
+  const loc_tx = parseInt($('#entity_location_tx').val());
+  const loc_ty = parseInt($('#entity_location_ty').val());
 
-  var loc_px = parseInt($('#entity_location_px').val());
-  var loc_py = parseInt($('#entity_location_py').val());
+  const loc_px = parseInt($('#entity_location_px').val());
+  const loc_py = parseInt($('#entity_location_py').val());
 
-  var pixels_on = false;
-  var tiles_on = false;
+  let pixels_on = false;
+  let tiles_on = false;
 
-  var tiles = $('div.tile_coordinates input');
-  var pixels = $('div.pixel_coordinates input');
+  const tiles = $('div.tile_coordinates input');
+  const pixels = $('div.pixel_coordinates input');
 
   tiles.css('background-color', '#AAA');
   pixels.css('background-color', '#AAA');
@@ -254,7 +259,7 @@ function assert_pixel_versus_tile_in_editing() {
   if (!loc_px && !loc_py) {
     tiles_on = true;
   } else {
-    if (loc_tx * 16 == loc_px && loc_ty * 16 == loc_py) { // TODO: pi
+    if (loc_tx * 16 === loc_px && loc_ty * 16 === loc_py) { // TODO: pi
       tiles_on = true;
     } else {
       pixels_on = true;
@@ -270,7 +275,6 @@ function assert_pixel_versus_tile_in_editing() {
   }
 }
 
-
 function new_entity_click(evt) {
   _entity_click(evt);
 }
@@ -282,13 +286,12 @@ function edit_entity_click(evt, id) {
 function _entity_click(evt, id) {
   evt.stopPropagation();
 
-  var dialog;
+  let dialog;
 
-  var ent = currentEntities[id];
+  const ent = currentEntities[id];
 
   $(() => {
-
-    var $template = setup_template(ent, id);
+    const $template = setup_template(ent, id);
 
     $('#modal-dialog').html('');
     $('#modal-dialog').append($template);
@@ -303,7 +306,7 @@ function _entity_click(evt, id) {
       title: $('#modal-dialog').attr('title'),
       buttons: {
         Save: () => {
-          var _id = ($.isNumeric(id) && ent) ? id : currentEntities.length;
+          const _id = ($.isNumeric(id) && ent) ? id : currentEntities.length;
 
           update_entity(dialog, _id);
         },
@@ -327,7 +330,7 @@ function _entity_click(evt, id) {
   });
 }
 
-const update_entity = (dialog, ent_id) => {
+export const update_entity = (dialog, ent_id) => {
   const entity_name = $('#entity_name').val(); // TODO: validate uniqueness
   const entity_filename = $('#entity_filename').val(); // TODO: validate existance
   const entity_activation_script = $('#entity_activation_script').val();
@@ -414,7 +417,7 @@ const update_entity = (dialog, ent_id) => {
     old_layer = new_layer;
   }
 
-  if (old_layer && new_layer && old_layer != new_layer) {
+  if (old_layer && new_layer && old_layer !== new_layer) {
     relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);
   }
 
@@ -423,12 +426,11 @@ const update_entity = (dialog, ent_id) => {
   window.$$$currentMap.createEntityRenderData(); // TODO: NO NO NO NO NONONONNONONNONO
 
   dialog.dialog('close');
-}
-
+};
 
 // TODO: ent_name should be a uuid
 // TODO: until then, make sure ent_name is verified unique
-var relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {
+const relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {
   var myboy;
   var ents = window.$$$currentMap.entities;
 
