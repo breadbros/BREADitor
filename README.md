@@ -85,9 +85,12 @@ The rest
 * Need a menu item for gathering all windows within the given area, if they are offscreen.
 * delete layers
 * delete zones
+* delete entities
+* resize / crop layers
 * entity palette
 * VSP selector
 * entity selector
+* a way to show / hide entity indexes on map (and/or click-entity-to-select-it behavior)
 * remove the hardcoded 16's in the entity palette: should be referencing the current tileset's tilesize.
 * maybe have some data-marker in the format if it's px/py vs tx/ty?  
 * continuous drawing (draw everything in a line from prevLoc to curLoc per frame.  BREZINGHAMZ J0)
