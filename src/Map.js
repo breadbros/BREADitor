@@ -947,8 +947,8 @@ Map.prototype = {
     }
 
         // / MARCHING ANTS
-    if (this.selection.lines.length > 0) {
-      var layer = window.selected_layer ? window.selected_layer.layer : {
+    if (this.selection.lines.length > 0 && vsp) {
+      const layer = window.selected_layer ? window.selected_layer.layer : {
         parallax: { X: 1, Y: 1 },
         dimensions: this.mapData.layers[0].dimensions
       };
@@ -968,7 +968,7 @@ Map.prototype = {
             );
       gl.uniform1i(this.selectionShader.uniform('u_time'), Date.now());
 
-      var a_position = this.selectionShader.attribute('a_position');
+      const a_position = this.selectionShader.attribute('a_position');
       gl.bindBuffer(gl.ARRAY_BUFFER, this.selectionVertexBuffer);
       gl.enableVertexAttribArray(a_position);
       gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
@@ -979,19 +979,20 @@ Map.prototype = {
   },
 
   renderEntity: function (entity, layer, tint, clip) {
-    var gl = this.gl;
-    var tilesize = this.vspData[layer.vsp].tilesize;
-    var entityData = entity.MAPED_USEDEFAULT ? this.entityData['__default__'] : this.entityData[entity.filename];
-    var entityTexture = this.entityTextures[entityData.image];
+    const gl = this.gl;
+    const tilesize = this.vspData[layer.vsp].tilesize;
+    const entityData = entity.MAPED_USEDEFAULT ? this.entityData['__default__'] : this.entityData[entity.filename];
+    const entityTexture = this.entityTextures[entityData.image];
 
     clip = (clip === undefined ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
 
-    var a_vertices = this.spriteShader.attribute('a_vertices');
+    const a_vertices = this.spriteShader.attribute('a_vertices');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
     gl.enableVertexAttribArray(a_vertices);
     gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
 
-    var tx, ty;
+    let tx;
+    let ty;
 
     if (entity.location.px && entity.location.px) {
       tx = entity.location.px / tilesize.width;
