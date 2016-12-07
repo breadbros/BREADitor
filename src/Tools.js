@@ -188,15 +188,11 @@ const toolLogic = {
       const tY = parseInt(oY / 16);
 
       // TODO: Again, this is dumb.  LALALA.
-      if (window.selected_layer.map_tileData_idx > 900) {
-        switch (window.selected_layer.map_tileData_idx) {
-          case 999:
-            map.setZone(tX, tY, getActiveZone());
-            return;
-          default:
-            throw new Error('WHAT ARE YOU EVEN DOING, MAN? ' + window.selected_layer);
-        }
+      if (window.selected_layer.map_tileData_idx === 999) {
+        map.setZone(tX, tY, getActiveZone());
+        return;
       } else {
+        /// obs do this too right now. 998
         map.UndoRedo.change_one_tile(
             tX, tY,
             window.selected_layer.map_tileData_idx,

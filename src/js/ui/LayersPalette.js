@@ -7,33 +7,33 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
 const $ = require('jquery');
 
-var list;
+let list;
 
-var _obsVisibility = true;
-var _obsAlpha = 1;
+let _obsVisibility = true;
+let _obsAlpha = 1;
 
-export var setObsVisibility = (val) => {
+export const setObsVisibility = (val) => {
   Tools.setObstructionsVisible(val);
 };
 
-export var getObsVisibility = () => {
+export const getObsVisibility = () => {
   return Tools.shouldShowObstructions();
 };
 
-export var setObsAlpha = (val) => {
+export const setObsAlpha = (val) => {
   _obsAlpha = val;
 };
 
-export var getObsAlpha = () => {
+export const getObsAlpha = () => {
   return _obsAlpha;
 };
 
-var new_layer_click = (evt) => {
+const new_layer_click = (evt) => {
   _layer_click(evt);
 };
 
-var layers = null;
-var map = null;
+let layers = null;
+let map = null;
 function initLayersWidget(_map) {
   map = _map;
   layers = map.mapData.layers;
@@ -190,18 +190,25 @@ function redraw_palette(map) {
     $list.append(newLayerContainer);
   }
 
-
   function addObstructionSelectHandler($obs_container) {
     $obs_container.on('click', function (evt) {
-
-      var selClass = 'selected';
+      const selClass = 'selected';
 
       removeAllSelectedLayers(selClass);
+
+      // TODO this is the wrong place to do this
+      window.$$$currentMap.obsLayerData.parallax = {
+        X: 1,
+        Y: 1
+      };
+
+      // TODO definitely wrong, especially when we start supporting multiple sized layers
+      window.$$$currentMap.obsLayerData.dimensions = window.$$$currentMap.mapData.layers[0].dimensions;
 
         // TODO: this is disgusting, right?  right.
       window.selected_layer = {
         map_tileData_idx: 998,
-        layer: window.$$$currentMap.zoneData,
+        layer: window.$$$currentMap.obsLayerData, // TODO why isnt this an array? :o
         $container: $obs_container
       };
 
@@ -213,16 +220,15 @@ function redraw_palette(map) {
     });
   }
 
-  function setup_shitty_obstruction_layer($list) {
-
-    var tmpLayer = {
-      MAPED_HIDDEN : !getObsVisibility(),
+  const setup_shitty_obstruction_layer = ($list) => {
+    const tmpLayer = {
+      MAPED_HIDDEN: !getObsVisibility(),
       alpha: getObsAlpha()
     };
-    var $eyeball;
-    var newLayerContainer = generateLayerContainer(l, i);
 
-    $eyeball = generateContent(998, tmpLayer, newLayerContainer);
+    const newLayerContainer = generateLayerContainer(l, i);
+    const $eyeball = generateContent(998, tmpLayer, newLayerContainer);
+
     newLayerContainer.find('.layer_name').text('Obstructions');
     newLayerContainer.find('.entity_layer').remove();
     newLayerContainer.addClass('nosort');
@@ -241,18 +247,12 @@ function redraw_palette(map) {
     });
 
     $list.append(newLayerContainer);
-  }
-
-  function addEntitySelectHandler($entity_container) {
-    $entity_container.click((evt) => {
-      console.log('Haha, charade you are.');
-    });
   };
 
-  function _setup_entity_eyeball(node) {
-    var $eyeball = $(node).find('.eyeball_button');
-    var tmpLayer = {
-      MAPED_HIDDEN : !getNormalEntityVisibility(),
+  const _setup_entity_eyeball = (node) => {
+    const $eyeball = $(node).find('.eyeball_button');
+    const tmpLayer = {
+      MAPED_HIDDEN: !getNormalEntityVisibility(),
       alpha: 1
     };
 
@@ -261,13 +261,13 @@ function redraw_palette(map) {
     $eyeball.click((evt) => {
       setNormalEntityVisibility(!getNormalEntityVisibility());
 
-      tmpLayer.MAPED_HIDDEN = !getNormalEntityVisibility(); // todo these nouns need to align.   entityVisibile vs HIDDEN wtf
+      tmpLayer.MAPED_HIDDEN = !getNormalEntityVisibility(); // TODO nouns need to align. entityVisibile vs HIDDEN wtf
 
       handleEyeball($eyeball, tmpLayer);
 
       evt.stopPropagation();
     });
-  }
+  };
 
   function handleEntityExpand(button) {
     button.removeClass('expand');
@@ -277,7 +277,6 @@ function redraw_palette(map) {
       button.addClass('expand');
 
       $('.entity_layer').show();
-
     } else {
       button.addClass('contract');
 
@@ -288,7 +287,7 @@ function redraw_palette(map) {
   }
 
   function _setup_entity_expand(node) {
-    var $expand_entities = $(node).find('.entity_expand_button');
+    const $expand_entities = $(node).find('.entity_expand_button');
 
     $expand_entities.click((evt) => {
       setEntityLayersExpanded(!getEntityLayersExpanded());
