@@ -298,6 +298,23 @@ function _entity_click(evt, id) {
 
     $('#modal-dialog').show();
 
+    $('#entity_location_tx').on('change', () => {
+      $('#entity_location_px').val('');
+      $('#entity_location_py').val('');
+    });
+    $('#entity_location_ty').on('change', () => {
+      $('#entity_location_px').val('');
+      $('#entity_location_py').val('');
+    });
+    $('#entity_location_px').on('change', () => {
+      $('#entity_location_tx').val('');
+      $('#entity_location_ty').val('');
+    });
+    $('#entity_location_py').on('change', () => {
+      $('#entity_location_tx').val('');
+      $('#entity_location_ty').val('');
+    });
+
     assert_pixel_versus_tile_in_editing();
 
     dialog = $('#modal-dialog').dialog({

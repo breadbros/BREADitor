@@ -23,8 +23,6 @@ TODO
 * Fill out the website
 * Set up a pipeline for auto-builds
 
-* Re Entity Editing: Although it still has the pixel vs tile issue (e.g. changing tx does not update px, so the old px value is retained (and prioritized when loading), effectively nullifying the change)
-
 The Immediates for Ustor
 ========================
 * Make it so you can write out obstructions
