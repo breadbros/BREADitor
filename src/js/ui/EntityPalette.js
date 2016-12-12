@@ -453,12 +453,12 @@ export const _update_entity_inner = (ent_id, valDict) => {
   let k;
   for (k in ent) {
     if (ent.hasOwnProperty(k)) {
-      console.info('overwriting ent[' + ent_id + '].' + k, 'with', ent[k]);
+      // console.info('overwriting ent[' + ent_id + '].' + k, 'with', ent[k]);
       currentEntities[ent_id][k] = ent[k];
     }
   }
 
-  console.info('currentEntities[' + ent_id + ']', currentEntities[ent_id]);
+  // console.info('currentEntities[' + ent_id + ']', currentEntities[ent_id]);
 
   // maaaybe?
   // currentEntities[ent_id] = ent;
