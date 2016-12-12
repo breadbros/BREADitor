@@ -104,7 +104,7 @@ ipcRenderer.on('window-menu', (event, arg) => {
 });
 
 // Setup the rest of the app
-(function () {
+(() => {
   window.$$$currentMap = null;
 
   const tick = function (timestamp) {

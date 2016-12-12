@@ -325,11 +325,11 @@ $('#btn-tool-zoomout').click(function (e) {
 
 $('#btn-tool-drag').click();
 
-function capturePaletteMovementForRestore($node) {
-  var $pal = $($node);
-  var classes = $pal.attr('class').split(' ');
+const capturePaletteMovementForRestore = ($node) => {
+  const $pal = $($node);
+  const classes = $pal.attr('class').split(' ');
 
-  var key = null;
+  let key = null;
 
   classes.map(function (currentValue, index, arr) {
     if (currentValue.endsWith('-palette')) {
@@ -338,7 +338,7 @@ function capturePaletteMovementForRestore($node) {
       } else {
         console.log('Why the hell does this element have two palette classes?');
         console.log("What's going on?  Let's explode!");
-        throw 'Fuk, two paletes zomg'; // remember, friends dont let friends code error message drunk
+        throw new Error('Fuk, two paletes zomg'); // remember, friends dont let friends code error message drunk
       }
     }
   });
@@ -348,27 +348,28 @@ function capturePaletteMovementForRestore($node) {
     return;
   }
 
-    // / add us into the custom palette registry
-  var pals = localStorage['palettes'] || '{}';
+  // TODO: add us into the custom palette registry
+  let pals = window.localStorage['palettes'] || '{}';
   if (pals) {
     pals = JSON.parse(pals);
     pals[key] = true; // todo make this a cache-key so we can invalidate the settings?
-    localStorage['palettes'] = JSON.stringify(pals);
+    window.localStorage['palettes'] = JSON.stringify(pals);
   }
 
     // / save our specific settings
-  var obj = {};
+  const obj = {};
   obj['w'] = $pal.width();
   obj['h'] = $pal.height();
   obj['x'] = $pal.css('left');
   obj['y'] = $pal.css('top');
-  obj['hide'] = $pal.is(':visible') ? false : true;
+  obj['hide'] = !$pal.is(':visible');
 
-  localStorage[key + ' settings'] = JSON.stringify(obj);
+  window.localStorage[key + ' settings'] = JSON.stringify(obj);
 };
 
 const paletteCloseListener = ($pal_close_button) => {
   $pal_close_button.closest('.ui-widget-content').hide();
+  savePalettePositions();
 };
 
 // / setup palette listeners

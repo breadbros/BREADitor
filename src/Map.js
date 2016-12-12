@@ -965,7 +965,7 @@ Map.prototype = {
     }
 
         // / MARCHING ANTS
-    if (this.selection.lines.length > 0 && vsp) {
+    if (this.selection.lines.length > 0 && typeof vsp !== 'undefined') {
       const layer = window.selected_layer ? window.selected_layer.layer : {
         parallax: { X: 1, Y: 1 },
         dimensions: this.mapData.layers[0].dimensions

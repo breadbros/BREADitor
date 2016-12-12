@@ -9,7 +9,6 @@ const $ = require('jquery');
 
 let list;
 
-let _obsVisibility = true;
 let _obsAlpha = 1;
 
 export const setObsVisibility = (val) => {
@@ -41,13 +40,13 @@ function initLayersWidget(_map) {
   redraw_palette(map);
 };
 
-function redraw_palette(map) {
+const redraw_palette = (map) => {
   list = $('.layers-palette .layers-list');
-  var newLayerContainer = null;
-  var l = null;
-  var line = null;
+  let newLayerContainer = null;
+  let l = null;
+  let line = null;
 
-  function handleEyeball(layerDiv, layer) {
+  const handleEyeball = (layerDiv, layer) => {
     layerDiv.removeClass('eye-open');
     layerDiv.removeClass('eye-closed');
 
@@ -56,13 +55,13 @@ function redraw_palette(map) {
     } else {
       layerDiv.addClass('eye-closed');
     }
-  }
+  };
 
   $('.layers-palette #layers-new').click((evt) => {
     new_layer_click(evt);
   });
 
-  function addLayerEyeballHandler($eyeball, i) {
+  const addLayerEyeballHandler = ($eyeball, i) => {
     $eyeball.on('click', function (evt) {
       layers[i].MAPED_HIDDEN = !layers[i].MAPED_HIDDEN;
 
@@ -70,9 +69,9 @@ function redraw_palette(map) {
 
       evt.stopPropagation();
     });
-  }
+  };
 
-  function handleEntityEyeball($btn, layerName) {
+  const handleEntityEyeball = ($btn, layerName) => {
     $btn.removeClass('showEnts');
     $btn.removeClass('hideEnts');
 
@@ -81,33 +80,32 @@ function redraw_palette(map) {
     } else {
       $btn.addClass('hideEnts');
     }
-  }
+  };
 
-  function addLayerEntityEyeballHandler($layerContainer, idx) {
-    var layerName = layers[i].name;
-    var $btn = $layerContainer.find('.entity_layer .eyeball_button');
+  const addLayerEntityEyeballHandler = ($layerContainer, idx) => {
+    const layerName = layers[i].name;
+    const $btn = $layerContainer.find('.entity_layer .eyeball_button');
 
     handleEntityEyeball($btn, layerName);
 
-    $btn.on('click', function (evt) {
+    $btn.on('click', (evt) => {
       setShowEntitiesForLayer(layerName, !shouldShowEntitiesForLayer(layerName));
 
       handleEntityEyeball($btn, layerName);
 
       evt.stopPropagation();
     });
-  }
+  };
 
-  function removeAllSelectedLayers(selClass) {
+  const removeAllSelectedLayers = (selClass) => {
     if (window && window.selected_layer) {
       window.selected_layer.$container.removeClass(selClass);
     }
-  }
+  };
 
-  function addZoneSelectHandler($zone_container) {
-    $zone_container.on('click', function (evt) {
-
-      var selClass = 'selected';
+  const addZoneSelectHandler = ($zone_container) => {
+    $zone_container.on('click', (evt) => {
+      const selClass = 'selected';
 
       removeAllSelectedLayers(selClass);
 
@@ -122,12 +120,11 @@ function redraw_palette(map) {
 
       evt.stopPropagation();
     });
-  }
+  };
 
-  function addLayerSelectHandler($layer_container, i) {
-    $layer_container.on('click', function (evt) {
-
-      var selClass = 'selected';
+  const addLayerSelectHandler = ($layer_container, i) => {
+    $layer_container.on('click', (evt) => {
+      const selClass = 'selected';
 
       removeAllSelectedLayers(selClass);
 
@@ -142,30 +139,25 @@ function redraw_palette(map) {
 
       evt.stopPropagation();
     });
-  }
+  };
 
-  function addLayerEditHandler($layer_container, i) {
-    $layer_container.on('dblclick', function (evt) {
-
+  const addLayerEditHandler = ($layer_container, i) => {
+    $layer_container.on('dblclick', (evt) => {
       console.log("Allow editing of the layer's name here?");
 
       evt.stopPropagation();
     });
-  }
+  };
 
-
-  function setup_shitty_zone_layer($list) {
-
-    var tmpLayer = {
-      MAPED_HIDDEN : !getZoneVisibility(),
+  const setup_shitty_zone_layer = ($list) => {
+    const tmpLayer = {
+      MAPED_HIDDEN: !getZoneVisibility(),
       alpha: getZoneAlpha()
     };
-    var $eyeball;
 
-    var newLayerContainer = generateLayerContainer(l, i);
+    const newLayerContainer = generateLayerContainer(l, i);
+    const $eyeball = generateContent(999, tmpLayer, newLayerContainer);
 
-
-    $eyeball = generateContent(999, tmpLayer, newLayerContainer);
     newLayerContainer.find('.layer_name').text('Zones');
     newLayerContainer.find('.entity_layer').remove();
     newLayerContainer.addClass('nosort');
@@ -175,9 +167,7 @@ function redraw_palette(map) {
     newLayerContainer.find('.layer_parallax').remove();
 
     addZoneSelectHandler(newLayerContainer);
-    $eyeball.on('click', function (evt) {
-
-
+    $eyeball.on('click', (evt) => {
       setZoneVisibility(!getZoneVisibility());
 
       tmpLayer.MAPED_HIDDEN = !getZoneVisibility();
@@ -188,9 +178,9 @@ function redraw_palette(map) {
     });
 
     $list.append(newLayerContainer);
-  }
+  };
 
-  function addObstructionSelectHandler($obs_container) {
+  const addObstructionSelectHandler = ($obs_container) => {
     $obs_container.on('click', function (evt) {
       const selClass = 'selected';
 

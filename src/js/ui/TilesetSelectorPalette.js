@@ -1,21 +1,18 @@
-import { Map, verifyTileData, verifyMap } from '../../Map.js';
-import { modal_error } from './Util.js';
+import { Map } from '../../Map.js';
 import { Tools } from '../../Tools.js';
 const $ = require('jquery');
 
-var old_map;
-var old_layer;
+let old_map = null;
+let old_layer = null;
 
-var vsp_mapdata, vsp_tiledata, vsp_map;
+let vsp_mapdata = null;
+let vsp_tiledata = null;
+let vsp_map = null;
 
-var is_active = () => {
-
-};
-
-var create_dynamic_map = (vspName) => {
-  var dynMap = {
-    isTileSelectorMap: true, // TODO: this is for special-case branch code.  Rework everythgin so branching isnt necessary later?
-
+const create_dynamic_map = (vspName) => {
+  const dynMap = {
+    isTileSelectorMap: true, // TODO: this is for special-case branch code.  Rework everythgin so branching
+                             // isnt necessary later?
     entities: [],
     layers: [{
       MAPED_HIDDEN: false,
@@ -45,33 +42,31 @@ var create_dynamic_map = (vspName) => {
   return dynMap;
 };
 
-var create_dynamic_tiledata = (mapdata, layerdata) => { ;
+const create_dynamic_tiledata = (mapdata, layerdata) => {
   return { tile_data: [0, 1, 2, 3, 4, 5], zone_data: [] };
 };
 
-var create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer) => {
-
+const create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer) => {
   return new Map(
       mapData, tileData, updateLocationFunction
-  ).ready().then(function (m) {
-
-    var tileSetSize = 0;
-
+  ).ready().then((m) => {
     m.vspImages = newMap.vspImages; // TODO: somewhere something is going wrong here.  FIX.
     m.vspData = newMap.vspData;
 
-    m.mapData.layers[0].dimensions.X = parseInt(m.vspImages[newLayer.vsp].width / m.vspData[newLayer.vsp].tilesize.width);
-    m.mapData.layers[0].dimensions.Y = parseInt(m.vspImages[newLayer.vsp].height / m.vspData[newLayer.vsp].tilesize.height);
+    m.mapData.layers[0].dimensions.X =
+        parseInt(m.vspImages[newLayer.vsp].width / m.vspData[newLayer.vsp].tilesize.width);
+    m.mapData.layers[0].dimensions.Y =
+        parseInt(m.vspImages[newLayer.vsp].height / m.vspData[newLayer.vsp].tilesize.height);
     m.mapSizeInTiles = [
       m.mapData.layers[0].dimensions.X,
       m.mapData.layers[0].dimensions.Y
     ];
 
-    tileSetSize = m.mapData.layers[0].dimensions.X * m.mapData.layers[0].dimensions.Y;
+    const tileSetSize = m.mapData.layers[0].dimensions.X * m.mapData.layers[0].dimensions.Y;
 
     // / this overwrites most of create_dynamic_tiledata, which was temporary.
     m.tileData = [[]];
-    for (var i = 0; i < tileSetSize; i++) {
+    for (let i = 0; i < tileSetSize; i++) {
       m.tileData[0].push(i);
     }
 
@@ -92,23 +87,20 @@ var create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer) =
 
     finalize_process(newMap, newLayer);
   });
-
 };
 
-var finalize_process = (newMap, newLayer) => {
-
-  if (old_map && old_map != newMap) {
+const finalize_process = (newMap, newLayer) => {
+  if (old_map && old_map !== newMap) {
     console.log('oh dear god are we handling map reloading?');
-    throw "I dont think we're handling map reloading well yet.  Audit when people complain of this message.";
+    throw new Error("I dont think we're handling map reloading well yet.  Audit when people complain of this message.");
   }
 
-  // / full init
+  // full init
   if (!old_layer && newLayer) {
     console.log('first time');
-  }
 
-  // / maybe reinit for new layer vsp?
-  else if (old_layer && old_layer != newLayer) {
+  // maybe reinit for new layer vsp?
+  } else if (old_layer && old_layer !== newLayer) {
     console.log('VSP layer shifting!  Reset things!');
   }
 
@@ -118,19 +110,17 @@ var finalize_process = (newMap, newLayer) => {
   vsp_map.render();
 };
 
-var obsLayerData = null;
+let obsLayerData = null;
 
-var initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
-
+const initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
   if (optionalTiledata) {
     obsLayerData = optionalTiledata;
 
-    for (var k in optionalTiledata) {
+    for (const k in optionalTiledata) {
       if (!newLayer[k]) {
         newLayer[k] = optionalTiledata[k];
       }
     }
-
   } else {
     obsLayerData = null;
   }
@@ -145,7 +135,10 @@ var initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
 
   if (newLayer) {
     if (!window.$$$currentMap.vspData[newLayer.vsp]) {
-      throw "current map didnt contain vsp '" + newLayer.vsp + "'.  Only contained: " + Object.keys(window.$$$currentMap.vspData).join(',');
+      throw new Error(
+        "current map didnt contain vsp '" + newLayer.vsp + "'.  Only contained: " +
+        Object.keys(window.$$$currentMap.vspData).join(',')
+      );
     }
 
     vsp_mapdata = create_dynamic_map(newLayer.vsp);
@@ -155,11 +148,18 @@ var initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
   }
 };
 
-var renderTilesetSelectorWidget = () => {
-  if (vsp_map) vsp_map.render();
+const renderTilesetSelectorWidget = () => {
+  if (vsp_map) {
+    vsp_map.render();
+  }
 };
 
-export var TilesetSelectorWidget = {
+const getObsLayerData = () => {
+  return obsLayerData;
+};
+
+export const TilesetSelectorWidget = {
   initTilesetSelectorWidget: initTilesetSelectorWidget,
-  renderTilesetSelectorWidget: renderTilesetSelectorWidget
+  renderTilesetSelectorWidget: renderTilesetSelectorWidget,
+  getObsLayerData: getObsLayerData
 };
