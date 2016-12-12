@@ -251,8 +251,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   tmpZones = this.mapRawTileData.zone_data;
   this.zoneData = new Array(this.tileData[0].length);
 
+  console.info('unpacking zones...');
   $.each(tmpZones, (idx) => {
     // todo verify this is right
+    console.info('unpacking zone', tmpZones[idx].z, 'to coordinates', tmpZones[idx].x, tmpZones[idx].y);
     this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
   });
   console.info('zones ->', this.zoneData);
@@ -293,7 +295,11 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         const x = getXfromFlat(idx, 20); // todo : variable vsp width for zones.
         const y = getYfromFlat(idx, 20); // todo : variable vsp width for zones.
 
-        tmpZones.push({x: x, y: y, z: this.zoneData[idx]});
+        const zone = {x: x, y: y, z: this.zoneData[idx]};
+
+        console.log('saving out flatzone', zone);
+
+        tmpZones.push(zone);
       }
     });
 
@@ -352,16 +358,17 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   };
 
   this.createEntityRenderData = () => {
+    console.info('createEntityRenderData...');
     this.entities = {};
     for (i = 0; i < this.mapData.entities.length; i++) {
-      var entity = this.mapData.entities[i];
-            // console.log(entity);
+      const entity = this.mapData.entities[i];
+      console.info(entity);
 
       entity.location.layer = entity.location.layer || defaultEntityLayer;
       this.addEntityWithoutSort(entity, entity.location, false);
     }
 
-    for (var i in this.entities) {
+    for (const i in this.entities) {
       if (this.entities[i]) {
         console.info('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
         this.entities[i].sort(function (a, b) {
@@ -448,26 +455,26 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.doneLoading();
 };
 
-function getFlatIdx(x, y, width) {
+export const getFlatIdx = (x, y, width) => {
   return parseInt(width, 10) * parseInt(y, 10) + parseInt(x, 10);
-}
+};
 
 // extracts the first dimension of a flat-indexed 2 dimensionally array given
 // the second dimension's maximum value and the value of the flat index you
 // wish to extract the first dimension's value from.
 //
-function getXfromFlat(idx, numColumns) {
+export const  getXfromFlat = (idx, numColumns) => {
   return idx % numColumns;
-}
+};
 
 // extracts the second dimension of a flat-indexed 2 dimensionally array given
 // the second dimension's maximum value and the value of the flat index you
 // wish to extract the second dimension's value from.
 //
-function getYfromFlat(idx, numColumns) {
-  var flatval = idx - getXfromFlat(idx, numColumns);
-  return parseInt(flatval / numColumns);
-}
+export const getYfromFlat = (idx, numColumns) => {
+  const flatval = idx - getXfromFlat(idx, numColumns);
+  return parseInt(flatval / numColumns, 10);
+};
 
 Map.prototype = {
   addEntityWithoutSort(entity, location) {
@@ -477,9 +484,8 @@ Map.prototype = {
     this.entities[location.layer].push(entity);
 
     if (!this.entityData[entity.filename]) {
-      var datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
-      var data;
-
+      const datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
+      let data = null;
 
       if (entity.filename.endsWith('chr')) {
         console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");

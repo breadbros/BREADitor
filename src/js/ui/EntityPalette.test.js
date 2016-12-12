@@ -1,16 +1,33 @@
 /*eslint no-undef: 1*/
-import { currentEntities, update_entity, setCurrentEntities } from './EntityPalette';
+import { getCurrentEntities, _update_entity_inner, setCurrentEntities } from './EntityPalette';
 
+let vals = null;
+let state = null;
 beforeEach(() => {
   setCurrentEntities([]);
+  vals = {};
+  vals.entity_speed = 1234;
+
+  state = window.$$$currentMap;
+  window.$$$currentMap = { createEntityRenderData: () => {} }; // STUB
 });
 
-test('update_entity doesnt overwrite unspecified variables', () => {
-  setCurrentEntities([{'this_key_cannot': 'possibly_exist', 'tx': 9999}]);
-  window.$$$currentMap = { createEntityRenderData: () => {} }; // STUB
+afterEach(()=>{
+  window.$$$currentMap = state;
+});
 
-  update_entity(null, 0);
+test('update_entity doesnt overwrite unknown variables (but does overwrite known variables)', () => {
+  setCurrentEntities([{
+    'this_key_cannot_possibly_exist_in_the_dialog': '(and should be preserved)',
+    'location': {
+      'tx': 9999
+    }
+  }]);
 
-  expect(currentEntities[0].tx).toEqual('');
-  expect(currentEntities[0].this_key_cannot, 'possibly_exist');
+  expect(getCurrentEntities()[0].location.tx).toEqual(9999);
+
+  _update_entity_inner(0, vals);
+
+  expect(getCurrentEntities()[0].location.tx).toBeUndefined();
+  expect(getCurrentEntities()[0].this_key_cannot_possibly_exist_in_the_dialog, '(and should be preserved)');
 });

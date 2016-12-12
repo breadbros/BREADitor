@@ -41,11 +41,15 @@ export const setShowEntitiesForLayer = (layername, isVisible) => {
   console.log('ents(' + layername + ')' + window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS);
 };
 
-export let currentEntities = null;
+let currentEntities = null;
 
 // TODO test-only atm.  bad.
 export const setCurrentEntities = (ce) => {
   return currentEntities = ce;
+};
+
+export const getCurrentEntities = () => {
+  return currentEntities;
 };
 
 const initEntitiesWidget = (map) => {
@@ -347,6 +351,7 @@ function _entity_click(evt, id) {
   });
 }
 
+
 export const update_entity = (dialog, ent_id) => {
   const entity_name = $('#entity_name').val(); // TODO: validate uniqueness
   const entity_filename = $('#entity_filename').val(); // TODO: validate existance
@@ -376,41 +381,68 @@ export const update_entity = (dialog, ent_id) => {
   const loc_px = parseInt($('#entity_location_px').val());
   const loc_py = parseInt($('#entity_location_py').val());
 
+  console.log('loc_tx, loc_ty, loc_px, loc_py:');
+  console.log(loc_tx, loc_ty, loc_px, loc_py);
+
   const loc_l = $('#entity_location_layer').val();
 
+  vals = {
+    loc_tx: loc_tx,
+    loc_ty: loc_ty,
+    loc_px: loc_px,
+    loc_py: loc_py,
+    loc_l: loc_l,
+    entity_animation: entity_animation,
+    entity_facing: entity_facing,
+    entity_wander: entity_wander,
+    entity_name: entity_name,
+    entity_filename: entity_filename,
+    entity_activation_script: entity_activation_script,
+    entity_speed: entity_speed,
+    entity_pays_attention_to_obstructions: entity_pays_attention_to_obstructions,
+    entity_is_an_obstruction: entity_is_an_obstruction,
+    entity_autofaces: entity_autofaces
+  };
+
+  if( _update_entity_inner(vals) ) {
+    dialog.dialog('close');
+  }
+};
+
+export const _update_entity_inner = (ent_id, valDict) => {
   // TODO : PX/PY?
   const loc = {
-    tx: loc_tx,
-    ty: loc_ty,
-    px: loc_px,
-    py: loc_py,
-    layer: loc_l
+    tx: valDict.loc_tx,
+    ty: valDict.loc_ty,
+    px: valDict.loc_px,
+    py: valDict.loc_py,
+    layer: valDict.loc_l
   };
 
   let ent = null;
 
   if (!$.isNumeric(ent_id) || ent_id < 0) {
     modal_error('Invalid input: ent_id (' + ent_id + ') is invalid.');
-    return;
+    return false;
   }
 
-  if (!$.isNumeric(entity_speed)) {
-    modal_error('Invalid input: speed not numeric (' + entity_speed + ').');
-    return;
+  if (!$.isNumeric(valDict.entity_speed)) {
+    modal_error('Invalid input: speed not numeric (' + valDict.entity_speed + ').');
+    return false;
   }
 
   ent = {
-    'name': entity_name,
-    'filename': entity_filename,
+    'name': valDict.entity_name,
+    'filename': valDict.entity_filename,
 
-    'facing': entity_facing,
-    'pays_attention_to_obstructions': entity_pays_attention_to_obstructions,
-    'is_an_obstruction': entity_is_an_obstruction,
-    'autofaces': entity_autofaces,
-    'speed': entity_speed,
-    'wander': entity_wander,
-    'activation_script': entity_activation_script,
-    'animation': entity_animation,
+    'facing': valDict.entity_facing,
+    'pays_attention_to_obstructions': valDict.entity_pays_attention_to_obstructions,
+    'is_an_obstruction': valDict.entity_is_an_obstruction,
+    'autofaces': valDict.entity_autofaces,
+    'speed': valDict.entity_speed,
+    'wander': valDict.entity_wander,
+    'activation_script': valDict.entity_activation_script,
+    'animation': valDict.entity_animation,
 
     'location': loc
   };
@@ -421,9 +453,12 @@ export const update_entity = (dialog, ent_id) => {
   let k;
   for (k in ent) {
     if (ent.hasOwnProperty(k)) {
+      console.info('overwriting ent[' + ent_id + '].' + k, 'with', ent[k]);
       currentEntities[ent_id][k] = ent[k];
     }
   }
+
+  console.info('currentEntities[' + ent_id + ']', currentEntities[ent_id]);
 
   // maaaybe?
   // currentEntities[ent_id] = ent;
@@ -442,7 +477,7 @@ export const update_entity = (dialog, ent_id) => {
 
   window.$$$currentMap.createEntityRenderData(); // TODO: NO NO NO NO NONONONNONONNONO
 
-  dialog.dialog('close');
+  return true;
 };
 
 // TODO: ent_name should be a uuid
