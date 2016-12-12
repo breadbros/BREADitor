@@ -58,6 +58,9 @@ ipcRenderer.on('main-menu', (event, arg) => {
     case 'save':
       window.$$$save();
       break;
+    case 'save-as':
+      window.$$$saveAs();
+      break;
     case 'load':
       window.$$$load();
       break;
@@ -151,15 +154,25 @@ ipcRenderer.on('window-menu', (event, arg) => {
   });
 
   console.log('$$$save should be initialized...');
-  window.$$$save = function () {
+  window.$$$save = function (newName) {
     const app = require('electron').remote.app;
     const jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
     const map = window.$$$currentMap;
     map.compactifyZones(); // TODO this should probably happen not-here?
 
-    jetpack.write(map.filenames.mapfile, map.mapData);
-    jetpack.write(map.filenames.mapdatafile, map.mapRawTileData);
+    let mapfile = map.filenames.mapfile;
+    let datafile = map.filenames.mapdatafile;
+    if (typeof newName !== 'undefined') {
+      mapfile = newName;
+      datafile = mapfile.replace('.map.json', '.map.data.json'); // todo this is shit.
+    }
+
+    console.info('saving', mapfile);
+    console.info('saving', datafile);
+
+    jetpack.write(mapfile, map.mapData);
+    jetpack.write(datafile, map.mapRawTileData);
 
     console.log('HELLO I AM $$$SAVE');
   };
@@ -221,9 +234,22 @@ ipcRenderer.on('window-menu', (event, arg) => {
     const { dialog } = require('electron').remote;
 
     dialog.showOpenDialog(
-        {filters: [{ name: 'text', extensions: ['map.json'] }]},
-        loadByFilename
-      );
+      {filters: [{ name: 'text', extensions: ['map.json'] }]},
+      loadByFilename
+    );
+  };
+
+  window.$$$saveAs = function () {
+    const { dialog } = require('electron').remote;
+
+    dialog.showSaveDialog(
+      {filters: [{ name: 'text', extensions: ['map.json'] }]},
+      (filename) => {
+        if (filename) {
+          window.$$$save(filename);
+        }
+      }
+    );
   };
 
   window.$$$palette_registry = [
