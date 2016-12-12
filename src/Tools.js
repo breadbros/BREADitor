@@ -112,7 +112,6 @@ const toolLogic = {
       const tY = parseInt(oY / 16);
 
       const doVSPselector = (tX, tY, map) => {
-        tIdx = map.getTile(tX, tY, 0);
         map.selection.deselect();
         map.selection.add(tX, tY, 1, 1);
       };
@@ -131,6 +130,7 @@ const toolLogic = {
           case 998:
             console.log('OBS!');
             doVSPselector(tX, tY, map);
+            tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
             break;
           default:
             throw new Error('SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN');
@@ -141,8 +141,7 @@ const toolLogic = {
           doVSPselector(tX, tY, map);
         } else {
           tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
-          map.selection.deselect();
-          map.selection.add(tX, tY, 1, 1);
+          doVSPselector(tX, tY, map);
         }
       }
 

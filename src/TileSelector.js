@@ -94,5 +94,5 @@ export const toggleSelectedTiles = (map) => {
 };
 
 export const getCurrentlySelectedTile = () => {
-  return leftTile;
+  return leftTile();
 };

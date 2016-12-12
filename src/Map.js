@@ -21,7 +21,7 @@ const buildTileDataTexture = (data) => {
     out[i * 4 + 3] = (t >> 24) % 256;
   }
   return out;
-}
+};
 
 let __obsColor = [1, 1, 1, 0.5];
 export const setObsColor = (r, g, b, a) => {
@@ -57,11 +57,10 @@ const saveData = (mapFile, mapData) => {
   jetpack.write(mapFile, mapData);
 };
 
-let verifyPromiseResolver;
-let verifyPromiseRejecter;
+let verifyPromiseResolver = null;
+let verifyPromiseRejecter = null;
 
 export const verifyMap = (mapfile) => {
-  const app = require('electron').remote.app;
   const { dialog } = require('electron').remote;
 
   const readyPromise = new Promise(function (resolve, reject) {
@@ -226,17 +225,21 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   for (i = 0; i < this.mapData.layers.length; i++) {
         // if (this.mapData.layers[i].MAPED_HIDDEN)  { continue; }
 
-    if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
-    if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
+    if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
+      this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
+    }
+    if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) {
+      this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
+    }
 
-    var layerName = this.uniqueLayerName(this.mapData.layers[i].name);
+    const layerName = this.uniqueLayerName(this.mapData.layers[i].name);
     this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
     this.layerLookup[layerName] = this.mapData.layers[i];
   }
   this.camera = [0, 0, 1];
 
   if (FILELOAD_MODE) {
-    this.mapRawTileData = jetpack.read(mapdatafile, 'json'); // zone_data: [{x,y,z}, ...]
+    this.mapRawTileData = jetpack.read(mapdatafile, 'json'); // zone_data: [{x:x,y:y,z:zIdx}, ...]
   } else {
     this.mapRawTileData = mapdatafile;
   }
@@ -244,12 +247,12 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.legacyObsData = this.mapRawTileData.legacy_obstruction_data;
   this.tileData = this.mapRawTileData.tile_data;
 
-  var tmpZones;
+  let tmpZones = null;
   tmpZones = this.mapRawTileData.zone_data;
   this.zoneData = new Array(this.tileData[0].length);
 
   $.each(tmpZones, (idx) => {
-        // todo verify this is right
+    // todo verify this is right
     this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
   });
   console.info('zones ->', this.zoneData);
@@ -257,8 +260,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.vspData = {};
 
     // if( FILELOAD_MODE ) {
-  for (var k in this.filenames.vspfiles) {
-    let tmppath = path.join(this.dataPath, this.filenames.vspfiles[k]);
+  for (const k in this.filenames.vspfiles) {
+    const tmppath = path.join(this.dataPath, this.filenames.vspfiles[k]);
     console.info("Loading '" + tmppath + "'...");
     this.vspData[k] = jetpack.read(tmppath, 'json');
     console.info(k, '->', this.vspData[k]);
@@ -266,7 +269,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
     // / "if this.dataPath" as a sentinel for only doing this to "real" maps.  This file is garbage.
   if (this.dataPath && this.mapData.vsp.obstructions) {
-    let tmppath = path.join(this.dataPath, this.mapData.vsp.obstructions);
+    const tmppath = path.join(this.dataPath, this.mapData.vsp.obstructions);
     this.obsLayerData = jetpack.read(tmppath, 'json');
     if (!this.obsLayerData.vsp) {
       this.obsLayerData.vsp = 'obstructions';
@@ -281,42 +284,44 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.vspData['zones'].source_image = path.join(window.appPath, '/images/zones.png');
 
   this.compactifyZones = () => {
-        // zone_data: [{x,y,z}, ...]
-
-    var tmpZones, x, y;
-    tmpZones = [];
+    // zone_data: [{x,y,z}, ...]
+    const tmpZones = [];
 
         // walk the in-memory zoneData layer, anything with zone >0, add.
     $.each(this.zoneData, (idx) => {
       if (this.zoneData[idx] > 0) {
-        x = getXfromFlat(idx, 20); // todo : variable vsp width for zones.
-        y = getYfromFlat(idx, 20); // todo : variable vsp width for zones.
+        const x = getXfromFlat(idx, 20); // todo : variable vsp width for zones.
+        const y = getYfromFlat(idx, 20); // todo : variable vsp width for zones.
+
+        tmpZones.push({x: x, y: y, z: this.zoneData[idx]});
       }
     });
+
+    this.mapRawTileData.zone_data = tmpZones;
   };
 
   this.toLoad = 1;
   this.doneLoading = function () {
     this.toLoad--;
-    if (this.toLoad === 0) this.promiseResolver(this);
+    if (this.toLoad === 0) {
+      this.promiseResolver(this);
+    }
   }.bind(this);
 
   this.vspImages = {};
-  for (k in this.vspData) {
-    var vsp = this.vspData[k];
-    if (!vsp) continue;
-        // TODO probably actually want to fail the load or do something other than
-        // just silently carry on when the image can't be loaded
-
-    let tmppath = path.join(this.dataPath, this.vspData[k].source_image);
-
+  for (const k in this.vspData) {
+    const vsp = this.vspData[k];
+    if (!vsp) {
+      continue;
+    }
+    // TODO probably actually want to fail the load or do something other than
+    // just silently carry on when the image can't be loaded
     this.toLoad++;
     this.vspImages[k] = new Image();
     this.vspImages[k].onload = this.doneLoading;
 
-
-    if (k != 'zones') { // TODO: a better solution to map-relative assets versus app-relative assets.  THIS IS SAD AND PATHETIC AND SADTHETIC
-      this.vspImages[k].src = tmppath;
+    if (k !== 'zones') { // TODO: a better solution to map-relative assets versus app-relative assets.  THIS IS SAD AND PATHETIC AND SADTHETIC
+      this.vspImages[k].src = path.join(this.dataPath, this.vspData[k].source_image);
     } else {
       this.vspImages[k].src = this.vspData[k].source_image;
     }
@@ -329,7 +334,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.entityTextures['__default__'].img.onload = this.doneLoading;
   this.entityTextures['__default__'].img.src = path.join(window.appPath, '/images/defaultsprite.png');
 
-  var defaultEntityLayer = this.fakeEntityLayer.name;
+  const defaultEntityLayer = this.fakeEntityLayer.name;
 
   this.entityData = {
     '__default__': {
@@ -592,7 +597,7 @@ Map.prototype = {
     const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
 
     if (layerIdx === 998) { // TODO the obs sentinel is the WORST
-      return this.obsLayerData[idx];
+      return this.legacyObsData[idx];
     }
 
     return this.tileData[layerIdx][idx];
@@ -602,7 +607,7 @@ Map.prototype = {
     const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
 
     if (layerIdx === 998) { // TODO the obs sentinel is the WORST
-      this.obsLayerData[idx] = tileIdx;
+      this.legacyObsData[idx] = tileIdx;
     } else {
       this.tileData[layerIdx][idx] = tileIdx;
     }
