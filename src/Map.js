@@ -323,10 +323,11 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     // TODO probably actually want to fail the load or do something other than
     // just silently carry on when the image can't be loaded
     this.toLoad++;
-    this.vspImages[k] = new Image();
+    this.vspImages[k] = new window.Image();
     this.vspImages[k].onload = this.doneLoading;
 
-    if (k !== 'zones') { // TODO: a better solution to map-relative assets versus app-relative assets.  THIS IS SAD AND PATHETIC AND SADTHETIC
+    if (k !== 'zones') { // TODO: a better solution to map-relative assets versus app-relative assets.  
+                         // THIS IS SAD AND PATHETIC AND SADTHETIC
       this.vspImages[k].src = path.join(this.dataPath, this.vspData[k].source_image);
     } else {
       this.vspImages[k].src = this.vspData[k].source_image;
@@ -335,7 +336,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.toLoad++;
   this.entityTextures = {
-    '__default__': { img: new Image() }
+    '__default__': { img: new window.Image() }
   };
   this.entityTextures['__default__'].img.onload = this.doneLoading;
   this.entityTextures['__default__'].img.src = path.join(window.appPath, '/images/defaultsprite.png');
@@ -469,7 +470,7 @@ export const getFlatIdx = (x, y, width) => {
 // the second dimension's maximum value and the value of the flat index you
 // wish to extract the first dimension's value from.
 //
-export const  getXfromFlat = (idx, numColumns) => {
+export const getXfromFlat = (idx, numColumns) => {
   return idx % numColumns;
 };
 
@@ -508,29 +509,30 @@ Map.prototype = {
         data = jetpack.read(datafile, 'json');
       } catch (e) {
         if (entity.filename.endsWith('json')) {
-          debugger;
+          console.error('Couldnt read a json entity file:', entity.filename);
         }
-        console.log("Totally couldnt read datafile: '" + datafile + "'");
+        console.warn("Totally couldnt read datafile: '" + datafile + "'");
       }
 
       if (data) {
         this.entityData[entity.filename] = data;
 
-        for (var name in data.animations) {
+        for (const name in data.animations) {
                     // convert short-hand to useful-hand
           if (typeof data.animations[name][0] === 'string') {
-            var chunks = data.animations[name][0].split(' ');
-            var t = parseInt(chunks.shift().substring(1), 10);
+            const chunks = data.animations[name][0].split(' ');
+            const t = parseInt(chunks.shift().substring(1), 10);
 
             data.animations[name][0] = [];
-            for (var f = 0; f < chunks.length; f++) {
-                data.animations[name][0].push([parseInt(chunks[f], 10), t]);
-              }
+            for (let f = 0; f < chunks.length; f++) {
+              data.animations[name][0].push([parseInt(chunks[f], 10), t]);
+            }
           }
         }
 
         if (!this.entityTextures[data.image]) {
-          var imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image); // TODO maybe make this definable in this.mapedConfigData too?
+          // TODO maybe make this definable in this.mapedConfigData too?
+          let imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image);
           if (!jetpack.inspect(imagePath)) {
             imagePath += '.png'; // TODO this is stupid and bad and wrong.
           }
@@ -544,7 +546,7 @@ Map.prototype = {
           console.info("Adding '" + imagePath + "' to entityTextures cache...");
           this.toLoad++;
           this.entityTextures[data.image] = {};
-          this.entityTextures[data.image].img = new Image();
+          this.entityTextures[data.image].img = new window.Image();
           this.entityTextures[data.image].img.onload = this.doneLoading;
           this.entityTextures[data.image].img.src = imagePath;
         }
@@ -557,29 +559,30 @@ Map.prototype = {
     }
 
     if (!entity.MAPED_USEDEFAULT) {
-      if (this.entityData[entity.filename].regions && this.entityData[entity.filename].regions['Tall_Redraw'] && !this.mapData.tallentitylayer) {
-        alert('ERROR: Loading tall entity ' + entity.filename + ' with no tallentitylayer in map!');
+      if (this.entityData[entity.filename].regions && this.entityData[entity.filename].regions['Tall_Redraw'] &&
+          !this.mapData.tallentitylayer) {
+        window.alert('ERROR: Loading tall entity ' + entity.filename + ' with no tallentitylayer in map!');
       }
 
       entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
     } else {
       entity.animation = 'Idle Down'; // / m-m-m-magick (__default__ has this)
     }
-
   },
-
   addEntity: function (filename, location) {
     this.addEntityWithoutSort(filename, location);
     this.entities[location.layer].sort(function (a, b) {
       if (a.location.py && b.location.py) {
-        returna.location.py - b.location.py; // TODO almost certainly wrong; probably should convery from ty -> py if no py and then compare py.
+        return a.location.py - b.location.py; // TODO almost certainly wrong; probably should convery from ty -> py if
+                                              //      no py and then compare py.
       }
       return a.location.ty - b.location.ty;
     });
   },
 
   getVSPTileLocation: function (vsp, idx) {
-    var x, y;
+    let x = null;
+    let y = null;
 
     y = parseInt(idx / this.vspData[vsp].tiles_per_row);
     x = idx - y * this.vspData[vsp].tiles_per_row;
@@ -641,6 +644,8 @@ Map.prototype = {
       let configVar = null;
       let obj = null;
 
+
+
       for (const k in paletteDict) {
         console.info('paletteDict.' + k);
         configVar = k + ' settings'; // this should be CONST'd somewhere and referenced in both places
@@ -666,9 +671,10 @@ Map.prototype = {
       }
     };
 
-    if (localStorage[key] + '-mapx') {
+    const localStorage = window.localStorage;
 
-            // TODO This is weird.  Why is the map palette being set here and then again in setPaletteLocations?
+    if (localStorage[key] + '-mapx') {
+      // TODO This is weird.  Why is the map palette being set here and then again in setPaletteLocations?
       if (localStorage[key + '-width']) { $cont.width(localStorage[key + '-width']); }
       if (localStorage[key + '-height']) { $cont.height(localStorage[key + '-height']); }
       if (localStorage[key + '-top']) { $cont.css('top', localStorage[key + '-top']); }
@@ -690,12 +696,12 @@ Map.prototype = {
   },
 
   uniqueLayerName: function (like) {
-    if (like && !this.layerLookup[like]) return like;
-    if (!like) like = 'Layer 0'; // will have 1 added to the 0 so unnamed layers will be Layer 1, Layer 2, etc.
+    if (like && !this.layerLookup[like]) { return like; }
+    if (!like) { like = 'Layer 0'; } // will have 1 added to the 0 so unnamed layers will be Layer 1, Layer 2, etc.
 
-    var name = '';
-    var num = parseInt(like.match(/\d*$/)[0], 10) || 1; // || 1 so that two layers named "Foo" become "Foo" and "Foo 2"
-    var stem = like.replace(/\d*$/, '');
+    let name = '';
+    let num = parseInt(like.match(/\d*$/)[0], 10) || 1; // || 1 so that two layers named "Foo" become "Foo" and "Foo 2"
+    const stem = like.replace(/\d*$/, '');
     num++;
 
     name = stem + num;
@@ -710,31 +716,37 @@ Map.prototype = {
 
   setCanvas: function ($canvas) {
     console.info('Setting canvas on map');
-    if (!!this.renderContainer) this.cleanUpCallbacks();
+    if (this.renderContainer) { this.cleanUpCallbacks(); }
 
         // set up callbacks
     $(window).on('resize', this.resize.bind(this));
 
         // set up context
     this.renderContainer = $canvas;
-    this.gl = this.renderContainer[0].getContext('webgl'); // we're targeting Electron not the Internet at large so don't worry about failing to get a GL context
+    this.gl = this.renderContainer[0].getContext('webgl'); // we're targeting Electron not the Internet at large so
+                                                           // don't worry about failing to get a GL context
     this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
 
-    var readShader = (path) => {
+    const readShader = (path) => {
       const p = jetpack.path(appPath, 'app', path);
       const res = jetpack.read(p);
       return res;
     };
 
-    this.tilemapShader = new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemap-frag.glsl'));
-    this.spriteShader = new ShaderProgram(this.gl, readShader('shaders/sprite-vert.glsl'), readShader('shaders/sprite-frag.glsl'));
-    this.obstructionmapShader = new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemapObs-frag.glsl'));
-    this.zonemapShader = new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemap-frag.glsl'));
-    this.selectionShader = new ShaderProgram(this.gl, readShader('shaders/selection-vert.glsl'), readShader('shaders/selection-frag.glsl'));
+    this.tilemapShader = new ShaderProgram(
+      this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemap-frag.glsl'));
+    this.spriteShader = new ShaderProgram(
+      this.gl, readShader('shaders/sprite-vert.glsl'), readShader('shaders/sprite-frag.glsl'));
+    this.obstructionmapShader = new ShaderProgram(
+      this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemapObs-frag.glsl'));
+    this.zonemapShader = new ShaderProgram(
+      this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemap-frag.glsl'));
+    this.selectionShader = new ShaderProgram(
+      this.gl, readShader('shaders/selection-vert.glsl'), readShader('shaders/selection-frag.glsl'));
 
     this.tileLibraryTextures = {};
-    for (var k in this.vspImages) {
-      if (!this.vspImages[k]) return;
+    for (const k in this.vspImages) {
+      if (!this.vspImages[k]) { return; }
       this.tileLibraryTextures[k] = this.gl.createTexture();
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLibraryTextures[k]);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
@@ -750,7 +762,10 @@ Map.prototype = {
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
-    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.mapData.layers[0].dimensions.X, this.mapData.layers[0].dimensions.Y, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[0]));
+    this.gl.texImage2D(
+      this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.mapData.layers[0].dimensions.X, this.mapData.layers[0].dimensions.Y,
+      0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[0])
+    );
 
     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     this.gl.enable(this.gl.BLEND);
@@ -761,8 +776,8 @@ Map.prototype = {
     this.entityVertexBuffer = this.gl.createBuffer();
     this.selectionVertexBuffer = this.gl.createBuffer();
 
-    for (var k in this.entityTextures) {
-      var texture = this.entityTextures[k];
+    for (const k in this.entityTextures) {
+      const texture = this.entityTextures[k];
 
       texture.tex = this.gl.createTexture();
       this.gl.bindTexture(this.gl.TEXTURE_2D, texture.tex);
@@ -807,7 +822,8 @@ Map.prototype = {
             map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
           }
           map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
-          if (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw']) {
+          if (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions &&
+              map.entityData[entities[e].filename].regions['Tall_Redraw']) {
             tallEntities.push(entities[e]);
           }
         }
@@ -818,53 +834,39 @@ Map.prototype = {
 
       if (map.mapData.tallentitylayer === i) {
         map.spriteShader.use();
-        for (var e in tallEntities) {
-          var entity = tallEntities[e];
+        for (const e in tallEntities) {
+          const entity = tallEntities[e];
           map.renderEntity(entity, layer, [1, 1, 1, 1], map.entityData[entity.filename].regions['Tall_Redraw']);
         }
       }
     }
   },
 
-  render: function () {
-    const gl = this.gl;
-
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    const tallEntities = [];
-
-    for (let i = 0; i < (this.layerRenderOrder.length); i++) {
-      const layerIndex = parseInt(this.layerRenderOrder[i], 10) - 1;
-      const layer = this.mapData.layers[layerIndex];
-
-      if (this.layerRenderOrder[i] === 'E') {
-        this.drawEntities(i, this, this.fakeEntityLayer, tallEntities);
-        continue;
-      }
-      if (isNaN(layerIndex)) {
-        continue;
-      }
-      if (layer.MAPED_HIDDEN) {
-        continue;
-      }
-
-      const vsp = layer.vsp;
+  maybeRenderZones: function (gl) {
+    // / ZONES
+    if (Tools.shouldShowZones() && this.zoneData.length > 1) {
+      const vsp = 'zones'; // TODO zones layer shouldn't just default like this
+      const layer = {
+        parallax: { X: 1, Y: 1 },
+        alpha: Tools.getZonesAlpha(),
+        dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
+      };
 
       this.tilemapShader.use();
 
       gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-          Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-          Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-          this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-          this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
-      );
+                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+            );
 
       gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
-          layer.dimensions.X,
-          layer.dimensions.Y,
-          this.vspData[vsp].tiles_per_row,
-          this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
-      );
+                layer.dimensions.X,
+                layer.dimensions.Y,
+                this.vspData[vsp].tiles_per_row,
+                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+            );
 
       gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
 
@@ -879,7 +881,7 @@ Map.prototype = {
       gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
       gl.texImage2D(
         gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
-        gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex])
+        gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.zoneData)
       );
 
       const a_position = this.tilemapShader.attribute('a_position');
@@ -888,10 +890,10 @@ Map.prototype = {
       gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
       gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-      this.drawEntities(i, this, layer, tallEntities);
     }
+  }, 
 
+  maybeRenderObstructions: function (gl) {
     // OBSTRUCTIONS
     if (Tools.shouldShowObstructions() && this.legacyObsData) {
       const vsp = 'obstructions'; // TODO obstruction layer shouldn't just default like this
@@ -942,31 +944,43 @@ Map.prototype = {
 
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
+  },
 
-        // / ZONES
-    if (Tools.shouldShowZones() && this.zoneData.length > 1) {
-      const vsp = 'zones'; // TODO zones layer shouldn't just default like this
-      const layer = {
-        parallax: { X: 1, Y: 1 },
-        alpha: Tools.getZonesAlpha(),
-        dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
-      };
+  renderTilesAndEntityLayers: function (gl) {
+    const tallEntities = [];
+
+    for (let i = 0; i < (this.layerRenderOrder.length); i++) {
+      const layerIndex = parseInt(this.layerRenderOrder[i], 10) - 1;
+      const layer = this.mapData.layers[layerIndex];
+
+      if (this.layerRenderOrder[i] === 'E') {
+        this.drawEntities(i, this, this.fakeEntityLayer, tallEntities);
+        continue;
+      }
+      if (isNaN(layerIndex)) {
+        continue;
+      }
+      if (layer.MAPED_HIDDEN) {
+        continue;
+      }
+
+      const vsp = layer.vsp;
 
       this.tilemapShader.use();
 
       gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
-            );
+        Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+        Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+        this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+        this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+      );
 
       gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
-                layer.dimensions.X,
-                layer.dimensions.Y,
-                this.vspData[vsp].tiles_per_row,
-                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
-            );
+        layer.dimensions.X,
+        layer.dimensions.Y,
+        this.vspData[vsp].tiles_per_row,
+        this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+      );
 
       gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
 
@@ -981,7 +995,7 @@ Map.prototype = {
       gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
       gl.texImage2D(
         gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
-        gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.zoneData)
+        gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex])
       );
 
       const a_position = this.tilemapShader.attribute('a_position');
@@ -990,12 +1004,19 @@ Map.prototype = {
       gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
       gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+      this.drawEntities(i, this, layer, tallEntities);
     }
+  },
+
+  maybeRenderMarchingAnts: function (gl) {
+    const vsp = 'default'; // TODO this is definitely wrong. Definitely if we allow vsp size mixing.
 
     // MARCHING ANTS
     if (this.selection.lines.length > 0 && typeof vsp !== 'undefined') {
       // TODO remove these fake layer shenanegans
-      const layer = getSelectedLayer() ? getSelectedLayer() : {
+      // TODO something smells about getSelectedLayer().layer
+      const layer = getSelectedLayer() ? getSelectedLayer().layer : {
         parallax: { X: 1, Y: 1 },
         dimensions: this.mapData.layers[0].dimensions
       };
@@ -1027,6 +1048,20 @@ Map.prototype = {
     }
   },
 
+  render: function () {
+    const gl = this.gl;
+
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    this.renderTilesAndEntityLayers(gl);
+
+    this.maybeRenderObstructions(gl);
+
+    this.maybeRenderZones(gl);
+
+    this.maybeRenderMarchingAnts(gl);
+  },
+
   renderEntity: function (entity, layer, tint, clip) {
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
@@ -1054,15 +1089,15 @@ Map.prototype = {
     tx -= (entityData.hitbox[0] / tilesize.width);
     ty -= (entityData.hitbox[1] / tilesize.height);
 
-    var tw = clip[2] / tilesize.width;
-    var th = clip[3] / tilesize.height;
+    const tw = clip[2] / tilesize.width;
+    const th = clip[3] / tilesize.height;
 
-    var fx = (entityData.outer_pad + clip[0]) / entityTexture.img.width;
-    var fy = (entityData.outer_pad + clip[1]) / entityTexture.img.height;
-    var fw = clip[2] / entityTexture.img.width;
-    var fh = clip[3] / entityTexture.img.height;
+    let fx = (entityData.outer_pad + clip[0]) / entityTexture.img.width;
+    let fy = (entityData.outer_pad + clip[1]) / entityTexture.img.height;
+    const fw = clip[2] / entityTexture.img.width;
+    const fh = clip[3] / entityTexture.img.height;
 
-    var f = entityData.animations[entity.animation][0][0][0];
+    const f = entityData.animations[entity.animation][0][0][0];
     fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
     fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
 
@@ -1084,7 +1119,7 @@ Map.prototype = {
 
     gl.uniform4f(this.spriteShader.uniform('u_tint'), tint[0], tint[1], tint[2], tint[3]);
 
-    var u_texture = this.tilemapShader.uniform('u_spriteAtlas');
+    const u_texture = this.tilemapShader.uniform('u_spriteAtlas');
     gl.uniform1i(u_texture, 0);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, entityTexture.tex);
@@ -1097,9 +1132,9 @@ Map.prototype = {
   },
 
   resize: function () {
-    if (!this.renderContainer || !this.gl) return;
+    if (!this.renderContainer || !this.gl) { return; }
     this.renderContainer.attr('width', this.renderContainer.width());
     this.renderContainer.attr('height', this.renderContainer.height());
     this.gl.viewport(0, 0, this.renderContainer.width(), this.renderContainer.height());
-  },
+  }
 };
