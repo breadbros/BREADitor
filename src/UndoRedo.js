@@ -17,6 +17,14 @@ export const MakeUndoRedoStack = (_map) => {
   const redoStack = [];
   const map = _map;
 
+  const undolog = (msg) => {
+    console.log('undolog: ', msg);
+    console.log('undoStack: ');
+    console.log(undoStack);
+    console.log('redoStack: ');
+    console.log(redoStack);
+  };
+
   undolog('initializing undostack');
 
   const change_one_tile = (
@@ -36,14 +44,6 @@ export const MakeUndoRedoStack = (_map) => {
       tileX, tileY,
       layerIdx, tileIdx
     );
-  };
-
-  const undolog = (msg) => {
-    console.log('undolog: ', msg);
-    console.log('undoStack: ');
-    console.log(undoStack);
-    console.log('redoStack: ');
-    console.log(redoStack);
   };
 
   const undo = () => {

@@ -1,5 +1,5 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
-import { Tools, clickEyedropper,clickDrawBrush } from './Tools.js';
+import { Tools, clickEyedropper, clickDrawBrush } from './Tools.js';
 import { Palettes } from './Palettes.js';
 import { LayersWidget } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
@@ -14,7 +14,11 @@ const path = require('path');
 const $ = require('jquery');
 
 const initInfoWidget = (map) => {
-  $('#info-mapname').text(map.mapPath);
+  $('#info-mapname').attr('src', map.mapPath);
+
+  const pathParts = map.mapPath.split(path.sep);
+  $('#info-mapname').text(pathParts[pathParts.length - 1]);
+
   $('#info-dims').text(map.mapSizeInTiles[0] + 'x' + map.mapSizeInTiles[1]);
 };
 
