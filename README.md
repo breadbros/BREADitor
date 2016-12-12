@@ -25,7 +25,6 @@ TODO
 
 The Immediates for Ustor
 ========================
-* Make it so you can write out obstructions
 * fill, line, copy+paste
 
 * ME4 bugs / improvements
@@ -47,7 +46,6 @@ The Immediates for Ustor
   - zones
     * selecting zones from the palette does not allow you to place them they have to be eyedroppered from the map
     * right click drawing on the zone layer should erase / set zone 0 unless you want to add the ability to select two zones at once, similar to tiles
-    * changes to zones are not saved
 
 The rest
 =========
