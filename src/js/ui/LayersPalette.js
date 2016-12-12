@@ -40,11 +40,18 @@ function initLayersWidget(_map) {
   redraw_palette(map);
 };
 
+let _selected_layer = null;
+const changeSelectedLayer = (newLayer) => {
+  _selected_layer = newLayer;
+};
+export const getSelectedLayer = () => {
+  return _selected_layer;
+};
+
 const redraw_palette = (map) => {
   list = $('.layers-palette .layers-list');
   let newLayerContainer = null;
   let l = null;
-  let line = null;
 
   const handleEyeball = (layerDiv, layer) => {
     layerDiv.removeClass('eye-open');
@@ -98,8 +105,8 @@ const redraw_palette = (map) => {
   };
 
   const removeAllSelectedLayers = (selClass) => {
-    if (window && window.selected_layer) {
-      window.selected_layer.$container.removeClass(selClass);
+    if (window && getSelectedLayer()) {
+      getSelectedLayer().$container.removeClass(selClass);
     }
   };
 
@@ -109,12 +116,12 @@ const redraw_palette = (map) => {
 
       removeAllSelectedLayers(selClass);
 
-        // TODO: this is disgusting, right?  right.
-      window.selected_layer = {
+      // TODO: this is disgusting, right?  right.
+      changeSelectedLayer({
         map_tileData_idx: 999,
         layer: window.$$$currentMap.zoneData,
         $container: $zone_container
-      };
+      });
 
       $zone_container.addClass(selClass);
 
@@ -128,11 +135,11 @@ const redraw_palette = (map) => {
 
       removeAllSelectedLayers(selClass);
 
-      window.selected_layer = {
+      changeSelectedLayer({
         map_tileData_idx: i,
         layer: layers[i],
         $container: $layer_container
-      };
+      });
       $layer_container.addClass(selClass);
 
       TilesetSelectorWidget.initTilesetSelectorWidget(map, layers[i]);
@@ -196,11 +203,11 @@ const redraw_palette = (map) => {
       window.$$$currentMap.obsLayerData.dimensions = window.$$$currentMap.mapData.layers[0].dimensions;
 
         // TODO: this is disgusting, right?  right.
-      window.selected_layer = {
+      changeSelectedLayer({
         map_tileData_idx: 998,
         layer: window.$$$currentMap.obsLayerData, // TODO why isnt this an array? :o
         $container: $obs_container
-      };
+      });
 
       TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData);
 

@@ -1,10 +1,11 @@
 const $ = require('jquery');
 const sprintf = require('sprintf-js').sprintf;
-const app = require('electron').remote.app;
 import { setTileSelectorUI, getCurrentlySelectedTile } from './TileSelector';
 
 import { getZoneVisibility, getZoneAlpha, getActiveZone,
-         setActiveZone, scrollZonePalletteToZone } from './js/ui/ZonesPalette.js';
+         setActiveZone, scrollZonePalletteToZone } from './js/ui/ZonesPalette';
+
+import { getSelectedLayer } from './js/ui/LayersPalette';
 
 const updateLocationFunction = (map) => {
   const x = map.camera[0];
@@ -13,8 +14,8 @@ const updateLocationFunction = (map) => {
 
   $('#info-location').text(x + ',' + y);
 
-  localStorage[key + '-mapx'] = x;
-  localStorage[key + '-mapy'] = y;
+  window.localStorage[key + '-mapx'] = x;
+  window.localStorage[key + '-mapy'] = y;
 };
 
 const zoomFn = function (map, e, zoomout) {
@@ -30,7 +31,7 @@ const zoomFn = function (map, e, zoomout) {
 };
 
 // TODO function to be renamed (and probably changed) later.  This is dumb.
-var grue_zoom = function (zoomout, map, evt) {
+const grue_zoom = (zoomout, map, evt) => {
     // if no event, fake it and center on current view.
     // TODO Do we even ACCEPT events anymore?
   if (!evt) {
@@ -43,7 +44,7 @@ var grue_zoom = function (zoomout, map, evt) {
 };
 
 const toolLogic = {
-  'DRAG' : {
+  'DRAG': {
     'dragging': false,
     'last_mouse': [0, 0],
 
@@ -74,7 +75,7 @@ const toolLogic = {
   },
   'SELECT': {
     'mousedown': function (map, e) {
-    debugger;
+      debugger;
     },
     'mousemove': function (map, e) {},
     'mouseup': function (map, e) {},
@@ -84,7 +85,8 @@ const toolLogic = {
   'EYEDROPPER': {
     'mousedown': function (map, e) {
       console.log('EYEDROPPER->mousedown...');
-      if (!window.selected_layer) {
+
+      if (!getSelectedLayer()) {
         console.log('You havent selected a layer yet.');
         window.alert('You havent selected a layer yet.');
         return;
@@ -95,9 +97,9 @@ const toolLogic = {
         return;
       }
 
-      let tIdx;
+      let tIdx = null;
       let zIdx = -1;
-      let selector;
+      let selector = null;
       const mapOffsetX = map.camera[0];
       const mapOffsetY = map.camera[1];
       const mouseOffsetX = e.offsetX;
@@ -116,8 +118,8 @@ const toolLogic = {
       };
 
       // TODO: using a valid integer as a sentinel is stupid. using sentinels is stupid. you're stupid, grue.
-      if (window.selected_layer.map_tileData_idx > 900) {
-        switch (window.selected_layer.map_tileData_idx) {
+      if (getSelectedLayer().map_tileData_idx > 900) {
+        switch (getSelectedLayer().map_tileData_idx) {
           case 999:
             zIdx = map.getZone(tX, tY);
             console.log('ZONES!: ' + zIdx);
@@ -138,14 +140,14 @@ const toolLogic = {
         if (map.mapData.isTileSelectorMap) {
           doVSPselector(tX, tY, map);
         } else {
-          tIdx = map.getTile(tX, tY, window.selected_layer.map_tileData_idx);
+          tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
           map.selection.deselect();
           map.selection.add(tX, tY, 1, 1);
         }
       }
 
       selector = '#left-palette';
-      setTileSelectorUI(selector, tIdx, map, 0);
+      setTileSelectorUI(selector, tIdx, map, 0, getSelectedLayer().layer.vsp);
 
       // map.dragging = true;
       // window.$MAP_WINDOW.draggable('disable');
@@ -165,7 +167,7 @@ const toolLogic = {
     'mousedown': function (map, e) {
       console.log('DRAW->mousedown...');
 
-      if (!window.selected_layer) {
+      if (!getSelectedLayer()) {
         console.log('You havent selected a layer yet.');
         window.alert('You havent selected a layer yet.');
         return;
@@ -188,14 +190,14 @@ const toolLogic = {
       const tY = parseInt(oY / 16);
 
       // TODO: Again, this is dumb.  LALALA.
-      if (window.selected_layer.map_tileData_idx === 999) {
+      if (getSelectedLayer().map_tileData_idx === 999) {
         map.setZone(tX, tY, getActiveZone());
         return;
       } else {
-        /// obs do this too right now. 998
+        // TODO obs do this too right now. 998
         map.UndoRedo.change_one_tile(
             tX, tY,
-            window.selected_layer.map_tileData_idx,
+            getSelectedLayer().map_tileData_idx,
             getCurrentlySelectedTile()
         );
       }
@@ -260,7 +262,6 @@ const setupToolClick = (toolObj, toolName) => {
 const setupTools = () => {
   for (const prop in toolLogic) {
     if (toolLogic.hasOwnProperty(prop)) {
-
       // or if (Object.prototype.hasOwnProperty.call(obj,prop)) for safety...
       // console.info('Initializing tool: ', prop, '...');
 
@@ -281,8 +282,8 @@ const setupTools = () => {
 };
 setupTools();
 
-var tools = function (action, map, evt) {
-  var mode = window.TOOLMODE;
+const tools = (action, map, evt) => {
+  const mode = window.TOOLMODE;
 
   if (toolLogic.hasOwnProperty(mode) && toolLogic[mode].hasOwnProperty(action)) {
     toolLogic[mode][action](map, evt);
@@ -291,8 +292,7 @@ var tools = function (action, map, evt) {
   }
 };
 
-function initToolsToMapContainer(renderContainer, map) {
-
+const initToolsToMapContainer = (renderContainer, map) => {
   renderContainer.on('mousedown', function (e) {
     tools('mousedown', map, e);
   });
@@ -305,10 +305,10 @@ function initToolsToMapContainer(renderContainer, map) {
   renderContainer.on('mousewheel', function (e) {
     tools('mousewheel', map, e);
   });
-}
+};
 
-var updateZoomText = function () {
-  var txt = (100 / window.$$$currentMap.camera[2]) + '%';
+const updateZoomText = () => {
+  const txt = (100 / window.$$$currentMap.camera[2]) + '%';
 
   $('#info-zoom').text(txt);
 };
@@ -409,13 +409,13 @@ $('#btn-add-tree').on('click', (e) => {
       const mapOffsetY = map.camera[1];
       const mouseOffsetX = evt.offsetX;
       const mouseOffsetY = evt.offsetY;
-      const tilesize = map.vspData[window.selected_layer.layer.vsp].tilesize;
+      const tilesize = map.vspData[getSelectedLayer().layer.vsp].tilesize;
 
       map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX * map.camera[2])) / tilesize.width);
       map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY * map.camera[2])) / tilesize.height);
     },
     mouseup: (map, evt) => {
-      map.entityPreview.location.layer = window.selected_layer.layer.name;
+      map.entityPreview.location.layer = getSelectedLayer().layer.name;
       map.addEntity(map.entityPreview, map.entityPreview.location);
       map.entityPreview = null;
       window.TOOLMODE = 'DRAG';

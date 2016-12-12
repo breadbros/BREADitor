@@ -22,40 +22,75 @@ const initializeTileSelectorsForMap = (imageFile) => {
 };
 
 const updateInfoWindow = () => {
-  $('#info-selected-tiles').text(leftTile + ',' + rightTile);
+  $('#info-selected-tiles').text(leftTile() + ',' + rightTile() + ' (vsp: ' + _last_vsp + ')');
 };
 
+let selectedTilesPerVSP = {};
+let _last_vsp = null;
 let _last_map = null;
-export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx) => {
+
+const leftTile = (val) => {
+  if (typeof val !== 'undefined') {
+    selectedTilesPerVSP[_last_vsp].leftTile = parseInt(val);
+  }
+
+  return selectedTilesPerVSP[_last_vsp].leftTile;
+};
+
+const rightTile = (val) => {
+  if (typeof val !== 'undefined') {
+    selectedTilesPerVSP[_last_vsp].rightTile = parseInt(val);
+  }
+
+  return selectedTilesPerVSP[_last_vsp].rightTile;
+};
+
+export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
   if (_last_map !== map) {
-    initializeTileSelectorsForMap(map.vspData['default'].source_image);
+    console.info('last_map !== map', _last_map, map);
+    selectedTilesPerVSP = {};
     _last_map = map;
   }
 
+  if (!selectedTilesPerVSP[whichVSP]) {
+    console.info('generating new placeholder tiles for', whichVSP);
+    selectedTilesPerVSP[whichVSP] = {
+      leftTile: 0,
+      rightTile: 0
+    };
+  }
+
+  if (_last_vsp !== whichVSP) {
+    console.info('_last_vsp !== whichVSP', _last_vsp, whichVSP);
+    initializeTileSelectorsForMap(map.vspData[whichVSP].source_image);
+
+    _last_vsp = whichVSP;
+  }
+
+  /// TODO: This slotIdx paradigm is dumb.  Kill it.
   if (slotIdx === 0) {
-    leftTile = vspIDX;
+    leftTile(vspIDX);
   } else if (slotIdx === 1) {
-    rightTile = vspIDX;
+    rightTile(vspIDX);
   } else {
     throw new Error('Unknwon slotIdx: ' + slotIdx);
   }
 
   updateInfoWindow();
 
-  const loc = map.getVSPTileLocation(window.selected_layer.layer.vsp, vspIDX);
+  const loc = map.getVSPTileLocation(whichVSP, vspIDX);
   $(whichOne).css('background-position', '-' + (loc.x * 2) + 'px -' + (loc.y * 2) + 'px'); // (offset *2)
 };
 
-// TODO - associate an encapulated object with VSPs so each active VSP can switch it's active tiles.
-let leftTile = 0;
-let rightTile = 0;
-
 export const toggleSelectedTiles = (map) => {
-  const _left = leftTile;
-  const _right = rightTile;
+  const _left = leftTile();
+  const _right = rightTile();
 
-  setTileSelectorUI('#left-palette', _right, map, 0);
-  setTileSelectorUI('#right-palette', _left, map, 1);
+  leftTile(_right);
+  rightTile(_left);
+
+  setTileSelectorUI('#left-palette', leftTile(), map, 0, _last_vsp);
+  setTileSelectorUI('#right-palette', rightTile(), map, 1, _last_vsp);
 };
 
 export const getCurrentlySelectedTile = () => {

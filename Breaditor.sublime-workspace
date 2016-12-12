@@ -4,6 +4,30 @@
 		"selected_items":
 		[
 			[
+				"tile",
+				"tileIdx"
+			],
+			[
+				"dim",
+				"dimensions"
+			],
+			[
+				"left",
+				"leftTile"
+			],
+			[
+				"layer",
+				"layerIdx"
+			],
+			[
+				"cons",
+				"console"
+			],
+			[
+				"get",
+				"getLayerData"
+			],
+			[
 				"ex",
 				"expectedVal"
 			],
@@ -44,10 +68,6 @@
 				"dims_y"
 			],
 			[
-				"dim",
-				"dims_x"
-			],
-			[
 				"ap",
 				"alpha"
 			],
@@ -78,10 +98,6 @@
 			[
 				"set",
 				"setZoneAlpha"
-			],
-			[
-				"get",
-				"getZoneAlpha"
 			],
 			[
 				"obstr",
@@ -139,101 +155,35 @@
 			"file": "app/app.html",
 			"settings":
 			{
-				"buffer_size": 5711,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/Palettes.js",
-			"settings":
-			{
-				"buffer_size": 1340,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/app.js",
-			"settings":
-			{
-				"buffer_size": 6032,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/Map.test.js",
-			"settings":
-			{
-				"buffer_size": 330,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "package.json",
-			"settings":
-			{
-				"buffer_size": 1978,
+				"buffer_size": 5513,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "README.md",
+			"file": "src/TileSelector.js",
 			"settings":
 			{
-				"buffer_size": 5111,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/grue/Downloads/RULES (1).md",
-			"settings":
-			{
-				"buffer_size": 3163,
+				"buffer_size": 2168,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "import { modal_error } from './Util.js';\nconst $ = require('jquery');\n\nvar currentZones = null;\nvar selectedZoneIdx = null;\n\nfunction initZonesWidget(map) {\n\n  currentZones = map.mapData.zones;\n\n  redraw_palette();\n}\n\nfunction _select_zone_ui_inner($node) {\n  $('.zone-row').removeClass('highlighted');\n  $node.addClass('highlighted');\n}\n\nfunction select_zone_by_index(idx) {\n  var $it_me;\n  if (!idx) {\n    idx = 0;\n  }\n\n  $it_me = $(\".zone-row[data-index=\" + idx+']');\n  _select_zone_ui_inner($it_me);\n  return $it_me;\n}\n\nfunction select_zone_from_pallete(evt) {\n  var $it_me = $(evt.target).closest('.zone-row');\n  _select_zone_ui_inner($it_me);\n  return $it_me;\n}\n\nfunction select_and_edit_zone_from_pallete(evt) {\n  var $it_me = select_zone_from_pallete(evt);\n  edit_zone_click(evt, $it_me.data('index'));\n}\n\nfunction redraw_palette() {\n  var $list = $('.zones-list');\n  $list.html('');\n  var $tmp;\n  $('#zones-number').text(currentZones.length);\n\n  var singleclick_handler = (evt) => {\n    select_zone_from_pallete(evt);\n  };\n\n  var doubleclick_handler = (evt) => {\n    var $it_me = select_zone_from_pallete(evt);\n    edit_zone_click(evt, $it_me.data('index'));\n  };\n\n  for (let i = 0; i < currentZones.length; i++) {\n\n    $tmp = $(\"<li class='zone-row' data-index='\" + i + \"'><span class='zone-index'></span><span class='zone-name'></span></li>\");\n    $tmp.find('.zone-index').text(i);\n    $tmp.find('.zone-name').text(currentZones[i].name);\n\n    $tmp.click(singleclick_handler);\n\n    $tmp.dblclick(doubleclick_handler);\n    $tmp.contextmenu(doubleclick_handler);\n\n    $list.append($tmp);\n  }\n\n  fixContainerSize();\n}\n\nvar fixContainerSize = function () {\n  var palette = $('.zones-palette');\n  var container = $('.zones-palette .window-container');\n\n  container.height(palette.height() - 70);\n};\n\n\n$('.zones-palette').resize(function () {\n  fixContainerSize();\n});\n\n$('.zones-palette #zones-new').click((evt) => {\n  new_zone_click(evt);\n});\n\n$('.zones-palette #zones-spreadsheet').click(() => {\n  alert('SPREAD THAT SHEET ZONE SHEIT');\n});\n\nvar template = \"<div>Name: <input id='zone_name'></div>\";\ntemplate += \"<div>Activation Script: <input id='zone_activation_script'></div>\";\ntemplate += \"<div>Activation Chance: <select id='zone_activation_chance'></select></div>\";\ntemplate += \"<div>Adjacent Activation?: <input type='checkbox' id='zone_can_by_adjacent_activated'></div>\";\n\n// {name: \"NULL_ZONE\", activation_script: \"\", activation_chance: 0, can_by_adjacent_activated: false}\"\n\nfunction setup_template() {\n  var $template = $(template);\n\n  var vals = new Array(256);// create an empty array with length 256\n  var select = $template.find('#zone_activation_chance');\n\n  $.each(vals, function (idx) {\n    select.append($('<option />').val(idx).text(idx));\n  });\n\n  return $template;\n}\n\nfunction new_zone_click(evt) {\n  _zone_click(evt);\n}\n\nfunction edit_zone_click(evt, id) {\n  _zone_click(evt, id);\n}\n\nfunction _zone_click(evt, id) {\n  evt.stopPropagation();\n\n  var dialog;\n\n  var zone = currentZones[id];\n\n  $(() => {\n\n    var $template = setup_template();\n\n    if (zone) {\n      $(\"#modal-dialog\").attr('title', \"Edit Zone \" + id+')');\n    } else {\n      $(\"#modal-dialog\").attr('title', \"Add New Zone (id: \" + (currentZones.length - 1)+')');\n    }\n    $(\"#modal-dialog\").html('');\n    $(\"#modal-dialog\").append($template);\n\n    if (zone) {\n      console.log('Editing: ' + zone.name);\n\n      $template.find('#zone_name').val(zone.name);\n      $template.find('#zone_activation_script').val(zone.activation_script);\n      $template.find('#zone_activation_chance').val(zone.activation_chance);\n      $template.find('#zone_can_by_adjacent_activated').prop( 'checked', zone.can_by_adjacent_activated);\n    }\n\n    $(\"#modal-dialog\").show();\n    dialog = $(\"#modal-dialog\").dialog({\n      width: 500,\n      modal: true,\n      buttons: {\n        Save: () => {\n          var _id = ($.isNumeric(id) && zone) ? id : currentZones.length;\n\n          update_zone(dialog, _id);\n        },\n        'Cancel': function () {\n          dialog.dialog(\"close\");\n        }\n      },\n      close: function () {\n        $(\"#modal-dialog\").html('');\n      }\n    });\n  });\n}\n\nfunction update_zone(dialog, zone_id) {\n\n  var name = dialog.find('#zone_name').val();\n  var script = dialog.find('#zone_activation_script').val();\n  var chance = dialog.find('#zone_activation_chance').val();\n  var adjAct = dialog.find('#zone_can_by_adjacent_activated').is(':checked');\n  var zone = null;\n\n  if (!$.isNumeric(zone_id) || zone_id < 0) {\n    modal_error(\"Invalid input: zone_id (\" + zone_id+') is invalid.');\n    return;\n  }\n\n  if (!$.isNumeric(chance)) {\n    modal_error('Invalid input: chance not numeric.');\n    return;\n  }\n\n  // if( zone_id < currentZones.length ) {\n  //   zone = currentZones[zone_id];\n  // }\n\n  console.log('TODO: scriptname legality check.');\n  console.log('TODO: optional scriptname uniqueness check.');\n  console.log('TODO: optional scriptname existance-in-source check.');\n\n  zone = {\n    name: name,\n    activation_script: script,\n    activation_chance: chance,\n    can_by_adjacent_activated: adjAct\n  };\n\n  currentZones[zone_id] = zone;\n  redraw_palette();\n\n  dialog.dialog(\"close\");\n}\n\nfunction write_zone(id, zone) {\n  window.$$$currentMap.mapData.zones[id] = zone;\n}\n\nvar _zoneVisibility = true;\nvar _zoneAlpha = 1;\n\nexport var setZoneVisibility = (val) => {\n  _zoneVisibility = !!val;\n};\n\nexport var getZoneVisibility = () => {\n  return _zoneVisibility;\n};\n\nexport var setZoneAlpha = (val) => {\n  _zoneAlpha = val;\n};\n\nexport var getZoneAlpha = () => {\n  return _zoneAlpha;\n};\n\nvar _activeZone = 0;\n\nexport var getActiveZone = () => {\n  return _activeZone;\n};\n\nexport var setActiveZone = (newZone) => {\n  select_zone_by_index(newZone);\n  _activeZone = newZone;\n};\n\nexport var scrollZonePalletteToZone = (zoneToFocus) => {\n  var $container = $('.zones-palette .window-container');\n  var $rowToScrollTo = $('.zone-row.highlighted');\n  var zoneIdx = $rowToScrollTo.data('index');\n  var msg = '';\n  var loc;\n  var $zone_0 = null;\n\n  if (!zoneToFocus) {\n    zoneToFocus = 0;\n  }\n\n  if (zoneIdx != zoneToFocus) {\n    msg = \"unexpected zone index, expected \" + zoneToFocus+', got ' + zoneIdx;\n    console.log(msg);\n    throw msg;\n  }\n\n  $zone_0 = $('.zone-row[data-index=0]');\n\n  loc = parseInt($rowToScrollTo.offset().top - $container.offset().top); // + Math.abs($zone_0.offset().top) ); //+ $container.height()) ;\n\n  $('.zones-palette .window-container').scrollTop(loc);\n};\n\nexport var ZonesWidget = {\n  initZonesWidget: initZonesWidget\n};\n",
-			"file": "src/js/ui/ZonesPalette.js",
-			"file_size": 6816,
-			"file_write_time": 131253389322212010,
-			"settings":
-			{
-				"buffer_size": 6546,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "import { modal_error } from './Util.js';\nimport { LayersWidget } from './LayersPalette.js';\nconst $ = require('jquery');\n\nvar _entityVisibility = true;\nvar _entityLayersExpanded = false;\n\nexport var setNormalEntityVisibility = (val) => {\n  _entityVisibility = !!val;\n};\n\nexport var getNormalEntityVisibility = () => {\n\n  return _entityVisibility;\n};\n\nexport var setEntityLayersExpanded = (val) => {\n  _entityLayersExpanded = !!val;\n};\n\nexport var getEntityLayersExpanded = () => {\n\n  return _entityLayersExpanded;\n};\n\nexport var shouldShowEntitiesForLayer = (layername) => {\n\n  if (!window.$$$currentMap.layerLookup[layername]) {\n    modal_error(\"cannot shouldShowEntitiesForLayer, '\" + layername + \"' is not a layer\");\n  }\n\n  let shouldHide = window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS;\n\n  return !shouldHide;\n};\n\nexport var setShowEntitiesForLayer = (layername, isVisible) => {\n  if (!window.$$$currentMap.layerLookup[layername]) {\n    modal_error(\"cannot setShowEntitiesForLayer, '\" + layername + \"' is not a layer\");\n  }\n\n  window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS = !isVisible;\n\n  console.log(\"ents(\" + layername+')' + window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS);\n};\n\n\nvar currentEntities = null;\nvar selectedEntityIdx = null;\n\nfunction initEntitiesWidget(map) {\n  currentEntities = map.mapData.entities;\n\n  redraw_palette();\n}\n\nfunction _select_entity_ui_inner($node) {\n  $('.entity-row').removeClass('highlighted');\n  $node.addClass('highlighted');\n}\n\nfunction select_entity_from_pallete(evt) {\n  var $it_me = $(evt.target).closest('.entity-row');\n  _select_entity_ui_inner($it_me);\n  return $it_me;\n}\n\nfunction redraw_palette() {\n  var $list = $('.entity-list');\n  $list.html('');\n  var $tmp;\n  $('#entity-number').text(currentEntities.length);\n\n  var singleclick_handler = (evt) => {\n    select_entity_from_pallete(evt);\n  };\n\n  var doubleclick_handler = (evt) => {\n    var $it_me = select_entity_from_pallete(evt);\n    edit_entity_click(evt, $it_me.data('index'));\n  };\n\n  for (let i = 0; i < currentEntities.length; i++) {\n    $tmp = $(\"<li class='entity-row' data-index='\" + i + \"'><span class='entity-index'></span><span class='entity-name'></span></li>\");\n    $tmp.find('.entity-index').text(i);\n    $tmp.find('.entity-name').text(currentEntities[i].name);\n\n    $tmp.click(singleclick_handler);\n    $tmp.dblclick(doubleclick_handler);\n    $tmp.contextmenu(doubleclick_handler);\n\n    $list.append($tmp);\n  }\n\n  fixContainerSize();\n}\n\nvar fixContainerSize = function () {\n  var palette = $('.entity-palette');\n  var container = $('.entity-palette .window-container');\n\n  container.height(palette.height() - 70);\n};\n\n$('.entity-palette').resize(function () {\n  fixContainerSize();\n});\n\n$('.entity-palette #entity-new').click((evt) => {\n  new_entity_click(evt);\n});\n\n$('.entity-palette #entity-spreadsheet').click(() => {\n  alert('SPREAD THAT SHEET entity SHEIT');\n});\n\nvar template = \"<div>Name: <input id='entity_name'></div>\";\ntemplate += \"<div>Filename: <input id='entity_filename'></div>\";\ntemplate += \"<div>Animation: <select id='entity_animation'></select>\";\ntemplate += \"<div>Facing: <select id='entity_facing'></select></div>\";\ntemplate += \"<div>Activation Script: <input id='entity_activation_script'></div>\";\ntemplate += \"<div>Pays attention to obstructions?: <input type='checkbox' id='entity_pays_attention_to_obstructions'></div>\";\ntemplate += \"<div>Is an obstructions?: <input type='checkbox' id='entity_is_an_obstruction'></div>\";\ntemplate += \"<div>Autofaces when activated?: <input type='checkbox' id='entity_autofaces'></div>\";\ntemplate += \"<div>Speed: <input id='entity_speed'></div>\";\ntemplate += \"<div class='tile_coordinates'>Location.tx: <input id='entity_location_tx'></div>\";\ntemplate += \"<div class='tile_coordinates'>Location.ty: <input id='entity_location_ty'></div>\";\ntemplate += \"<div class='pixel_coordinates'>Location.px: <input id='entity_location_px'></div>\";\ntemplate += \"<div class='pixel_coordinates'>Location.py: <input id='entity_location_py'></div>\";\n\ntemplate += \"<div>Location.layer: <select id='entity_location_layer'></select></div>\";\ntemplate += \"<div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly></textarea></div>\";\n\n\nfunction setup_template(ent, id) {\n  var $template = $(template);\n\n  if (ent) {\n    $(\"#modal-dialog\").attr('title', \"Edit Entity (id: \" + id+')');\n  } else {\n    $(\"#modal-dialog\").attr('title', \"Add New Entity (id: \" + (currentEntities.length - 1)+')');\n  }\n\n  if (ent) {\n    console.log('Editing: ' + ent.name);\n\n    $template.find('#entity_name').val(ent.name);\n    $template.find('#entity_filename').val(ent.filename);\n\n    $template.find('#entity_activation_script').val(ent.activation_script);\n    $template.find('#entity_speed').val(ent.speed);\n\n    $template.find('#entity_location_tx').val(ent.location.tx);\n    $template.find('#entity_location_ty').val(ent.location.ty);\n\n    if (typeof ent.location.px == 'undefined') {\n      ent.location.px = ent.location.tx * 16; // TODO: should be based on tilesize\n      ent.location.py = ent.location.ty * 16; // TODO: should be based on tilesize\n    }\n\n    $template.find('#entity_location_px').val(ent.location.px);\n    $template.find('#entity_location_py').val(ent.location.py);\n\n    // http://regex.info/blog/2006-09-15/247\n    $template.find('#entity_wander').val(JSON.stringify(ent.wander).replace(/{/g, '{\\n').replace(/}/g, '\\n}').replace(/,/g, ',\\n').replace(/\":/g, '\": ').replace(/^\"/mg, '\\t\"'));\n\n    $template.find('#entity_pays_attention_to_obstructions').prop( 'checked', ent.pays_attention_to_obstructions);\n    $template.find('#entity_is_an_obstruction').prop( 'checked', ent.is_an_obstruction);\n    $template.find('#entity_autofaces').prop( 'checked', ent.autofaces);\n\n    $template.find('#entity_filename').click(() => {\n      alert('Pop up file dialog here.');\n    });\n\n    var entData;\n    if (window.$$$currentMap.entityData[ent.filename]) {\n      entData = window.$$$currentMap.entityData[ent.filename];\n    } else {\n      console.warn(\"I DO NOT KNOW HOW TO RENDER [\" + ent.filename + \"]\");\n      entData = window.$$$currentMap.entityData['__default__'];\n    }\n\n    // = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];\n    var animationKeyset = Object.keys(entData.animations);\n\n    var $entAnim = $template.find('#entity_animation');\n\n    // / repopulate animation select\n    $entAnim.empty();\n    $.each(animationKeyset, (key, value) => {\n      $entAnim.append(\n          $('<option></option>')\n          .attr('value', value)\n          .text(value)\n        );\n    });\n\n    // / set value.\n    $entAnim.val(ent.animation);\n\n    var $entFace = $template.find('#entity_facing');\n    var faceKeyset = ['Up', 'Down', 'Left', 'Right'];\n\n    // / repopulate animation select\n    $entFace.empty();\n    $.each(faceKeyset, (key, value) => {\n      $entFace.append(\n          $('<option></option>')\n          .attr('value', value)\n          .text(value)\n        );\n    });\n\n    // / set value.\n    $entFace.val(ent.facing);\n\n\n    var $entLocLay = $template.find('#entity_location_layer');\n    var locLayKeyset = LayersWidget.get_layernames_by_rstring_order();\n    $entLocLay.empty();\n    $.each(locLayKeyset, (key, value) => {\n      $entLocLay.append(\n          $('<option></option>')\n          .attr('value', value)\n          .text(value)\n        );\n    });\n\n    $entLocLay.val(ent.location.layer);\n  }\n\n  return $template;\n}\n\nfunction assert_tileness() {\n  var loc_tx = parseInt($('#entity_location_tx').val());\n  var loc_ty = parseInt($('#entity_location_ty').val());\n\n  $('#entity_location_px').val(loc_tx * 16);  // TODO should be tilesize not 16\n  $('#entity_location_py').val(loc_ty * 16);  // TODO should be tilesize not 16\n}\n\nfunction assert_pixel_versus_tile_in_editing() {\n  var loc_tx = parseInt($('#entity_location_tx').val());\n  var loc_ty = parseInt($('#entity_location_ty').val());\n\n  var loc_px = parseInt($('#entity_location_px').val());\n  var loc_py = parseInt($('#entity_location_py').val());\n\n  var pixels_on = false;\n  var tiles_on = false;\n\n  var tiles = $('div.tile_coordinates input');\n  var pixels = $('div.pixel_coordinates input');\n\n  tiles.css('background-color', '#AAA');\n  pixels.css('background-color', '#AAA');\n\n  if (!loc_px && !loc_py) {\n    tiles_on = true;\n  } else {\n    if (loc_tx * 16 == loc_px && loc_ty * 16 == loc_py) { // TODO: pi\n      tiles_on = true;\n    } else {\n      pixels_on = true;\n    }\n  }\n\n  if (tiles_on) {\n    tiles.css('background-color', 'white');\n  }\n\n  if (pixels_on) {\n    pixels.css('background-color', 'white');\n  }\n}\n\n\nfunction new_entity_click(evt) {\n  _entity_click(evt);\n}\n\nfunction edit_entity_click(evt, id) {\n  _entity_click(evt, id);\n}\n\nfunction _entity_click(evt, id) {\n  evt.stopPropagation();\n\n  var dialog;\n\n  var ent = currentEntities[id];\n\n  $(() => {\n\n    var $template = setup_template(ent, id);\n\n    $(\"#modal-dialog\").html('');\n    $(\"#modal-dialog\").append($template);\n\n    $(\"#modal-dialog\").show();\n\n    assert_pixel_versus_tile_in_editing();\n\n    dialog = $(\"#modal-dialog\").dialog({\n      width: 500,\n      modal: true,\n      title: $(\"#modal-dialog\").attr('title'),\n      buttons: {\n        Save: () => {\n          var _id = ($.isNumeric(id) && ent) ? id : currentEntities.length;\n\n          update_entity(dialog, _id);\n        },\n        'Cancel': function () {\n          dialog.dialog(\"close\");\n        }\n      },\n      close: function () {\n        $(\"#modal-dialog\").html('');\n      }\n    });\n  });\n\n  $('div.tile_coordinates input').on( 'change', () => {\n    assert_tileness();\n    assert_pixel_versus_tile_in_editing();\n  });\n\n  $('div.pixel_coordinates input').on( 'change', () => {\n    assert_pixel_versus_tile_in_editing();\n  });\n}\n\nfunction update_entity(dialog, ent_id) {\n\n  var entity_name = $('#entity_name').val(); // TODO: validate uniqueness\n  var entity_filename = $('#entity_filename').val(); // TODO: validate existance\n  var entity_activation_script = $('#entity_activation_script').val();\n  var entity_speed = parseInt($('#entity_speed').val());\n\n  var entity_pays_attention_to_obstructions = $('#entity_pays_attention_to_obstructions').is(':checked');\n  var entity_is_an_obstruction = $('#entity_is_an_obstruction').is(':checked');\n  var entity_autofaces = $('#entity_autofaces').is(':checked');\n\n\n  var entity_wander;\n\n  if (ent_id < currentEntities.length) { // edit\n    entity_wander = currentEntities[ent_id].wander; // TODO: allow actual editing of wander.\n    console.log('YOU REALLY NEED TO IMPLEMENT WANDER-EDITING');\n  } else { // add\n    entity_wander = {mode: 'Scripted', delay: 0, initial_movestring: ''};\n    alert(\"Creating new entity with bullshit wander because you haven't actually added it. Dick.\");\n  }\n\n\n  var entity_animation = $('#entity_animation').val();\n  var entity_facing = $('#entity_facing').val();\n\n  var loc_tx = parseInt($('#entity_location_tx').val());\n  var loc_ty = parseInt($('#entity_location_ty').val());\n\n  var loc_px = parseInt($('#entity_location_px').val());\n  var loc_py = parseInt($('#entity_location_py').val());\n\n  var loc_l = $('#entity_location_layer').val();\n\n  // TODO : PX/PY?\n  var loc = {\n    tx: loc_tx,\n    ty: loc_ty,\n    px: loc_px,\n    py: loc_py,\n    layer: loc_l\n  };\n\n  var ent = null;\n\n  if (!$.isNumeric(ent_id) || ent_id < 0) {\n    modal_error(\"Invalid input: ent_id (\" + ent_id+') is invalid.');\n    return;\n  }\n\n  if (!$.isNumeric(entity_speed)) {\n    modal_error(\"Invalid input: speed not numeric (\" + entity_speed+').');\n    return;\n  }\n\n  ent = {\n    'name': entity_name,\n    'filename': entity_filename,\n\n    'facing': entity_facing,\n    'pays_attention_to_obstructions': entity_pays_attention_to_obstructions,\n    'is_an_obstruction': entity_is_an_obstruction,\n    'autofaces': entity_autofaces,\n    'speed': entity_speed,\n    'wander': entity_wander,\n    'activation_script': entity_activation_script,\n    'animation': entity_animation,\n\n    'location': loc\n  };\n\n  var old_layer;\n  var new_layer;\n  currentEntities[ent_id] = ent;\n\n  if (currentEntities[ent_id] && currentEntities[ent_id].location) {\n    old_layer = currentEntities[ent_id].location.layer;\n  } else {\n    old_layer = new_layer;\n  }\n\n  if (old_layer && new_layer && old_layer != new_layer) {\n    relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);\n  }\n\n  redraw_palette();\n\n  window.$$$currentMap.createEntityRenderData(); // TODO: NO NO NO NO NONONONNONONNONO\n\n  dialog.dialog(\"close\");\n}\n\n\n// / todo: ent_name should be a uuid\n// / todo: until then, make sure ent_name is verified unique\nvar relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {\n  var myboy;\n  var ents = window.$$$currentMap.entities;\n\n  for (var i = ents[old_layer].length - 1; i >= 0; i--) {\n    if (ents[old_layer][i].name == ent_name) {\n\n      if (!ents[new_layer]) {\n        ents[new_layer] = [];\n      }\n\n      myboy = ents[old_layer].splice(i, 1);\n      ents[new_layer].push(myboy[0]); // remember to unbox. :(\n\n      return;\n    }\n  }\n\n  alert(\"FAILED TO MOVE entity '\" + ent_name + \"' from layer '\" + old_layer + \"' to layer '\" + new_layer + \"'.  FOR REASONS.\");\n};\n\nexport var EntitiesWidget = {\n  initEntitiesWidget: initEntitiesWidget\n};\n",
-			"file": "src/js/ui/EntityPalette.js",
-			"file_size": 13730,
-			"file_write_time": 131253389321677550,
+			"contents": "Searching 65 files for \"btn-tool-select\"\n\nC:\\grue\\Breaditor\\src\\Tools.js:\n   79      'mousemove': function (map, e) {},\n   80      'mouseup': function (map, e) {},\n   81:     'button_element': '#btn-tool-select',\n   82      'human_name': 'Select'\n   83    },\n\n1 match in 1 file\n",
 			"settings":
 			{
-				"buffer_size": 13278,
-				"line_ending": "Windows"
+				"buffer_size": 278,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
 			}
 		},
 		{
-			"contents": "import { Tools } from '../../Tools.js';\nimport { modal_error } from './Util.js';\nimport { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js';\nimport { setShowEntitiesForLayer, shouldShowEntitiesForLayer,\n         setNormalEntityVisibility, getNormalEntityVisibility,\n         setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js';\nimport { TilesetSelectorWidget } from './TilesetSelectorPalette.js';\nconst $ = require('jquery');\n\nvar list;\n\nvar _obsVisibility = true;\nvar _obsAlpha = 1;\n\nexport var setObsVisibility = (val) => {\n  Tools.setObstructionsVisible(val);\n};\n\nexport var getObsVisibility = () => {\n  return Tools.shouldShowObstructions();\n};\n\nexport var setObsAlpha = (val) => {\n  _obsAlpha = val;\n};\n\nexport var getObsAlpha = () => {\n  return _obsAlpha;\n};\n\nvar new_layer_click = (evt) => {\n  _layer_click(evt);\n};\n\nvar layers = null;\nvar map = null;\nfunction initLayersWidget(_map) {\n  map = _map;\n  layers = map.mapData.layers;\n\n  redraw_palette(map);\n};\n\nfunction redraw_palette(map) {\n  list = $('.layers-palette .layers-list');\n  var newLayerContainer = null;\n  var l = null;\n  var line = null;\n\n  function handleEyeball(layerDiv, layer) {\n    layerDiv.removeClass('eye-open');\n    layerDiv.removeClass('eye-closed');\n\n    if (!layer.MAPED_HIDDEN) {\n      layerDiv.addClass('eye-open');\n    } else {\n      layerDiv.addClass('eye-closed');\n    }\n  }\n\n  $('.layers-palette #layers-new').click((evt) => {\n    new_layer_click(evt);\n  });\n\n  function addLayerEyeballHandler($eyeball, i) {\n    $eyeball.on( 'click', function (evt) {\n      layers[i].MAPED_HIDDEN = !layers[i].MAPED_HIDDEN;\n\n      handleEyeball($eyeball, layers[i]);\n\n      evt.stopPropagation();\n    });\n  }\n\n  function handleEntityEyeball($btn, layerName) {\n    $btn.removeClass('showEnts');\n    $btn.removeClass('hideEnts');\n\n    if (shouldShowEntitiesForLayer(layerName)) {\n      $btn.addClass('showEnts');\n    } else {\n      $btn.addClass('hideEnts');\n    }\n  }\n\n  function addLayerEntityEyeballHandler($layerContainer, idx) {\n    var layerName = layers[i].name;\n    var $btn = $layerContainer.find('.entity_layer .eyeball_button');\n\n    handleEntityEyeball($btn, layerName);\n\n    $btn.on( 'click', function (evt) {\n      setShowEntitiesForLayer(layerName, !shouldShowEntitiesForLayer(layerName));\n\n      handleEntityEyeball($btn, layerName);\n\n      evt.stopPropagation();\n    });\n  }\n\n  function removeAllSelectedLayers(selClass) {\n    if (window && window.selected_layer) {\n        window.selected_layer.$container.removeClass(selClass);\n      }\n  }\n\n  function addZoneSelectHandler($zone_container) {\n    $zone_container.on( 'click', function (evt) {\n\n        var selClass = 'selected';\n\n        removeAllSelectedLayers(selClass);\n\n        // / TODO: this is disgusting, right?  right.\n        window.selected_layer = {\n          map_tileData_idx: 999,\n          layer: window.$$$currentMap.zoneData,\n          $container: $zone_container\n        };\n\n        $zone_container.addClass(selClass);\n\n        evt.stopPropagation();\n      });\n  }\n\n  function addLayerSelectHandler($layer_container, i) {\n    $layer_container.on( 'click', function (evt) {\n\n        var selClass = 'selected';\n\n        removeAllSelectedLayers(selClass);\n\n        window.selected_layer = {\n          map_tileData_idx: i,\n          layer: layers[i],\n          $container: $layer_container\n        };\n        $layer_container.addClass(selClass);\n\n        TilesetSelectorWidget.initTilesetSelectorWidget(map, layers[i]);\n\n        evt.stopPropagation();\n      });\n  }\n\n  function addLayerEditHandler($layer_container, i) {\n    $layer_container.on( 'dblclick', function (evt) {\n\n        console.log(\"Allow editing of the layer's name here?\");\n\n        evt.stopPropagation();\n      });\n  }\n\n\n  function setup_shitty_zone_layer($list) {\n\n    var tmpLayer = {\n      MAPED_HIDDEN : !getZoneVisibility(),\n      alpha: getZoneAlpha()\n    };\n    var $eyeball;\n\n    var newLayerContainer = generateLayerContainer(l, i);\n\n\n    $eyeball = generateContent(999, tmpLayer, newLayerContainer);\n    newLayerContainer.find('.layer_name').text('Zones');\n    newLayerContainer.find('.entity_layer').remove();\n    newLayerContainer.addClass('nosort');\n    newLayerContainer.data('alpha', getZoneAlpha());\n    newLayerContainer.data('rstring_ref', 'ZZZ');\n\n    newLayerContainer.find('.layer_parallax').remove();\n\n    addZoneSelectHandler(newLayerContainer);\n    $eyeball.on( 'click', function (evt) {\n\n\n      setZoneVisibility(!getZoneVisibility());\n\n      tmpLayer.MAPED_HIDDEN = !getZoneVisibility();\n\n      handleEyeball($eyeball, tmpLayer);\n\n      evt.stopPropagation();\n    });\n\n    $list.append(newLayerContainer);\n  }\n\n\n  function addObstructionSelectHandler($obs_container) {\n    $obs_container.on( 'click', function (evt) {\n\n        var selClass = 'selected';\n\n        removeAllSelectedLayers(selClass);\n\n        // / TODO: this is disgusting, right?  right.\n        window.selected_layer = {\n          map_tileData_idx: 998,\n          layer: window.$$$currentMap.zoneData,\n          $container: $obs_container\n        };\n\n        TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData);\n\n        $obs_container.addClass(selClass);\n\n        evt.stopPropagation();\n      });\n  }\n\n  function setup_shitty_obstruction_layer($list) {\n\n    var tmpLayer = {\n      MAPED_HIDDEN : !getObsVisibility(),\n      alpha: getObsAlpha()\n    };\n    var $eyeball;\n    var newLayerContainer = generateLayerContainer(l, i);\n\n    $eyeball = generateContent(998, tmpLayer, newLayerContainer);\n    newLayerContainer.find('.layer_name').text('Obstructions');\n    newLayerContainer.find('.entity_layer').remove();\n    newLayerContainer.addClass('nosort');\n    newLayerContainer.data('alpha', getObsAlpha());\n    newLayerContainer.data('rstring_ref', 'ZZZ');\n\n    newLayerContainer.find('.layer_parallax').remove();\n\n    addObstructionSelectHandler(newLayerContainer);\n    $eyeball.on( 'click', (evt) => {\n      setObsVisibility(!getObsVisibility());\n\n      tmpLayer.MAPED_HIDDEN = !getObsVisibility();\n      handleEyeball($eyeball, tmpLayer);\n      evt.stopPropagation();\n    });\n\n    $list.append(newLayerContainer);\n  }\n\n  function addEntitySelectHandler($entity_container) {\n    $entity_container.click((evt) => {\n      console.log(\"Haha, charade you are.\");\n    });\n  };\n\n  function _setup_entity_eyeball(node) {\n    var $eyeball = $(node).find('.eyeball_button');\n    var tmpLayer = {\n      MAPED_HIDDEN : !getNormalEntityVisibility(),\n      alpha: 1\n    };\n\n    handleEyeball($eyeball, tmpLayer);\n\n    $eyeball.click((evt) => {\n      setNormalEntityVisibility(!getNormalEntityVisibility());\n\n      tmpLayer.MAPED_HIDDEN = !getNormalEntityVisibility(); // todo these nouns need to align.   entityVisibile vs HIDDEN wtf\n\n      handleEyeball($eyeball, tmpLayer);\n\n      evt.stopPropagation();\n    });\n  }\n\n  function handleEntityExpand(button) {\n    button.removeClass('expand');\n    button.removeClass('contract');\n\n    if (getEntityLayersExpanded()) {\n      button.addClass('expand');\n\n      $('.entity_layer').show();\n\n    } else {\n      button.addClass('contract');\n\n      $('.entity_layer').hide();\n    }\n\n    resizeWindow();\n  }\n\n  function _setup_entity_expand(node) {\n    var $expand_entities = $(node).find('.entity_expand_button');\n\n    $expand_entities.click((evt) => {\n      setEntityLayersExpanded(!getEntityLayersExpanded());\n\n      handleEntityExpand($expand_entities);\n\n      evt.stopPropagation();\n    });\n  }\n\n  function setup_shitty_entity_layer(node, $list) {\n\n    _setup_entity_eyeball(node);\n\n    _setup_entity_expand(node);\n\n\n    $list.append(node);\n  }\n\n  function reorder_layers_by_rstring_priority($list, map) {\n\n    var childs = $list.children('li');\n    childs.detach();\n\n    var rstring_ref = null;\n    var rstring_cur_target = null;\n    var cur_kid = null;\n    var node = null;\n\n    setup_shitty_zone_layer($list);\n    setup_shitty_obstruction_layer($list);\n\n    // / ZONES\n\n    // node = $(\"<li class='layer ui-state-default'><button class='eyeball_button'>?</button>Entities (default)</li>\");\n    // node.data(\"rstring_ref\", \"E\");\n    // $list.append(node);\n\n    for (var i = map.layerRenderOrder.length - 1; i >= 0; i--) {\n      rstring_cur_target = map.layerRenderOrder[i];\n      rstring_ref = parseInt(rstring_cur_target, 10);\n      if (isNaN(rstring_ref)) {\n\n        // / TODO this is certainly the wrong place to populate \"R\" and \"E\" visually.\n        if (rstring_cur_target == \"E\") {\n          node = $(\"<li class='layer ui-state-default'><button class='eyeball_button'></button><button class='entity_expand_button'></button>Entities (default)</li>\");\n          node.data('rstring_ref', 'E');\n          node.data('layer_name', 'Entity Layer (E)');\n\n          setup_shitty_entity_layer(node, $list);\n\n        } else if (rstring_cur_target == \"R\") {\n          node = $(\"<li class='layer ui-state-default'><button class='eyeball_button question_mark'>?</button>'Render'</li>\");\n          node.data('rstring_ref', 'R');\n          $list.append(node);\n        } else {\n          console.log(\"UNKNOWN RSTRING PARTICLE '\" + rstring_cur_target + \"'\");\n        }\n\n        continue;\n      }\n\n      for (var j = childs.length - 1; j >= 0; j--) {\n        cur_kid = $(childs[j]);\n        if (cur_kid.data('rstring_ref') == rstring_cur_target) {\n          $list.append(cur_kid); // re-add to list\n          childs.splice(j, 1); // remove from childs array\n          break;\n        }\n      };\n\n      $('.eyeball_button.question_mark').click(function () {\n        console.log('unimplemented, weirdo.');\n      });\n    };\n\n    var $expand_entities = $(node).find('.entity_expand_button');\n    handleEntityExpand($expand_entities);\n  }\n\n  function resizeWindow() {\n    var h = 0;\n    var w = 0;\n\n    // / hackery of the worst calibur; probably a flaming trashbin.  do not trust.\n    $('.layers-palette').children().each(function (idx, kid) {\n      if (idx >= $('.layers-palette').children().length - 3) {\n        return; // / the last three are chrome for resizable windows.\n      }\n\n      h += $(kid).outerHeight(true);\n    });\n\n    w += $('.layers-palette .window-container').outerWidth(true);\n\n    h += 14; // todo fix this - needs to calc from top padding\n\n    $('.layers-palette').width(w);\n    $('.layers-palette').height(h);\n  }\n\n  function update_lucency(layer, dialog, special_case) {\n    var val = $('#new_layer_lucent').val().trim();\n\n    if (!$.isNumeric(val)) {\n      modal_error('Invalid input: not numeric.');\n      return;\n    }\n\n    if (val.indexOf('.') === -1) {\n      val = parseInt(val);\n\n      if (val < 0 || val > 100) {\n        modal_error('INVALID PERCENTAGE VALUE, range: [0...100]');\n        return;\n      } else {\n        val = val / 100;\n      }\n    } else { // parse fraction\n      val = parseFloat(val);\n      if (val < 0 || val > 1) {\n        modal_error('INVALID FLOAT VALUE, range:  [0...1]');\n        return;\n      }\n    }\n\n    switch (special_case) {\n      case 'zone':\n        setZoneAlpha(val);\n        break;\n      default:\n        layer.alpha = val;\n        break;\n    }\n\n    redrawAllLucentAndParallax();\n\n    dialog.dialog(\"close\");\n  }\n\n  function lucent_click(evt) {\n    var idx, layer, dialog;\n    var $me = $(evt.target).closest('li');\n    var special = '';\n\n    // / TODO: this is special-case and evil.  make more better.\n    if ($me.data('rstring_ref') === \"ZZZ\") {\n      layer = {\n        name: 'Zones',\n        alpha: getZoneAlpha()\n      };\n\n      special = 'zone';\n\n    } else {\n      idx = parseInt($me.data('rstring_ref')) - 1;\n      layer = window.$$$currentMap.mapData.layers[idx];\n    }\n\n\n    evt.stopPropagation();\n\n    $(() => {\n\n      var template = '<div>Layer: ' + layer.name + '</div>';\n      template += '<div>Current: ' + formatAlphaAsPercentage(layer.alpha) + '</div>';\n      template += \"<div>New: <input id='new_layer_lucent'>%</div>\";\n\n      $(\"#modal-dialog\").attr('title', 'Set layer Opacity');\n      $(\"#modal-dialog\").html(template);\n\n      $(\"#modal-dialog\").show();\n      dialog = $(\"#modal-dialog\").dialog({\n        modal: true,\n        buttons: {\n          Save: () => { update_lucency(layer, dialog, special); },\n          'Cancel': function () {\n            dialog.dialog(\"close\");\n          }\n        },\n        close: function () {\n          $(\"#modal-dialog\").html('');\n        }\n      });\n    });\n  }\n\n  function parallax_click(evt) {\n    var idx = parseInt($(this).closest('li').data('rstring_ref')) - 1;\n    var layer = window.$$$currentMap.mapData.layers[idx];\n\n    evt.stopPropagation();\n\n    // var newLucent = dialog\n    var dialog;\n\n    $(() => {\n\n      var template = '<div>Layer: ' + layer.name + '</div>';\n      template += '<div>Current (X:Y): ' + layer.parallax.X + \":\" + layer.parallax.Y+'</div>';\n      template += \"<div>New: <input id='new_layer_parallax_x' size=3>&nbsp;:&nbsp;<input id='new_layer_parallax_y' size=3></div>\";\n\n      $(\"#modal-dialog\").attr('title', 'Set layer Parallax');\n      $(\"#modal-dialog\").html(template);\n\n      $(\"#modal-dialog\").show();\n      dialog = $(\"#modal-dialog\").dialog({\n        modal: true,\n        buttons: {\n          Save: () => { update_parallax(layer, dialog); },\n          'Cancel': function () {\n            dialog.dialog(\"close\");\n          }\n        },\n        close: function () {\n          $(\"#modal-dialog\").html('');\n        }\n      });\n    });\n  }\n\n  function update_parallax(layer, dialog) {\n    var x = $('#new_layer_parallax_x').val().trim();\n    var y = $('#new_layer_parallax_y').val().trim();\n    var newParallax = {};\n\n    if (!$.isNumeric(x)) {\n      modal_error('Invalid input: x not numeric.');\n      return;\n    }\n    if (!$.isNumeric(y)) {\n      modal_error('Invalid input: y not numeric.');\n      return;\n    }\n\n    x = parseFloat(x);\n    y = parseFloat(y);\n\n    newParallax.X = x;\n    newParallax.Y = y;\n\n    layer.parallax = newParallax;\n\n    redrawAllLucentAndParallax();\n\n    dialog.dialog(\"close\");\n  }\n\n  function formatAlphaAsPercentage(alpha) {\n    return (alpha.toFixed(2) * 100);\n  }\n\n  function redrawAllLucentAndParallax(map) {\n\n    if (!map) {\n      map = window.$$$currentMap;\n    }\n\n    $('.layer').each(function (idx, layer) {\n      var nodeLayer = $(layer);\n      var rstring = nodeLayer.data('rstring_ref');\n      var lucentDomNode = null;\n      var parallaxDomNode = null;\n\n      var mapLayer = null\n\n      if (nodeLayer.hasClass('nosort')) {\n\n        if (nodeLayer.data('rstring_ref') === \"ZZZ\") {\n          lucentDomNode = nodeLayer.find('.layer_lucency');\n          lucentDomNode.text(formatAlphaAsPercentage(getZoneAlpha())+'%');\n        }\n\n        return;\n      }\n\n      if (!$.isNumeric(rstring)) {\n        return;\n      } else {\n        mapLayer = map.mapData.layers[parseInt(rstring) - 1]; // todo: seperate human-indx from 0-based.\n        lucentDomNode = nodeLayer.find('.layer_lucency');\n        lucentDomNode.text(formatAlphaAsPercentage(mapLayer.alpha)+'%');\n\n        parallaxDomNode = nodeLayer.find('.layer_parallax');\n        parallaxDomNode.text(mapLayer.parallax.X + \":\" + mapLayer.parallax.Y);\n\n        if (!mapLayer.alpha) {\n          debugger;\n        }\n\n        nodeLayer.data('alpha', mapLayer.alpha); // TODO: remove this, only one source of truth: the data.\n      }\n\n    });\n  }\n\n  function generateContent(i, l, $parent) {\n\n    var normalContainer = $(\"<div class='normal_layer'></div>\");\n\n    var visible_div = $(\"<button class='eyeball_button'></button>\");\n    var name_div = $(\"<div class='layer_name'></div>\");\n\n    var right_div = $(\"<div class='rightmost_div'></div>\");\n\n    var lucent_div = $(\"<div class='layer_lucency'></div>\");\n    var parallax_div = $(\"<div class='layer_parallax'>?:?</div>\");\n\n    var entityContainer = $(\"<div class='entity_layer'><button class='eyeball_button'></button><div class='layer_name'></div></div>\");\n\n    var entity_name_div = entityContainer.find('.layer_name');\n\n    handleEyeball(visible_div, l);\n\n    name_div.text((i + 1) + \": \" + l.name);\n    entity_name_div.text((i + 1) + \" (entities)\");\n\n    lucent_div.text(formatAlphaAsPercentage(l.alpha)+'%');\n\n    lucent_div.click(lucent_click);\n    parallax_div.click(parallax_click);\n\n    normalContainer.append(visible_div);\n    normalContainer.append(name_div);\n\n    // right div\n    right_div.append(lucent_div);\n    right_div.append(parallax_div);\n\n    normalContainer.append(right_div);\n\n    $parent.append(entityContainer);\n    $parent.append(normalContainer);\n\n\n\n    return visible_div;\n  }\n\n  function generateLayerContainer(layer, layer_index) {\n    var newLayerContainer = $(\"<li class='layer ui-state-default'></li>\");\n    newLayerContainer.data('alpha', layer.alpha);\n    newLayerContainer.data('rstring_ref', \"\" + (layer_index + 1));\n    newLayerContainer.data('layer_name', layer.name);\n\n    return newLayerContainer;\n  }\n\n  var eyeballButton;\n\n  for (var i = layers.length - 1; i >= 0; i--) {\n    l = layers[i];\n\n    newLayerContainer = generateLayerContainer(l, i);\n    eyeballButton = generateContent(i, l, newLayerContainer);\n\n    addLayerEntityEyeballHandler(newLayerContainer, i);\n    addLayerEyeballHandler(eyeballButton, i);\n    addLayerSelectHandler(newLayerContainer, i);\n    addLayerEditHandler(newLayerContainer, i);\n\n\n    list.append(newLayerContainer);\n  };\n\n  // / RSTRING is weird and needs to die.\n  reorder_layers_by_rstring_priority(list, map);\n  resizeWindow();\n\n  // / make the layers sortable\n  $(\".layers-list\").sortable({\n    revert: true,\n    cancel: '.nosort',\n  });\n  $(\"ul, li\").disableSelection();\n\n  var skipWeirdThings = (rstring_val) => {\n    if (rstring_val === 'ZZZ') {\n      return true;\n    }\n\n    return false;\n  };\n\n  $(\".layers-list\").on( 'sortupdate', function (event, ui) {\n    var kids = $(\".layers-list\").children();\n    var i, val;\n\n    var rstring = [];\n\n    try {\n      for (i in kids) {\n        if (kids.hasOwnProperty(i)) {\n          val = $(kids[i]).data('rstring_ref');\n          if (val && !skipWeirdThings(val)) {\n            rstring.unshift($(kids[i]).data('rstring_ref'));\n          }\n        }\n      }\n    } catch (e) {\n      console.log('error');\n      console.log(e);\n      throw e;\n    }\n\n    window.$$$currentMap.updateRstring(rstring);\n  });\n\n  redrawAllLucentAndParallax(map);\n};\n\nfunction get_layernames_by_rstring_order() {\n  var ret = [];\n  var childs = list.children('li');\n  var cur_kid;\n  var rstring_cur_target;\n  var rstring_ref;\n\n  var map = window.$$$currentMap;\n\n  for (var i = map.layerRenderOrder.length - 1; i >= 0; i--) {\n    rstring_cur_target = map.layerRenderOrder[i];\n    rstring_ref = parseInt(rstring_cur_target, 10);\n\n    if (isNaN(rstring_ref)) {\n      switch (rstring_cur_target) {\n        case 'E':\n          ret.push('Entity Layer (E)');\n          continue;\n\n        case 'R': // ignore everything else for now\n        default:\n          continue;\n      }\n    }\n\n    for (var j = childs.length - 1; j >= 0; j--) {\n      cur_kid = $(childs[j]);\n      if (cur_kid.data('rstring_ref') == rstring_cur_target) {\n        ret.push(cur_kid.data('layer_name'));\n        break;\n      }\n    };\n  }\n\n  return ret;\n};\n\n/*\n{\n  \"name\":\"Background Art\",\n  \"parallax\":{\"X\":1,\"Y\":1},\n  \"dimensions\":{\"X\":78,\"Y\":75},\n  \"alpha\":1,\n  \"vsp\":\"default\",\n  \"MAPED_HIDDEN\":false,\n  \"maped_HIDE_ENTS\":false\n}\n*/\n\n\nvar template = \"<div>Name: <input id='layer_name'></div>\";\ntemplate += \"<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> y: <input id='layer_parallax_y' value='1' size=3></div>\";\ntemplate += \"<div>Dimensions (tiles): w: <input id='layer_dims_x' size=3> h: <input id='layer_dims_y' size=3></div>\";\ntemplate += \"<div>Alpha: <input id='layer_opacity' value='1' size=3></div>\";\ntemplate += \"<div>vsp: <input id='layer_vsp' value='default'></div>\";\n\nfunction setup_template() {\n  var $template = $(template);\n\n  var $dims_x = $template.find('#layer_dims_x');\n  var $dims_y = $template.find('#layer_dims_y');\n\n  $dims_x.val(window.$$$currentMap.mapSizeInTiles[0]);\n  $dims_y.val(window.$$$currentMap.mapSizeInTiles[1]);\n\n  return $template;\n}\n\nfunction _layer_click(evt) {\n  evt.stopPropagation();\n\n  var dialog;\n\n  // var zone = currentZones[id];\n\n  var layer = false;\n\n  $(() => {\n\n    var $template = setup_template();\n    var newLayerId = window.$$$currentMap.mapData.layers.length + 1;\n\n    if (layer) {\n      $(\"#modal-dialog\").attr('title', \"Edit Layer \" + id+')');\n    } else {\n      $(\"#modal-dialog\").attr('title', \"Add New Layer (id: \" + (newLayerId) +')');\n    }\n    $(\"#modal-dialog\").html('');\n    $(\"#modal-dialog\").append($template);\n\n    if (layer) {\n      // console.log(\"Editing: \" + zone.name);\n\n      // $template.find(\"#zone_name\").val(zone.name);\n      // $template.find(\"#zone_activation_script\").val(zone.activation_script);\n      // $template.find(\"#zone_activation_chance\").val(zone.activation_chance);\n      // $template.find(\"#zone_can_by_adjacent_activated\").prop( \"checked\", zone.can_by_adjacent_activated );\n    }\n\n    $(\"#modal-dialog\").show();\n    dialog = $(\"#modal-dialog\").dialog({\n      width: 500,\n      modal: true,\n      buttons: {\n        Save: () => {\n          update_layer(dialog, newLayerId);\n        },\n        'Cancel': function () {\n          dialog.dialog(\"close\");\n        }\n      },\n      close: function () {\n        $(\"#modal-dialog\").html('');\n      }\n    });\n  });\n}\n\nfunction update_layer(dialog, layer_id) {\n\n/*\nvar template = \"<div>Name: <input id='layer_name'></div>\";\ntemplate += \"<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> y: <input id='layer_parallax_y' value='1' size=3></div>\";\ntemplate += \"<div>Dimensions (tiles): w: <input id='layer_dims_x' size=3> h: <input id='layer_dims_y' size=3></div>\";\ntemplate += \"<div>Alpha: <input id='layer_opacity' value='1' size=3></div>\";\ntemplate += \"<div>vsp: <input id='layer_vsp' value='default'></div>\";\n*/\n\n  var name = dialog.find('#layer_name').val();\n  var par_x = dialog.find('#layer_parallax_x').val();\n  var par_y = dialog.find('#layer_parallax_y').val();\n  var dims_x = dialog.find('#layer_dims_x').val();\n  var dims_y = dialog.find('#layer_dims_y').val();\n  var alpha = dialog.find('#layer_opacity').val();\n  var vsp = dialog.find('#layer_vsp').val();\n  var layer = null;\n\n  if (!$.isNumeric(par_x)) {\n    modal_error(\"Invalid input: parralax x (\" + par_x+') is invalid.');\n    return;\n  }\n  if (!$.isNumeric(par_y)) {\n    modal_error(\"Invalid input: parralax y (\" + par_y+') is invalid.');\n    return;\n  }\n  if (!$.isNumeric(dims_x) && dims_x >= 0) {\n    modal_error(\"Invalid input: dimension x (\" + dims_x+') is invalid.');\n    return;\n  }\n  dims_x = parseInt(dims_x);\n  if (!$.isNumeric(dims_y) && dims_y >= 0) {\n    modal_error(\"Invalid input: dimension y (\" + dims_y+') is invalid.');\n    return;\n  }\n  dims_y = parseInt(dims_y);\n  if (!$.isNumeric(alpha) || alpha < 0 || alpha > 1) {\n    modal_error(\"Invalid input: alpha (\" + alpha+') is invalid.  Try values [0...1]');\n    return;\n  }\n\n  if (!name) {\n    modal_error('Invalid name: you must define a name.');\n    return;\n  }\n\n  var nameSet = window.$$$currentMap.mapData.layers.map((l) => { return l.name; });\n  if (nameSet.indexOf(name) != -1) {\n    modal_error(\"Invalid input: name (\" + name+') is not unique on this map.  Try a new, unique name.');\n    return;\n  }\n\n  alpha = parseFloat(alpha);\n\n  layer = {\n    name: name,\n    alpha: alpha,\n    dimensions: {\n      X: parseInt(dims_x),\n      Y: parseInt(dims_y)\n    },\n    parallax: {\n      X: parseFloat(par_x),\n      Y: parseFloat(par_y)\n    },\n    vsp: vsp\n  };\n\n  var layersLength = 0;\n  window.$$$currentMap.mapData.layers.push(layer);\n  layersLength = window.$$$currentMap.mapData.layers.length;\n  window.$$$currentMap.layerLookup[name] = window.$$$currentMap.mapData.layers[layersLength - 1];\n  window.$$$currentMap.layerRenderOrder.push(\"\" + (layersLength));\n  window.$$$currentMap.mapRawTileData.tile_data.push(new Array((dims_x * dims_y)).fill(0));\n\n  redraw_palette(window.$$$currentMap);\n  Tools.updateRstringInfo();\n\n  dialog.dialog(\"close\");\n}\n\nexport var LayersWidget = {\n  initLayersWidget: initLayersWidget,\n  get_layernames_by_rstring_order: get_layernames_by_rstring_order\n};\n",
-			"file": "src/js/ui/LayersPalette.js",
-			"file_size": 25098,
-			"file_write_time": 131253389321858048,
+			"file": "src/Tools.js",
 			"settings":
 			{
-				"buffer_size": 24191,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "import { Map, verifyTileData, verifyMap } from '../../Map.js';\nimport { modal_error } from './Util.js';\nimport { Tools } from '../../Tools.js';\nconst $ = require('jquery');\n\nvar old_map;\nvar old_layer;\n\nvar vsp_mapdata, vsp_tiledata, vsp_map;\n\nvar is_active = () => {\n\n};\n\nvar create_dynamic_map = (vspName) => {\n  var dynMap = {\n    isTileSelectorMap: true, // TODO: this is for special-case branch code.  Rework everythgin so branching isnt necessary later?\n\n    entities: [],\n    layers: [{\n      MAPED_HIDDEN: false,\n      alpha: 1,\n      dimensions: {\n        X: -1, // TODO: get this from the vsp definition file\n        Y: -1  // TODO: calculate this from the vsp definition file and the size of the source image\n      },\n      name: 'Dynamic Tileselector VspMap Layer xTreem 7',\n      parallax: {\n        X: 1,\n        Y: 1\n      },\n      vsp: vspName\n    }],\n    name: 'The magical dynamically generated vsp map for the tileselector(tm)!',\n    notes: [],\n    renderstring: '1', // TODO: needs at least one E?\n    starting_coordinates: [0, 0], // TODO: probably unnecessary\n    // tallentitylayer: 1,\n    vsp: {},\n    zones: undefined\n  };\n\n  dynMap.vsp[vspName] = window.$$$currentMap.mapData.vsp[vspName];\n\n  return dynMap;\n};\n\nvar create_dynamic_tiledata = (mapdata, layerdata) => { ;\n  return { tile_data: [0, 1, 2, 3, 4, 5], zone_data: [] };\n};\n\nvar create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer) => {\n\n  return new Map(\n      mapData, tileData, updateLocationFunction\n  ).ready().then(function (m) {\n\n    var tileSetSize = 0;\n\n    m.vspImages = newMap.vspImages; // / TODO: somewhere something is going wrong here.  FIX.\n    m.vspData = newMap.vspData;\n\n    m.mapData.layers[0].dimensions.X = parseInt(m.vspImages[newLayer.vsp].width / m.vspData[newLayer.vsp].tilesize.width);\n    m.mapData.layers[0].dimensions.Y = parseInt(m.vspImages[newLayer.vsp].height / m.vspData[newLayer.vsp].tilesize.height);\n    m.mapSizeInTiles = [\n      m.mapData.layers[0].dimensions.X,\n      m.mapData.layers[0].dimensions.Y\n    ];\n\n    tileSetSize = m.mapData.layers[0].dimensions.X * m.mapData.layers[0].dimensions.Y;\n\n    // / this overwrites most of create_dynamic_tiledata, which was temporary.\n    m.tileData = [[]];\n    for (var i = 0; i < tileSetSize; i++) {\n      m.tileData[0].push(i);\n    }\n\n    m.setCanvas($('.tileset_selector_canvas'));\n\n    // TODO need to set a channel up to the tile selectors.\n    vsp_map = m;\n\n    Tools.initToolsToMapContainer($('.tileset_selector_canvas'), vsp_map);\n\n    $('#btn-vsp-zoomin').click(function (e) {\n      Tools.grue_zoom(false, vsp_map);\n    });\n\n    $('#btn-vsp-zoomout').click(function (e) {\n      Tools.grue_zoom(true, vsp_map);\n    });\n\n    finalize_process(newMap, newLayer);\n  });\n\n};\n\nvar finalize_process = (newMap, newLayer) => {\n\n  if (old_map && old_map != newMap) {\n    console.log(\"oh dear god are we handling map reloading?\");\n    throw \"I dont think we're handling map reloading well yet.  Audit when people complain of this message.\";\n  }\n\n  // / full init\n  if (!old_layer && newLayer) {\n    console.log(\"first time\");\n  }\n\n  // / maybe reinit for new layer vsp?\n  else if (old_layer && old_layer != newLayer) {\n    console.log('VSP layer shifting!  Reset things!');\n  }\n\n  old_map = newMap;\n  old_layer = newLayer;\n\n  vsp_map.render();\n};\n\nvar obsLayerData = null;\n\nvar initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {\n\n  if (optionalTiledata) {\n    obsLayerData = optionalTiledata;\n\n    for (var k in optionalTiledata) {\n      if (!newLayer[k]) {\n        newLayer[k] = optionalTiledata[k];\n      }\n    }\n\n  } else {\n    obsLayerData = null;\n  }\n\n  if (newLayer) {\n    $('.tileset_selector_canvas_container h3.note').hide();\n    $('.tileset_selector_canvas_container canvas').show();\n  } else {\n    $('.tileset_selector_canvas_container h3.note').show();\n    $('.tileset_selector_canvas_container canvas').hide();\n  }\n\n  if (newLayer) {\n    if (!window.$$$currentMap.vspData[newLayer.vsp]) {\n      throw \"current map didnt contain vsp '\" + newLayer.vsp + \"'.  Only contained: \" + Object.keys(window.$$$currentMap.vspData).join(',');\n    }\n\n    vsp_mapdata = create_dynamic_map(newLayer.vsp);\n    vsp_tiledata = create_dynamic_tiledata(vsp_mapdata, newLayer);\n\n    create_map(vsp_mapdata, vsp_tiledata, Tools.updateLocationFunction, newMap, newLayer);\n  }\n};\n\nvar renderTilesetSelectorWidget = () => {\n  if (vsp_map) vsp_map.render();\n};\n\nexport var TilesetSelectorWidget = {\n  initTilesetSelectorWidget: initTilesetSelectorWidget,\n  renderTilesetSelectorWidget: renderTilesetSelectorWidget\n};\n",
-			"file": "src/js/ui/TilesetSelectorPalette.js",
-			"file_size": 4773,
-			"file_write_time": 131253389322031519,
-			"settings":
-			{
-				"buffer_size": 4608,
+				"buffer_size": 13531,
 				"line_ending": "Windows"
 			}
 		}
@@ -276,37 +226,56 @@
 	[
 		"/C/grue/Breaditor",
 		"/C/grue/Breaditor/src",
+		"/C/grue/Breaditor/src/helpers",
 		"/C/grue/Breaditor/src/js",
 		"/C/grue/Breaditor/tasks"
 	],
 	"file_history":
 	[
+		"/C/grue/Breaditor/app/app.html",
 		"/C/grue/Breaditor/src/Map.js",
-		"/C/grue/Breaditor/__mocks__/electron.js",
-		"/C/grue/Breaditor/README.md",
+		"/C/grue/Breaditor/src/js/ui/TilesetSelectorPalette.js",
 		"/C/grue/Breaditor/src/Tools.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.json",
+		"/C/grue/Breaditor/README.md",
+		"/C/grue/Breaditor/src/js/ui/LayersPalette.js",
+		"/C/grue/Breaditor/src/menu/edit_menu_template.js",
+		"/C/grue/Breaditor/src/app.js",
+		"/C/grue/Breaditor/src/js/ui/EntityPalette.test.js",
+		"/C/grue/Breaditor/src/js/ui/EntityPalette.js",
+		"/C/grue/Breaditor/src/Tools.UndoRedo.test.js",
+		"/C/grue/Breaditor/src/Map.test.js",
+		"/C/grue/Breaditor/src/UndoRedo.js",
+		"/C/grue/Breaditor/src/menu/file_menu_template.js",
+		"/C/grue/Breaditor/.eslintrc",
+		"/C/grue/Breaditor/src/helpers/FakeMap.test.js",
+		"/C/grue/Breaditor/src/helpers/FakeMap.js",
+		"/C/grue/Breaditor/src/Palettes.js",
+		"/C/grue/Breaditor/src/background.js",
+		"/C/grue/Breaditor/package.json",
+		"/C/grue/Breaditor/tasks/build_app.js",
+		"/C/grue/Breaditor/tasks/build_tests.js",
+		"/C/grue/Breaditor/tasks/start.js",
+		"/C/Users/grue/Downloads/RULES (1).md",
+		"/C/grue/Breaditor/src/js/ui/ZonesPalette.js",
+		"/C/grue/Breaditor/tasks/utils.js",
+		"/C/grue/Breaditor/tasks/bundle.js",
+		"/C/grue/Breaditor/__mocks__/electron.js",
 		"/C/grue/Breaditor/src/menu/prod_menu_template.js",
 		"/C/grue/Breaditor/src/menu/window_menu_template.js",
-		"/C/grue/Breaditor/package.json",
 		"/C/grue/Breaditor/.babelrc",
-		"/C/grue/Breaditor/src/Map.test.js",
 		"/C/grue/Breaditor/src/main/MainWindowReference.js",
-		"/C/grue/Breaditor/src/background.js",
 		"/C/grue/Breaditor/src/stylesheets/main.less",
-		"/C/grue/Breaditor/src/app.js",
-		"/C/grue/Breaditor/src/menu/file_menu_template.js",
 		"/C/grue/Breaditor/app/background.js",
 		"/C/grue/Breaditor/src/stylesheets/jquery-ui-fixes.less",
 		"/C/grue/Breaditor/app/stylesheets/main.css",
 		"/C/grue/Breaditor/app/app.js",
-		"/C/grue/Breaditor/tasks/build_app.js",
 		"/C/grue/Breaditor/app/stylesheets/jquery-ui-fixes.css",
 		"/C/grue/Breaditor/src/shim/Shim.js",
 		"/C/grue/Breaditor/src/ShaderProgram.js",
-		"/C/grue/Breaditor/src/js/ui/TilesetSelectorPalette.js",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-bottom.json",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.jso",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.json",
 		"/C/tmp/SullyContent/maps/json/$$$_MAPED.json",
 		"/C/Users/grue/Desktop/DUAL setup-maped4-dev.ahk",
 		"/C/grue/electron-boilerplate-5.0.0/src/app.js",
@@ -355,7 +324,6 @@
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.vsp.json",
 		"/C/Users/grue/Downloads/Win_Sully_20051211/island.vc",
 		"/C/Users/grue/Downloads/Win_Sully_20051211/vc/util/inet_talk.vc",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.json",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-water.json",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/conversations/evil_lab_f2/Teacher_Take_Rod_3a.txt",
 		"/C/grue/maped4/build/app.html",
@@ -391,24 +359,7 @@
 		"/C/grue/maped4/app/map_assets/underwater_crystalcaves.map.json",
 		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_fg.json",
 		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_bg - Copy.json",
-		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_fg - Copy.json",
-		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_parallax - Copy.json",
-		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/upper_bg.json",
-		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/red_water.json",
-		"/C/grue/maped4/app/map_assets/chrs_json/object_tree2.json",
-		"/C/grue/maped4/app/map_assets/underwater_lower_green.map.json",
-		"/C/grue/maped4/app/map_assets/underwater_lower_red.map.json",
-		"/C/grue/maped4/app/map_assets/underwater_upper.map.json",
-		"/C/grue/maped4/app/map_assets/farmsville.map.data.json",
-		"/C/tmp/underwater_lower.map.json",
-		"/C/grue/maped4/app/map_assets/underwater_lower_red.map.data.json",
-		"/C/grue/maped4/app/map_assets/underwater_cave_crystal.vsp.json",
-		"/C/grue/maped4/app/js/ui/Util.js",
-		"/C/grue/pokebot/pokemons.py",
-		"/C/grue/gitIssue2/scripts/fetch_wrapper.js",
-		"/C/grue/gitIssue2/gulpfile.js",
-		"/C/grue/gitIssue2/scripts/containers/CommentThread.js",
-		"/C/grue/pokebot/twitter.js"
+		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_fg - Copy.json"
 	],
 	"find":
 	{
@@ -419,6 +370,7 @@
 		"height": 176.0,
 		"where_history":
 		[
+			"C:\\grue\\Breaditor",
 			"C:\\grue\\Breaditor,-*.map,-app\\app.js.-app\\background.js",
 			"<current file>",
 			"C:\\grue\\Breaditor,-*.map,-app\\app.js.-app\\background.js",
@@ -462,6 +414,113 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"btn-tool-select",
+			"toggleSelectedTiles",
+			"TileSelector",
+			"initializeTileSelectorsForMap",
+			"paletteCloseListener",
+			"savePalettePositions",
+			"capturePaletteMovementForRestore",
+			"localStorage",
+			"palette",
+			"Zone",
+			"create_map",
+			"initTile",
+			"is_active",
+			"obsLayerData",
+			"initTilesetSelectorWidget",
+			"debugger",
+			"_obsVisibility",
+			"obstructions",
+			"obstr",
+			"getTile",
+			"998",
+			"selected_layer",
+			"dimensions",
+			"$entity_container",
+			"addEntitySelectHandler",
+			"998",
+			"999",
+			"998",
+			"assert_pixel_versus_tile_in_editing",
+			"save",
+			"setup_",
+			"entity_location_tx",
+			"redraw_palette",
+			"let current",
+			"const current",
+			"var current",
+			"current",
+			"blocks",
+			"padded",
+			"update_entity",
+			"Edit Entity",
+			"selectedEntityIdx",
+			"Edit Entity",
+			"needsDefault",
+			"'default'",
+			"mapData.vsp",
+			"walker_05.chr",
+			"walker",
+			"toolObj",
+			"button_element",
+			"btn-tool-eyedropper",
+			"window.selected_layer",
+			"selected_layer.map_tileData_idx",
+			"CURRENT_SELECTED_TILES",
+			"initializeTileSelectorsForMap",
+			"whichOne",
+			"CURRENT_SELECTED_TILES",
+			"left-palette",
+			"CURRENT_SELECTED_TILES",
+			"jetpack",
+			"currentMap",
+			"($$$currentMap",
+			"tilese",
+			"setTileSelectorUI",
+			"CURRENT_SELECTED_TILES",
+			"doVSPselector",
+			"DRAG",
+			"MAP_WINDOW",
+			"e.button",
+			"right",
+			"rightClick",
+			"undo",
+			"main-menu",
+			"redoStack",
+			"redoSet",
+			"console.lo",
+			"undolog",
+			"jsx-sort",
+			"const map",
+			"tileIdx",
+			"change_one_tile",
+			"sprintf",
+			"change_one_tile",
+			"verify_map_for_undoredo",
+			"undo",
+			"Map",
+			"Undo",
+			"undo",
+			"zIdx",
+			"// / todo",
+			"$",
+			"undoredo_map",
+			"change_one_tile",
+			"Initializing tool",
+			"const",
+			"deep",
+			"deep-copy",
+			"deepcopy",
+			"getTile",
+			"undoredo_map",
+			"redoStack",
+			"undo",
+			"had",
+			"Undo",
+			"path",
+			"import path",
+			"mainWindow",
 			"save-dev",
 			"__obsColor",
 			"require('electron').remote",
@@ -482,114 +541,7 @@
 			"editMenuTemplate",
 			"menu",
 			"map-",
-			"500",
-			"cont",
-			"map-palette",
-			"z-index",
-			"z-inde",
-			"MAP_WINDOW",
-			"Notification",
-			"myNotification",
-			"garbage_zsort",
-			"order",
-			"z-index",
-			"localSto",
-			"Loca",
-			"localStorage",
-			"updateLocationFunction",
-			"localStor",
-			"../app/images",
-			"../app",
-			"../app/",
-			"lless",
-			"ui-icon-gripsmall-diagonal-se",
-			"map.json",
-			"debug",
-			"debugger",
-			"shim/",
-			"shaders/selection",
-			"shader",
-			"appPath",
-			"dataPath",
-			"jetpac",
-			"../src/shaders/",
-			"src/shaders",
-			"app/shaders",
-			"/app/shaders",
-			"getShaderInfoLog",
-			"dialog",
-			"app.",
-			"app",
-			"verifyMap",
-			"'remote'",
-			"\"remote\"",
-			"install-app-deps",
-			"ipcRenderer",
-			"get shell",
-			"\"get shell\"",
-			"electron",
-			"document",
-			"app.html-inline-3",
-			"app.js",
-			"$$$load",
-			"bootstrapMap",
-			"window.$KEYMASTER",
-			"keymaster",
-			"getDevToolsMenu",
-			"BrowserWindow",
-			"mainWindow",
-			"mainWindow.loadURL",
-			"loadU",
-			"setApplicationMenu",
-			"openDevTools",
-			"mainWindowState",
-			"windowStateKeeper",
-			"Brows",
-			"mainWindowState",
-			"windowStateKeeper",
-			"Browser",
-			"browser-window",
-			"document",
-			"env",
-			"jetpack",
-			"remote",
-			"app",
-			"jquer",
-			"$(\".zones-palette\")",
-			"env",
-			"image",
-			"this.dataPath =",
-			"create_dynamic_map",
-			"create_map",
-			"newLayer",
-			"initTilesetSelectorWidget",
-			"mapData",
-			"jetpac",
-			"LayerSele",
-			"initTilesetSelectorWidget",
-			"obs",
-			"SelectHan",
-			"initTilesetSelectorWidget",
-			"create_map",
-			"cleek",
-			"generateLayerContainer",
-			"setup_shitty_obstruction_layer",
-			"shitty_zon",
-			"setup_shitty_obstruction_layer",
-			"shitty_o",
-			"btn-toggle-obs",
-			"getObsVisibility",
-			"setObstructionsVisible",
-			"btn-toggle-obs",
-			"zones",
-			"shitty_obs",
-			"handleEyeball",
-			"getObst",
-			"getObsVisibility",
-			"getObstructionAlpha",
-			"getObstructionVisibility",
-			"Visibility",
-			"ZoneVisibility"
+			"500"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -597,6 +549,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"// TODO",
+			"map",
 			"\"); ",
 			"send(",
 			"../images",
@@ -615,7 +569,7 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -624,15 +578,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5711,
+						"buffer_size": 5513,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1038,
-								1038
+								2088,
+								2088
 							]
 						],
 						"settings":
@@ -642,181 +596,32 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 746.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/Palettes.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1340,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								526,
-								526
-							]
-						],
-						"settings":
-						{
-							"auto_name": "",
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/app.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6032,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1868,
-								1868
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2199.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/Map.test.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 330,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								330,
-								330
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "package.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1978,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1975,
-								1975
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 423.0,
+						"translation.y": 1617.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "README.md",
+					"buffer": 1,
+					"file": "src/TileSelector.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5111,
+						"buffer_size": 2168,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5050,
-								5058
+								1272,
+								1301
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Markdown/Markdown.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3979.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "/C/Users/grue/Downloads/RULES (1).md",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3163,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								503,
-								503
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Markdown/Markdown.sublime-syntax",
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
@@ -828,50 +633,67 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "src/js/ui/ZonesPalette.js",
+					"buffer": 2,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6546,
+						"buffer_size": 278,
 						"regions":
 						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										195,
+										210
+									]
+								],
+								"scope": ""
+							}
 						},
 						"selection":
 						[
 							[
-								70,
-								41
+								278,
+								278
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "src/js/ui/EntityPalette.js",
+					"buffer": 3,
+					"file": "src/Tools.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13278,
+						"buffer_size": 13531,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								121,
-								121
+								2560,
+								2560
 							]
 						],
 						"settings":
@@ -881,70 +703,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2038.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "src/js/ui/LayersPalette.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 24191,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								493,
-								493
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "src/js/ui/TilesetSelectorPalette.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4608,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								243,
-								243
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
@@ -999,12 +761,64 @@
 		"selected_items":
 		[
 			[
-				"package",
-				"package.json"
+				"app.js",
+				"src\\app.js"
+			],
+			[
+				"tools.js",
+				"src\\Tools.js"
 			],
 			[
 				"map.js",
 				"src\\Map.js"
+			],
+			[
+				"layer",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"tools.",
+				"src\\Tools.js"
+			],
+			[
+				"readme",
+				"README.md"
+			],
+			[
+				"map",
+				"src\\Map.js"
+			],
+			[
+				"test.js",
+				"src\\Tools.UndoRedo.test.js"
+			],
+			[
+				"entitypl",
+				"src\\js\\ui\\EntityPalette.js"
+			],
+			[
+				"tools",
+				"src\\Tools.js"
+			],
+			[
+				"menu",
+				"src\\menu\\edit_menu_template.js"
+			],
+			[
+				"readm",
+				"README.md"
+			],
+			[
+				"menutempl",
+				"src\\menu\\file_menu_template.js"
+			],
+			[
+				"map.",
+				"src\\Map.js"
+			],
+			[
+				"package",
+				"package.json"
 			],
 			[
 				"tile",
@@ -1023,20 +837,8 @@
 				"src\\js\\ui\\ZonesPalette.js"
 			],
 			[
-				"tools",
-				"src\\Tools.js"
-			],
-			[
 				"zones",
 				"src\\js\\ui\\ZonesPalette.js"
-			],
-			[
-				"readme",
-				"README.md"
-			],
-			[
-				"app.js",
-				"src\\app.js"
 			],
 			[
 				"window_m",
@@ -1051,10 +853,6 @@
 				"src\\menu\\file_menu_template.js"
 			],
 			[
-				"menu",
-				"src\\menu\\edit_menu_template.js"
-			],
-			[
 				"rea",
 				"README.md"
 			],
@@ -1065,10 +863,6 @@
 			[
 				"app.html",
 				"app\\app.html"
-			],
-			[
-				"map",
-				"src\\Map.js"
 			],
 			[
 				"tilesele",
@@ -1085,10 +879,6 @@
 			[
 				"shaderpro",
 				"src\\ShaderProgram.js"
-			],
-			[
-				"map.",
-				"src\\Map.js"
 			],
 			[
 				"background",
@@ -1109,10 +899,6 @@
 			[
 				"tileset",
 				"app\\js\\ui\\TilesetSelectorPalette.js"
-			],
-			[
-				"layer",
-				"app\\js\\ui\\LayersPalette.js"
 			],
 			[
 				"build.js",
@@ -1153,10 +939,6 @@
 			[
 				"util.",
 				"app\\js\\ui\\Util.js"
-			],
-			[
-				"readm",
-				"README.md"
 			],
 			[
 				"entitypalette",

@@ -9,7 +9,9 @@ import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/E
 const sprintf = require('sprintf-js').sprintf;
 const $ = require('jquery');
 
-function buildTileDataTexture(data) {
+import { getSelectedLayer } from './js/ui/LayersPalette.js';
+
+const buildTileDataTexture = (data) => {
   const out = new Uint8Array(data.length * 4);
   for (let i = 0; i < data.length; i++) {
     const t = data[i];
@@ -767,15 +769,16 @@ Map.prototype = {
         // / Layered Entities
     if (getNormalEntityVisibility()) {
       if (map.entities[layer.name] && map.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name)) {
-        var entities = map.entities[layer.name];
-        var showEntityPreview = (window.selected_layer && layer === window.selected_layer.layer && map.entityPreview);
+        const entities = map.entities[layer.name];
+
+        const showEntityPreview = (getSelectedLayer() && layer === getSelectedLayer().layer && map.entityPreview);
         map.spriteShader.use();
 
-        for (var e = 0; e < entities.length; e++) {
+        for (let e = 0; e < entities.length; e++) {
           if (showEntityPreview &&
-                        map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
-                        (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
-                    ) {
+              map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
+              (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
+          ) {
             map.renderEntity(map.entityPreview, layer, [1, 1, 1, 0.75]);
           }
           map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
@@ -964,26 +967,30 @@ Map.prototype = {
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
-        // / MARCHING ANTS
+    // / MARCHING ANTS
     if (this.selection.lines.length > 0 && typeof vsp !== 'undefined') {
-      const layer = window.selected_layer ? window.selected_layer.layer : {
+      
+      // TODO remove these fake layer shenanegans
+      const layer = getSelectedLayer() ? getSelectedLayer() : {
         parallax: { X: 1, Y: 1 },
         dimensions: this.mapData.layers[0].dimensions
       };
 
       this.selectionShader.use();
-      gl.uniform4f(this.selectionShader.uniform('u_camera'),
-                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
-            );
-      gl.uniform4f(this.selectionShader.uniform('u_dimensions'),
-                layer.dimensions.X,
-                layer.dimensions.Y,
-                this.vspData[vsp].tiles_per_row,
-                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
-            );
+      gl.uniform4f(
+        this.selectionShader.uniform('u_camera'),
+        Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+        Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+        this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
+        this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+      );
+      gl.uniform4f(
+        this.selectionShader.uniform('u_dimensions'),
+        layer.dimensions.X,
+        layer.dimensions.Y,
+        this.vspData[vsp].tiles_per_row,
+        this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+      );
       gl.uniform1i(this.selectionShader.uniform('u_time'), Date.now());
 
       const a_position = this.selectionShader.attribute('a_position');
