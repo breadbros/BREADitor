@@ -288,12 +288,13 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.compactifyZones = () => {
     // zone_data: [{x,y,z}, ...]
     const tmpZones = [];
+    const mapWidth = this.mapData.layers[0].dimensions.X; // todo - make canonical width NOT layer 0's.
 
-        // walk the in-memory zoneData layer, anything with zone >0, add.
+    // walk the in-memory zoneData layer, anything with zone >0, add.
     $.each(this.zoneData, (idx) => {
       if (this.zoneData[idx] > 0) {
-        const x = getXfromFlat(idx, 20); // todo : variable vsp width for zones.
-        const y = getYfromFlat(idx, 20); // todo : variable vsp width for zones.
+        const x = getXfromFlat(idx, mapWidth);
+        const y = getYfromFlat(idx, mapWidth);
 
         const zone = {x: x, y: y, z: this.zoneData[idx]};
 
