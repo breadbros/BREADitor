@@ -191,23 +191,22 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     name: 'Entity Layer (E)',
     parallax: {
       X: 1,
-      Y: 1,
+      Y: 1
     },
     vsp: 'default'
   };
 
   this.updateRstring = (rstring) => {
-
     if (typeof rstring === 'string') {
       console.log("Setting new rstring: '" + rstring + "'");
       this.layerRenderOrder = rstring.split(',');
-    } else if (typeof rstring.length == 'number') {
+    } else if (typeof rstring.length === 'number') {
       console.log("Setting new rstring: '");
       console.log(rstring);
 
       this.layerRenderOrder = rstring;
     } else {
-      throw 'What fresh hell is this.  What are you throwing at updateRstring?!';
+      throw new Error('What fresh hell is this.  What are you throwing at updateRstring?!');
     }
 
     this.mapData.renderstring = this.layerRenderOrder.join(',');
@@ -385,12 +384,14 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.selection = {
     add: function (x, y, w, h) {
-      if (x < this.hull.x || this.hull.x === null) this.hull.x = x;
-      if (y < this.hull.y || this.hull.y === null) this.hull.y = y;
-      if (x + w > this.hull.x + this.hull.w) this.hull.w = x + w;
-      if (y + h > this.hull.y + this.hull.h) this.hull.h = y + h;
+      if (x < this.hull.x || this.hull.x === null) { this.hull.x = x; }
+      if (y < this.hull.y || this.hull.y === null) { this.hull.y = y; }
+      if (x + w > this.hull.x + this.hull.w) { this.hull.w = x + w; }
+      if (y + h > this.hull.y + this.hull.h) { this.hull.h = y + h; }
 
-      var ix, iy, i;
+      let ix = null;
+      let iy = null;
+      let i = null;
       for (iy = 0; iy < h; iy++) {
         for (ix = 0; ix < w; ix++) {
           i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
@@ -403,7 +404,9 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     remove: function (x, y, w, h) {
             // TODO update hull -- it's much harder to recalc the hull on subtraction
 
-      var ix, iy, i;
+      let ix = null;
+      let iy = null;
+      let i = null;
       for (iy = 0; iy < h; iy++) {
         for (ix = 0; ix < w; ix++) {
           i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
@@ -427,13 +430,15 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     recalculateLines: function () {
       this.lines = [];
 
-      var mapWidth = this.map.mapSizeInTiles[0];
-      var x, y, i;
+      const mapWidth = this.map.mapSizeInTiles[0];
+      let x = null;
+      let y = null;
+      let i = null;
       for (y = this.hull.y; y < this.hull.y + this.hull.h; y++) {
         for (x = this.hull.x; x < this.hull.x + this.hull.w; x++) {
           i = getFlatIdx(x, y, mapWidth);
-          if (this.tiles[i] != this.tiles[i - 1]) this.lines.push(x, y, x, y + 1);
-          if (this.tiles[i] != this.tiles[i - mapWidth]) this.lines.push(x, y, x + 1, y);
+          if (this.tiles[i] !== this.tiles[i - 1]) { this.lines.push(x, y, x, y + 1); }
+          if (this.tiles[i] !== this.tiles[i - mapWidth]) { this.lines.push(x, y, x + 1, y); }
         }
       }
 
@@ -443,7 +448,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       console.info(this.lines);
     },
 
-    hull: { x:null, y:null, w:0, h:0 },
+    hull: { x: null, y: null, w: 0, h: 0 },
     tiles: [],
     lines: []
   };
