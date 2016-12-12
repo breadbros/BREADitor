@@ -155,7 +155,7 @@ const redraw_palette = (map) => {
   };
 
   const addLayerEntityEyeballHandler = ($layerContainer, idx) => {
-    const layerName = layers[i].name;
+    const layerName = layers[idx].name;
     const $btn = $layerContainer.find('.entity_layer .eyeball_button');
 
     handleEntityEyeball($btn, layerName);
@@ -210,7 +210,7 @@ const redraw_palette = (map) => {
       alpha: getZoneAlpha()
     };
 
-    const newLayerContainer = generateLayerContainer(l, i);
+    const newLayerContainer = generateLayerContainer(l, 0);
     const $eyeball = generateContent(999, tmpLayer, newLayerContainer);
 
     newLayerContainer.find('.layer_name').text('Zones');
@@ -253,7 +253,7 @@ const redraw_palette = (map) => {
       alpha: getObsAlpha()
     };
 
-    const newLayerContainer = generateLayerContainer(l, i);
+    const newLayerContainer = generateLayerContainer(l, 0);
     const $eyeball = generateContent(998, tmpLayer, newLayerContainer);
 
     newLayerContainer.find('.layer_name').text('Obstructions');
