@@ -1,7 +1,7 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
 import { Tools, clickEyedropper, clickDrawBrush } from './Tools.js';
 import { Palettes } from './Palettes.js';
-import { LayersWidget } from './js/ui/LayersPalette.js';
+import { LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
 import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
@@ -79,6 +79,28 @@ ipcRenderer.on('main-menu', (event, arg) => {
       break;
     case 'about':
       window.$$$about_breaditor();
+      break;
+    case 'focus-layer-O':
+      selectObstructionLayer();
+      break;
+    case 'focus-layer-Z':
+      selectZoneLayer();
+      break;
+    case 'focus-layer-E':
+      // TODO implement the entities layer already.
+      console.log('TODO implement the entities layer already.');
+      break;
+    case 'focus-layer-1':
+    case 'focus-layer-2':
+    case 'focus-layer-3':
+    case 'focus-layer-4':
+    case 'focus-layer-5':
+    case 'focus-layer-6':
+    case 'focus-layer-7':
+    case 'focus-layer-8':
+    case 'focus-layer-9':
+      const argParsed = arg.split('-');
+      selectNumberedLayer(parseInt(argParsed[argParsed.length-1]));
       break;
     default:
       console.error(sprintf("Unknown action from main-menu: '%s'.", arg));

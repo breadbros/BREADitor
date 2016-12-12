@@ -31,6 +31,64 @@ const new_layer_click = (evt) => {
   _layer_click(evt);
 };
 
+export const selectNumberedLayer = (num) => {
+  console.log("select", num);
+
+  const $list = $('.layer_name');
+  for (let i = $list.length - 1; i >= 0; i--) {
+    const $node = $($list[i]);
+    if ($node.text().startsWith(num + ':')) {
+      $node.closest('li').click();
+      return;
+    }
+  }
+
+  console.warn('No such layer',num,'found on this map');
+};
+
+let $zone_container = null;
+export const selectZoneLayer = () => {
+  const selClass = 'selected';
+
+  removeAllSelectedLayers(selClass);
+
+  // TODO: this is disgusting, right?  right.
+  changeSelectedLayer({
+    map_tileData_idx: 999,
+    layer: window.$$$currentMap.zoneData,
+    $container: $zone_container
+  });
+
+  $zone_container.addClass(selClass);
+};
+
+let $obs_container = null;
+export const selectObstructionLayer = () => {
+  const selClass = 'selected';
+
+  removeAllSelectedLayers(selClass);
+
+  // TODO this is the wrong place to do this
+  window.$$$currentMap.obsLayerData.parallax = {
+    X: 1,
+    Y: 1
+  };
+
+  // TODO definitely wrong, especially when we start supporting multiple sized layers
+  window.$$$currentMap.obsLayerData.dimensions = window.$$$currentMap.mapData.layers[0].dimensions;
+
+    // TODO: this is disgusting, right?  right.
+  changeSelectedLayer({
+    map_tileData_idx: 998,
+    layer: window.$$$currentMap.obsLayerData, // TODO why isnt this an array? :o
+    $container: $obs_container
+  });
+
+  TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData);
+
+  $obs_container.addClass(selClass);
+};
+
 let layers = null;
 let map = null;
 function initLayersWidget(_map) {
@@ -44,8 +102,15 @@ let _selected_layer = null;
 const changeSelectedLayer = (newLayer) => {
   _selected_layer = newLayer;
 };
+
 export const getSelectedLayer = () => {
   return _selected_layer;
+};
+
+const removeAllSelectedLayers = (selClass) => {
+  if (window && getSelectedLayer()) {
+    getSelectedLayer().$container.removeClass(selClass);
+  }
 };
 
 const redraw_palette = (map) => {
@@ -104,27 +169,10 @@ const redraw_palette = (map) => {
     });
   };
 
-  const removeAllSelectedLayers = (selClass) => {
-    if (window && getSelectedLayer()) {
-      getSelectedLayer().$container.removeClass(selClass);
-    }
-  };
-
-  const addZoneSelectHandler = ($zone_container) => {
+  const addZoneSelectHandler = (_$zone_container) => {
+    $zone_container = _$zone_container; 
     $zone_container.on('click', (evt) => {
-      const selClass = 'selected';
-
-      removeAllSelectedLayers(selClass);
-
-      // TODO: this is disgusting, right?  right.
-      changeSelectedLayer({
-        map_tileData_idx: 999,
-        layer: window.$$$currentMap.zoneData,
-        $container: $zone_container
-      });
-
-      $zone_container.addClass(selClass);
-
+      selectZoneLayer();
       evt.stopPropagation();
     });
   };
@@ -187,35 +235,17 @@ const redraw_palette = (map) => {
     $list.append(newLayerContainer);
   };
 
-  const addObstructionSelectHandler = ($obs_container) => {
+  const addObstructionSelectHandler = (_$obs_container) => {
+    $obs_container = _$obs_container;
     $obs_container.on('click', function (evt) {
-      const selClass = 'selected';
-
-      removeAllSelectedLayers(selClass);
-
-      // TODO this is the wrong place to do this
-      window.$$$currentMap.obsLayerData.parallax = {
-        X: 1,
-        Y: 1
-      };
-
-      // TODO definitely wrong, especially when we start supporting multiple sized layers
-      window.$$$currentMap.obsLayerData.dimensions = window.$$$currentMap.mapData.layers[0].dimensions;
-
-        // TODO: this is disgusting, right?  right.
-      changeSelectedLayer({
-        map_tileData_idx: 998,
-        layer: window.$$$currentMap.obsLayerData, // TODO why isnt this an array? :o
-        $container: $obs_container
-      });
-
-      TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData);
-
-      $obs_container.addClass(selClass);
-
+      selectObstructionLayer();
       evt.stopPropagation();
     });
-  }
+  };
+
+  const setup_shitty_layer_seperator = ($list) => {
+    $list.append('<li><hr></li>');
+  };
 
   const setup_shitty_obstruction_layer = ($list) => {
     const tmpLayer = {
@@ -317,6 +347,7 @@ const redraw_palette = (map) => {
 
     setup_shitty_zone_layer($list);
     setup_shitty_obstruction_layer($list);
+    setup_shitty_layer_seperator($list);
 
     // / ZONES
 
@@ -620,13 +651,11 @@ const redraw_palette = (map) => {
     $parent.append(entityContainer);
     $parent.append(normalContainer);
 
-
-
     return visible_div;
   }
 
   function generateLayerContainer(layer, layer_index) {
-    var newLayerContainer = $("<li class='layer ui-state-default'></li>");
+    const newLayerContainer = $("<li class='layer ui-state-default'></li>");
     newLayerContainer.data('alpha', layer.alpha);
     newLayerContainer.data('rstring_ref', '' + (layer_index + 1));
     newLayerContainer.data('layer_name', layer.name);
@@ -634,9 +663,9 @@ const redraw_palette = (map) => {
     return newLayerContainer;
   }
 
-  var eyeballButton;
+  let eyeballButton = null;
 
-  for (var i = layers.length - 1; i >= 0; i--) {
+  for (let i = layers.length - 1; i >= 0; i--) {
     l = layers[i];
 
     newLayerContainer = generateLayerContainer(l, i);
@@ -646,7 +675,6 @@ const redraw_palette = (map) => {
     addLayerEyeballHandler(eyeballButton, i);
     addLayerSelectHandler(newLayerContainer, i);
     addLayerEditHandler(newLayerContainer, i);
-
 
     list.append(newLayerContainer);
   };
@@ -658,11 +686,11 @@ const redraw_palette = (map) => {
   // / make the layers sortable
   $('.layers-list').sortable({
     revert: true,
-    cancel: '.nosort',
+    cancel: '.nosort'
   });
   $('ul, li').disableSelection();
 
-  var skipWeirdThings = (rstring_val) => {
+  const skipWeirdThings = (rstring_val) => {
     if (rstring_val === 'ZZZ') {
       return true;
     }

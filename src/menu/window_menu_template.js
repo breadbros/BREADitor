@@ -1,12 +1,11 @@
-import { app, ipcMain } from 'electron';
 import { MainWindow } from '../main/MainWindowReference';
 
-var send = (msg) => {
-  let contents = MainWindow.get().webContents;
+const send = (msg) => {
+  const contents = MainWindow.get().webContents;
   contents.send('window-menu', msg);
 };
 
-export var windowMenuTemplate = {
+export const windowMenuTemplate = {
   label: 'Window',
 
   submenu: [
@@ -59,5 +58,6 @@ export var windowMenuTemplate = {
       click: function () {
         send('all-show');
       }
-    },
-  ]};
+    }
+  ]
+};
