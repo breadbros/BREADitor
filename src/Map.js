@@ -967,9 +967,8 @@ Map.prototype = {
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
-    // / MARCHING ANTS
+    // MARCHING ANTS
     if (this.selection.lines.length > 0 && typeof vsp !== 'undefined') {
-      
       // TODO remove these fake layer shenanegans
       const layer = getSelectedLayer() ? getSelectedLayer() : {
         parallax: { X: 1, Y: 1 },

@@ -1,5 +1,3 @@
-const sprintf = require('sprintf-js').sprintf;
-
 export const handleUndo = () => {
   if (window.$$$currentMap) {
     window.$$$currentMap.UndoRedo.undo();
@@ -16,8 +14,10 @@ export const MakeUndoRedoStack = (_map) => {
   // todo: definitely need to wipeout undo stack on map change.
   // Probably should make it a child object of Maps, really....
   const undoStack = [];
-  let redoStack = [];
+  const redoStack = [];
   const map = _map;
+
+  undolog('initializing undostack');
 
   const change_one_tile = (
     tileX, tileY,
@@ -36,11 +36,10 @@ export const MakeUndoRedoStack = (_map) => {
       tileX, tileY,
       layerIdx, tileIdx
     );
-
-    //undolog();
   };
 
-  const undolog = () => {
+  const undolog = (msg) => {
+    console.log('undolog: ', msg);
     console.log('undoStack: ');
     console.log(undoStack);
     console.log('redoStack: ');
@@ -48,7 +47,6 @@ export const MakeUndoRedoStack = (_map) => {
   };
 
   const undo = () => {
-
     if (undoStack.length <= 0) {
 // console.log("aborting undo")
       return;
@@ -90,8 +88,6 @@ export const MakeUndoRedoStack = (_map) => {
     if (redoStack.length <= 0) {
       return;
     }
-
-    //undolog();
 
     const changes = redoStack.pop();
     const undoSet = [];
