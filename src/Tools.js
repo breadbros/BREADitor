@@ -20,14 +20,14 @@ const updateLocationFunction = (map) => {
 
 export const zoomLevels = [0.125, 0.25, 0.5, 1, 2, 4, 8, 16];
 
-const baseZoomIndex = 1;
+const baseZoomIndex = 3;
 
 export const zero_zoom = (map) => {
   map.camera[0] = 0;
   map.camera[1] = 0;
 
   map.zoom_level = baseZoomIndex;
-  map.camera[2] = map.zoom_level;
+  map.camera[2] = zoomLevels[map.zoom_level];
 
   console.log('map.zoom_level', map.zoom_level);
   console.log('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
@@ -39,18 +39,21 @@ const zoomFn = function (map, e, zoomout) {
 
   if (!map.zoom_level) {
     if (zoomLevels.indexOf(map.camera[2]) >= 0) {
-      map.zoom_level = map.camera[2];
+      zero_zoom(map);
+      return;
     } else {
       map.zoom_level = baseZoomIndex;
     }
   }
 
   if (!zoomout) {
+    // debugger;
     map.zoom_level--;
     if (map.zoom_level < 0) { map.zoom_level = 0; }
   } else {
+    // debugger;
     map.zoom_level++;
-    if (map.zoom_level >= zoomLevels.length) { map.zoom_level = zoomLevels.length - 1; }
+    if (map.zoom_level == zoomLevels.length) { map.zoom_level = zoomLevels.length - 1; }
   }
 
   console.log('map.zoom_level', map.zoom_level);
