@@ -18,22 +18,55 @@ const updateLocationFunction = (map) => {
   window.localStorage[key + '-mapy'] = y;
 };
 
+export const zoomLevels = [0.125, 0.25, 0.5, 1, 2, 4, 8, 16];
+
+const baseZoomIndex = 1;
+
+export const zero_zoom = (map) => {
+  map.camera[0] = 0;
+  map.camera[1] = 0;
+
+  map.zoom_level = baseZoomIndex;
+  map.camera[2] = map.zoom_level;
+
+  console.log('map.zoom_level', map.zoom_level);
+  console.log('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
+};
+
 const zoomFn = function (map, e, zoomout) {
-  const mouseX = map.camera[0] + e.clientX * map.camera[2];
-  const mouseY = map.camera[1] + e.clientY * map.camera[2];
-  if (!zoomout) {
-    map.camera[2] = Math.max(map.camera[2] / 2, 0.125);
-  } else {
-    map.camera[2] = Math.min(map.camera[2] * 2, 16);
+  const mouseX = map.camera[0] + e.offsetX * map.camera[2];
+  const mouseY = map.camera[1] + e.offsetY * map.camera[2];
+
+  if (!map.zoom_level) {
+    if (zoomLevels.indexOf(map.camera[2]) >= 0) {
+      map.zoom_level = map.camera[2];
+    } else {
+      map.zoom_level = baseZoomIndex;
+    }
   }
-  map.camera[0] = mouseX - (e.clientX * map.camera[2]);
-  map.camera[1] = mouseY - (e.clientY * map.camera[2]);
+
+  if (!zoomout) {
+    map.zoom_level--;
+    if (map.zoom_level < 0) { map.zoom_level = 0; }
+  } else {
+    map.zoom_level++;
+    if (map.zoom_level >= zoomLevels.length) { map.zoom_level = zoomLevels.length - 1; }
+  }
+
+  console.log('map.zoom_level', map.zoom_level);
+
+  map.camera[2] = zoomLevels[map.zoom_level];
+
+  map.camera[0] = mouseX - (e.offsetX * map.camera[2]);
+  map.camera[1] = mouseY - (e.offsetY * map.camera[2]);
+
+  console.log('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
 };
 
 // TODO function to be renamed (and probably changed) later.  This is dumb.
 const grue_zoom = (zoomout, map, evt) => {
-    // if no event, fake it and center on current view.
-    // TODO Do we even ACCEPT events anymore?
+  // if no event, fake it and center on current view.
+  // TODO Do we even ACCEPT events anymore?
   if (!evt) {
     evt = {};
     evt.clientX = map.renderContainer.width() / 2;

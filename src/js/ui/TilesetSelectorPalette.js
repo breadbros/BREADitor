@@ -1,5 +1,5 @@
 import { Map } from '../../Map.js';
-import { Tools } from '../../Tools.js';
+import { Tools, zero_zoom, zoomLevels } from '../../Tools.js';
 const $ = require('jquery');
 
 let old_map = null;
@@ -78,11 +78,18 @@ const create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer)
     Tools.initToolsToMapContainer($('.tileset_selector_canvas'), vsp_map);
 
     $('#btn-vsp-zoomin').click(function (e) {
-      Tools.grue_zoom(false, vsp_map);
+      Tools.grue_zoom(false, vsp_map, e);
+      $('#vsp-zoom-label').text((zoomLevels[vsp_map.zoom_level] * 100) + '%');
     });
 
     $('#btn-vsp-zoomout').click(function (e) {
-      Tools.grue_zoom(true, vsp_map);
+      Tools.grue_zoom(true, vsp_map, e);
+      $('#vsp-zoom-label').text((zoomLevels[vsp_map.zoom_level] * 100) + '%');
+    });
+
+    $('#btn-vsp-zero').click(function (e) {
+      zero_zoom(vsp_map);
+      $('#vsp-zoom-label').text((zoomLevels[vsp_map.zoom_level] * 100) + '%');
     });
 
     finalize_process(newMap, newLayer);
