@@ -53,7 +53,7 @@ const zoomFn = function (map, e, zoomout) {
   } else {
     // debugger;
     map.zoom_level++;
-    if (map.zoom_level == zoomLevels.length) { map.zoom_level = zoomLevels.length - 1; }
+    if (map.zoom_level === zoomLevels.length) { map.zoom_level = zoomLevels.length - 1; }
   }
 
   console.log('map.zoom_level', map.zoom_level);

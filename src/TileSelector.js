@@ -83,8 +83,8 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
 };
 
 export const toggleSelectedTiles = (map) => {
-  const _left = leftTile();
-  const _right = rightTile();
+  const _left = parseInt(leftTile());
+  const _right = parseInt(rightTile());
 
   leftTile(_right);
   rightTile(_left);
