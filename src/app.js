@@ -54,7 +54,18 @@ const bootstrapMap = (mapFile, tiledataFile) => {
 
 // Setup IPC
 ipcRenderer.on('main-menu', (event, arg) => {
-  switch (arg) {
+  if (typeof arg.accelerator === 'string') {
+    const el = document.activeElement;
+    if (el.type && el.type === 'text') {
+      console.info('in a textfield, ignoring the accelerator');
+      return;
+    }
+    // console.log(document.activeElement);
+    // var el = document.activeElement;
+    // debugger;
+  }
+
+  switch (arg.msg) {
     case 'save':
       window.$$$save();
       break;
@@ -103,15 +114,8 @@ ipcRenderer.on('main-menu', (event, arg) => {
     case 'focus-layer-8':
     case 'focus-layer-9':
       const argParsed = arg.split('-');
-      selectNumberedLayer(parseInt(argParsed[argParsed.length-1]));
+      selectNumberedLayer(parseInt(argParsed[argParsed.length - 1]));
       break;
-    default:
-      console.error(sprintf("Unknown action from main-menu: '%s'.", arg));
-  }
-});
-
-ipcRenderer.on('window-menu', (event, arg) => {
-  switch (arg) {
     case 'map':
     case 'tool':
     case 'info':
@@ -127,8 +131,9 @@ ipcRenderer.on('window-menu', (event, arg) => {
     case 'all-show':
       window.$$$show_all_windows();
       break;
+
     default:
-      console.error(sprintf("Unknown action from window-menu: '%s'.", arg));
+      console.error(sprintf("Unknown action from main-menu: '%s'.", arg));
   }
 });
 

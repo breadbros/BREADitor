@@ -1,12 +1,9 @@
-import { MainWindow } from '../main/MainWindowReference';
-
-const send = (msg) => {
-  const contents = MainWindow.get().webContents;
-  contents.send('main-menu', msg);
-};
+import { send } from '../main/SendMsgToMainWindow';
 
 const makeLayer = (title, accelerator) => {
-  return { label: title, accelerator: accelerator, click: function () { send('focus-layer-' + accelerator); } };
+  return { label: title, accelerator: accelerator, click: function () {
+    send('focus-layer-' + accelerator, accelerator);
+  } };
 };
 
 // TODO: make this update with the real layer names on load / add

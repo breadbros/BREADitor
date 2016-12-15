@@ -1,10 +1,5 @@
 import { app } from 'electron';
-import { MainWindow } from '../main/MainWindowReference';
-
-const send = (msg) => {
-  const contents = MainWindow.get().webContents;
-  contents.send('main-menu', msg);
-};
+import { send } from '../main/SendMsgToMainWindow';
 
 export const fileMenuTemplate = {
   label: 'File',

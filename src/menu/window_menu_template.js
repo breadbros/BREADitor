@@ -1,9 +1,4 @@
-import { MainWindow } from '../main/MainWindowReference';
-
-const send = (msg) => {
-  const contents = MainWindow.get().webContents;
-  contents.send('window-menu', msg);
-};
+import { send } from '../main/SendMsgToMainWindow';
 
 export const windowMenuTemplate = {
   label: 'Window',
