@@ -113,7 +113,7 @@ ipcRenderer.on('main-menu', (event, arg) => {
     case 'focus-layer-7':
     case 'focus-layer-8':
     case 'focus-layer-9':
-      const argParsed = arg.split('-');
+      const argParsed = arg.msg.split('-');
       selectNumberedLayer(parseInt(argParsed[argParsed.length - 1]));
       break;
     case 'map':
