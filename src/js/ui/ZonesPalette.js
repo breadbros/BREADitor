@@ -30,11 +30,6 @@ function select_zone_from_pallete(evt) {
   return $it_me;
 }
 
-function select_and_edit_zone_from_pallete(evt) {
-  var $it_me = select_zone_from_pallete(evt);
-  edit_zone_click(evt, $it_me.data('index'));
-}
-
 function redraw_palette() {
   const $list = $('.zones-list');
   $list.html('');
@@ -52,7 +47,8 @@ function redraw_palette() {
   };
 
   for (let i = 0; i < currentZones.length; i++) {
-    $tmp = $("<li class='zone-row' data-index='" + i + "'><span class='zone-index'></span><span class='zone-name'></span></li>");
+    $tmp = $("<li class='zone-row' data-index='" + i + "'>" +
+             "<span class='zone-index'></span><span class='zone-name'></span></li>");
     $tmp.find('.zone-index').text(i);
     $tmp.find('.zone-name').text(currentZones[i].name);
 
@@ -67,13 +63,12 @@ function redraw_palette() {
   fixContainerSize();
 }
 
-var fixContainerSize = function () {
-  var palette = $('.zones-palette');
-  var container = $('.zones-palette .window-container');
+const fixContainerSize = () => {
+  const palette = $('.zones-palette');
+  const container = $('.zones-palette .window-container');
 
   container.height(palette.height() - 70);
 };
-
 
 $('.zones-palette').resize(function () {
   fixContainerSize();
@@ -84,21 +79,21 @@ $('.zones-palette #zones-new').click((evt) => {
 });
 
 $('.zones-palette #zones-spreadsheet').click(() => {
-  alert('SPREAD THAT SHEET ZONE SHEIT');
+  window.alert('SPREAD THAT SHEET ZONE SHEIT');
 });
 
-var template = "<div>Name: <input id='zone_name'></div>";
-template += "<div>Activation Script: <input id='zone_activation_script'></div>";
-template += "<div>Activation Chance: <select id='zone_activation_chance'></select></div>";
-template += "<div>Adjacent Activation?: <input type='checkbox' id='zone_can_by_adjacent_activated'></div>";
+const template = "<div>Name: <input id='zone_name'></div>" +
+  "<div>Activation Script: <input id='zone_activation_script'></div>" +
+  "<div>Activation Chance: <select id='zone_activation_chance'></select></div>" +
+  "<div>Adjacent Activation?: <input type='checkbox' id='zone_can_by_adjacent_activated'></div>";
 
 // {name: "NULL_ZONE", activation_script: "", activation_chance: 0, can_by_adjacent_activated: false}"
 
 function setup_template() {
-  var $template = $(template);
+  const $template = $(template);
 
-  var vals = new Array(256);// create an empty array with length 256
-  var select = $template.find('#zone_activation_chance');
+  const vals = new Array(256);// create an empty array with length 256
+  const select = $template.find('#zone_activation_chance');
 
   $.each(vals, function (idx) {
     select.append($('<option />').val(idx).text(idx));
@@ -118,13 +113,12 @@ function edit_zone_click(evt, id) {
 function _zone_click(evt, id) {
   evt.stopPropagation();
 
-  var dialog;
+  let dialog = null;
 
-  var zone = currentZones[id];
+  const zone = currentZones[id];
 
   $(() => {
-
-    var $template = setup_template();
+    const $template = setup_template();
 
     if (zone) {
       $('#modal-dialog').attr('title', 'Edit Zone ' + id + ')');
@@ -149,7 +143,7 @@ function _zone_click(evt, id) {
       modal: true,
       buttons: {
         Save: () => {
-          var _id = ($.isNumeric(id) && zone) ? id : currentZones.length;
+          const _id = ($.isNumeric(id) && zone) ? id : currentZones.length;
 
           update_zone(dialog, _id);
         },
@@ -164,13 +158,11 @@ function _zone_click(evt, id) {
   });
 }
 
-function update_zone(dialog, zone_id) {
-
-  var name = dialog.find('#zone_name').val();
-  var script = dialog.find('#zone_activation_script').val();
-  var chance = dialog.find('#zone_activation_chance').val();
-  var adjAct = dialog.find('#zone_can_by_adjacent_activated').is(':checked');
-  var zone = null;
+const update_zone = (dialog, zone_id) => {
+  const name = dialog.find('#zone_name').val();
+  const script = dialog.find('#zone_activation_script').val();
+  const chance = dialog.find('#zone_activation_chance').val();
+  const adjAct = dialog.find('#zone_can_by_adjacent_activated').is(':checked');
 
   if (!$.isNumeric(zone_id) || zone_id < 0) {
     modal_error('Invalid input: zone_id (' + zone_id + ') is invalid.');
@@ -190,7 +182,7 @@ function update_zone(dialog, zone_id) {
   console.log('TODO: optional scriptname uniqueness check.');
   console.log('TODO: optional scriptname existance-in-source check.');
 
-  zone = {
+  const zone = {
     name: name,
     activation_script: script,
     activation_chance: chance,
@@ -201,67 +193,61 @@ function update_zone(dialog, zone_id) {
   redraw_palette();
 
   dialog.dialog('close');
-}
+};
 
-function write_zone(id, zone) {
-  window.$$$currentMap.mapData.zones[id] = zone;
-}
+let _zoneVisibility = true;
+let _zoneAlpha = 1;
 
-var _zoneVisibility = true;
-var _zoneAlpha = 1;
-
-export var setZoneVisibility = (val) => {
+export const setZoneVisibility = (val) => {
   _zoneVisibility = !!val;
 };
 
-export var getZoneVisibility = () => {
+export const getZoneVisibility = () => {
   return _zoneVisibility;
 };
 
-export var setZoneAlpha = (val) => {
+export const setZoneAlpha = (val) => {
   _zoneAlpha = val;
 };
 
-export var getZoneAlpha = () => {
+export const getZoneAlpha = () => {
   return _zoneAlpha;
 };
 
-var _activeZone = 0;
+let _activeZone = 0;
 
-export var getActiveZone = () => {
+export const getActiveZone = () => {
   return _activeZone;
 };
 
-export var setActiveZone = (newZone) => {
+export const setActiveZone = (newZone) => {
   select_zone_by_index(newZone);
   _activeZone = newZone;
 };
 
-export var scrollZonePalletteToZone = (zoneToFocus) => {
-  var $container = $('.zones-palette .window-container');
-  var $rowToScrollTo = $('.zone-row.highlighted');
-  var zoneIdx = $rowToScrollTo.data('index');
-  var msg = '';
-  var loc;
-  var $zone_0 = null;
+export const scrollZonePalletteToZone = (zoneToFocus) => {
+  const $container = $('.zones-palette .window-container');
+  const $rowToScrollTo = $('.zone-row.highlighted');
+  const zoneIdx = $rowToScrollTo.data('index');
+  let msg = '';
 
   if (!zoneToFocus) {
     zoneToFocus = 0;
   }
 
-  if (zoneIdx != zoneToFocus) {
+  if (zoneIdx !== zoneToFocus) {
     msg = 'unexpected zone index, expected ' + zoneToFocus + ', got ' + zoneIdx;
     console.log(msg);
     throw msg;
   }
 
-  $zone_0 = $('.zone-row[data-index=0]');
-
-  loc = parseInt($rowToScrollTo.offset().top - $container.offset().top); // + Math.abs($zone_0.offset().top) ); //+ $container.height()) ;
+  // const $zone_0 = $('.zone-row[data-index=0]');
+  const loc = parseInt($rowToScrollTo.offset().top - $container.offset().top);
+  // + Math.abs($zone_0.offset().top) ); //+ $container.height()) ;
 
   $('.zones-palette .window-container').scrollTop(loc);
 };
 
-export var ZonesWidget = {
+export const ZonesWidget = {
   initZonesWidget: initZonesWidget
 };
