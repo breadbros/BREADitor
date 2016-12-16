@@ -40,10 +40,6 @@ The Immediates for Ustor
     * loading a different map also has no effect: all palettes retain their prior state
     * have to restart to fix
     * Some kind of indicator of the cursor / selection's tile coordinates (setting up scripts that reference positions on the map is really painful without this)
-  - zones
-    * selecting zones from the palette does not allow you to place them they have to be eyedroppered from the map
-    * right click drawing on the zone layer should erase / set zone 0 unless you want to add the ability to select two zones at once, similar to tiles
-    * changes to zones are not saved
 
 The rest
 =========
