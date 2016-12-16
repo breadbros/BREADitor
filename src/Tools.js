@@ -34,11 +34,11 @@ export const zero_zoom = (map) => {
 };
 
 const zoomFn = function (map, e, zoomout) {
-  const mouseX = map.camera[0] + e.offsetX * map.camera[2];
-  const mouseY = map.camera[1] + e.offsetY * map.camera[2];
+  const mouseX = map.camera[0] + (e.offsetX ? e.offsetX : e.clientX) * map.camera[2];
+  const mouseY = map.camera[1] + (e.offsetY ? e.offsetY : e.clientY) * map.camera[2];
 
-  if (!map.zoom_level) {
-    if (zoomLevels.indexOf(map.camera[2]) >= 0) {
+  if (typeof map.zoom_level === 'undefined') {
+    if (zoomLevels.indexOf(map.camera[2]) === -1) {
       zero_zoom(map);
       return;
     } else {
@@ -47,11 +47,9 @@ const zoomFn = function (map, e, zoomout) {
   }
 
   if (!zoomout) {
-    // debugger;
     map.zoom_level--;
     if (map.zoom_level < 0) { map.zoom_level = 0; }
   } else {
-    // debugger;
     map.zoom_level++;
     if (map.zoom_level === zoomLevels.length) { map.zoom_level = zoomLevels.length - 1; }
   }
@@ -60,8 +58,8 @@ const zoomFn = function (map, e, zoomout) {
 
   map.camera[2] = zoomLevels[map.zoom_level];
 
-  map.camera[0] = mouseX - (e.offsetX * map.camera[2]);
-  map.camera[1] = mouseY - (e.offsetY * map.camera[2]);
+  map.camera[0] = mouseX - ((e.offsetX ? e.offsetX : e.clientX) * map.camera[2]);
+  map.camera[1] = mouseY - ((e.offsetY ? e.offsetY : e.clientY) * map.camera[2]);
 
   console.log('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
 };
