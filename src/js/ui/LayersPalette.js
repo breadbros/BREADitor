@@ -11,6 +11,15 @@ let list;
 
 let _obsAlpha = 1;
 
+export const visibilityFix = () => {
+  const $n = $('.layers-palette');
+
+  if ($n.width() < 100) {
+    $n.css('width', '230px'); // todo  minwidth/height this in the css
+    $n.css('height', '330px');
+  }
+};
+
 export const setObsVisibility = (val) => {
   Tools.setObstructionsVisible(val);
 };

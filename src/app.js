@@ -1,7 +1,7 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
 import { Tools, clickEyedropper, clickDrawBrush } from './Tools.js';
 import { Palettes } from './Palettes.js';
-import { LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer } from './js/ui/LayersPalette.js';
+import { LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix } from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
 import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
@@ -268,6 +268,11 @@ ipcRenderer.on('main-menu', (event, arg) => {
   ];
 
   window.$$$toggle_pallete = function (pal) {
+
+    if (pal.msg) {
+      pal = pal.msg;
+    }
+
     let node_selector = '';
     let node = pal + '-palette';
 
@@ -286,6 +291,10 @@ ipcRenderer.on('main-menu', (event, arg) => {
       node.hide();
     } else {
       node.show();
+
+      if (node_selector === '.layers-palette') {
+        visibilityFix();
+      }
     }
 
     Tools.savePalettePositions();
