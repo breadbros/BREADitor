@@ -1,15 +1,13 @@
 import { modal_error } from './Util.js';
 const $ = require('jquery');
 
-var currentZones = null;
-var selectedZoneIdx = null;
+let currentZones = null;
 
-function initZonesWidget(map) {
-
+const initZonesWidget = (map) => {
   currentZones = map.mapData.zones;
 
   redraw_palette();
-}
+};
 
 function _select_zone_ui_inner($node) {
   $('.zone-row').removeClass('highlighted');
@@ -17,18 +15,17 @@ function _select_zone_ui_inner($node) {
 }
 
 function select_zone_by_index(idx) {
-  var $it_me;
   if (!idx) {
     idx = 0;
   }
 
-  $it_me = $('.zone-row[data-index=' + idx + ']');
+  const $it_me = $('.zone-row[data-index=' + idx + ']');
   _select_zone_ui_inner($it_me);
   return $it_me;
 }
 
 function select_zone_from_pallete(evt) {
-  var $it_me = $(evt.target).closest('.zone-row');
+  const $it_me = $(evt.target).closest('.zone-row');
   _select_zone_ui_inner($it_me);
   return $it_me;
 }
@@ -39,22 +36,22 @@ function select_and_edit_zone_from_pallete(evt) {
 }
 
 function redraw_palette() {
-  var $list = $('.zones-list');
+  const $list = $('.zones-list');
   $list.html('');
-  var $tmp;
+  let $tmp = null;
   $('#zones-number').text(currentZones.length);
 
-  var singleclick_handler = (evt) => {
-    select_zone_from_pallete(evt);
+  const singleclick_handler = (evt) => {
+    const $it_me = select_zone_from_pallete(evt);
+    setActiveZone($it_me.data('index'));
   };
 
-  var doubleclick_handler = (evt) => {
-    var $it_me = select_zone_from_pallete(evt);
+  const doubleclick_handler = (evt) => {
+    const $it_me = select_zone_from_pallete(evt);
     edit_zone_click(evt, $it_me.data('index'));
   };
 
   for (let i = 0; i < currentZones.length; i++) {
-
     $tmp = $("<li class='zone-row' data-index='" + i + "'><span class='zone-index'></span><span class='zone-name'></span></li>");
     $tmp.find('.zone-index').text(i);
     $tmp.find('.zone-name').text(currentZones[i].name);

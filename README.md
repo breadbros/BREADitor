@@ -30,13 +30,10 @@ The Immediates for Ustor
 * ME4 bugs / improvements
 
   - tileset
-    * must use eyedropper to select from tileset. should work regardless of tool
-    * selecting from tileset forces opposite click to empty/magenta tile in UI, but retains actual tile index using eyedropper on map with click opposite of the one set by tileset does the same
     * tileset +/- zoom seems to lose its "middle range" levels after a few uses
     * If you've selected a parallax layer, the parallax offsets will apply to the tileset (???)
 
   - general
-    * often, canvas will stop updating
     * A mouse-over-tile outline 
     * tools can be selected, but either cannot be used, or their effect not visible
     * toggling layer visibility has no effect either
@@ -46,6 +43,7 @@ The Immediates for Ustor
   - zones
     * selecting zones from the palette does not allow you to place them they have to be eyedroppered from the map
     * right click drawing on the zone layer should erase / set zone 0 unless you want to add the ability to select two zones at once, similar to tiles
+    * changes to zones are not saved
 
 The rest
 =========

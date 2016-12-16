@@ -41,8 +41,6 @@ const new_layer_click = (evt) => {
 };
 
 export const selectNumberedLayer = (num) => {
-  console.log("select", num);
-
   const $list = $('.layer_name');
   for (let i = $list.length - 1; i >= 0; i--) {
     const $node = $($list[i]);
