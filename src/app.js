@@ -1,7 +1,9 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
-import { Tools, clickEyedropper, clickDrawBrush } from './Tools.js';
+import { Tools, clickEyedropper, clickDrawBrush, clickMove } from './Tools.js';
 import { Palettes } from './Palettes.js';
-import { LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix } from './js/ui/LayersPalette.js';
+import {
+  LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix
+} from './js/ui/LayersPalette.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
 import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
@@ -90,6 +92,9 @@ ipcRenderer.on('main-menu', (event, arg) => {
       break;
     case 'tool-eyedropper':
       clickEyedropper();
+      break;
+    case 'tool-move':
+      clickMove();
       break;
     case 'about':
       window.$$$about_breaditor();

@@ -124,12 +124,43 @@ const toolLogic = {
   },
   'SELECT': {
     'mousedown': function (map, e) {
-      
+      if (!getSelectedLayer()) {
+        console.log('You havent selected a layer yet.');
+        window.alert('You havent selected a layer yet.');
+        return;
+      }
+
+      const result = getTXTyFromMouse(map, e);
+      const tX = result[0];
+      const tY = result[1];
+
+      console.log('SELECT DOWN');
+
+      if (!toolLogic.SELECT.isSelecting) {
+        console.log('it wasnt selecting!');
+        toolLogic.SELECT.isSelecting = true;
+        toolLogic.SELECT.lastTX = tX;
+        toolLogic.SELECT.lastTY = tY;
+        toolLogic.SELECT.startTX = tX;
+        toolLogic.SELECT.startTY = tY;
+      } else {
+        console.log('it was selecting!');
+      }
+
+      map.selection.deselect();
+      map.selection.add(tX, tY, 1, 1);
+
+      console.log('selected:', tX, tY, 1, 1);
     },
     'mousemove': function (map, e) {},
     'mouseup': function (map, e) {},
     'button_element': '#btn-tool-select',
-    'human_name': 'Select'
+    'human_name': 'Select',
+    'isSelecting': false,
+    'startTX': -1,
+    'startTY': -1,
+    'lastTX': -1,
+    'lastTY': -1
   },
   'EYEDROPPER': {
     'mousedown': function (map, e) {
@@ -273,6 +304,10 @@ const updateRstringInfo = () => {
 
 export const clickEyedropper = () => {
   $(toolLogic['EYEDROPPER'].button_element).click();
+};
+
+export const clickMove = () => {
+  $(toolLogic['DRAG'].button_element).click();
 };
 
 export const clickDrawBrush = () => {
