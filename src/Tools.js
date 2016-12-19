@@ -92,6 +92,32 @@ const getTXTyFromMouse = (map, evt) => {
   return [tX, tY];
 };
 
+// TODO this is probably not the most efficient way to calculate the topleftmost of two points and the offset between...
+const getTopLeftmostCoordinatesAndOffsets = (x1, y1, x2, y2) => {
+  let ret = null;
+  if (x1 <= x2 && y1 <= y2) {
+    ret = [x1, y1, x2 - x1, y2 - y1];
+  } else {
+    ret = [x2, y2, x1 - x2, y1 - y2];
+  }
+
+  if (ret[2] === 0) {
+    ret[2] = 1;
+  } else if (ret[2] < 0) {
+    ret[2] = Math.abs(ret[2]);
+    ret[0] -= ret[2];
+  }
+
+  if (ret[3] === 0) {
+    ret[3] = 1;
+  } else if (ret[3] < 0) {
+    ret[3] = Math.abs(ret[3]);
+    ret[1] -= ret[3];
+  }
+
+  return ret;
+};
+
 const toolLogic = {
   'DRAG': {
     'dragging': false,
@@ -144,19 +170,44 @@ const toolLogic = {
         toolLogic.SELECT.startTY = tY;
 
         map.selection.add(tX, tY, 1, 1);
+        toolLogic.SELECT.isButtonDown = true;
       } else {
         toolLogic.SELECT.isSelecting = false;
+        toolLogic.SELECT.isButtonDown = false;
         toolLogic.SELECT.lastTX = -1;
         toolLogic.SELECT.lastTY = -1;
         toolLogic.SELECT.startTX = -1;
         toolLogic.SELECT.startTY = -1;
       }
     },
-    'mousemove': function (map, e) {},
-    'mouseup': function (map, e) {},
+    'mousemove': function (map, e) {
+      if (!toolLogic.SELECT.isSelecting || !toolLogic.SELECT.isButtonDown) {
+        return;
+      }
+
+      const result = getTXTyFromMouse(map, e);
+      const tX = result[0];
+      const tY = result[1];
+
+      if (toolLogic.SELECT.lastTX === tX && toolLogic.SELECT.lastTY === tY) {
+        return;
+      }
+
+      toolLogic.SELECT.lastTX = tX;
+      toolLogic.SELECT.lastTY = tY;
+
+      const res = getTopLeftmostCoordinatesAndOffsets(tX, tY, toolLogic.SELECT.startTX, toolLogic.SELECT.startTY);
+
+      map.selection.deselect();
+      map.selection.add(res[0], res[1], res[2], res[3]);
+    },
+    'mouseup': function (map, e) {
+      toolLogic.SELECT.isButtonDown = false;
+    },
     'button_element': '#btn-tool-select',
     'human_name': 'Select',
     'isSelecting': false,
+    'isButtonDown': false,
     'startTX': -1,
     'startTY': -1,
     'lastTX': -1,
