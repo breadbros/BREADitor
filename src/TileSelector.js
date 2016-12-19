@@ -30,6 +30,10 @@ let _last_vsp = null;
 let _last_map = null;
 
 const leftTile = (val) => {
+  if (_last_vsp === null) {
+    return 0;
+  }
+
   if (typeof val !== 'undefined') {
     selectedTilesPerVSP[_last_vsp].leftTile = parseInt(val);
   }
@@ -38,6 +42,10 @@ const leftTile = (val) => {
 };
 
 const rightTile = (val) => {
+  if (_last_vsp === null) {
+    return 0;
+  }
+
   if (typeof val !== 'undefined') {
     selectedTilesPerVSP[_last_vsp].rightTile = parseInt(val);
   }
