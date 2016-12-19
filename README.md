@@ -30,7 +30,6 @@ The Immediates for Ustor
 * ME4 bugs / improvements
 
   - tileset
-    * tileset +/- zoom seems to lose its "middle range" levels after a few uses
     * If you've selected a parallax layer, the parallax offsets will apply to the tileset (???)
 
   - general

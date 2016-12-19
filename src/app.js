@@ -267,8 +267,7 @@ ipcRenderer.on('main-menu', (event, arg) => {
     'tileset-selector-palette'
   ];
 
-  window.$$$toggle_pallete = function (pal) {
-
+  window.$$$toggle_pallete = function (pal, forceShow) {
     if (pal.msg) {
       pal = pal.msg;
     }
@@ -287,7 +286,7 @@ ipcRenderer.on('main-menu', (event, arg) => {
       throw new Error("Invalid palette name: '" + pal + "'");
     }
 
-    if (node.is(':visible')) {
+    if (node.is(':visible') && forceShow !== true) {
       node.hide();
     } else {
       node.show();

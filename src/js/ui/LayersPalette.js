@@ -177,9 +177,14 @@ const redraw_palette = (map) => {
   };
 
   const addZoneSelectHandler = (_$zone_container) => {
-    $zone_container = _$zone_container; 
+    $zone_container = _$zone_container;
     $zone_container.on('click', (evt) => {
       selectZoneLayer();
+      evt.stopPropagation();
+    });
+
+    $zone_container.on('dblclick', (evt) => {
+      window.$$$toggle_pallete('zones', true);
       evt.stopPropagation();
     });
   };
