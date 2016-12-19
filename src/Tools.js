@@ -18,6 +18,30 @@ const updateLocationFunction = (map) => {
   window.localStorage[key + '-mapy'] = y;
 };
 
+let _currentHoverTile = null;
+let _lastHoverTile = null;
+export const getCurrentHoverTile = () => {
+  return _currentHoverTile;
+};
+
+const setCurrentHoverTile = (map, mouseEvt) => {
+  if (mouseEvt) {
+    _currentHoverTile = getTXTyFromMouse(map, mouseEvt);
+  } else {
+    _currentHoverTile = null;
+  }
+
+  if (_lastHoverTile !== _currentHoverTile) {
+    if (_currentHoverTile) {
+      $('#info-current-hover-tile').text(_currentHoverTile[0] + ',' + _currentHoverTile[1]);
+    } else {
+      $('#info-current-hover-tile').text('-');
+    }
+
+    _lastHoverTile = _currentHoverTile;
+  }
+};
+
 export const zoomLevels = [0.125, 0.25, 0.5, 1, 2, 4, 8, 16];
 
 const baseZoomIndex = 3;
@@ -431,6 +455,10 @@ const tools = (action, map, evt) => {
   const mode = window.TOOLMODE;
 
   if (toolLogic.hasOwnProperty(mode) && toolLogic[mode].hasOwnProperty(action)) {
+    // TODO make a proper 'beforeAll: event' maybe?
+    if (action === 'mousemove') {
+      setCurrentHoverTile(map, evt);
+    }
     toolLogic[mode][action](map, evt);
   } else {
     console.log(sprintf("No action '%s' for mode '%s'", action, mode));

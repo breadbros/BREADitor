@@ -67,7 +67,7 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
     _last_vsp = whichVSP;
   }
 
-  /// TODO: This slotIdx paradigm is dumb.  Kill it.
+  // TODO: This slotIdx paradigm is dumb.  Kill it.
   if (slotIdx === 0) {
     leftTile(vspIDX);
   } else if (slotIdx === 1) {
