@@ -25,7 +25,7 @@ TODO
 
 The Immediates for Ustor
 ========================
-* fill, line, copy+paste
+* fill, line
 
 * ME4 bugs / improvements
 
@@ -33,12 +33,7 @@ The Immediates for Ustor
     * If you've selected a parallax layer, the parallax offsets will apply to the tileset (???)
 
   - general
-    * A mouse-over-tile outline 
     * tools can be selected, but either cannot be used, or their effect not visible
-    * toggling layer visibility has no effect either
-    * loading a different map also has no effect: all palettes retain their prior state
-    * have to restart to fix
-    * Some kind of indicator of the cursor / selection's tile coordinates (setting up scripts that reference positions on the map is really painful without this)
 
 The rest
 =========
@@ -66,7 +61,7 @@ The rest
   * enter should attempt to submit a dialog, no matter what.
 * OMG, kill all caught exceptions from the framework. We should be able to "Pause On Caught Exceptions" in peace
 * Map palette needs to remember dimensions.
-* make sure map.renderString saves/loads properly 
+* make sure map.renderString saves/loads properly
 * add last eye-open/eye-closed state to savefile (seperate dict from 'game' data. editor-specific state.)
 * verify load/save of layer parallax values.
 * verify load/save of layer lucency values.
@@ -81,14 +76,14 @@ The rest
 * entity selector
 * a way to show / hide entity indexes on map (and/or click-entity-to-select-it behavior)
 * remove the hardcoded 16's in the entity palette: should be referencing the current tileset's tilesize.
-* maybe have some data-marker in the format if it's px/py vs tx/ty?  
+* maybe have some data-marker in the format if it's px/py vs tx/ty?
 * continuous drawing (draw everything in a line from prevLoc to curLoc per frame.  BREZINGHAMZ J0)
 * eyeball icons for entity layer should hide the "normal" entities
 * we should change the entity layer paradigm since they can be ANYWHERE now
 * eyeball icon for RENDER layer should do ????
 * do we even NEED a render layer?
 * all layers should have unique string names and that should be enforced.
-  * on successful layer namechange, change all entity.location.layers from old -> new 
+  * on successful layer namechange, change all entity.location.layers from old -> new
 * properly initialize infoWindow upon load
 * This list is not exhaustive
 * rename __default__ to __VERGE3_DEFAULT__
