@@ -77,6 +77,21 @@ const grue_zoom = (zoomout, map, evt) => {
   zoomFn(map, evt, zoomout);
 };
 
+const getTXTyFromMouse = (map, evt) => {
+  const mapOffsetX = map.camera[0];
+  const mapOffsetY = map.camera[1];
+  const mouseOffsetX = evt.offsetX;
+  const mouseOffsetY = evt.offsetY;
+
+  const oX = mapOffsetX + mouseOffsetX * map.camera[2];
+  const oY = mapOffsetY + mouseOffsetY * map.camera[2];
+
+  const tX = parseInt(oX / 16);
+  const tY = parseInt(oY / 16);
+
+  return [tX, tY];
+};
+
 const toolLogic = {
   'DRAG': {
     'dragging': false,
@@ -109,7 +124,7 @@ const toolLogic = {
   },
   'SELECT': {
     'mousedown': function (map, e) {
-      debugger;
+      
     },
     'mousemove': function (map, e) {},
     'mouseup': function (map, e) {},
@@ -134,16 +149,10 @@ const toolLogic = {
       let tIdx = null;
       let zIdx = -1;
       let selector = null;
-      const mapOffsetX = map.camera[0];
-      const mapOffsetY = map.camera[1];
-      const mouseOffsetX = e.offsetX;
-      const mouseOffsetY = e.offsetY;
 
-      const oX = mapOffsetX + mouseOffsetX * map.camera[2];
-      const oY = mapOffsetY + mouseOffsetY * map.camera[2];
-
-      const tX = parseInt(oX / 16);
-      const tY = parseInt(oY / 16);
+      const result = getTXTyFromMouse(map, e);
+      const tX = result[0];
+      const tY = result[1];
 
       const doVSPselector = (tX, tY, map) => {
         map.selection.deselect();
@@ -211,16 +220,10 @@ const toolLogic = {
         return;
       }
 
-      const mapOffsetX = map.camera[0];
-      const mapOffsetY = map.camera[1];
-      const mouseOffsetX = e.offsetX * map.camera[2];
-      const mouseOffsetY = e.offsetY * map.camera[2];
+      const result = getTXTyFromMouse(map, e);
 
-      const oX = mapOffsetX + mouseOffsetX;
-      const oY = mapOffsetY + mouseOffsetY;
-
-      const tX = parseInt(oX / 16);
-      const tY = parseInt(oY / 16);
+      const tX = result[0];
+      const tY = result[1];
 
       // TODO: Again, this is dumb.  LALALA.
       if (getSelectedLayer().map_tileData_idx === 999) {
