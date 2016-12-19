@@ -32,8 +32,11 @@ const setCurrentHoverTile = (map, mouseEvt) => {
   }
 
   if (_lastHoverTile !== _currentHoverTile) {
+    map.visibleHoverTile.deselect();
+
     if (_currentHoverTile) {
       $('#info-current-hover-tile').text(_currentHoverTile[0] + ',' + _currentHoverTile[1]);
+      map.visibleHoverTile.add(_currentHoverTile[0], _currentHoverTile[1], 1, 1);
     } else {
       $('#info-current-hover-tile').text('-');
     }

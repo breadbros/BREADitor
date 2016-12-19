@@ -4,7 +4,7 @@ const path = require('path');
 const appPath = app.getAppPath();
 const jetpack = require('fs-jetpack').cwd(appPath);
 import { ShaderProgram } from './ShaderProgram.js';
-import { Tools } from './Tools.js';
+import { Tools, getCurrentHoverTile } from './Tools.js';
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js';
 const sprintf = require('sprintf-js').sprintf;
 const $ = require('jquery');
@@ -385,81 +385,84 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.renderContainer = null;
 
-  this.selection = {
-    add: function (x, y, w, h) {
-      if (x < this.hull.x || this.hull.x === null) { this.hull.x = x; }
-      if (y < this.hull.y || this.hull.y === null) { this.hull.y = y; }
-      if (x + w > this.hull.x + this.hull.w) { this.hull.w = x + w; }
-      if (y + h > this.hull.y + this.hull.h) { this.hull.h = y + h; }
+  this.selectionMaker = function () {
+    return {
+      add: function (x, y, w, h) {
+        if (x < this.hull.x || this.hull.x === null) { this.hull.x = x; }
+        if (y < this.hull.y || this.hull.y === null) { this.hull.y = y; }
+        if (x + w > this.hull.x + this.hull.w) { this.hull.w = x + w; }
+        if (y + h > this.hull.y + this.hull.h) { this.hull.h = y + h; }
 
-      let ix = null;
-      let iy = null;
-      let i = null;
-      for (iy = 0; iy < h; iy++) {
-        for (ix = 0; ix < w; ix++) {
-          i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
-          this.tiles[i] = true;
+        let ix = null;
+        let iy = null;
+        let i = null;
+        for (iy = 0; iy < h; iy++) {
+          for (ix = 0; ix < w; ix++) {
+            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+            this.tiles[i] = true;
+          }
         }
-      }
 
-      this.recalculateLines();
-    },
-    remove: function (x, y, w, h) {
-            // TODO update hull -- it's much harder to recalc the hull on subtraction
+        this.recalculateLines();
+      },
+      remove: function (x, y, w, h) {
+              // TODO update hull -- it's much harder to recalc the hull on subtraction
 
-      let ix = null;
-      let iy = null;
-      let i = null;
-      for (iy = 0; iy < h; iy++) {
-        for (ix = 0; ix < w; ix++) {
-          i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
-          this.tiles[i] = false;
+        let ix = null;
+        let iy = null;
+        let i = null;
+        for (iy = 0; iy < h; iy++) {
+          for (ix = 0; ix < w; ix++) {
+            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+            this.tiles[i] = false;
+          }
         }
-      }
 
-      this.recalculateLines();
-    },
-    deselect: function () {
-      this.hull.x = null;
-      this.hull.y = null;
-      this.hull.w = 0;
-      this.hull.h = 0;
+        this.recalculateLines();
+      },
+      deselect: function () {
+        this.hull.x = null;
+        this.hull.y = null;
+        this.hull.w = 0;
+        this.hull.h = 0;
 
-      this.tiles = [];
-      this.lines = [];
-    },
+        this.tiles = [];
+        this.lines = [];
+      },
 
-        // "private"
-    recalculateLines: function () {
-      this.lines = [];
+          // "private"
+      recalculateLines: function () {
+        this.lines = [];
 
-      const mapWidth = this.map.mapSizeInTiles[0];
-      let x = null;
-      let y = null;
-      let i = null;
-      for (y = this.hull.y; y < this.hull.y + this.hull.h; y++) {
-        for (x = this.hull.x; x < this.hull.x + this.hull.w; x++) {
-          i = getFlatIdx(x, y, mapWidth);
-          if (this.tiles[i] !== this.tiles[i - 1]) { this.lines.push(x, y, x, y + 1); }
-          if (this.tiles[i] !== this.tiles[i - mapWidth]) { this.lines.push(x, y, x + 1, y); }
+        const mapWidth = this.map.mapSizeInTiles[0];
+        let x = null;
+        let y = null;
+        let i = null;
+        for (y = this.hull.y; y < this.hull.y + this.hull.h; y++) {
+          for (x = this.hull.x; x < this.hull.x + this.hull.w; x++) {
+            i = getFlatIdx(x, y, mapWidth);
+            if (this.tiles[i] !== this.tiles[i - 1]) { this.lines.push(x, y, x, y + 1); }
+            if (this.tiles[i] !== this.tiles[i - mapWidth]) { this.lines.push(x, y, x + 1, y); }
+          }
         }
-      }
 
-      console.info('Recalculated lines:');
-      console.info(this.hull);
-      console.info(this.tiles);
-      console.info(this.lines);
-    },
+        console.info('Recalculated lines:');
+        console.info(this.hull);
+        console.info(this.tiles);
+        console.info(this.lines);
+      },
 
-    hull: { x: null, y: null, w: 0, h: 0 },
-    tiles: [],
-    lines: []
+      hull: { x: null, y: null, w: 0, h: 0 },
+      tiles: [],
+      lines: []
+    };
   };
+
+  this.selection = this.selectionMaker();
   this.selection.map = this;
 
-    // // Test selection drawing!
-    // this.selection.add(40, 35, 6, 5);
-    // this.selection.remove(41, 36, 1, 2);
+  this.visibleHoverTile = this.selectionMaker();
+  this.visibleHoverTile.map = this;
 
   this.doneLoading();
 };
@@ -1011,11 +1014,11 @@ Map.prototype = {
     }
   },
 
-  maybeRenderMarchingAnts: function (gl) {
+  maybeRenderMarchingAnts: function (gl, selection) {
     const vsp = 'default'; // TODO this is definitely wrong. Definitely if we allow vsp size mixing.
 
     // MARCHING ANTS
-    if (this.selection.lines.length > 0 && typeof vsp !== 'undefined') {
+    if (selection.lines.length > 0 && typeof vsp !== 'undefined') {
       // TODO remove these fake layer shenanegans
       // TODO something smells about getSelectedLayer().layer
       const layer = getSelectedLayer() ? getSelectedLayer().layer : {
@@ -1044,9 +1047,9 @@ Map.prototype = {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.selectionVertexBuffer);
       gl.enableVertexAttribArray(a_position);
       gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
-      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.selection.lines), this.gl.STATIC_DRAW);
+      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(selection.lines), this.gl.STATIC_DRAW);
 
-      gl.drawArrays(gl.LINES, 0, this.selection.lines.length / 2);
+      gl.drawArrays(gl.LINES, 0, selection.lines.length / 2);
     }
   },
 
@@ -1061,7 +1064,9 @@ Map.prototype = {
 
     this.maybeRenderZones(gl);
 
-    this.maybeRenderMarchingAnts(gl);
+    this.maybeRenderMarchingAnts(gl, this.selection);
+
+    this.maybeRenderMarchingAnts(gl, this.visibleHoverTile);
   },
 
   renderEntity: function (entity, layer, tint, clip) {
@@ -1112,12 +1117,13 @@ Map.prototype = {
       tx + tw, -ty, fx + fw, fy
     ]), this.gl.STATIC_DRAW);
 
-    gl.uniform4f(this.spriteShader.uniform('u_camera'),
-            Math.floor(layer.parallax.X * this.camera[0]) / tilesize.width,
-            Math.floor(layer.parallax.Y * this.camera[1]) / tilesize.height,
-            this.camera[2] * this.renderContainer.width() / tilesize.width,
-            this.camera[2] * this.renderContainer.height() / tilesize.height
-        );
+    gl.uniform4f(
+      this.spriteShader.uniform('u_camera'),
+      Math.floor(layer.parallax.X * this.camera[0]) / tilesize.width,
+      Math.floor(layer.parallax.Y * this.camera[1]) / tilesize.height,
+      this.camera[2] * this.renderContainer.width() / tilesize.width,
+      this.camera[2] * this.renderContainer.height() / tilesize.height
+    );
 
     gl.uniform4f(this.spriteShader.uniform('u_tint'), tint[0], tint[1], tint[2], tint[3]);
 
