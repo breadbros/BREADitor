@@ -1,5 +1,6 @@
 import { getSelectedLayer } from './LayersPalette';
-import { getXfromFlat, getYfromFlat } from '../../Map'
+import { getXfromFlat, getYfromFlat } from '../../Map';
+import { getCurrentHoverTile } from '../../Tools';
 
 let pasteboard = [];
 
@@ -63,12 +64,29 @@ const _cut_or_copy = (map, isCut) => {
   }
 };
 
-export const paste = (map, tX, tY) => {
+export const paste = (map, tX, tY, newLayer) => {
+  debugger;
   if (typeof tX === 'undefined' || typeof tY === 'undefined') {
-    window.alert('wtf');
+    const hoverTile = getCurrentHoverTile();
+    if (hoverTile === null) {
+      console.error('attempted to paste when hovertile was null.  wtf.');
+      return;
+    }
+    tX = hoverTile[0];
+    tY = hoverTile[1];
+    newLayer = getSelectedLayer().map_tileData_idx;
   }
 
+  const pasteSet = [];
 
+  for (let i = pasteboard.length - 1; i >= 0; i--) {
+    pasteSet.push([
+      pasteboard[i][0] + tX,
+      pasteboard[i][1] + tY,
+      newLayer,
+      pasteboard[i][3]
+    ]);
+  }
 
-  console.log("paste");
+  map.UndoRedo.change_many_tiles(pasteSet);
 };

@@ -68,7 +68,7 @@ export const MakeUndoRedoStack = (_map) => {
 
       if (was === tileIdx) {
         // console.log('skip draw of duplicate tile.');
-        return;
+        continue;
       }
 
       map.setTile(

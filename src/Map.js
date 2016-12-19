@@ -446,10 +446,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
           }
         }
 
-        console.info('Recalculated lines:');
-        console.info(this.hull);
-        console.info(this.tiles);
-        console.info(this.lines);
+        // console.info('Recalculated lines:');
+        // console.info(this.hull);
+        // console.info(this.tiles);
+        // console.info(this.lines);
       },
 
       hull: { x: null, y: null, w: 0, h: 0 },
