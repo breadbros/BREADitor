@@ -17,23 +17,23 @@ const getPasteboard = () => {
   l++;
 };
 
-export const cut = (map) => {
-  console.log("cut");
-  if (map.selection.tiles) {
-    clearPasteboard();
-    console.log('put cut here');
-  } else {
-    console.log('Nothing cut, there was no selection.');
-  }
+export const copy = (map) => {
+  _cut_or_copy(map, false);
 };
 
-export const copy = (map) => {
+export const cut = (map) => {
+  _cut_or_copy(map, true);
+};
+
+const _cut_or_copy = (map, isCut) => {
   if (map.selection.tiles) {
     clearPasteboard();
     const curLayer = getSelectedLayer().map_tileData_idx;
     const hull_x = map.selection.hull.x;
     const hull_y = map.selection.hull.y;
     const mapWidth = map.mapData.layers[0].dimensions.X;
+
+    const cutSet = [];
 
     for (const flatidx in map.selection.tiles) {
       const x = getXfromFlat(flatidx, mapWidth);
@@ -46,8 +46,17 @@ export const copy = (map) => {
         map.getTile(x, y, curLayer)
       );
 
-      // addToPasteboard
+      if (isCut) {
+        cutSet.push(
+          map.UndoRedo.prepare_one_tile(x, y, curLayer, 0)
+        ); // TODO should cuts not default to zeros always?
+      }
     }
+
+    if (isCut) {
+      map.UndoRedo.change_many_tiles(cutSet);
+    }
+
     getPasteboard();
   } else {
     console.log('Nothing copied, there was no selection.');
@@ -58,6 +67,8 @@ export const paste = (map, tX, tY) => {
   if (typeof tX === 'undefined' || typeof tY === 'undefined') {
     window.alert('wtf');
   }
+
+
 
   console.log("paste");
 };

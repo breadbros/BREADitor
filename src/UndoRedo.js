@@ -25,7 +25,7 @@ export const MakeUndoRedoStack = (_map) => {
     console.log(redoStack);
   };
 
-  undolog('initializing undostack');
+  // undolog('initializing undostack');
 
   const change_one_tile = (
     tileX, tileY,
@@ -38,12 +38,50 @@ export const MakeUndoRedoStack = (_map) => {
       return;
     }
 
-    undoStack.push([[tileX, tileY, layerIdx, was]]);
+    undoStack.push(
+      [
+        prepare_one_tile(tileX, tileY, layerIdx, was)
+      ]
+    );
 
     map.setTile(
       tileX, tileY,
       layerIdx, tileIdx
     );
+  };
+
+  const prepare_one_tile = (tileX, tileY, layerIdx, tileIdx) => {
+    return [tileX, tileY, layerIdx, tileIdx];
+  };
+
+  const change_many_tiles = (arManyTiles) => {
+    const manyChangeStack = [];
+    for (let i = arManyTiles.length - 1; i >= 0; i--) {
+      const curTile = arManyTiles[i];
+
+      const tileX = curTile[0];
+      const tileY = curTile[1];
+      const layerIdx = curTile[2];
+      const tileIdx = curTile[3];
+
+      const was = map.getTile(tileX, tileY, layerIdx);
+
+      if (was === tileIdx) {
+        // console.log('skip draw of duplicate tile.');
+        return;
+      }
+
+      map.setTile(
+        tileX, tileY,
+        layerIdx, tileIdx
+      );
+
+      manyChangeStack.push(
+        prepare_one_tile(tileX, tileY, layerIdx, was)
+      );
+    }
+
+    undoStack.push(manyChangeStack);
   };
 
   const undo = () => {
@@ -57,7 +95,6 @@ export const MakeUndoRedoStack = (_map) => {
     const redoSet = [];
 // console.log("changes.length: " + changes.length)
     for (let i = changes.length - 1; i >= 0; i--) {
-      // todo: undostacks should be a child of Map objects.  This is a poor temporary solution
       const was = map.getTile(changes[i][0], changes[i][1], changes[i][2]);
 
       if (was === changes[i][3]) {
@@ -116,7 +153,10 @@ export const MakeUndoRedoStack = (_map) => {
     redo: redo,
     _undoStack: undoStack,
     _redoStack: redoStack,
-    change_one_tile: change_one_tile
+    change_one_tile: change_one_tile,
+
+    change_many_tiles: change_many_tiles,
+    prepare_one_tile: prepare_one_tile
   };
 
   return UndoRedo;

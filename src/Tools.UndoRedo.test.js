@@ -98,3 +98,59 @@ test('draw. undo. redo. undo. redo.', () => {
   expect(REDO_stack.length).toEqual(0);
   expect(888).toEqual(map.getTile(tileX, tileY, layerIdx));
 });
+
+test('change_many_tiles', () => {
+  const changeset = [];
+
+  changeset[0] = ur.prepare_one_tile(0, 0, layerIdx, 101);
+  changeset[1] = ur.prepare_one_tile(0, 1, layerIdx, 202);
+  changeset[2] = ur.prepare_one_tile(0, 2, layerIdx, 303);
+
+  ur.change_many_tiles(changeset);
+
+  expect(map.getTile(0, 0, layerIdx)).toEqual(101);
+  expect(map.getTile(0, 1, layerIdx)).toEqual(202);
+  expect(map.getTile(0, 2, layerIdx)).toEqual(303);
+  expect(UNDO_stack.length).toEqual(1);
+  expect(REDO_stack.length).toEqual(0);
+
+  ur.undo();
+
+  expect(map.getTile(0, 0, layerIdx)).toEqual(0);
+  expect(map.getTile(0, 1, layerIdx)).toEqual(0);
+  expect(map.getTile(0, 2, layerIdx)).toEqual(0);
+  expect(UNDO_stack.length).toEqual(0);
+  expect(REDO_stack.length).toEqual(1);
+
+  ur.redo();
+
+  expect(map.getTile(0, 0, layerIdx)).toEqual(101);
+  expect(map.getTile(0, 1, layerIdx)).toEqual(202);
+  expect(map.getTile(0, 2, layerIdx)).toEqual(303);
+  expect(UNDO_stack.length).toEqual(1);
+  expect(REDO_stack.length).toEqual(0);
+});
+
+test('change_many_tiles but there is only one change', () => {
+  const changeset = [];
+
+  changeset[0] = ur.prepare_one_tile(0, 0, layerIdx, 101);
+
+  ur.change_many_tiles(changeset);
+
+  expect(map.getTile(0, 0, layerIdx)).toEqual(101);
+  expect(UNDO_stack.length).toEqual(1);
+  expect(REDO_stack.length).toEqual(0);
+
+  ur.undo();
+
+  expect(map.getTile(0, 0, layerIdx)).toEqual(0);
+  expect(UNDO_stack.length).toEqual(0);
+  expect(REDO_stack.length).toEqual(1);
+
+  ur.redo();
+
+  expect(map.getTile(0, 0, layerIdx)).toEqual(101);
+  expect(UNDO_stack.length).toEqual(1);
+  expect(REDO_stack.length).toEqual(0);
+});
