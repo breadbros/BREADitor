@@ -10,6 +10,7 @@ export const editMenuTemplate = {
     { label: 'Tool: Brush', accelerator: 'B', click: function () { send('tool-brush', 'B'); } },
     { label: 'Tool: Eyedropper', accelerator: 'I', click: function () { send('tool-eyedropper', 'I'); } },
     { label: 'Tool: Move', accelerator: 'V', click: function () { send('tool-move', 'V'); } },
+    { label: 'Tool: Marquee Select', accelerator: 'M', click: function () { send('tool-select', 'M'); } },
     { type: 'separator' },
     { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
     { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },

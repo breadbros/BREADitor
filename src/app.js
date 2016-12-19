@@ -1,5 +1,5 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
-import { Tools, clickEyedropper, clickDrawBrush, clickMove } from './Tools.js';
+import { Tools, clickEyedropper, clickDrawBrush, clickMove, clickSelect } from './Tools.js';
 import { Palettes } from './Palettes.js';
 import {
   LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix
@@ -95,6 +95,9 @@ ipcRenderer.on('main-menu', (event, arg) => {
       break;
     case 'tool-move':
       clickMove();
+      break;
+    case 'tool-select':
+      clickSelect();
       break;
     case 'about':
       window.$$$about_breaditor();

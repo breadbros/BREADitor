@@ -134,23 +134,23 @@ const toolLogic = {
       const tX = result[0];
       const tY = result[1];
 
-      console.log('SELECT DOWN');
+      map.selection.deselect();
 
       if (!toolLogic.SELECT.isSelecting) {
-        console.log('it wasnt selecting!');
         toolLogic.SELECT.isSelecting = true;
         toolLogic.SELECT.lastTX = tX;
         toolLogic.SELECT.lastTY = tY;
         toolLogic.SELECT.startTX = tX;
         toolLogic.SELECT.startTY = tY;
+
+        map.selection.add(tX, tY, 1, 1);
       } else {
-        console.log('it was selecting!');
+        toolLogic.SELECT.isSelecting = false;
+        toolLogic.SELECT.lastTX = -1;
+        toolLogic.SELECT.lastTY = -1;
+        toolLogic.SELECT.startTX = -1;
+        toolLogic.SELECT.startTY = -1;
       }
-
-      map.selection.deselect();
-      map.selection.add(tX, tY, 1, 1);
-
-      console.log('selected:', tX, tY, 1, 1);
     },
     'mousemove': function (map, e) {},
     'mouseup': function (map, e) {},
@@ -308,6 +308,10 @@ export const clickEyedropper = () => {
 
 export const clickMove = () => {
   $(toolLogic['DRAG'].button_element).click();
+};
+
+export const clickSelect = () => {
+  $(toolLogic['SELECT'].button_element).click();
 };
 
 export const clickDrawBrush = () => {
