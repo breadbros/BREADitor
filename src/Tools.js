@@ -118,6 +118,8 @@ const getTopLeftmostCoordinatesAndOffsets = (x1, y1, x2, y2) => {
   return ret;
 };
 
+// TODO once we know the common verbs and nouns for palette tools, we really should extract each one into its own file
+// TODO and test the bejeezus out of them.  There's some janky-ass jank in here!
 const toolLogic = {
   'DRAG': {
     'dragging': false,
@@ -148,6 +150,8 @@ const toolLogic = {
         zoomFn(map, e, e.originalEvent.deltaY < 0);
     }*/
   },
+
+  /// TODO add hold-shift to add selection and hold-alt to subtract
   'SELECT': {
     'mousedown': function (map, e) {
       if (!getSelectedLayer()) {
