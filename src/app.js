@@ -4,6 +4,7 @@ import { Palettes } from './Palettes.js';
 import {
   LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix
 } from './js/ui/LayersPalette.js';
+import { cut, copy, paste } from './js/ui/CutCopyPaste.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
 import { EntitiesWidget } from './js/ui/EntityPalette.js';
 import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
@@ -140,9 +141,13 @@ ipcRenderer.on('main-menu', (event, arg) => {
       window.$$$show_all_windows();
       break;
     case 'edit-cut':
+      cut(window.$$$currentMap);
+      break;
     case 'edit-copy':
+      copy(window.$$$currentMap);
+      break;
     case 'edit-paste':
-      console.log('butts', arg.msg);
+      paste(window.$$$currentMap);
       break;
     case 'edit-select-all':
       selectAll(window.$$$currentMap);
@@ -164,18 +169,24 @@ $('body').on('keydown', (e) => {
     return;
   }
 
+  // TODO all of these commands should probably be passed in the map on the currently active map palette
+  // (if there is one) so as to include the tileset map or any future ones
+
   if (e.key === 'c' || e.key === 'C') {
     console.log('edit-copy, but the one on the document.  SIGH WINDOWS.');
+    copy(window.$$$currentMap);
     return;
   }
 
   if (e.key === 'v' || e.key === 'V') {
     console.log('edit-paste, but the one on the document.  SIGH WINDOWS.');
+    paste(window.$$$currentMap);
     return;
   }
 
   if (e.key === 'x' || e.key === 'X') {
     console.log('edit-cut, but the one on the document.  SIGH WINDOWS.');
+    cut(window.$$$currentMap);
     return;
   }
 
