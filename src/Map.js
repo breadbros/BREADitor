@@ -179,6 +179,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.mapPath = null; // TODO, I dunno, maybe this is stupid?  What do we use this for anyway?
   }
 
+  this.layers = this.mapData.layers;
+
   this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
 
   this.filenames.vspfiles = this.mapData.vsp;
@@ -326,7 +328,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.vspImages[k] = new window.Image();
     this.vspImages[k].onload = this.doneLoading;
 
-    if (k !== 'zones') { // TODO: a better solution to map-relative assets versus app-relative assets.  
+    if (k !== 'zones') { // TODO: a better solution to map-relative assets versus app-relative assets.
                          // THIS IS SAD AND PATHETIC AND SADTHETIC
       this.vspImages[k].src = path.join(this.dataPath, this.vspData[k].source_image);
     } else {
@@ -891,7 +893,7 @@ Map.prototype = {
 
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
-  }, 
+  },
 
   maybeRenderObstructions: function (gl) {
     // OBSTRUCTIONS

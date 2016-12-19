@@ -118,6 +118,20 @@ const getTopLeftmostCoordinatesAndOffsets = (x1, y1, x2, y2) => {
   return ret;
 };
 
+export const selectAll = (map) => {
+  toolLogic.SELECT.isSelecting = true;
+  toolLogic.SELECT.isButtonDown = false;
+
+  // TODO "map.layers[0]" is almost certainly wrong.
+  // TODO make this select all of the CURRENT layer.
+  toolLogic.SELECT.lastTX = map.layers[0].dimensions.X;
+  toolLogic.SELECT.lastTY = map.layers[0].dimensions.Y;
+  toolLogic.SELECT.startTX = 0;
+  toolLogic.SELECT.startTY = 0;
+
+  map.selection.add(0, 0, map.layers[0].dimensions.X, map.layers[0].dimensions.Y);
+};
+
 // TODO once we know the common verbs and nouns for palette tools, we really should extract each one into its own file
 // TODO and test the bejeezus out of them.  There's some janky-ass jank in here!
 const toolLogic = {
@@ -152,6 +166,7 @@ const toolLogic = {
   },
 
   // TODO add hold-shift to add selection and hold-alt to subtract
+  // TODO clamp SELECT to the bounds of the layer and/or map
   'SELECT': {
     'mousedown': function (map, e) {
       if (!getSelectedLayer()) {

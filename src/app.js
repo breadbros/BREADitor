@@ -1,5 +1,5 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
-import { Tools, clickEyedropper, clickDrawBrush, clickMove, clickSelect } from './Tools.js';
+import { Tools, clickEyedropper, clickDrawBrush, clickMove, clickSelect, selectAll } from './Tools.js';
 import { Palettes } from './Palettes.js';
 import {
   LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix
@@ -142,8 +142,10 @@ ipcRenderer.on('main-menu', (event, arg) => {
     case 'edit-cut':
     case 'edit-copy':
     case 'edit-paste':
-    case 'edit-select-all':
       console.log('butts', arg.msg);
+      break;
+    case 'edit-select-all':
+      selectAll(window.$$$currentMap);
       break;
     default:
       console.error('Unknown action from main-menu:', arg);
@@ -179,6 +181,7 @@ $('body').on('keydown', (e) => {
 
   if (e.key === 'a' || e.key === 'A') {
     console.log('edit-select-all but the one on the document.  SIGH WINDOWS.');
+    selectAll(window.$$$currentMap);
     return;
   }
 });

@@ -924,9 +924,8 @@ template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
     vsp: vsp
   };
 
-  var layersLength = 0;
   window.$$$currentMap.mapData.layers.push(layer);
-  layersLength = window.$$$currentMap.mapData.layers.length;
+  const layersLength = window.$$$currentMap.mapData.layers.length;
   window.$$$currentMap.layerLookup[name] = window.$$$currentMap.mapData.layers[layersLength - 1];
   window.$$$currentMap.layerRenderOrder.push('' + (layersLength));
   window.$$$currentMap.mapRawTileData.tile_data.push(new Array((dims_x * dims_y)).fill(0));
@@ -937,7 +936,7 @@ template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
   dialog.dialog('close');
 }
 
-export var LayersWidget = {
+export const LayersWidget = {
   initLayersWidget: initLayersWidget,
   get_layernames_by_rstring_order: get_layernames_by_rstring_order
 };
