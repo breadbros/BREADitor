@@ -151,7 +151,7 @@ const toolLogic = {
     }*/
   },
 
-  /// TODO add hold-shift to add selection and hold-alt to subtract
+  // TODO add hold-shift to add selection and hold-alt to subtract
   'SELECT': {
     'mousedown': function (map, e) {
       if (!getSelectedLayer()) {

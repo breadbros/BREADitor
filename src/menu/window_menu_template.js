@@ -14,14 +14,14 @@ export const windowMenuTemplate = {
     { type: 'separator' },
     {
       label: 'Collect all visible palettes',
-      accelerator: 'CmdOrCtrl+Shift+C',
+      accelerator: 'CmdOrCtrl+Shift+P',
       click: function () {
         send('all-collect');
       }
     },
     {
       label: 'Show all palettes',
-      accelerator: 'CmdOrCtrl+Shift+Alt+C',
+      accelerator: 'CmdOrCtrl+Shift+Alt+P',
       click: function () {
         send('all-show');
       }

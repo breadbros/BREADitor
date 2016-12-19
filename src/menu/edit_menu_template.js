@@ -12,10 +12,10 @@ export const editMenuTemplate = {
     { label: 'Tool: Move', accelerator: 'V', click: function () { send('tool-move', 'V'); } },
     { label: 'Tool: Marquee Select', accelerator: 'M', click: function () { send('tool-select', 'M'); } },
     { type: 'separator' },
-    { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
-    { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-    { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-    { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
+    { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:', click: function () { send('edit-cut'); } },
+    { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:', click: function () { send('edit-copy'); } },
+    { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:', click: function () { send('edit-paste'); } },
+    { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:',
+      click: function () { send('edit-select-all'); } }
   ]
 };
-

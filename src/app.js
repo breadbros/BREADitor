@@ -139,9 +139,47 @@ ipcRenderer.on('main-menu', (event, arg) => {
     case 'all-show':
       window.$$$show_all_windows();
       break;
-
+    case 'edit-cut':
+    case 'edit-copy':
+    case 'edit-paste':
+    case 'edit-select-all':
+      console.log('butts', arg.msg);
+      break;
     default:
-      console.error(sprintf("Unknown action from main-menu: '%s'.", arg));
+      console.error('Unknown action from main-menu:', arg);
+  }
+});
+
+// TODO this is evil.
+// This registers
+$('body').on('keydown', (e) => {
+  if (!(e.ctrlKey || e.cmdKey)) { // TODO verify this on mac, cmdKey is a guess.
+    return;
+  }
+
+  if (document.activeElement.type && document.activeElement.type === 'text') {
+    // console.info('in a textfield, ignoring the accelerator');
+    return;
+  }
+
+  if (e.key === 'c' || e.key === 'C') {
+    console.log('edit-copy, but the one on the document.  SIGH WINDOWS.');
+    return;
+  }
+
+  if (e.key === 'v' || e.key === 'V') {
+    console.log('edit-paste, but the one on the document.  SIGH WINDOWS.');
+    return;
+  }
+
+  if (e.key === 'x' || e.key === 'X') {
+    console.log('edit-cut, but the one on the document.  SIGH WINDOWS.');
+    return;
+  }
+
+  if (e.key === 'a' || e.key === 'A') {
+    console.log('edit-select-all but the one on the document.  SIGH WINDOWS.');
+    return;
   }
 });
 
