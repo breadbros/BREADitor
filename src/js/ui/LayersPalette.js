@@ -106,7 +106,7 @@ function initLayersWidget(_map) {
 };
 
 let _selected_layer = null;
-const changeSelectedLayer = (newLayer) => {
+export const changeSelectedLayer = (newLayer) => {
   _selected_layer = newLayer;
 };
 

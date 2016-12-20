@@ -22,12 +22,10 @@ export const FakeMap = () => {
   };
 
   return {
+    layers: [{dimensions: {X: 3, Y:3}}], // TODO kill map.layers[0].dimensions.X/Y as dim source of truth
     getTile: getTile,
     setTile: setTile,
-    getLayerData: getLayerData
+    getLayerData: getLayerData,
+    getVSPTileLocation: () => { return 1234567890; }
   };
-};
-
-export const printLayer = (layerData) => {
-  console.log(JSON.stringify(layerData));
 };
