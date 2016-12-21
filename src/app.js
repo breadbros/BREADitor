@@ -1,5 +1,5 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
-import { Tools, clickEyedropper, clickDrawBrush, clickMove, clickSelect, selectAll } from './Tools.js';
+import { Tools, clickEyedropper, clickDrawBrush, clickMove, clickSelect, selectAll, clickFloodFill } from './Tools.js';
 import { Palettes } from './Palettes.js';
 import {
   LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix
@@ -96,6 +96,9 @@ ipcRenderer.on('main-menu', (event, arg) => {
       break;
     case 'tool-move':
       clickMove();
+      break;
+    case 'tool-flood-fill':
+      clickFloodFill();
       break;
     case 'tool-select':
       clickSelect();

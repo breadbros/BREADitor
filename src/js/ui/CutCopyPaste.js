@@ -12,12 +12,6 @@ const addToPasteboard = (dx, dy, originalLayer, tile) => {
   pasteboard.push([dx, dy, originalLayer, tile]);
 };
 
-const getPasteboard = () => {
-  var l = pasteboard.length;
-  debugger;
-  l++;
-};
-
 export const copy = (map) => {
   _cut_or_copy(map, false);
 };
@@ -57,15 +51,12 @@ const _cut_or_copy = (map, isCut) => {
     if (isCut) {
       map.UndoRedo.change_many_tiles(cutSet);
     }
-
-    getPasteboard();
   } else {
     console.log('Nothing copied, there was no selection.');
   }
 };
 
 export const paste = (map, tX, tY, newLayer) => {
-  debugger;
   if (typeof tX === 'undefined' || typeof tY === 'undefined') {
     const hoverTile = getCurrentHoverTile();
     if (hoverTile === null) {

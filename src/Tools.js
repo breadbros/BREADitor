@@ -502,6 +502,10 @@ const updateRstringInfo = () => {
   $('#info-rstring').text(window.$$$currentMap.layerRenderOrder.join(','));
 };
 
+export const clickFloodFill = () => {
+  $(toolLogic['FLOOD'].button_element).click();
+};
+
 export const clickEyedropper = () => {
   $(toolLogic['EYEDROPPER'].button_element).click();
 };

@@ -11,6 +11,7 @@ export const editMenuTemplate = {
     { label: 'Tool: Eyedropper', accelerator: 'I', click: function () { send('tool-eyedropper', 'I'); } },
     { label: 'Tool: Move', accelerator: 'V', click: function () { send('tool-move', 'V'); } },
     { label: 'Tool: Marquee Select', accelerator: 'M', click: function () { send('tool-select', 'M'); } },
+    { label: 'Tool: Flood Fill', accelerator: 'G', click: function () { send('tool-flood-fill', 'G'); } },
     { type: 'separator' },
     { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:', click: function () { send('edit-cut'); } },
     { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:', click: function () { send('edit-copy'); } },

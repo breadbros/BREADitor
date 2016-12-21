@@ -60,15 +60,11 @@ test('test a flood fill', () => {
   expect(map.getTile(2, 1, 0)).toEqual(0);
   expect(map.getTile(2, 2, 0)).toEqual(0);
 
-console.log(JSON.stringify(map.getLayerData(0)))
-
   setCurrentlySelectedTile(42);
 
   expect(getCurrentlySelectedTile()).toEqual(42);
 
   doFloodFill(map, mouseEvt);
-
-console.log(JSON.stringify(map.getLayerData(0)))
 
   expect(map.getTile(0, 0, 0)).toEqual(42);
   expect(map.getTile(0, 1, 0)).toEqual(42);
@@ -79,5 +75,4 @@ console.log(JSON.stringify(map.getLayerData(0)))
   expect(map.getTile(2, 0, 0)).toEqual(42);
   expect(map.getTile(2, 1, 0)).toEqual(42);
   expect(map.getTile(2, 2, 0)).toEqual(42);
-
 });

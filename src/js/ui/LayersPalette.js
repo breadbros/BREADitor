@@ -108,6 +108,20 @@ function initLayersWidget(_map) {
 let _selected_layer = null;
 export const changeSelectedLayer = (newLayer) => {
   _selected_layer = newLayer;
+
+  // TODO in a codebase filled with shame, this is the most shameful. SHAAAAME.
+  if (!_selected_layer.layer.parallax) {
+    _selected_layer.layer.parallax = {
+      X: 1,
+      Y: 1
+    };
+  }
+  if (!_selected_layer.layer.dimensions) {
+    _selected_layer.layer.dimensions = {
+      X: map.layers[0].dimensions.X,
+      Y: map.layers[0].dimensions.Y
+    };
+  }
 };
 
 export const getSelectedLayer = () => {
