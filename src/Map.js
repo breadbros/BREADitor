@@ -510,7 +510,7 @@ Map.prototype = {
       }
 
       try {
-                // TODO: use aen's loaders in MAPPO and convert binary chrs to images and json files, motherfucker!
+        // TODO: use aen's loaders in MAPPO and convert binary chrs to images and json files, motherfucker!
         data = jetpack.read(datafile, 'json');
       } catch (e) {
         if (entity.filename.endsWith('json')) {
@@ -520,6 +520,12 @@ Map.prototype = {
       }
 
       if (data) {
+        // TODO we just shouldnt save any "MAPED_" properties in the first place.
+        // TODO we should have a universal MAPED_CONF type that lives parallel to objects, not in them
+        if (entity.MAPED_USEDEFAULT) {
+          delete entity.MAPED_USEDEFAULT;
+        }
+
         this.entityData[entity.filename] = data;
 
         for (const name in data.animations) {
@@ -557,6 +563,7 @@ Map.prototype = {
         }
 
         entity.MAPED_USEDEFAULT = false;
+        console.log( "NOT USING DEFAULT ENTITY FOR ", data.image );
       } else {
         console.warn("Could not find '" + entity.filename + "', using the default. Path: ", datafile);
         entity.MAPED_USEDEFAULT = true;
@@ -1069,10 +1076,24 @@ Map.prototype = {
     this.maybeRenderMarchingAnts(gl, this.visibleHoverTile);
   },
 
+  _getEntityData: function (entity) {
+    if( entity.name && entity.filename == "chrs_json/object_tree2.json" ) {
+      entity.MAPED_USEDEFAULT = false;
+    }
+
+    const e = entity.MAPED_USEDEFAULT ? this.entityData['__default__'] : this.entityData[entity.filename];
+
+    if( !entity.MAPED_USEDEFAULT && e === this.entityData['__default__'] ) {
+      debugger;
+    }
+
+    return e;
+  },
+
   renderEntity: function (entity, layer, tint, clip) {
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
-    const entityData = entity.MAPED_USEDEFAULT ? this.entityData['__default__'] : this.entityData[entity.filename];
+    const entityData = this._getEntityData(entity);
     const entityTexture = this.entityTextures[entityData.image];
 
     clip = (clip === undefined ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
