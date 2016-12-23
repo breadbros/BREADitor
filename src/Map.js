@@ -1166,13 +1166,13 @@ Map.prototype = {
   },
 
   _getEntityData: function (entity) {
-    if( entity.name && entity.filename == "chrs_json/object_tree2.json" ) {
-      entity.MAPED_USEDEFAULT = false;
-    }
+    // if( entity.name && entity.filename == "chrs_json/object_tree2.json" ) {
+    //   entity.MAPED_USEDEFAULT = false;
+    // }
 
     const e = entity.MAPED_USEDEFAULT ? this.entityData['__default__'] : this.entityData[entity.filename];
 
-    if( !entity.MAPED_USEDEFAULT && e === this.entityData['__default__'] ) {
+    if (!entity.MAPED_USEDEFAULT && e === this.entityData['__default__']) {
       debugger;
     }
 

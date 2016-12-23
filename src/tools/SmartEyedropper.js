@@ -10,7 +10,7 @@ const checkEntities = (ents, layer, map, click) => {
   const tileSize = layer ? map.vspData[layer.vsp].tilesize : map.vspData['default'].tilesize;
 
   for (let i = ents.length - 1; i >= 0; i--) {
-    if (determineCollision(ents[i], click, tileSize)) {
+    if (determineEntityCollision(ents[i], click, map, tileSize)) {
       return {
         type: 'ENTITY',
         layerName: layer ? layer.name : 'E',
@@ -46,7 +46,7 @@ const isInRectangle = (px, py, rx, ry, rw, rh) => {
   return rx <= px && px <= rx + rw && ry <= py && py <= ry + rh;
 };
 
-const determineCollision = (ent, clickSet, tileSize) => {
+const determineEntityCollision = (ent, clickSet, map, tileSize) => {
   let px = null;
   let py = null;
 
@@ -60,15 +60,21 @@ const determineCollision = (ent, clickSet, tileSize) => {
     throw new Error('Entity has invalid location information', ent);
   }
 
-  if (ent.filename.endsWith('.chr')) { // TODO this is super hax.  Remove when everything is JSON
+  // TODO this is super hax.  Remove when everything is JSON
+  if (ent.MAPED_USEDEFAULT || ent.filename.endsWith('.chr')) {
     const w = 16;
     const h = 32;
     py -= 16;
 
     return isInRectangle(clickSet[2], clickSet[3], px, py, w, h);
-  }
+  } else {
+    const data = map.entityData[ent.filename];
+    const dims = data.dims;
+    const hitbox = data.hitbox;
 
-  return false;
+    // todo THIS is the lazy rect way, without calculating for empty pixels and things underneath.  FIX.
+    return isInRectangle(clickSet[2], clickSet[3], px - hitbox[0], py - hitbox[1], dims[0], dims[1]);
+  }
 };
 
 const seekResultFromLayers = (map, clickSet) => {
