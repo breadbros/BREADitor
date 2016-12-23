@@ -45,7 +45,8 @@ let currentEntities = null;
 
 // TODO test-only atm.  bad.
 export const setCurrentEntities = (ce) => {
-  return currentEntities = ce;
+  currentEntities = ce;
+  return currentEntities;
 };
 
 export const getCurrentEntities = () => {
