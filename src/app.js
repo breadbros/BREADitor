@@ -1,7 +1,7 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
 import {
   updateLocationFunction, clickEyedropper, clickDrawBrush, clickMove, clickSelect, selectAll, clickFloodFill,
-  initTools, savePalettePositions, updateRstringInfo
+  initTools, updateRstringInfo
 } from './Tools.js';
 import { Palettes } from './Palettes.js';
 import {
@@ -286,7 +286,7 @@ $('body').on('keydown', (e) => {
       z += 2;
     });
 
-    savePalettePositions();
+    Palettes.savePalettePositions();
   };
 
   window.$$$show_all_windows = function () {
@@ -296,7 +296,7 @@ $('body').on('keydown', (e) => {
       $node.show();
     });
 
-    savePalettePositions();
+    Palettes.savePalettePositions();
   };
 
   window.$$$load = function () {
@@ -360,7 +360,7 @@ $('body').on('keydown', (e) => {
       }
     }
 
-    savePalettePositions();
+    Palettes.savePalettePositions();
   };
 
   Palettes.setupPaletteListeners();
