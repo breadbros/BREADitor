@@ -7,6 +7,7 @@ import { getZoneVisibility, getActiveZone } from './js/ui/ZonesPalette';
 import { getSelectedLayer } from './js/ui/LayersPalette';
 
 import eyedropperGenerator from './tools/Eyedropper';
+import drawGenerator from './tools/Draw';
 
 export const updateLocationFunction = (map) => {
   const x = map.camera[0];
@@ -222,40 +223,40 @@ export const doFloodFill = (map, e) => {
 };
 
 export const selectAll = (map) => {
-  toolLogic.SELECT.isSelecting = true;
-  toolLogic.SELECT.isButtonDown = false;
+  _toolLogic.SELECT.isSelecting = true;
+  _toolLogic.SELECT.isButtonDown = false;
 
   // TODO "map.layers[0]" is almost certainly wrong.
   // TODO make this select all of the CURRENT layer.
-  toolLogic.SELECT.lastTX = map.layers[0].dimensions.X;
-  toolLogic.SELECT.lastTY = map.layers[0].dimensions.Y;
-  toolLogic.SELECT.startTX = 0;
-  toolLogic.SELECT.startTY = 0;
+  _toolLogic.SELECT.lastTX = map.layers[0].dimensions.X;
+  _toolLogic.SELECT.lastTY = map.layers[0].dimensions.Y;
+  _toolLogic.SELECT.startTX = 0;
+  _toolLogic.SELECT.startTY = 0;
 
   map.selection.add(0, 0, map.layers[0].dimensions.X, map.layers[0].dimensions.Y);
 };
 
 // TODO once we know the common verbs and nouns for palette tools, we really should extract each one into its own file
 // TODO and test the bejeezus out of them.  There's some janky-ass jank in here!
-const toolLogic = {
+export const _toolLogic = {
   'DRAG': {
     'dragging': false,
     'last_mouse': [0, 0],
 
     'mousedown': function (map, e) {
-      toolLogic.DRAG.dragging = true;
+      _toolLogic.DRAG.dragging = true;
       window.$MAP_WINDOW.draggable('disable');
-      toolLogic.DRAG.last_mouse = [ e.clientX, e.clientY ];
+      _toolLogic.DRAG.last_mouse = [ e.clientX, e.clientY ];
     },
     'mousemove': function (map, e) {
-      if (toolLogic.DRAG.dragging) {
-        map.camera[0] += (toolLogic.DRAG.last_mouse[0] - e.clientX) * map.camera[2];
-        map.camera[1] += (toolLogic.DRAG.last_mouse[1] - e.clientY) * map.camera[2];
-        toolLogic.DRAG.last_mouse = [ e.clientX, e.clientY ];
+      if (_toolLogic.DRAG.dragging) {
+        map.camera[0] += (_toolLogic.DRAG.last_mouse[0] - e.clientX) * map.camera[2];
+        map.camera[1] += (_toolLogic.DRAG.last_mouse[1] - e.clientY) * map.camera[2];
+        _toolLogic.DRAG.last_mouse = [ e.clientX, e.clientY ];
       }
     },
     'mouseup': function (map, e) {
-      toolLogic.DRAG.dragging = false;
+      _toolLogic.DRAG.dragging = false;
       map.updateLocationFn(map);
       window.$MAP_WINDOW.draggable('enable');
     },
@@ -312,26 +313,26 @@ flood_fill(x,y, check_validity)
 
       map.selection.deselect();
 
-      if (!toolLogic.SELECT.isSelecting) {
-        toolLogic.SELECT.isSelecting = true;
-        toolLogic.SELECT.lastTX = tX;
-        toolLogic.SELECT.lastTY = tY;
-        toolLogic.SELECT.startTX = tX;
-        toolLogic.SELECT.startTY = tY;
+      if (!_toolLogic.SELECT.isSelecting) {
+        _toolLogic.SELECT.isSelecting = true;
+        _toolLogic.SELECT.lastTX = tX;
+        _toolLogic.SELECT.lastTY = tY;
+        _toolLogic.SELECT.startTX = tX;
+        _toolLogic.SELECT.startTY = tY;
 
         map.selection.add(tX, tY, 1, 1);
-        toolLogic.SELECT.isButtonDown = true;
+        _toolLogic.SELECT.isButtonDown = true;
       } else {
-        toolLogic.SELECT.isSelecting = false;
-        toolLogic.SELECT.isButtonDown = false;
-        toolLogic.SELECT.lastTX = -1;
-        toolLogic.SELECT.lastTY = -1;
-        toolLogic.SELECT.startTX = -1;
-        toolLogic.SELECT.startTY = -1;
+        _toolLogic.SELECT.isSelecting = false;
+        _toolLogic.SELECT.isButtonDown = false;
+        _toolLogic.SELECT.lastTX = -1;
+        _toolLogic.SELECT.lastTY = -1;
+        _toolLogic.SELECT.startTX = -1;
+        _toolLogic.SELECT.startTY = -1;
       }
     },
     'mousemove': function (map, e) {
-      if (!toolLogic.SELECT.isSelecting || !toolLogic.SELECT.isButtonDown) {
+      if (!_toolLogic.SELECT.isSelecting || !_toolLogic.SELECT.isButtonDown) {
         return;
       }
 
@@ -339,20 +340,20 @@ flood_fill(x,y, check_validity)
       const tX = result[0];
       const tY = result[1];
 
-      if (toolLogic.SELECT.lastTX === tX && toolLogic.SELECT.lastTY === tY) {
+      if (_toolLogic.SELECT.lastTX === tX && _toolLogic.SELECT.lastTY === tY) {
         return;
       }
 
-      toolLogic.SELECT.lastTX = tX;
-      toolLogic.SELECT.lastTY = tY;
+      _toolLogic.SELECT.lastTX = tX;
+      _toolLogic.SELECT.lastTY = tY;
 
-      const res = getTopLeftmostCoordinatesAndOffsets(tX, tY, toolLogic.SELECT.startTX, toolLogic.SELECT.startTY);
+      const res = getTopLeftmostCoordinatesAndOffsets(tX, tY, _toolLogic.SELECT.startTX, _toolLogic.SELECT.startTY);
 
       map.selection.deselect();
       map.selection.add(res[0], res[1], res[2], res[3]);
     },
     'mouseup': function (map, e) {
-      toolLogic.SELECT.isButtonDown = false;
+      _toolLogic.SELECT.isButtonDown = false;
     },
     'button_element': '#btn-tool-select',
     'human_name': 'Select',
@@ -371,61 +372,7 @@ flood_fill(x,y, check_validity)
     'human_name': 'Smart Eyedropper'
   },
   'EYEDROPPER': eyedropperGenerator(),
-  'DRAW': {
-    'mousedown': function (map, e) {
-      console.log('DRAW->mousedown...');
-
-      if (!getSelectedLayer()) {
-        console.log('You havent selected a layer yet.');
-        window.alert('You havent selected a layer yet.');
-        return;
-      }
-
-      if (!(e.button === 0)) {
-        console.log("Unknown draw button: we know left (0), got: '" + e.button + "'.");
-        return;
-      }
-
-      const result = getTXTyFromMouse(map, e);
-
-      const tX = result[0];
-      const tY = result[1];
-
-      // TODO: Again, this is dumb.  LALALA.
-      if (getSelectedLayer().map_tileData_idx === 999) {
-        map.setZone(tX, tY, getActiveZone());
-        return;
-      } else {
-        // TODO obs do this too right now. 998
-        map.UndoRedo.change_one_tile(
-            tX, tY,
-            getSelectedLayer().map_tileData_idx,
-            getCurrentlySelectedTile()
-        );
-      }
-    },
-    'mouseup': function (map, e) {
-      console.log('DRAW->mouseup: NOTHING');
-    },
-
-    // TODO this doesn't seem to drag correctly for rightmouse...
-    // TODO this doesn't perform correctly if you move the mouse too quickly.  Should keep track of
-    //      position-1, draw a line between points, and change all those on this layer?
-    'mousemove': function (map, e) {
-      // / if there's one button pressed and it's the left button...
-      if (e.buttons === 1 && (e.button === 0)) {
-        // TODO this duplicates work. if it's costly, check before everything.  I doubt it'll matter.
-        toolLogic['DRAW']['mousedown'](map, e); // let's be lazy.
-      }
-    },
-
-    'button_element': '#btn-tool-draw',
-    'human_name': 'Draw',
-
-    'extra_setup_fn': function (e, name, obj) {
-      console.log(name, 'had an extra setup function', obj);
-    }
-  }
+  'DRAW': drawGenerator()
 };
 
 export const updateRstringInfo = () => {
@@ -438,23 +385,23 @@ export const updateRstringInfo = () => {
 };
 
 export const clickFloodFill = () => {
-  $(toolLogic['FLOOD'].button_element).click();
+  $(_toolLogic['FLOOD'].button_element).click();
 };
 
 export const clickEyedropper = () => {
-  $(toolLogic['EYEDROPPER'].button_element).click();
+  $(_toolLogic['EYEDROPPER'].button_element).click();
 };
 
 export const clickMove = () => {
-  $(toolLogic['DRAG'].button_element).click();
+  $(_toolLogic['DRAG'].button_element).click();
 };
 
 export const clickSelect = () => {
-  $(toolLogic['SELECT'].button_element).click();
+  $(_toolLogic['SELECT'].button_element).click();
 };
 
 export const clickDrawBrush = () => {
-  $(toolLogic['DRAW'].button_element).click();
+  $(_toolLogic['DRAW'].button_element).click();
 };
 
 const setupToolClick = (toolObj, toolName) => {
@@ -467,30 +414,16 @@ const setupToolClick = (toolObj, toolName) => {
 
     window.TOOLMODE = toolName;
 
-    if (toolObj.extra_setup_fn) {
-      toolObj.extra_setup_fn(e, toolName, toolObj);
+    if (toolObj.init_fn) {
+      toolObj.init_fn(e, toolName, toolObj);
     }
   });
 };
 
 const setupTools = () => {
-  for (const prop in toolLogic) {
-    if (toolLogic.hasOwnProperty(prop)) {
-      // or if (Object.prototype.hasOwnProperty.call(obj,prop)) for safety...
-      // console.info('Initializing tool: ', prop, '...');
-
-      setupToolClick(toolLogic[prop], prop);
-
-        /*
-        $(toolLogic[prop].button_element).click( function(e) {
-            $("#tool-title").text(toolLogic[prop].human_name);
-            window.TOOLMODE = prop;
-
-            if(toolLogic[prop].extra_setup_fn) {
-                toolLogic[prop].extra_setup_fn(e, prop, toolLogic[prop]);
-            }
-        } );
-        */
+  for (const prop in _toolLogic) {
+    if (_toolLogic.hasOwnProperty(prop)) {
+      setupToolClick(_toolLogic[prop], prop);
     }
   }
 };
@@ -499,12 +432,12 @@ setupTools();
 const tools = (action, map, evt) => {
   const mode = window.TOOLMODE;
 
-  if (toolLogic.hasOwnProperty(mode) && toolLogic[mode].hasOwnProperty(action)) {
+  if (_toolLogic.hasOwnProperty(mode) && _toolLogic[mode].hasOwnProperty(action)) {
     // TODO make a proper 'beforeAll: event' maybe?
     if (action === 'mousemove') {
       setCurrentHoverTile(map, evt);
     }
-    toolLogic[mode][action](map, evt);
+    _toolLogic[mode][action](map, evt);
   } else {
     console.log(sprintf("No action '%s' for mode '%s'", action, mode));
   }
@@ -590,15 +523,15 @@ const paletteCloseListener = ($pal_close_button) => {
   savePalettePositions();
 };
 
-// / setup palette listeners
+// setup palette listeners
 $(document).ready(() => {
   window.$$$palette_registry.map((pal) => {
     const node_selector = '.' + pal;
     const $node = $(node_selector);
-    // / palette motion save listener
+    // palette motion save listener
     $node.mouseup(() => { capturePaletteMovementForRestore($node); });
 
-    // / palette "X" button listener
+    // palette "X" button listener
     const $node2 = $(node_selector + ' button.close-palette');
     $node2.click(() => { paletteCloseListener($node2); });
   });
@@ -625,7 +558,7 @@ $('#btn-add-tree').on('click', (e) => {
     filename: 'chrs_json/object_tree2.json'
   };
 
-  toolLogic.TREE = {
+  _toolLogic.TREE = {
     mousemove: (map, evt) => {
       if (!getSelectedLayer()) {
         window.alert('select a layer first.');

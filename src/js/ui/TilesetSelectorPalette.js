@@ -1,5 +1,5 @@
 import { Map } from '../../Map.js';
-import { Tools, zero_zoom, zoomLevels } from '../../Tools.js';
+import { Tools, zero_zoom, zoomLevels, updateLocationFunction, initTools } from '../../Tools.js';
 const $ = require('jquery');
 
 let old_map = null;
@@ -75,7 +75,7 @@ const create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer)
     // TODO need to set a channel up to the tile selectors.
     vsp_map = m;
 
-    Tools.initToolsToMapContainer($('.tileset_selector_canvas'), vsp_map);
+    initTools($('.tileset_selector_canvas'), vsp_map);
 
     $('#btn-vsp-zoomin').click(function (e) {
       Tools.grue_zoom(false, vsp_map, e);
@@ -151,7 +151,7 @@ const initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
     vsp_mapdata = create_dynamic_map(newLayer.vsp);
     vsp_tiledata = create_dynamic_tiledata(vsp_mapdata, newLayer);
 
-    create_map(vsp_mapdata, vsp_tiledata, Tools.updateLocationFunction, newMap, newLayer);
+    create_map(vsp_mapdata, vsp_tiledata, updateLocationFunction, newMap, newLayer);
   }
 };
 
