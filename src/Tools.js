@@ -623,10 +623,17 @@ $('#btn-add-tree').on('click', (e) => {
 
   toolLogic.TREE = {
     mousemove: (map, evt) => {
+      if( !getSelectedLayer() ) {
+        window.alert('select a layer first.');
+        window.TOOLMODE = 'DRAG';
+        return;
+      }
+
       const mapOffsetX = map.camera[0];
       const mapOffsetY = map.camera[1];
       const mouseOffsetX = evt.offsetX;
       const mouseOffsetY = evt.offsetY;
+      // const tilesize = map.vspData[getSelectedLayer().layer.vsp].tilesize;
       const tilesize = map.vspData[getSelectedLayer().layer.vsp].tilesize;
 
       map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX * map.camera[2])) / tilesize.width);
