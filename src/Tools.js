@@ -362,6 +362,13 @@ flood_fill(x,y, check_validity)
     'lastTX': -1,
     'lastTY': -1
   },
+  'SMART-EYEDROPPER': {
+    'mousedown': function (map, e) {
+      console.log('SMART-EYEDROPPER->mousedown...');
+    },
+    'button_element': '#btn-tool-smart-eyedropper',
+    'human_name': 'Smart Eyedropper'
+  },
   'EYEDROPPER': {
     'mousedown': function (map, e) {
       console.log('EYEDROPPER->mousedown...');
@@ -379,7 +386,6 @@ flood_fill(x,y, check_validity)
 
       let tIdx = null;
       let zIdx = -1;
-      let selector = null;
 
       const result = getTXTyFromMouse(map, e);
       const tX = result[0];
@@ -421,18 +427,7 @@ flood_fill(x,y, check_validity)
       }
 
       setTileSelectorUI('#left-palette', tIdx, map, 0, getSelectedLayer().layer.vsp);
-
-      // map.dragging = true;
-      // window.$MAP_WINDOW.draggable('disable');
-      // map.lastMouse = [ e.clientX, e.clientY ];
     },
-    'mouseup': function (map, e) {
-      console.log('EYEDROPPER->mouseup: NOTHING');
-    },
-    'mousemove': function (map, e) {
-      console.log('EYEDROPPER->mousemove: NOTHING');
-    },
-
     'button_element': '#btn-tool-eyedropper',
     'human_name': 'Eyedropper'
   },
