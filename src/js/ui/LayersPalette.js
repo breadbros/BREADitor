@@ -203,6 +203,11 @@ const redraw_palette = (map) => {
 
     $zone_container.on('dblclick', (evt) => {
       window.$$$toggle_pallete('zones', true);
+
+      if (!getZoneVisibility()) {
+        $('li.layer.selected button.eyeball_button').click();
+      }
+
       evt.stopPropagation();
     });
   };
