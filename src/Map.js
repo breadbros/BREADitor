@@ -5,7 +5,7 @@ const path = require('path');
 const appPath = app.getAppPath();
 const jetpack = require('fs-jetpack').cwd(appPath);
 import { ShaderProgram } from './ShaderProgram.js';
-import { Tools, getCurrentHoverTile } from './Tools.js';
+import { updateRstringInfo, getCurrentHoverTile } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js';
 const sprintf = require('sprintf-js').sprintf;
@@ -225,7 +225,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
     this.mapData.renderstring = this.layerRenderOrder.join(',');
 
-    Tools.updateRstringInfo();
+    updateRstringInfo();
   };
 
   this.updateRstring(this.mapData.renderstring);

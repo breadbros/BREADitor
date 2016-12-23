@@ -1,4 +1,4 @@
-import { Tools } from '../../Tools.js';
+import { updateRstringInfo } from '../../Tools.js';
 import { modal_error } from './Util.js';
 import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js';
 import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
@@ -1060,7 +1060,7 @@ const update_layer = (dialog, layer_id) => {
   }
 
   redraw_palette(window.$$$currentMap);
-  Tools.updateRstringInfo();
+  updateRstringInfo();
 
   closeEditLayerDialog();
 };

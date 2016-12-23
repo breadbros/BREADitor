@@ -1,5 +1,8 @@
 import { Map, verifyTileData, verifyMap } from './Map.js';
-import { Tools, clickEyedropper, clickDrawBrush, clickMove, clickSelect, selectAll, clickFloodFill } from './Tools.js';
+import {
+  updateLocationFunction, clickEyedropper, clickDrawBrush, clickMove, clickSelect, selectAll, clickFloodFill,
+  initTools, savePalettePositions, updateRstringInfo
+} from './Tools.js';
 import { Palettes } from './Palettes.js';
 import {
   LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix
@@ -12,7 +15,6 @@ import { handleUndo, handleRedo } from './UndoRedo';
 import { ipcRenderer } from 'electron';
 import { toggleSelectedTiles } from './TileSelector';
 
-const sprintf = require('sprintf-js').sprintf;
 const path = require('path');
 const $ = require('jquery');
 
@@ -33,8 +35,7 @@ const bootstrapMap = (mapFile, tiledataFile) => {
         .then(() => {
           console.log('create map?');
           new Map(
-              mapFile, tiledataFile,
-              Tools.updateLocationFunction
+              mapFile, tiledataFile, updateLocationFunction
           ).ready()
               .then(function (m) {
                 const currentMap = m;
@@ -47,9 +48,9 @@ const bootstrapMap = (mapFile, tiledataFile) => {
                 ZonesWidget.initZonesWidget(currentMap);
                 EntitiesWidget.initEntitiesWidget(currentMap);
 
-                Tools.initToolsToMapContainer($('.map_canvas'), window.$$$currentMap);
+                initTools($('.map_canvas'), window.$$$currentMap);
 
-                Tools.updateRstringInfo();
+                updateRstringInfo();
               });
         });
     });
@@ -285,7 +286,7 @@ $('body').on('keydown', (e) => {
       z += 2;
     });
 
-    Tools.savePalettePositions();
+    savePalettePositions();
   };
 
   window.$$$show_all_windows = function () {
@@ -295,7 +296,7 @@ $('body').on('keydown', (e) => {
       $node.show();
     });
 
-    Tools.savePalettePositions();
+    savePalettePositions();
   };
 
   window.$$$load = function () {
@@ -359,7 +360,7 @@ $('body').on('keydown', (e) => {
       }
     }
 
-    Tools.savePalettePositions();
+    savePalettePositions();
   };
 
   Palettes.setupPaletteListeners();

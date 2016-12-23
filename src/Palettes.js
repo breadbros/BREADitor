@@ -1,6 +1,5 @@
 var $ = require('jquery');
 
-
 var garbage_zsort = 1;
 
 var setupPaletteListeners = () => {
@@ -31,7 +30,6 @@ var setupPaletteListeners = () => {
     $('.map .map_canvas').draggable('disable');
   });
 };
-
 
 var correctResizeWidget = (node, newZ) => {
   var z;

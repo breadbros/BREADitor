@@ -8,7 +8,7 @@ import { getSelectedLayer } from './js/ui/LayersPalette';
 
 import eyedropperGenerator from './tools/Eyedropper';
 
-const updateLocationFunction = (map) => {
+export const updateLocationFunction = (map) => {
   const x = map.camera[0];
   const y = map.camera[1];
   const key = 'map-' + map.mapData.name;
@@ -428,7 +428,7 @@ flood_fill(x,y, check_validity)
   }
 };
 
-const updateRstringInfo = () => {
+export const updateRstringInfo = () => {
   if (!window.$$$currentMap) {
     console.log('lol, no window.$$$currentMap yet.');
     return;
@@ -510,7 +510,7 @@ const tools = (action, map, evt) => {
   }
 };
 
-const initToolsToMapContainer = (renderContainer, map) => {
+export const initTools = (renderContainer, map) => {
   renderContainer.on('mousedown', function (e) {
     tools('mousedown', map, e);
   });
@@ -604,7 +604,7 @@ $(document).ready(() => {
   });
 });
 
-const savePalettePositions = () => {
+export const savePalettePositions = () => {
   window.$$$palette_registry.map((pal) => {
     const node_selector = '.' + pal;
     const $node = $(node_selector);
@@ -653,7 +653,6 @@ $('#btn-add-tree').on('click', (e) => {
     mouseup: (map, evt) => {
       map.entityPreview.location.layer = getSelectedLayer().layer.name;
       map.addEntity(map.entityPreview, map.entityPreview.location);
-      debugger;
       map.entityPreview = null;
       window.TOOLMODE = 'DRAG';
     },
@@ -663,9 +662,5 @@ $('#btn-add-tree').on('click', (e) => {
 });
 
 export const Tools = {
-  updateRstringInfo: updateRstringInfo,
-  savePalettePositions: savePalettePositions,
-  updateLocationFunction: updateLocationFunction,
-  initToolsToMapContainer: initToolsToMapContainer,
   grue_zoom: grue_zoom
 };
