@@ -1,10 +1,12 @@
 /*eslint no-undef: 0*/
-import { MakeUndoRedoStack } from './UndoRedo';
-import { FakeMap } from './helpers/FakeMap';
-import { doFloodFill } from './Tools';
-import { changeSelectedLayer } from './js/ui/LayersPalette'; // TODO this shouldnt be public?
+import { MakeUndoRedoStack } from '../UndoRedo';
+import { FakeMap } from '../helpers/FakeMap';
+import { changeSelectedLayer } from '../js/ui/LayersPalette'; // TODO this shouldnt be public?
 // TODO this definitely is too much junk that shouldnt be exposed. MOCK
-import { setCurrentlySelectedTile, getCurrentlySelectedTile, setTileSelectorUI } from './TileSelector';
+import { setCurrentlySelectedTile, getCurrentlySelectedTile, setTileSelectorUI } from '../TileSelector';
+
+import floodFillGenerator from './FloodFill';
+const doFloodFill = floodFillGenerator().doFloodFill;
 
 // jest.mock('fs-jetpack');
 
@@ -48,8 +50,7 @@ test('getCurrentlyExpectedTile / setCurrentlySelectedTile', () => {
 });
 
 test('test a flood fill', () => {
-
-  changeSelectedLayer({layer:map.layers[0], map_tileData_idx: 0}); // what's going on here this is weird
+  changeSelectedLayer({layer: map.layers[0], map_tileData_idx: 0}); // what's going on here this is weird
 
   expect(map.getTile(0, 0, 0)).toEqual(0);
   expect(map.getTile(0, 1, 0)).toEqual(0);
