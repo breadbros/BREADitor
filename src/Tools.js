@@ -412,6 +412,7 @@ flood_fill(x,y, check_validity)
       } else {
         // TODO seriously branching code here is not a good idea for complexity reasons.  rework later?
         if (map.mapData.isTileSelectorMap) {
+          tIdx = map.getTile(tX, tY, 0);
           doVSPselector(tX, tY, map);
         } else {
           tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
@@ -419,8 +420,7 @@ flood_fill(x,y, check_validity)
         }
       }
 
-      selector = '#left-palette';
-      setTileSelectorUI(selector, tIdx, map, 0, getSelectedLayer().layer.vsp);
+      setTileSelectorUI('#left-palette', tIdx, map, 0, getSelectedLayer().layer.vsp);
 
       // map.dragging = true;
       // window.$MAP_WINDOW.draggable('disable');

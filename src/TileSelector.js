@@ -29,6 +29,15 @@ let selectedTilesPerVSP = {};
 let _last_vsp = null;
 let _last_map = null;
 
+export const debugSelectedTiles = () => {
+  var i = selectedTilesPerVSP;
+  debugger;
+};
+
+$("#btn-tool-debugger").on( "click", () => {
+  debugSelectedTiles();
+} );
+
 const leftTile = (val) => {
   if (_last_vsp === null) {
     return 0;
@@ -55,7 +64,7 @@ const rightTile = (val) => {
 
 export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
   if (_last_map !== map) {
-    // console.info('last_map !== map', _last_map, map);
+    console.info('last_map !== map', _last_map, map);
     selectedTilesPerVSP = {};
     _last_map = map;
   }
@@ -102,6 +111,7 @@ export const toggleSelectedTiles = (map) => {
 };
 
 export const setCurrentlySelectedTile = (idx) => {
+  debugger;
   leftTile(idx);
 };
 
