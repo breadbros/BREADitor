@@ -1,6 +1,76 @@
 import { getTXTyFromMouse } from '../Tools';
+import { selectLayer } from '../js/ui/LayersPalette';
+import { setTileSelectorUI } from '../TileSelector';
 
 const $ = require('jquery');
+
+const checkEntities = (ents, click) => {
+  debugger;
+  return false;
+};
+
+const checkTiles = (map, layer, click) => {
+  const tX = click[0];
+  const tY = click[1];
+  const lIdx = map.layers.indexOf(layer);
+
+  const tIdx = map.getTile(tX, tY, lIdx);
+
+  if (tIdx) {
+    return {
+      type: 'TILE',
+      tIdx: tIdx,
+      layer: layer
+    };
+  }
+
+  return false;
+};
+
+const seekResultFromLayers = (map, clickSet) => {
+  const stack = JSON.parse(JSON.stringify(map.layerRenderOrder));
+  let ret = null;
+
+  while (stack.length) {
+    const layerCode = stack.pop();
+
+    if (layerCode === 'R') {
+      continue;
+    }
+    if (layerCode === 'E') {
+      if (map.entities['Entity Layer (E)']) {
+        ret = checkEntities(map.entities['Entity Layer (E)'], clickSet);
+
+        if (ret) {
+          return ret;
+        }
+      }
+
+      continue;
+    }
+    if ($.isNumeric(layerCode)) {
+      const layer = map.getLayerByRStringCode(layerCode);
+
+      if (map.entities[layer.name]) {
+        ret = checkEntities(map.entities[layer.name], clickSet);
+
+        if (ret) {
+          return ret;
+        }
+      }
+
+      ret = checkTiles(map, layer, clickSet);
+
+      if (ret) {
+        return ret;
+      }
+
+      continue;
+    }
+
+    throw new Error('Unknown rstring layercode: ' + layerCode);
+  }
+};
 
 export default () => {
   return {
@@ -12,37 +82,29 @@ export default () => {
         return;
       }
 
-      let tIdx = null;
-      let eIdx = null;
-      let zIdx = -1;
+      // let tIdx = null;
+      // let eIdx = null;
+      // let zIdx = -1;
 
-      const result = getTXTyFromMouse(map, e);
-      const tX = result[0];
-      const tY = result[1];
+      const clickSet = getTXTyFromMouse(map, e);
+      // const tX = clickSet[0];
+      // const tY = clickSet[1];
 
-      const doVSPselector = (tX, tY, map) => {
-        map.selection.deselect();
-        map.selection.add(tX, tY, 1, 1);
-      };
+      // TODO if Zones are visible, check zone first.
+      // TODO if Obs are visible, check obs next.
 
-      const stack = JSON.parse(JSON.stringify(map.layerRenderOrder));
-debugger;
-      while (stack.length) {
-        const layerCode = stack.pop();
+      const ret = seekResultFromLayers(map, clickSet);
 
-        if (layerCode === 'R') {
-          continue;
+      if (ret) {
+        if (ret.type === 'TILE') {
+          selectLayer(ret.layer.name);
+          setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
+          return;
         }
-        if (layerCode === 'E') {
-          debugger;
-        }
-        if ($.isNumeric(layerCode)) {
-
-          debugger;
-        }
-
-        throw new Error('Unknown rstring layercode: ' + layerCode);
       }
+
+      debugger;
+
 
       debugger;
 
