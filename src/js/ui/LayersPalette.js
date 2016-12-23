@@ -984,7 +984,11 @@ const update_layer = (dialog, layer_id) => {
     for (const k in layer) {
       window.$$$currentMap.mapData.layers[layer_id][k] = layer[k];
     }
- }
+  }
+
+  if (window.document.getElementById('layer_is_tall_redraw_layer').checked) {
+    window.$$$currentMap.setEntityTallRedrawLayer(layer_id);
+  }
 
   redraw_palette(window.$$$currentMap);
   Tools.updateRstringInfo();

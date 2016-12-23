@@ -70,8 +70,6 @@ export const verifyMap = (mapfile) => {
 
   const mapData = jetpack.read(mapfile, 'json');
 
-  mapData.tallentitylayer = 4;
-
   let needsDefault = false;
   let needsObstructions = false;
 
@@ -156,8 +154,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     return this.mapData.tallentitylayer;
   };
 
-  this.setEntityTallRedrawLayer = (layer) => {
-    this.mapData.tallentitylayer = layer;
+  this.setEntityTallRedrawLayer = (layerIdx) => {
+    this.mapData.tallentitylayer = layerIdx;
   };
 
   const FILELOAD_MODE = (typeof mapfile === 'string');
