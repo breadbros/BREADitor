@@ -2,10 +2,25 @@ import { getTXTyFromMouse } from '../Tools';
 import { selectLayer } from '../js/ui/LayersPalette';
 import { setTileSelectorUI } from '../TileSelector';
 
+import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToEntity } from '../js/ui/EntityPalette';
+
 const $ = require('jquery');
 
-const checkEntities = (ents, click) => {
-  debugger;
+const checkEntities = (ents, layer, map, click) => {
+  const tileSize = layer ? map.vspData[layer.vsp].tilesize : map.vspData['default'].tilesize;
+
+  for (let i = ents.length - 1; i >= 0; i--) {
+    if (determineCollision(ents[i], click, tileSize)) {
+      return {
+        type: 'ENTITY',
+        layerName: layer ? layer.name : 'E',
+        layer: layer,
+        ent: ents[i],
+        eIdx: map.mapData.entities.indexOf(ents[i]) // todo man, map.mapData.entities vs map.entities is rough...
+      };
+    }
+  }
+
   return false;
 };
 
@@ -27,6 +42,35 @@ const checkTiles = (map, layer, click) => {
   return false;
 };
 
+const isInRectangle = (px, py, rx, ry, rw, rh) => {
+  return rx <= px && px <= rx + rw && ry <= py && py <= ry + rh;
+};
+
+const determineCollision = (ent, clickSet, tileSize) => {
+  let px = null;
+  let py = null;
+
+  if ($.isNumeric(ent.location.px) && $.isNumeric(ent.location.py)) {
+    px = ent.location.px;
+    py = ent.location.py;
+  } else if ($.isNumeric(ent.location.tx) && $.isNumeric(ent.location.ty)) {
+    px = ent.location.tx * tileSize.width;
+    py = ent.location.ty * tileSize.height;
+  } else {
+    throw new Error('Entity has invalid location information', ent);
+  }
+
+  if (ent.filename.endsWith('.chr')) { // TODO this is super hax.  Remove when everything is JSON
+    const w = 16;
+    const h = 32;
+    py -= 16;
+
+    return isInRectangle(clickSet[2], clickSet[3], px, py, w, h);
+  }
+
+  return false;
+};
+
 const seekResultFromLayers = (map, clickSet) => {
   const stack = JSON.parse(JSON.stringify(map.layerRenderOrder));
   let ret = null;
@@ -38,8 +82,8 @@ const seekResultFromLayers = (map, clickSet) => {
       continue;
     }
     if (layerCode === 'E') {
-      if (map.entities['Entity Layer (E)']) {
-        ret = checkEntities(map.entities['Entity Layer (E)'], clickSet);
+      if (map.entities['Entity Layer (E)'] && getNormalEntityVisibility()) {
+        ret = checkEntities(map.entities['Entity Layer (E)'], null, map, clickSet);
 
         if (ret) {
           return ret;
@@ -52,7 +96,7 @@ const seekResultFromLayers = (map, clickSet) => {
       const layer = map.getLayerByRStringCode(layerCode);
 
       if (map.entities[layer.name]) {
-        ret = checkEntities(map.entities[layer.name], clickSet);
+        ret = checkEntities(map.entities[layer.name], layer, map, clickSet);
 
         if (ret) {
           return ret;
@@ -101,6 +145,19 @@ export default () => {
           setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
           return;
         }
+
+        if (ret.type === 'ENTITY') {
+          selectLayer(ret.layerName);
+          window.$$$toggle_pallete('entity', true);
+          selectEntityByIndex(ret.eIdx);
+          scrollEntityPalletteToEntity(ret.eIdx);
+
+          debugger;
+          //selectLayer(ret.layer.name);
+          //setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
+          return;
+        }
+        debugger;
       }
 
       debugger;

@@ -69,6 +69,16 @@ const select_entity_from_pallete = (evt) => {
   return $it_me;
 };
 
+export const selectEntityByIndex = (idx) => {
+  if (!idx) {
+    idx = 0;
+  }
+
+  const $it_me = $('.entity-row[data-index=' + idx + ']');
+  _select_entity_ui_inner($it_me);
+  return $it_me;
+};
+
 const redraw_palette = () => {
   const $list = $('.entity-list');
   $list.html('');
@@ -500,9 +510,30 @@ const relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {
     }
   }
 
-  alert("FAILED TO MOVE entity '" + ent_name + "' from layer '" + old_layer + "' to layer '" + new_layer + "'.  FOR REASONS.");
+  window.alert("FAILED TO MOVE entity '" + ent_name + "' from layer '" + old_layer + "' to layer '" + new_layer + "'.  FOR REASONS.");
 };
 
-export var EntitiesWidget = {
+export const scrollEntityPalletteToEntity = (entToFocus) => {
+  const $container = $('.entity-palette .window-container');
+  const $rowToScrollTo = $('.entity-row.highlighted');
+  const entIdx = $rowToScrollTo.data('index');
+  let msg = '';
+
+  if (!entToFocus) {
+    entToFocus = 0;
+  }
+
+  if (entIdx !== entToFocus) {
+    msg = 'unexpected entity index, expected ' + entToFocus + ', got ' + entIdx;
+    console.log(msg);
+    throw msg;
+  }
+
+  const loc = parseInt($rowToScrollTo.offset().top - $container.offset().top);
+
+  $('.entity-palette .window-container').scrollTop(loc);
+};
+
+export const EntitiesWidget = {
   initEntitiesWidget: initEntitiesWidget
 };
