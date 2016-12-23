@@ -751,7 +751,7 @@ const redraw_palette = (map) => {
 
     normalContainer.append(visible_div);
 
-    if (i === window.$$$currentMap.getEntityTallRedrawLayer()) {
+    if (l === window.$$$currentMap.getEntityTallRedrawLayer()) {
       normalContainer.append(tall_div);
     }
 
@@ -1056,7 +1056,7 @@ const update_layer = (dialog, layer_id) => {
   }
 
   if (window.document.getElementById('layer_is_tall_redraw_layer').checked) {
-    window.$$$currentMap.setEntityTallRedrawLayer(layer_id);
+    window.$$$currentMap.setEntityTallRedrawLayerByName(name);
   }
 
   redraw_palette(window.$$$currentMap);

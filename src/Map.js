@@ -93,6 +93,32 @@ export const verifyMap = (mapfile) => {
     }
   }
 
+  if (!mapData.tallentitylayer) {
+    const stack = mapData.renderstring.split(',');
+    while (stack.length) {
+      const rCode = stack.pop();
+      if (!$.isNumeric(rCode)) {
+        continue;
+      }
+
+      mapData.tallentitylayer = mapData.layers[(parseInt(rCode) - 1)].name;
+    }
+    throw new Error('no tallentitylayer, and couldnt default to a valid candidate');
+  } else if ($.isNumeric(mapData.tallentitylayer)) {
+    mapData.tallentitylayer = mapData.layers[mapData.tallentitylayer].name; // convert to name
+  } else {
+    const truth = new Set();
+    mapData.layers.map((a) => {
+      truth.add(a.name === mapData.tallentitylayer);
+    });
+
+    if (!truth.has(true)) {
+      throw new Error('looking for mapData.tallentitylayer "' + mapData.tallentitylayer + '", but could not find it');
+    }
+  }
+
+  console.info('mapData.tallentitylayer verified as ' + mapData.tallentitylayer);
+
   if (typeof mapData.vsp !== 'object') {
     mapData.vsp = {};
   }
@@ -141,6 +167,7 @@ export const verifyMap = (mapfile) => {
   return readyPromise;
 };
 
+// todo all of this.mapData should be obfuscated
 export function Map(mapfile, mapdatafile, updateLocationFunction) {
   let i;
   console.info('Loading map', mapfile);
@@ -154,12 +181,20 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     );
   }
 
+  let tallentitylayer_layerref = null;
   this.getEntityTallRedrawLayer = () => {
-    return this.mapData.tallentitylayer;
+    return tallentitylayer_layerref;
   };
 
-  this.setEntityTallRedrawLayer = (layerIdx) => {
-    this.mapData.tallentitylayer = layerIdx;
+  this.setEntityTallRedrawLayerByName = (name) => {
+    // this.mapData.tallentitylayer_layerref
+    if (this.layerLookup[name]) {
+      tallentitylayer_layerref = this.layerLookup[name];
+      this.mapData.tallentitylayer = name;
+      return tallentitylayer_layerref;
+    }
+
+    throw new Error('Unknown layer name: "' + name + '"');
   };
 
   const FILELOAD_MODE = (typeof mapfile === 'string');
@@ -267,10 +302,14 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.mapSizeInTiles = [0, 0];
   this.layerLookup = {};
 
-    // / YOU BIG FAT PHONY
+  // YOU BIG FAT PHONY
   this.layerLookup[this.fakeEntityLayer.name] = this.fakeEntityLayer;
 
+  // populate this.layerLookup
   for (i = 0; i < this.mapData.layers.length; i++) {
+    console.log(i);
+    console.log(this.mapData.layers[i].name);
+
     if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
       this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
     }
@@ -282,6 +321,12 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
     this.layerLookup[layerName] = this.mapData.layers[i];
   }
+
+  // TODO: this branch-code is bad
+  if (!this.mapData.isTileSelectorMap) {
+    this.setEntityTallRedrawLayerByName(this.mapData.tallentitylayer);
+  }
+
   this.camera = [0, 0, 1];
 
   if (FILELOAD_MODE) {
@@ -608,7 +653,7 @@ Map.prototype = {
         }
 
         entity.MAPED_USEDEFAULT = false;
-        console.log( "NOT USING DEFAULT ENTITY FOR ", data.image );
+        console.log('NOT USING DEFAULT ENTITY FOR ', data.image);
       } else {
         console.warn("Could not find '" + entity.filename + "', using the default. Path: ", datafile);
         entity.MAPED_USEDEFAULT = true;
@@ -616,8 +661,11 @@ Map.prototype = {
     }
 
     if (!entity.MAPED_USEDEFAULT) {
-      if (this.entityData[entity.filename].regions && this.entityData[entity.filename].regions['Tall_Redraw'] &&
-          !this.mapData.tallentitylayer) {
+      if (
+        this.entityData[entity.filename].regions &&
+        this.entityData[entity.filename].regions['Tall_Redraw'] &&
+        !this.getEntityTallRedrawLayer()
+      ) {
         window.alert('ERROR: Loading tall entity ' + entity.filename + ' with no tallentitylayer in map!');
       }
 
@@ -859,7 +907,7 @@ Map.prototype = {
   },
 
   drawEntities: function (i, map, layer, tallEntities) {
-    // / Layered Entities
+    // Layered Entities
     if (getNormalEntityVisibility()) {
       if (map.entities[layer.name] && map.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name)) {
         const entities = map.entities[layer.name];
@@ -885,7 +933,7 @@ Map.prototype = {
         map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA]);
       }
 
-      if (map.mapData.tallentitylayer === i) {
+      if (map.getEntityTallRedrawLayer() === layer) {
         map.spriteShader.use();
         for (const e in tallEntities) {
           const entity = tallEntities[e];

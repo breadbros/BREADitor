@@ -32,7 +32,6 @@ const create_dynamic_map = (vspName) => {
     notes: [],
     renderstring: '1', // TODO: needs at least one E?
     starting_coordinates: [0, 0], // TODO: probably unnecessary
-    // tallentitylayer: 1,
     vsp: {},
     zones: undefined
   };
