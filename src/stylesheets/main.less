@@ -74,7 +74,11 @@ h3.ui-widget-header {
 
 .layer.ui-state-default.selected {
     background-image: none;
-    background-color: orange;
+    background-color: #ad750f;
+}
+
+button:disabled {
+    background: #444;
 }
 
 .zones-palette, .entity-palette {
@@ -200,6 +204,36 @@ h3.ui-widget-header {
     background-image: url("../images/icons/svg/virus.svg")
 }
 
+.no-button {
+    padding: 0;
+    border: none;
+    background: none;
+
+    position: absolute;
+    left: 58px;
+}
+
+.name-label {
+    position: absolute;
+    left: 80px;
+    bottom: 1px;
+}
+
+.entity-name-label {
+    position: absolute;
+    left: 80px;
+    top: 1px;
+}
+
+#white-icon-entity {
+    background-image: url("../images/icons/svg/white/man-user.svg");
+    top: 1px;
+}
+
+#white-icon-art {
+    background-image: url("../images/icons/svg/white/painter-palette.svg");
+    bottom: 1px;
+}
 
 .layers-list button {
     width: 20px;
@@ -243,7 +277,7 @@ h3.ui-widget-header {
 }
 
 .entity_layer {
-    background-color: olive;
+    background-color: #444;
 }
 
 .layer {
@@ -260,7 +294,7 @@ h3.ui-widget-header {
 .rightmost_div div {
     font-size: 8px;
     line-height: 8px;
-    color: #444;
+    color: #AAA;
     right: 4px;
     padding: 1px;
 }

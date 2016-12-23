@@ -71,6 +71,24 @@ export const selectZoneLayer = () => {
   closeEditLayerDialog();
 };
 
+let $ent_container = null;
+export const selectEntityLayer = () => {
+  const selClass = 'selected';
+
+  removeAllSelectedLayers(selClass);
+
+  // TODO: this is disgusting, right?  right.
+  changeSelectedLayer({
+    map_tileData_idx: 997,
+    layer: {},
+    $container: $zone_container
+  });
+
+  $ent_container.addClass(selClass);
+
+  closeEditLayerDialog();
+};
+
 let $obs_container = null;
 export const selectObstructionLayer = () => {
   const selClass = 'selected';
@@ -164,6 +182,13 @@ const redraw_palette = (map) => {
 
       handleEyeball($eyeball, layers[i]);
 
+      const $friendNode = $(evt.target.parentElement.parentElement).find('.entity_layer .eyeball_button');
+      if (!layers[i].MAPED_HIDDEN) {
+        $friendNode.prop('disabled', false);
+      } else {
+        $friendNode.prop('disabled', true);
+      }
+
       evt.stopPropagation();
     });
   };
@@ -177,6 +202,24 @@ const redraw_palette = (map) => {
     } else {
       $btn.addClass('hideEnts');
     }
+  };
+
+  const addEntitySelectHandler = (_$ent_container) => {
+    $ent_container = _$ent_container;
+    $ent_container.on('click', (evt) => {
+      selectEntityLayer();
+      evt.stopPropagation();
+    });
+
+    $ent_container.on('dblclick', (evt) => {
+      window.$$$toggle_pallete('entity', true);
+
+      if (!getNormalEntityVisibility()) {
+        $('li.layer.selected button.eyeball_button').click();
+      }
+
+      evt.stopPropagation();
+    });
   };
 
   const addLayerEntityEyeballHandler = ($layerContainer, idx) => {
@@ -340,6 +383,22 @@ const redraw_palette = (map) => {
 
       handleEyeball($eyeball, tmpLayer);
 
+      if (!getNormalEntityVisibility()) {
+        const $allEntSublayerButtons = $('.entity_layer .eyeball_button');
+        $allEntSublayerButtons.prop('disabled', true);
+      } else {
+        $('.layer').each((a, b) => {
+          const $layer = $(b);
+          const idx = $layer.data('layer_idx');
+          if ($.isNumeric(idx)) {
+
+            //console.log( "layers[",idx,"].MAPED_HIDDEN", layers[idx].MAPED_HIDDEN )
+
+            $layer.find('.entity_layer .eyeball_button').prop('disabled', !!layers[idx].MAPED_HIDDEN);
+          }
+        });
+      }
+
       evt.stopPropagation();
     });
   };
@@ -378,6 +437,8 @@ const redraw_palette = (map) => {
 
     _setup_entity_expand(node);
 
+    addEntitySelectHandler(node);
+
     $list.append(node);
   };
 
@@ -394,11 +455,7 @@ const redraw_palette = (map) => {
     setup_shitty_obstruction_layer($list);
     setup_shitty_layer_seperator($list);
 
-    // / ZONES
-
-    // node = $("<li class='layer ui-state-default'><button class='eyeball_button'>?</button>Entities (default)</li>");
-    // node.data("rstring_ref", "E");
-    // $list.append(node);
+    // ZONES
 
     for (let i = map.layerRenderOrder.length - 1; i >= 0; i--) {
       rstring_cur_target = map.layerRenderOrder[i];
@@ -410,7 +467,7 @@ const redraw_palette = (map) => {
             "<li class='layer ui-state-default'>" +
             "<button class='eyeball_button'></button>" +
             "<button class='entity_expand_button'></button>" +
-            'Entities (default)</li>');
+            '<span class="name-label">Entities (default)</span></li>');
 
           node.data('rstring_ref', 'E');
           node.data('layer_name', 'Entity Layer (E)');
@@ -418,7 +475,8 @@ const redraw_palette = (map) => {
           setup_shitty_entity_layer(node, $list);
         } else if (rstring_cur_target === 'R') {
           node = $("<li class='layer ui-state-default'>" +
-                   "<button class='eyeball_button question_mark'>?</button>'Render'</li>");
+                   "<button class='eyeball_button question_mark'>?</button>" +
+                   "<span class='name-label'>'Render'</span></li>");
           node.data('rstring_ref', 'R');
           $list.append(node);
         } else {
@@ -676,8 +734,13 @@ const redraw_palette = (map) => {
 
     handleEyeball(visible_div, l);
 
-    name_div.text('Art: ' + l.name);
-    entity_name_div.text((i + 1) + ' (entities)');
+    // TODO we are using id's as classes for most buttons.  STOPIT.
+    name_div.html(
+      '<button class="no-button" id="white-icon-art"></button> <span class="name-label">' + l.name + '</span>'
+    );
+    entity_name_div.html(
+      '<button class="no-button" id="white-icon-entity"></button> <span class="entity-name-label">' + l.name + '</span>'
+    );
 
     lucent_div.text(formatAlphaAsPercentage(l.alpha) + '%');
 
@@ -709,6 +772,7 @@ const redraw_palette = (map) => {
     newLayerContainer.data('alpha', layer.alpha);
     newLayerContainer.data('rstring_ref', '' + (layer_index + 1));
     newLayerContainer.data('layer_name', layer.name);
+    newLayerContainer.data('layer_idx', layer_index);
 
     return newLayerContainer;
   }

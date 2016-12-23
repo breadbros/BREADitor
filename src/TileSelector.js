@@ -64,7 +64,6 @@ const rightTile = (val) => {
 
 export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
   if (_last_map !== map) {
-    console.info('last_map !== map', _last_map, map);
     selectedTilesPerVSP = {};
     _last_map = map;
   }
