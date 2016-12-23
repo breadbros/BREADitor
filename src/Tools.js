@@ -708,13 +708,12 @@ $('#btn-add-tree').on('click', (e) => {
   };
 });
 
-let obstructionsVisible = true;
 const setObstructionsVisible = (visible) => {
-  obstructionsVisible = visible;
+  window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE = visible;
 };
 
 const shouldShowObstructions = () => {
-  return obstructionsVisible;
+  return window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE;
 };
 
 const shouldShowZones = () => {
