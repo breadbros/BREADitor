@@ -232,8 +232,6 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.layerLookup[this.fakeEntityLayer.name] = this.fakeEntityLayer;
 
   for (i = 0; i < this.mapData.layers.length; i++) {
-        // if (this.mapData.layers[i].MAPED_HIDDEN)  { continue; }
-
     if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
       this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
     }

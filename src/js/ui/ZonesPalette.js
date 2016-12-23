@@ -195,15 +195,14 @@ const update_zone = (dialog, zone_id) => {
   dialog.dialog('close');
 };
 
-let _zoneVisibility = true;
 let _zoneAlpha = 1;
 
 export const setZoneVisibility = (val) => {
-  _zoneVisibility = !!val;
+  window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE = val;
 };
 
 export const getZoneVisibility = () => {
-  return _zoneVisibility;
+  return window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE;
 };
 
 export const setZoneAlpha = (val) => {

@@ -800,17 +800,6 @@ function get_layernames_by_rstring_order() {
   return ret;
 };
 
-/*
-{
-  "name":"Background Art",
-  "parallax":{"X":1,"Y":1},
-  "dimensions":{"X":78,"Y":75},
-  "alpha":1,
-  "vsp":"default",
-  "MAPED_HIDDEN":false,
-  "maped_HIDE_ENTS":false
-}
-*/
 
 let template = "<div>Name: <input id='layer_name'></div>";
 template += "<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> ";
