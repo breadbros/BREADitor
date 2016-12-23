@@ -276,6 +276,14 @@ const redraw_palette = (map) => {
       selectObstructionLayer();
       evt.stopPropagation();
     });
+
+    $obs_container.on('dblclick', function (evt) {
+      window.$$$toggle_pallete('tileset-selector', true);
+      if (!getObsVisibility()) {
+        $('li.layer.selected button.eyeball_button').click();
+      }
+      evt.stopPropagation();
+    });
   };
 
   const setup_shitty_layer_seperator = ($list) => {
@@ -824,10 +832,11 @@ function setup_template() {
 
 let dialog = null;
 const closeEditLayerDialog = () => {
-  dialog.dialog('close');
-  dialog = null;
+  if (dialog) {
+    dialog.dialog('close');
+    dialog = null;
+  }
 };
-
 
 function _layer_click(evt, layerIdx) {
   evt.stopPropagation();

@@ -4,6 +4,82 @@
 		"selected_items":
 		[
 			[
+				"set",
+				"setObsVisibility"
+			],
+			[
+				"newLa",
+				"newLayerId"
+			],
+			[
+				"la",
+				"layer"
+			],
+			[
+				"get",
+				"getTile"
+			],
+			[
+				"new",
+				"newTileIdx"
+			],
+			[
+				"wor",
+				"workQueue"
+			],
+			[
+				"paste",
+				"pasteboard"
+			],
+			[
+				"hover",
+				"hoverTile"
+			],
+			[
+				"for",
+				"for\tfor (…) {…} (Improved Native For-Loop)"
+			],
+			[
+				"may",
+				"maybeRenderMarchingAnts"
+			],
+			[
+				"render",
+				"renderTilesAndEntityLayers"
+			],
+			[
+				"maybe",
+				"maybeRenderZones"
+			],
+			[
+				"loca",
+				"localStorage"
+			],
+			[
+				"ent",
+				"ent_id"
+			],
+			[
+				"data",
+				"datafile"
+			],
+			[
+				"close",
+				"closest"
+			],
+			[
+				"layers-",
+				"layers-list"
+			],
+			[
+				"select",
+				"selectZoneLayer"
+			],
+			[
+				"tmp",
+				"tmpZones"
+			],
+			[
 				"tile",
 				"tileIdx"
 			],
@@ -22,10 +98,6 @@
 			[
 				"cons",
 				"console"
-			],
-			[
-				"get",
-				"getLayerData"
 			],
 			[
 				"ex",
@@ -96,10 +168,6 @@
 				"zone_0"
 			],
 			[
-				"set",
-				"setZoneAlpha"
-			],
-			[
 				"obstr",
 				"obstructions"
 			],
@@ -152,38 +220,89 @@
 	"buffers":
 	[
 		{
-			"file": "app/app.html",
+			"file": "src/Tools.FloodFill.test.js",
 			"settings":
 			{
-				"buffer_size": 5513,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/TileSelector.js",
-			"settings":
-			{
-				"buffer_size": 2168,
+				"buffer_size": 2527,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "Searching 65 files for \"btn-tool-select\"\n\nC:\\grue\\Breaditor\\src\\Tools.js:\n   79      'mousemove': function (map, e) {},\n   80      'mouseup': function (map, e) {},\n   81:     'button_element': '#btn-tool-select',\n   82      'human_name': 'Select'\n   83    },\n\n1 match in 1 file\n",
+			"file": "src/helpers/FakeMap.js",
 			"settings":
 			{
-				"buffer_size": 278,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
+				"buffer_size": 651,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 4130,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/js/ui/ZonesPalette.js",
+			"settings":
+			{
+				"buffer_size": 6430,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/js/ui/LayersPalette.js",
+			"settings":
+			{
+				"buffer_size": 27539,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
 			}
 		},
 		{
 			"file": "src/Tools.js",
 			"settings":
 			{
-				"buffer_size": 13531,
+				"buffer_size": 21261,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/Map.js",
+			"settings":
+			{
+				"buffer_size": 41387,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/js/ui/EntityPalette.js",
+			"settings":
+			{
+				"buffer_size": 15422,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/blue_tank.json",
+			"settings":
+			{
+				"buffer_size": 802,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/js/ui/TilesetSelectorPalette.js",
+			"settings":
+			{
+				"buffer_size": 5075,
 				"line_ending": "Windows"
 			}
 		}
@@ -225,59 +344,68 @@
 	"expanded_folders":
 	[
 		"/C/grue/Breaditor",
-		"/C/grue/Breaditor/src",
-		"/C/grue/Breaditor/src/helpers",
+		"/C/grue/Breaditor/__mocks__",
 		"/C/grue/Breaditor/src/js",
-		"/C/grue/Breaditor/tasks"
+		"/C/grue/Breaditor/src/js/ui"
 	],
 	"file_history":
 	[
 		"/C/grue/Breaditor/app/app.html",
-		"/C/grue/Breaditor/src/Map.js",
-		"/C/grue/Breaditor/src/js/ui/TilesetSelectorPalette.js",
-		"/C/grue/Breaditor/src/Tools.js",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.json",
-		"/C/grue/Breaditor/README.md",
 		"/C/grue/Breaditor/src/js/ui/LayersPalette.js",
+		"/C/grue/Breaditor/src/Map.js",
+		"/C/grue/Breaditor/src/stylesheets/main.less",
+		"/C/grue/Breaditor/app/themes/ui-darkness/jquery-ui.theme.css",
+		"/C/grue/Breaditor/app/stylesheets/jquery-ui-fixes.css",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-bottom-brown.json",
+		"/C/Users/grue/Desktop/DUAL setup-maped4-dev.ahk",
+		"/C/Users/grue/Desktop/SMALL setup-maped4-dev - Copy.ahk",
 		"/C/grue/Breaditor/src/menu/edit_menu_template.js",
 		"/C/grue/Breaditor/src/app.js",
-		"/C/grue/Breaditor/src/js/ui/EntityPalette.test.js",
-		"/C/grue/Breaditor/src/js/ui/EntityPalette.js",
-		"/C/grue/Breaditor/src/Tools.UndoRedo.test.js",
-		"/C/grue/Breaditor/src/Map.test.js",
+		"/C/grue/Breaditor/src/helpers/FakeMap.js",
+		"/C/grue/Breaditor/src/Tools.js",
+		"/C/grue/Breaditor/src/js/ui/CutCopyPaste.js",
+		"/C/grue/Breaditor/src/TileSelector.js",
+		"/C/grue/Breaditor/__mocks__/electron.js",
+		"/C/grue/Breaditor/__mocks__/fs-jetpack.js",
 		"/C/grue/Breaditor/src/UndoRedo.js",
+		"/C/grue/Breaditor/src/menu/window_menu_template.js",
+		"/C/grue/Breaditor/README.md",
+		"/C/grue/Breaditor/src/js/ui/ZonesPalette.js",
+		"/C/grue/Breaditor/src/Map.test.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.json",
+		"/C/grue/Breaditor/src/menu/prod_menu_template.js",
+		"/C/grue/Breaditor/src/background.js",
+		"/C/grue/Breaditor/src/main/SendMsgToMainWindow.js",
+		"/C/grue/Breaditor/src/menu/layers_menu_template.js",
 		"/C/grue/Breaditor/src/menu/file_menu_template.js",
+		"/C/grue/Breaditor/src/js/ui/Util.js",
+		"/C/grue/Breaditor/src/js/ui/EntityPalette.js",
+		"/C/grue/Breaditor/src/js/ui/TilesetSelectorPalette.js",
+		"/C/grue/Breaditor/app/stylesheets/main.css",
+		"/C/grue/Breaditor/src/ShaderProgram.js",
+		"/C/grue/Breaditor/src/menu/dev_menu_template.js",
+		"/C/grue/Breaditor/src/js/ui/EntityPalette.test.js",
+		"/C/grue/Breaditor/src/Tools.UndoRedo.test.js",
 		"/C/grue/Breaditor/.eslintrc",
 		"/C/grue/Breaditor/src/helpers/FakeMap.test.js",
-		"/C/grue/Breaditor/src/helpers/FakeMap.js",
 		"/C/grue/Breaditor/src/Palettes.js",
-		"/C/grue/Breaditor/src/background.js",
 		"/C/grue/Breaditor/package.json",
 		"/C/grue/Breaditor/tasks/build_app.js",
 		"/C/grue/Breaditor/tasks/build_tests.js",
 		"/C/grue/Breaditor/tasks/start.js",
 		"/C/Users/grue/Downloads/RULES (1).md",
-		"/C/grue/Breaditor/src/js/ui/ZonesPalette.js",
 		"/C/grue/Breaditor/tasks/utils.js",
 		"/C/grue/Breaditor/tasks/bundle.js",
-		"/C/grue/Breaditor/__mocks__/electron.js",
-		"/C/grue/Breaditor/src/menu/prod_menu_template.js",
-		"/C/grue/Breaditor/src/menu/window_menu_template.js",
 		"/C/grue/Breaditor/.babelrc",
 		"/C/grue/Breaditor/src/main/MainWindowReference.js",
-		"/C/grue/Breaditor/src/stylesheets/main.less",
 		"/C/grue/Breaditor/app/background.js",
 		"/C/grue/Breaditor/src/stylesheets/jquery-ui-fixes.less",
-		"/C/grue/Breaditor/app/stylesheets/main.css",
 		"/C/grue/Breaditor/app/app.js",
-		"/C/grue/Breaditor/app/stylesheets/jquery-ui-fixes.css",
 		"/C/grue/Breaditor/src/shim/Shim.js",
-		"/C/grue/Breaditor/src/ShaderProgram.js",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-bottom.json",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.jso",
 		"/C/tmp/SullyContent/maps/json/$$$_MAPED.json",
-		"/C/Users/grue/Desktop/DUAL setup-maped4-dev.ahk",
 		"/C/grue/electron-boilerplate-5.0.0/src/app.js",
 		"/C/grue/electron-boilerplate-5.0.0/src/hello_world/hello_world.js",
 		"/C/grue/Breaditor-2/.gitignore",
@@ -316,7 +444,6 @@
 		"/C/grue/maped4/app/hello_world/hello_universe.spec.js",
 		"/C/grue/maped4/app/Tools.spec.js",
 		"/C/grue/maped4/app/js/ui/TilesetSelectorPalette.spec.js",
-		"/C/Users/grue/Desktop/SMALL setup-maped4-dev - Copy.ahk",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/$$$_MAPED.json",
 		"/C/grue/maped4/app/app.js",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/underwater_lower.map.data.json",
@@ -350,16 +477,7 @@
 		"/C/grue/maped4/app/map_assets/chrs_map/undersea_cave/lower/lower_bg.json",
 		"/C/grue/maped4/app/map_assets/underwater_lower.map.json",
 		"/C/tmp/farmsville.map.json",
-		"/C/grue/maped4/app/map_assets/farmsville.vsp.json",
-		"/C/grue/maped4/app/map_assets/farmsville.obsvsp.json",
-		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_bg.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/underwater_cave.vsp.json",
-		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_parallax.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.data.json",
-		"/C/grue/maped4/app/map_assets/underwater_crystalcaves.map.json",
-		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_fg.json",
-		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_bg - Copy.json",
-		"/C/grue/maped4/app/map_assets/map_chrs/undersea_cave/lower/lower_fg - Copy.json"
+		"/C/grue/maped4/app/map_assets/farmsville.vsp.json"
 	],
 	"find":
 	{
@@ -370,6 +488,11 @@
 		"height": 176.0,
 		"where_history":
 		[
+			"",
+			"C:\\grue\\Breaditor",
+			"C:\\grue\\Breaditor\\",
+			"C:\\grue\\Breaditor\\*.js",
+			"C:\\grue\\Breaditor\\*.test.js",
 			"C:\\grue\\Breaditor",
 			"C:\\grue\\Breaditor,-*.map,-app\\app.js.-app\\background.js",
 			"<current file>",
@@ -414,134 +537,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"btn-tool-select",
-			"toggleSelectedTiles",
-			"TileSelector",
-			"initializeTileSelectorsForMap",
-			"paletteCloseListener",
-			"savePalettePositions",
-			"capturePaletteMovementForRestore",
-			"localStorage",
-			"palette",
-			"Zone",
-			"create_map",
-			"initTile",
-			"is_active",
-			"obsLayerData",
-			"initTilesetSelectorWidget",
-			"debugger",
-			"_obsVisibility",
-			"obstructions",
-			"obstr",
-			"getTile",
-			"998",
-			"selected_layer",
-			"dimensions",
-			"$entity_container",
-			"addEntitySelectHandler",
-			"998",
-			"999",
-			"998",
-			"assert_pixel_versus_tile_in_editing",
-			"save",
-			"setup_",
-			"entity_location_tx",
+			"setObsVisibility",
+			"getObsVisibility",
+			"obsla",
+			"$$$toggle_pallete",
+			"dblc",
+			"shitty_",
+			"setup_shitty_obstruction_layer",
+			"'Entities",
+			"Entities",
+			"addLayerEntityEyeballHandler",
+			"handleEntityEyeball",
+			"entity",
+			"getObs",
+			"_zoneVisibility",
+			"window.$$$\n",
+			"getZoneVisibility",
+			"MAPED_HIDDEN",
+			"localSto",
+			"position",
+			"MAPED_HIDDEN",
+			"eyeball",
+			"mapData.tallentitylayer",
+			"Tall",
+			"visible_div",
+			"layer_name",
 			"redraw_palette",
-			"let current",
-			"const current",
-			"var current",
-			"current",
-			"blocks",
-			"padded",
-			"update_entity",
-			"Edit Entity",
-			"selectedEntityIdx",
-			"Edit Entity",
-			"needsDefault",
-			"'default'",
-			"mapData.vsp",
-			"walker_05.chr",
-			"walker",
-			"toolObj",
-			"button_element",
-			"btn-tool-eyedropper",
-			"window.selected_layer",
-			"selected_layer.map_tileData_idx",
-			"CURRENT_SELECTED_TILES",
-			"initializeTileSelectorsForMap",
-			"whichOne",
-			"CURRENT_SELECTED_TILES",
-			"left-palette",
-			"CURRENT_SELECTED_TILES",
-			"jetpack",
-			"currentMap",
-			"($$$currentMap",
-			"tilese",
-			"setTileSelectorUI",
-			"CURRENT_SELECTED_TILES",
-			"doVSPselector",
-			"DRAG",
-			"MAP_WINDOW",
-			"e.button",
-			"right",
-			"rightClick",
-			"undo",
-			"main-menu",
-			"redoStack",
-			"redoSet",
-			"console.lo",
-			"undolog",
-			"jsx-sort",
-			"const map",
-			"tileIdx",
-			"change_one_tile",
-			"sprintf",
-			"change_one_tile",
-			"verify_map_for_undoredo",
-			"undo",
+			"layers",
+			"eyeball",
+			"cannot shouldShowEn",
+			"newLayerId",
+			"update_layer",
+			"layer_id",
+			"zone",
+			"update_lucency",
+			"dialog",
+			"close",
+			"click",
+			"layer_idx",
+			"template",
+			"\"",
+			"redraw_palette",
+			"new_la",
+			"_layer_click\n_layer_click\nnew_layer_click",
+			"_layer_click\nnew_layer_click",
+			"_layer_click",
+			"newLayerId",
+			"update_layer",
+			"layer_id",
+			"mapData.layers",
+			"_layer_click",
+			"Edit ",
+			"oh yeah",
+			"_layer_click",
+			"dialog",
+			"ui-dia",
+			"ui-dialog-titlebar-close",
+			"\"",
+			"layer",
+			"later",
+			"\"\"\"",
+			"\\\"",
+			"\"",
+			"layer[",
+			"layer.",
+			"setup_temp",
+			"tallentitylayer",
+			"tall",
+			"Map =",
 			"Map",
-			"Undo",
-			"undo",
-			"zIdx",
-			"// / todo",
-			"$",
-			"undoredo_map",
+			"mapData",
+			"_layer_click",
+			"dblcl",
+			"_layer_click",
+			"Allow editing of the layer's name here",
+			"layer",
+			"tall",
+			"mapData",
+			"tallentitylayer",
+			"Tall",
+			"jetpack",
+			"MAPED_USEDEFAULT",
+			"entity.animation",
+			"MAPED_USEDEFAULT",
+			"entity",
+			"drawEntities",
+			"renderTilesAndEntityLayers",
+			"render",
+			"MAPED 4",
+			"maped 4",
+			"maped4",
+			"getPas",
+			"paste",
+			"getPasteboard",
+			"changeSelectedLayer",
+			"999",
+			"'FLOOD'",
+			"check_validity",
+			"map.layers[0].dimensions.Y",
+			"vspData",
+			"mock",
+			"initializeTileSelectorsForMap",
+			"_last_vsp",
+			"_last_vsp\n_last_vsp",
+			"_last_vsp",
+			"leftTile",
+			"setCurrentlySelectedTile",
+			"layerData",
+			"leftTile",
+			"getCurrentlySelectedTile",
+			"getTXTyFromMouse",
+			"changeSelectedLayer",
+			"_selected_layer",
+			"e",
+			"doFloodFill",
+			"change_many_tiles",
+			"pasteSet",
+			"change_many_tiles",
+			"UndoRedo",
+			"change_one_",
 			"change_one_tile",
-			"Initializing tool",
-			"const",
-			"deep",
-			"deep-copy",
-			"deepcopy",
-			"getTile",
-			"undoredo_map",
-			"redoStack",
-			"undo",
-			"had",
-			"Undo",
-			"path",
-			"import path",
-			"mainWindow",
-			"save-dev",
-			"__obsColor",
-			"require('electron').remote",
-			"setColo",
-			"__obsColor",
-			"setColor",
-			"getColor",
-			"tools",
-			"\");'); ",
-			"mainWindow.webContents.executeJavaScript('window.$$$toggle_pallete(",
-			"Map.js",
-			"'load",
-			"about",
-			"window.$$$load",
-			"sprintf",
-			"ipcRenderer",
-			"$$$",
-			"editMenuTemplate",
-			"menu",
-			"map-",
-			"500"
+			"new",
+			"left",
+			"let",
+			"btn",
+			"zoomOut",
+			"mousewhee",
+			"zoomOut",
+			"grue_zoom"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -549,6 +672,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"'",
 			"// TODO",
 			"map",
 			"\"); ",
@@ -569,54 +693,54 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "app/app.html",
+					"file": "src/Tools.FloodFill.test.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5513,
+						"buffer_size": 2527,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2088,
-								2088
+								1243,
+								1243
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
-							"tab_size": 4,
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1617.0,
+						"translation.y": 434.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/TileSelector.js",
+					"file": "src/helpers/FakeMap.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2168,
+						"buffer_size": 651,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1272,
-								1301
+								557,
+								557
 							]
 						],
 						"settings":
@@ -629,71 +753,114 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"semi_transient": false,
+					"file": "README.md",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 278,
+						"buffer_size": 4130,
 						"regions":
 						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										195,
-										210
-									]
-								],
-								"scope": ""
-							}
 						},
 						"selection":
 						[
 							[
-								278,
-								278
+								4121,
+								4129
 							]
 						],
 						"settings":
 						{
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 1,
-							"result_base_dir": "",
-							"result_file_regex": "^([^ \t].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2948.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/js/ui/ZonesPalette.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6430,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5235,
+								5176
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 8903.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/js/ui/LayersPalette.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 27539,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7220,
+								7220
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 9306.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 5,
 					"file": "src/Tools.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13531,
+						"buffer_size": 21261,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2560,
-								2560
+								20509,
+								20509
 							]
 						],
 						"settings":
@@ -703,10 +870,130 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2038.0,
+						"translation.y": 24786.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/Map.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 41387,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								22498,
+								22511
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 23611.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/js/ui/EntityPalette.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15422,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								264,
+								264
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/blue_tank.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 802,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								802,
+								802
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/js/ui/TilesetSelectorPalette.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5075,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1112,
+								1112
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 382.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
 					"type": "text"
 				}
 			]
@@ -751,7 +1038,7 @@
 	"project": "Breaditor.sublime-project",
 	"replace":
 	{
-		"height": 84.0
+		"height": 120.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -761,12 +1048,120 @@
 		"selected_items":
 		[
 			[
+				"entit",
+				"src\\js\\ui\\EntityPalette.js"
+			],
+			[
+				"tools",
+				"src\\Tools.js"
+			],
+			[
+				"map",
+				"src\\Map.js"
+			],
+			[
+				"mai",
+				"src\\stylesheets\\main.less"
+			],
+			[
+				"main.",
+				"src\\stylesheets\\main.less"
+			],
+			[
+				"layers",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"layerspal",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"tools.flo",
+				"src\\Tools.FloodFill.test.js"
+			],
+			[
+				"cutcop",
+				"src\\js\\ui\\CutCopyPaste.js"
+			],
+			[
+				"app",
+				"src\\app.js"
+			],
+			[
+				"menu",
+				"src\\menu\\edit_menu_template.js"
+			],
+			[
+				"mock",
+				"__mocks__\\electron.js"
+			],
+			[
+				"elect",
+				"__mocks__\\electron.js"
+			],
+			[
+				"__mocks__",
+				"__mocks__\\electron.js"
+			],
+			[
+				"fakem",
+				"src\\helpers\\FakeMap.js"
+			],
+			[
+				"layerspalette",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"readme",
+				"README.md"
+			],
+			[
+				"fakemap",
+				"src\\helpers\\FakeMap.js"
+			],
+			[
+				"undore",
+				"src\\Tools.UndoRedo.test.js"
+			],
+			[
+				"sendmsgtomainwindow",
+				"src\\main\\SendMsgToMainWindow.js"
+			],
+			[
+				"tool.js",
+				"src\\Tools.js"
+			],
+			[
+				"zone",
+				"src\\js\\ui\\ZonesPalette.js"
+			],
+			[
+				"zonepal",
+				"src\\js\\ui\\ZonesPalette.js"
+			],
+			[
+				"shader",
+				"src\\ShaderProgram.js"
+			],
+			[
 				"app.js",
 				"src\\app.js"
 			],
 			[
-				"tools.js",
-				"src\\Tools.js"
+				"dev_menu_",
+				"src\\menu\\dev_menu_template.js"
+			],
+			[
+				"util.js",
+				"src\\js\\ui\\Util.js"
+			],
+			[
+				"entity",
+				"src\\js\\ui\\EntityPalette.js"
+			],
+			[
+				"entitypalette.test.js",
+				"src\\js\\ui\\EntityPalette.test.js"
 			],
 			[
 				"map.js",
@@ -777,16 +1172,12 @@
 				"src\\js\\ui\\LayersPalette.js"
 			],
 			[
-				"tools.",
+				"tools.js",
 				"src\\Tools.js"
 			],
 			[
-				"readme",
-				"README.md"
-			],
-			[
-				"map",
-				"src\\Map.js"
+				"tools.",
+				"src\\Tools.js"
 			],
 			[
 				"test.js",
@@ -795,14 +1186,6 @@
 			[
 				"entitypl",
 				"src\\js\\ui\\EntityPalette.js"
-			],
-			[
-				"tools",
-				"src\\Tools.js"
-			],
-			[
-				"menu",
-				"src\\menu\\edit_menu_template.js"
 			],
 			[
 				"readm",
@@ -829,24 +1212,12 @@
 				"src\\js\\ui\\LayersPalette.js"
 			],
 			[
-				"entit",
-				"src\\js\\ui\\EntityPalette.js"
-			],
-			[
-				"zone",
-				"src\\js\\ui\\ZonesPalette.js"
-			],
-			[
 				"zones",
 				"src\\js\\ui\\ZonesPalette.js"
 			],
 			[
 				"window_m",
 				"src\\menu\\window_menu_template.js"
-			],
-			[
-				"app",
-				"src\\app.js"
 			],
 			[
 				"file",
@@ -933,10 +1304,6 @@
 				"app\\map_assets\\chrs_map\\undersea_cave\\lower\\lower_bg.json"
 			],
 			[
-				"entity",
-				"app\\js\\ui\\EntityPalette.js"
-			],
-			[
 				"util.",
 				"app\\js\\ui\\Util.js"
 			],
@@ -997,7 +1364,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 587.0,
+	"side_bar_width": 374.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
