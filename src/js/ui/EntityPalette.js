@@ -2,15 +2,14 @@ import { modal_error } from './Util.js';
 import { LayersWidget } from './LayersPalette.js';
 const $ = require('jquery');
 
-let _entityVisibility = true;
 let _entityLayersExpanded = false;
 
 export const setNormalEntityVisibility = (val) => {
-  _entityVisibility = !!val;
+  window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE = !!val;
 };
 
 export const getNormalEntityVisibility = () => {
-  return _entityVisibility;
+  return window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE;
 };
 
 export const setEntityLayersExpanded = (val) => {
