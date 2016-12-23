@@ -1,4 +1,5 @@
 import { MakeUndoRedoStack } from './UndoRedo';
+import { getObsVisibility } from './js/ui/LayersPalette';
 const app = require('electron').remote.app;
 const path = require('path');
 const appPath = app.getAppPath();
@@ -910,7 +911,7 @@ Map.prototype = {
 
   maybeRenderObstructions: function (gl) {
     // OBSTRUCTIONS
-    if (Tools.shouldShowObstructions() && this.legacyObsData) {
+    if (getObsVisibility() && this.legacyObsData) {
       const vsp = 'obstructions'; // TODO obstruction layer shouldn't just default like this
       const layer = {
         parallax: { X: 1, Y: 1 },

@@ -21,11 +21,11 @@ export const visibilityFix = () => {
 };
 
 export const setObsVisibility = (val) => {
-  Tools.setObstructionsVisible(val);
+  window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE = val;
 };
 
 export const getObsVisibility = () => {
-  return Tools.shouldShowObstructions();
+  return window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE;
 };
 
 export const setObsAlpha = (val) => {

@@ -643,21 +643,11 @@ $('#btn-add-tree').on('click', (e) => {
   };
 });
 
-const setObstructionsVisible = (visible) => {
-  window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE = visible;
-};
-
-const shouldShowObstructions = () => {
-  return window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE;
-};
-
 const shouldShowZones = () => {
   return getZoneVisibility();
 };
 
 export const Tools = {
-  setObstructionsVisible: setObstructionsVisible,
-  shouldShowObstructions: shouldShowObstructions,
   shouldShowZones: shouldShowZones,
   updateRstringInfo: updateRstringInfo,
   savePalettePositions: savePalettePositions,
