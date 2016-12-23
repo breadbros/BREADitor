@@ -5,6 +5,7 @@ const appPath = app.getAppPath();
 const jetpack = require('fs-jetpack').cwd(appPath);
 import { ShaderProgram } from './ShaderProgram.js';
 import { Tools, getCurrentHoverTile } from './Tools.js';
+import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js';
 const sprintf = require('sprintf-js').sprintf;
 const $ = require('jquery');
@@ -857,12 +858,12 @@ Map.prototype = {
   },
 
   maybeRenderZones: function (gl) {
-    // / ZONES
-    if (Tools.shouldShowZones() && this.zoneData.length > 1) {
+    // ZONES
+    if (getZoneVisibility() && this.zoneData.length > 1) {
       const vsp = 'zones'; // TODO zones layer shouldn't just default like this
       const layer = {
         parallax: { X: 1, Y: 1 },
-        alpha: Tools.getZonesAlpha(),
+        alpha: getZoneAlpha(),
         dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
       };
 

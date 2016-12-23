@@ -2,13 +2,11 @@ const $ = require('jquery');
 const sprintf = require('sprintf-js').sprintf;
 import { getCurrentlySelectedTile } from './TileSelector';
 
-import { getZoneVisibility, getZoneAlpha, getActiveZone } from './js/ui/ZonesPalette';
+import { getZoneVisibility, getActiveZone } from './js/ui/ZonesPalette';
 
 import { getSelectedLayer } from './js/ui/LayersPalette';
 
-
 import eyedropperGenerator from './tools/Eyedropper';
-
 
 const updateLocationFunction = (map) => {
   const x = map.camera[0];
@@ -657,15 +655,10 @@ const shouldShowZones = () => {
   return getZoneVisibility();
 };
 
-const getZonesAlpha = () => {
-  return getZoneAlpha();
-};
-
 export const Tools = {
   setObstructionsVisible: setObstructionsVisible,
   shouldShowObstructions: shouldShowObstructions,
   shouldShowZones: shouldShowZones,
-  getZonesAlpha: getZonesAlpha,
   updateRstringInfo: updateRstringInfo,
   savePalettePositions: savePalettePositions,
   updateLocationFunction: updateLocationFunction,
