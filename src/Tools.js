@@ -168,6 +168,10 @@ export const clickEyedropper = () => {
   $(_toolLogic['EYEDROPPER'].button_element).click();
 };
 
+export const clickSmartdropper = () => {
+  $(_toolLogic['SMART-EYEDROPPER'].button_element).click();
+};
+
 export const clickMove = () => {
   $(_toolLogic['DRAG'].button_element).click();
 };
