@@ -70,6 +70,8 @@ export const verifyMap = (mapfile) => {
 
   const mapData = jetpack.read(mapfile, 'json');
 
+  mapData.tallentitylayer = 4;
+
   let needsDefault = false;
   let needsObstructions = false;
 
@@ -149,6 +151,14 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       )
     );
   }
+
+  this.getEntityTallRedrawLayer = () => {
+    return this.mapData.tallentitylayer;
+  };
+
+  this.setEntityTallRedrawLayer = (layer) => {
+    this.mapData.tallentitylayer = layer;
+  };
 
   const FILELOAD_MODE = (typeof mapfile === 'string');
 
@@ -656,21 +666,17 @@ Map.prototype = {
       let configVar = null;
       let obj = null;
 
-
-
       for (const k in paletteDict) {
-        console.info('paletteDict.' + k);
+        // console.info('paletteDict.' + k);
         configVar = k + ' settings'; // this should be CONST'd somewhere and referenced in both places
         const $pal = $('.' + k);
 
-        console.info('configVar: ' + configVar);
-        console.info('$pal: ' + $pal);
-        console.info('localStorage[configVar]: ' + localStorage[configVar]);
+        // console.info('configVar: ' + configVar);
+        // console.info('$pal: ' + $pal);
+        // console.info('localStorage[configVar]: ' + localStorage[configVar]);
 
         if (localStorage[configVar] && $pal) {
           obj = JSON.parse(localStorage[configVar]);
-
-          console.info('oh yeah: ' + obj);
 
           if (obj.w) { $pal.width(obj.w); }
           if (obj.h) { $pal.height(obj.h); }
@@ -818,7 +824,7 @@ Map.prototype = {
   },
 
   drawEntities: function (i, map, layer, tallEntities) {
-        // / Layered Entities
+    // / Layered Entities
     if (getNormalEntityVisibility()) {
       if (map.entities[layer.name] && map.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name)) {
         const entities = map.entities[layer.name];

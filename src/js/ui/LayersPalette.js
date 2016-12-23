@@ -50,7 +50,7 @@ export const selectNumberedLayer = (num) => {
     }
   }
 
-  console.warn('No such layer',num,'found on this map');
+  console.warn('No such layer', num, 'found on this map');
 };
 
 let $zone_container = null;
@@ -67,6 +67,8 @@ export const selectZoneLayer = () => {
   });
 
   $zone_container.addClass(selClass);
+
+  closeEditLayerDialog();
 };
 
 let $obs_container = null;
@@ -94,6 +96,8 @@ export const selectObstructionLayer = () => {
   TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData);
 
   $obs_container.addClass(selClass);
+
+  closeEditLayerDialog();
 };
 
 let layers = null;
@@ -218,13 +222,18 @@ const redraw_palette = (map) => {
 
       TilesetSelectorWidget.initTilesetSelectorWidget(map, layers[i]);
 
+      if (dialog) {
+        _layer_click(evt, i);
+      }
+
       evt.stopPropagation();
     });
   };
 
   const addLayerEditHandler = ($layer_container, i) => {
     $layer_container.on('dblclick', (evt) => {
-      console.log("Allow editing of the layer's name here?");
+      console.log('addLayerEditHandler', i);
+      _layer_click(evt, i);
 
       evt.stopPropagation();
     });
@@ -351,25 +360,22 @@ const redraw_palette = (map) => {
     });
   }
 
-  function setup_shitty_entity_layer(node, $list) {
-
+  const setup_shitty_entity_layer = (node, $list) => {
     _setup_entity_eyeball(node);
 
     _setup_entity_expand(node);
 
-
     $list.append(node);
-  }
+  };
 
-  function reorder_layers_by_rstring_priority($list, map) {
-
-    var childs = $list.children('li');
+  const reorder_layers_by_rstring_priority = ($list, map) => {
+    const childs = $list.children('li');
     childs.detach();
 
-    var rstring_ref = null;
-    var rstring_cur_target = null;
-    var cur_kid = null;
-    var node = null;
+    let rstring_ref = null;
+    let rstring_cur_target = null;
+    let cur_kid = null;
+    let node = null;
 
     setup_shitty_zone_layer($list);
     setup_shitty_obstruction_layer($list);
@@ -381,21 +387,25 @@ const redraw_palette = (map) => {
     // node.data("rstring_ref", "E");
     // $list.append(node);
 
-    for (var i = map.layerRenderOrder.length - 1; i >= 0; i--) {
+    for (let i = map.layerRenderOrder.length - 1; i >= 0; i--) {
       rstring_cur_target = map.layerRenderOrder[i];
       rstring_ref = parseInt(rstring_cur_target, 10);
       if (isNaN(rstring_ref)) {
-
         // TODO this is certainly the wrong place to populate "R" and "E" visually.
-        if (rstring_cur_target == 'E') {
-          node = $("<li class='layer ui-state-default'><button class='eyeball_button'></button><button class='entity_expand_button'></button>Entities (default)</li>");
+        if (rstring_cur_target === 'E') {
+          node = $(
+            "<li class='layer ui-state-default'>" +
+            "<button class='eyeball_button'></button>" +
+            "<button class='entity_expand_button'></button>" +
+            'Entities (default)</li>');
+
           node.data('rstring_ref', 'E');
           node.data('layer_name', 'Entity Layer (E)');
 
           setup_shitty_entity_layer(node, $list);
-
-        } else if (rstring_cur_target == 'R') {
-          node = $("<li class='layer ui-state-default'><button class='eyeball_button question_mark'>?</button>'Render'</li>");
+        } else if (rstring_cur_target === 'R') {
+          node = $("<li class='layer ui-state-default'>" +
+                   "<button class='eyeball_button question_mark'>?</button>'Render'</li>");
           node.data('rstring_ref', 'R');
           $list.append(node);
         } else {
@@ -405,9 +415,9 @@ const redraw_palette = (map) => {
         continue;
       }
 
-      for (var j = childs.length - 1; j >= 0; j--) {
+      for (let j = childs.length - 1; j >= 0; j--) {
         cur_kid = $(childs[j]);
-        if (cur_kid.data('rstring_ref') == rstring_cur_target) {
+        if (cur_kid.data('rstring_ref') === rstring_cur_target) {
           $list.append(cur_kid); // re-add to list
           childs.splice(j, 1); // remove from childs array
           break;
@@ -419,13 +429,13 @@ const redraw_palette = (map) => {
       });
     };
 
-    var $expand_entities = $(node).find('.entity_expand_button');
+    const $expand_entities = $(node).find('.entity_expand_button');
     handleEntityExpand($expand_entities);
-  }
+  };
 
   function resizeWindow() {
-    var h = 0;
-    var w = 0;
+    let h = 0;
+    let w = 0;
 
     // / hackery of the worst calibur; probably a flaming trashbin.  do not trust.
     $('.layers-palette').children().each(function (idx, kid) {
@@ -445,7 +455,7 @@ const redraw_palette = (map) => {
   }
 
   function update_lucency(layer, dialog, special_case) {
-    var val = $('#new_layer_lucent').val().trim();
+    let val = $('#new_layer_lucent').val().trim();
 
     if (!$.isNumeric(val)) {
       modal_error('Invalid input: not numeric.');
@@ -484,9 +494,11 @@ const redraw_palette = (map) => {
   }
 
   function lucent_click(evt) {
-    var idx, layer, dialog;
-    var $me = $(evt.target).closest('li');
-    var special = '';
+    let idx = null;
+    let layer = null;
+    let dialog = null;
+    const $me = $(evt.target).closest('li');
+    let special = '';
 
     // TODO: this is special-case and evil.  make more better.
     if ($me.data('rstring_ref') === 'ZZZ') {
@@ -496,18 +508,15 @@ const redraw_palette = (map) => {
       };
 
       special = 'zone';
-
     } else {
       idx = parseInt($me.data('rstring_ref')) - 1;
       layer = window.$$$currentMap.mapData.layers[idx];
     }
 
-
     evt.stopPropagation();
 
     $(() => {
-
-      var template = '<div>Layer: ' + layer.name + '</div>';
+      let template = '<div>Layer: ' + layer.name + '</div>';
       template += '<div>Current: ' + formatAlphaAsPercentage(layer.alpha) + '</div>';
       template += "<div>New: <input id='new_layer_lucent'>%</div>";
 
@@ -531,19 +540,19 @@ const redraw_palette = (map) => {
   }
 
   function parallax_click(evt) {
-    var idx = parseInt($(this).closest('li').data('rstring_ref')) - 1;
-    var layer = window.$$$currentMap.mapData.layers[idx];
+    const idx = parseInt($(this).closest('li').data('rstring_ref')) - 1;
+    const layer = window.$$$currentMap.mapData.layers[idx];
 
     evt.stopPropagation();
 
     // var newLucent = dialog
-    var dialog;
+    let dialog = null;
 
     $(() => {
-
-      var template = '<div>Layer: ' + layer.name + '</div>';
+      let template = '<div>Layer: ' + layer.name + '</div>';
       template += '<div>Current (X:Y): ' + layer.parallax.X + ':' + layer.parallax.Y + '</div>';
-      template += "<div>New: <input id='new_layer_parallax_x' size=3>&nbsp;:&nbsp;<input id='new_layer_parallax_y' size=3></div>";
+      template += "<div>New: <input id='new_layer_parallax_x' size=3>&nbsp;:&nbsp;";
+      template += "<input id='new_layer_parallax_y' size=3></div>";
 
       $('#modal-dialog').attr('title', 'Set layer Parallax');
       $('#modal-dialog').html(template);
@@ -565,9 +574,9 @@ const redraw_palette = (map) => {
   }
 
   function update_parallax(layer, dialog) {
-    var x = $('#new_layer_parallax_x').val().trim();
-    var y = $('#new_layer_parallax_y').val().trim();
-    var newParallax = {};
+    let x = $('#new_layer_parallax_x').val().trim();
+    let y = $('#new_layer_parallax_y').val().trim();
+    const newParallax = {};
 
     if (!$.isNumeric(x)) {
       modal_error('Invalid input: x not numeric.');
@@ -596,21 +605,18 @@ const redraw_palette = (map) => {
   }
 
   function redrawAllLucentAndParallax(map) {
-
     if (!map) {
       map = window.$$$currentMap;
     }
 
     $('.layer').each(function (idx, layer) {
-      var nodeLayer = $(layer);
-      var rstring = nodeLayer.data('rstring_ref');
-      var lucentDomNode = null;
-      var parallaxDomNode = null;
-
-      var mapLayer = null;
+      const nodeLayer = $(layer);
+      const rstring = nodeLayer.data('rstring_ref');
+      let lucentDomNode = null;
+      let parallaxDomNode = null;
+      let mapLayer = null;
 
       if (nodeLayer.hasClass('nosort')) {
-
         if (nodeLayer.data('rstring_ref') === 'ZZZ') {
           lucentDomNode = nodeLayer.find('.layer_lucency');
           lucentDomNode.text(formatAlphaAsPercentage(getZoneAlpha()) + '%');
@@ -635,25 +641,24 @@ const redraw_palette = (map) => {
 
         nodeLayer.data('alpha', mapLayer.alpha); // TODO: remove this, only one source of truth: the data.
       }
-
     });
   }
 
   function generateContent(i, l, $parent) {
+    const normalContainer = $("<div class='normal_layer'></div>");
 
-    var normalContainer = $("<div class='normal_layer'></div>");
+    const visible_div = $("<button class='eyeball_button'></button>");
+    const name_div = $("<div class='layer_name'></div>");
 
-    var visible_div = $("<button class='eyeball_button'></button>");
-    var name_div = $("<div class='layer_name'></div>");
+    const right_div = $("<div class='rightmost_div'></div>");
 
-    var right_div = $("<div class='rightmost_div'></div>");
+    const lucent_div = $("<div class='layer_lucency'></div>");
+    const parallax_div = $("<div class='layer_parallax'>?:?</div>");
 
-    var lucent_div = $("<div class='layer_lucency'></div>");
-    var parallax_div = $("<div class='layer_parallax'>?:?</div>");
+    const entityContainer = $("<div class='entity_layer'><button class='eyeball_button'></button>" +
+                              "<div class='layer_name'></div></div>");
 
-    var entityContainer = $("<div class='entity_layer'><button class='eyeball_button'></button><div class='layer_name'></div></div>");
-
-    var entity_name_div = entityContainer.find('.layer_name');
+    const entity_name_div = entityContainer.find('.layer_name');
 
     handleEyeball(visible_div, l);
 
@@ -725,10 +730,11 @@ const redraw_palette = (map) => {
   };
 
   $('.layers-list').on('sortupdate', function (event, ui) {
-    var kids = $('.layers-list').children();
-    var i, val;
+    const kids = $('.layers-list').children();
+    let i = null;
+    let val = null;
 
-    var rstring = [];
+    const rstring = [];
 
     try {
       for (i in kids) {
@@ -752,15 +758,15 @@ const redraw_palette = (map) => {
 };
 
 function get_layernames_by_rstring_order() {
-  var ret = [];
-  var childs = list.children('li');
-  var cur_kid;
-  var rstring_cur_target;
-  var rstring_ref;
+  const ret = [];
+  const childs = list.children('li');
+  let cur_kid = null;
+  let rstring_cur_target = null;
+  let rstring_ref = null;
 
-  var map = window.$$$currentMap;
+  const map = window.$$$currentMap;
 
-  for (var i = map.layerRenderOrder.length - 1; i >= 0; i--) {
+  for (let i = map.layerRenderOrder.length - 1; i >= 0; i--) {
     rstring_cur_target = map.layerRenderOrder[i];
     rstring_ref = parseInt(rstring_cur_target, 10);
 
@@ -776,9 +782,9 @@ function get_layernames_by_rstring_order() {
       }
     }
 
-    for (var j = childs.length - 1; j >= 0; j--) {
+    for (let j = childs.length - 1; j >= 0; j--) {
       cur_kid = $(childs[j]);
-      if (cur_kid.data('rstring_ref') == rstring_cur_target) {
+      if (cur_kid.data('rstring_ref') === rstring_cur_target) {
         ret.push(cur_kid.data('layer_name'));
         break;
       }
@@ -800,18 +806,20 @@ function get_layernames_by_rstring_order() {
 }
 */
 
-
-var template = "<div>Name: <input id='layer_name'></div>";
-template += "<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> y: <input id='layer_parallax_y' value='1' size=3></div>";
+let template = "<div>Name: <input id='layer_name'></div>";
+template += "<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> ";
+template += "   y: <input id='layer_parallax_y' value='1' size=3></div>";
 template += "<div>Dimensions (tiles): w: <input id='layer_dims_x' size=3> h: <input id='layer_dims_y' size=3></div>";
 template += "<div>Alpha: <input id='layer_opacity' value='1' size=3></div>";
 template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
+template += "<div>isTallEntity Redraw Layer? <input type='checkbox' id='layer_is_tall_redraw_layer'></div>";
+template += "<div>Index: <span id='layer_idx'></span></div>";
 
 function setup_template() {
-  var $template = $(template);
+  const $template = $(template);
 
-  var $dims_x = $template.find('#layer_dims_x');
-  var $dims_y = $template.find('#layer_dims_y');
+  const $dims_x = $template.find('#layer_dims_x');
+  const $dims_y = $template.find('#layer_dims_y');
 
   $dims_x.val(window.$$$currentMap.mapSizeInTiles[0]);
   $dims_y.val(window.$$$currentMap.mapSizeInTiles[1]);
@@ -819,47 +827,67 @@ function setup_template() {
   return $template;
 }
 
-function _layer_click(evt) {
+let dialog = null;
+const closeEditLayerDialog = () => {
+  dialog.dialog('close');
+  dialog = null;
+};
+
+
+function _layer_click(evt, layerIdx) {
   evt.stopPropagation();
 
-  var dialog;
+  if (dialog) {
+    closeEditLayerDialog();
+  }
 
-  // var zone = currentZones[id];
-
-  var layer = false;
+  if (typeof layerIdx === 'undefined') {
+    layerIdx = false;
+  }
 
   $(() => {
+    const $template = setup_template();
+    let newLayerId = null;
 
-    var $template = setup_template();
-    var newLayerId = window.$$$currentMap.mapData.layers.length + 1;
-
-    if (layer) {
-      $('#modal-dialog').attr('title', 'Edit Layer ' + id + ')');
-    } else {
-      $('#modal-dialog').attr('title', 'Add New Layer (id: ' + (newLayerId) + ')');
-    }
     $('#modal-dialog').html('');
     $('#modal-dialog').append($template);
 
-    if (layer) {
-      // console.log("Editing: " + zone.name);
+    let title = null;
 
-      // $template.find("#zone_name").val(zone.name);
-      // $template.find("#zone_activation_script").val(zone.activation_script);
-      // $template.find("#zone_activation_chance").val(zone.activation_chance);
-      // $template.find("#zone_can_by_adjacent_activated").prop( "checked", zone.can_by_adjacent_activated );
+    if (typeof layerIdx === 'number') {
+      const layer = window.$$$currentMap.mapData.layers[layerIdx]; // TODO needs better accessor
+
+      title = 'Edit Layer: ' + layer.name;
+
+      $template.find('#layer_name').val(layer.name);
+      $template.find('#layer_parallax_x').val(layer.parallax.X);
+      $template.find('#layer_parallax_y').val(layer.parallax.Y);
+      $template.find('#layer_dims_x').val(layer.dimensions.X);
+      $template.find('#layer_dims_y').val(layer.dimensions.Y);
+      $template.find('#layer_opacity').val(layer.alpha);
+      $template.find('#layer_vsp').val(layer.vsp);
+      $template.find('#layer_idx').text(layerIdx);
+      newLayerId = layerIdx;
+
+      $template.find('#layer_is_tall_redraw_layer').prop(
+        'checked', layerIdx === window.$$$currentMap.getEntityTallRedrawLayer()
+      );
+    } else {
+      title = 'Add New Layer';
+      newLayerId = window.$$$currentMap.mapData.layers.length;
     }
 
     $('#modal-dialog').show();
     dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
+      title: title,
       buttons: {
         Save: () => {
           update_layer(dialog, newLayerId);
         },
         'Cancel': function () {
-          dialog.dialog('close');
+          closeEditLayerDialog();
         }
       },
       close: function () {
@@ -869,24 +897,15 @@ function _layer_click(evt) {
   });
 }
 
-function update_layer(dialog, layer_id) {
-
-/*
-var template = "<div>Name: <input id='layer_name'></div>";
-template += "<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> y: <input id='layer_parallax_y' value='1' size=3></div>";
-template += "<div>Dimensions (tiles): w: <input id='layer_dims_x' size=3> h: <input id='layer_dims_y' size=3></div>";
-template += "<div>Alpha: <input id='layer_opacity' value='1' size=3></div>";
-template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
-*/
-
-  var name = dialog.find('#layer_name').val();
-  var par_x = dialog.find('#layer_parallax_x').val();
-  var par_y = dialog.find('#layer_parallax_y').val();
-  var dims_x = dialog.find('#layer_dims_x').val();
-  var dims_y = dialog.find('#layer_dims_y').val();
-  var alpha = dialog.find('#layer_opacity').val();
-  var vsp = dialog.find('#layer_vsp').val();
-  var layer = null;
+const update_layer = (dialog, layer_id) => {
+  const name = dialog.find('#layer_name').val();
+  const par_x = dialog.find('#layer_parallax_x').val();
+  const par_y = dialog.find('#layer_parallax_y').val();
+  let dims_x = dialog.find('#layer_dims_x').val();
+  let dims_y = dialog.find('#layer_dims_y').val();
+  let alpha = dialog.find('#layer_opacity').val();
+  const vsp = dialog.find('#layer_vsp').val();
+  let layer = null;
 
   if (!$.isNumeric(par_x)) {
     modal_error('Invalid input: parralax x (' + par_x + ') is invalid.');
@@ -916,10 +935,13 @@ template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
     return;
   }
 
-  var nameSet = window.$$$currentMap.mapData.layers.map((l) => { return l.name; });
-  if (nameSet.indexOf(name) != -1) {
-    modal_error('Invalid input: name (' + name + ') is not unique on this map.  Try a new, unique name.');
-    return;
+  const nameSet = window.$$$currentMap.mapData.layers.map((l) => { return l.name; });
+
+  if (nameSet.indexOf(name) !== -1) {
+    if (window.$$$currentMap.mapData.layers[layer_id] && window.$$$currentMap.mapData.layers[layer_id].name !== name) {
+      modal_error('Invalid input: name (' + name + ') is not unique on this map.  Try a new, unique name.');
+      return;
+    }
   }
 
   alpha = parseFloat(alpha);
@@ -938,17 +960,31 @@ template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
     vsp: vsp
   };
 
-  window.$$$currentMap.mapData.layers.push(layer);
-  const layersLength = window.$$$currentMap.mapData.layers.length;
-  window.$$$currentMap.layerLookup[name] = window.$$$currentMap.mapData.layers[layersLength - 1];
-  window.$$$currentMap.layerRenderOrder.push('' + (layersLength));
-  window.$$$currentMap.mapRawTileData.tile_data.push(new Array((dims_x * dims_y)).fill(0));
+  if (layer_id === window.$$$currentMap.mapData.layers.length) {
+    window.$$$currentMap.mapData.layers.push(layer);
+    const layersLength = window.$$$currentMap.mapData.layers.length;
+    window.$$$currentMap.layerLookup[name] = window.$$$currentMap.mapData.layers[layersLength - 1];
+    window.$$$currentMap.layerRenderOrder.push('' + (layersLength));
+    window.$$$currentMap.mapRawTileData.tile_data.push(new Array((dims_x * dims_y)).fill(0));
+  } else {
+    // TODO do all layer-name-updating here
+    if (name !== window.$$$currentMap.mapData.layers[layer_id].name) {
+      const oldName = window.$$$currentMap.mapData.layers[layer_id].name;
+
+      window.$$$currentMap.layerLookup[name] = window.$$$currentMap.layerLookup[oldName];
+      delete window.$$$currentMap.layerLookup[oldName];
+    }
+
+    for (const k in layer) {
+      window.$$$currentMap.mapData.layers[layer_id][k] = layer[k];
+    }
+ }
 
   redraw_palette(window.$$$currentMap);
   Tools.updateRstringInfo();
 
-  dialog.dialog('close');
-}
+  closeEditLayerDialog();
+};
 
 export const LayersWidget = {
   initLayersWidget: initLayersWidget,
