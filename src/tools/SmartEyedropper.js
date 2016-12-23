@@ -1,7 +1,7 @@
 import { getTXTyFromMouse } from '../Tools';
-import { selectLayer } from '../js/ui/LayersPalette';
+import { selectLayer, getObsVisibility } from '../js/ui/LayersPalette';
 import { setTileSelectorUI } from '../TileSelector';
-
+import { setActiveZone, scrollZonePalletteToZone, getZoneVisibility } from '../js/ui/ZonesPalette';
 import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToEntity } from '../js/ui/EntityPalette';
 
 const $ = require('jquery');
@@ -132,16 +132,31 @@ export default () => {
         return;
       }
 
-      // let tIdx = null;
-      // let eIdx = null;
-      // let zIdx = -1;
-
       const clickSet = getTXTyFromMouse(map, e);
-      // const tX = clickSet[0];
-      // const tY = clickSet[1];
 
       // TODO if Zones are visible, check zone first.
       // TODO if Obs are visible, check obs next.
+
+      if (getZoneVisibility()) {
+        const zIdx = map.getZone(clickSet[0], clickSet[1]);
+        if (zIdx) {
+          selectLayer('Z');
+          window.$$$toggle_pallete('zones', true);
+          setActiveZone(zIdx);
+          scrollZonePalletteToZone(zIdx);
+          return;
+        }
+      }
+
+      if (getObsVisibility()) {
+        const oIdx = map.getTile(clickSet[0], clickSet[1], 998);
+        if (oIdx) {
+          selectLayer('O');
+          window.$$$toggle_pallete('tileset-selector', true);
+          setTileSelectorUI('#left-palette', oIdx, map, 0, 'obstructions');
+          return;
+        }
+      }
 
       const ret = seekResultFromLayers(map, clickSet);
 
