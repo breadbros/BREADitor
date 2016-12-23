@@ -191,7 +191,42 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.mapPath = null; // TODO, I dunno, maybe this is stupid?  What do we use this for anyway?
   }
 
+  // TODO eventually hide access to map.layers
   this.layers = this.mapData.layers;
+
+  this.getLayerByName = (name) => {
+    for (let i = this.layers.length - 1; i >= 0; i--) {
+      if (this.layers[i].name === name) {
+        return this.layers[i];
+      }
+    }
+
+    throw new Error('Unknown layer by name of "' + name + '"');
+  };
+
+  this.getLayerByRStringCode = (rstringcode) => {
+    if ($.isNumeric(rstringcode)) {
+      const i = parseInt(rstringcode);
+
+      if (i > 0 && i <= this.layers.length) {
+        return this.layers[i - 1];
+      }
+    }
+
+    throw new Error('Invalid rstring code "' + rstringcode + '".  Valid range [1, ' + (this.layers.length) + ']');
+  };
+
+  this.getLayerByIdx_DANGEROUS = (idx) => {
+    if ($.isNumeric(idx)) {
+      const i = parseInt(idx);
+
+      if (i >= 0 && i < this.layers.length) {
+        return this.layers[i];
+      }
+    }
+
+    throw new Error('Invalid layer index "' + idx + '".  Valid range [0, ' + (this.layers.length - 1) + ']');
+  };
 
   this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
 
