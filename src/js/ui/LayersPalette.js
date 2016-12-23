@@ -80,7 +80,9 @@ export const selectEntityLayer = () => {
   // TODO: this is disgusting, right?  right.
   changeSelectedLayer({
     map_tileData_idx: 997,
-    layer: {},
+    layer: {
+      name: 'Entity Layer (E)'
+    },
     $container: $zone_container
   });
 

@@ -613,6 +613,10 @@ const savePalettePositions = () => {
   });
 };
 
+const currentLayerCanHaveEntityOnIt = () => {
+  return getSelectedLayer().map_tileData_idx < 900 || getSelectedLayer().map_tileData_idx === 997;
+};
+
 $('#btn-add-tree').on('click', (e) => {
   window.TOOLMODE = 'TREE';
   window.$$$currentMap.entityPreview = {
@@ -623,18 +627,25 @@ $('#btn-add-tree').on('click', (e) => {
 
   toolLogic.TREE = {
     mousemove: (map, evt) => {
-      if( !getSelectedLayer() ) {
+      if (!getSelectedLayer()) {
         window.alert('select a layer first.');
         window.TOOLMODE = 'DRAG';
         return;
       }
 
+      if (!currentLayerCanHaveEntityOnIt()) {
+        window.alert('invalid layer for entity placement.');
+        window.TOOLMODE = 'DRAG';
+        return;
+      }
+
+      const vsp = getSelectedLayer().layer.vsp || 'default';
+
       const mapOffsetX = map.camera[0];
       const mapOffsetY = map.camera[1];
       const mouseOffsetX = evt.offsetX;
       const mouseOffsetY = evt.offsetY;
-      // const tilesize = map.vspData[getSelectedLayer().layer.vsp].tilesize;
-      const tilesize = map.vspData[getSelectedLayer().layer.vsp].tilesize;
+      const tilesize = map.vspData[vsp].tilesize;
 
       map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX * map.camera[2])) / tilesize.width);
       map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY * map.camera[2])) / tilesize.height);
@@ -642,6 +653,7 @@ $('#btn-add-tree').on('click', (e) => {
     mouseup: (map, evt) => {
       map.entityPreview.location.layer = getSelectedLayer().layer.name;
       map.addEntity(map.entityPreview, map.entityPreview.location);
+      debugger;
       map.entityPreview = null;
       window.TOOLMODE = 'DRAG';
     },

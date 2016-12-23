@@ -837,7 +837,6 @@ Map.prototype = {
               map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
               (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
           ) {
-console.log("CLAUSE 1");
             map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA]);
           }
           map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
@@ -848,8 +847,6 @@ console.log("CLAUSE 1");
         }
       } else if (map.entityPreview) {
         map.spriteShader.use();
-
-console.log("CLAUSE 2");
         map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA]);
       }
 
