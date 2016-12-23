@@ -648,6 +648,7 @@ const redraw_palette = (map) => {
     const normalContainer = $("<div class='normal_layer'></div>");
 
     const visible_div = $("<button class='eyeball_button'></button>");
+    const tall_div = $("<button class='tall-entity-layer' title='Tall entities redraw on this layer'></button>");
     const name_div = $("<div class='layer_name'></div>");
 
     const right_div = $("<div class='rightmost_div'></div>");
@@ -662,7 +663,7 @@ const redraw_palette = (map) => {
 
     handleEyeball(visible_div, l);
 
-    name_div.text((i + 1) + ': ' + l.name);
+    name_div.text('Art: ' + l.name);
     entity_name_div.text((i + 1) + ' (entities)');
 
     lucent_div.text(formatAlphaAsPercentage(l.alpha) + '%');
@@ -671,6 +672,11 @@ const redraw_palette = (map) => {
     parallax_div.click(parallax_click);
 
     normalContainer.append(visible_div);
+
+    if (i === window.$$$currentMap.getEntityTallRedrawLayer()) {
+      normalContainer.append(tall_div);
+    }
+
     normalContainer.append(name_div);
 
     // right div
