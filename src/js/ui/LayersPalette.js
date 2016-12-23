@@ -40,17 +40,29 @@ const new_layer_click = (evt) => {
   _layer_click(evt);
 };
 
-export const selectNumberedLayer = (num) => {
+export const selectNamedLayer = (name) => {
   const $list = $('.layer_name');
   for (let i = $list.length - 1; i >= 0; i--) {
     const $node = $($list[i]);
-    if ($node.text().startsWith(num + ':')) {
+    if ($node.text().trim().startsWith(name)) {
       $node.closest('li').click();
-      return;
+      return true;
     }
   }
 
-  console.warn('No such layer', num, 'found on this map');
+  console.warn('No such named layer', name, 'found on this map');
+
+  return false;
+};
+
+export const selectNumberedLayer = (rstringNum) => {
+  const name = window.$$$currentMap.getLayerByRStringCode(rstringNum).name;
+
+  if (!name) {
+    console.warn('No such numbered layer', rstringNum, 'found on this map');
+  } else {
+    selectNamedLayer(name);
+  }
 };
 
 let $zone_container = null;
@@ -89,6 +101,22 @@ export const selectEntityLayer = () => {
   $ent_container.addClass(selClass);
 
   closeEditLayerDialog();
+};
+
+export const selectLayer = (name) => {
+  switch (name) {
+    case 'O':
+      selectObstructionLayer();
+      return;
+    case 'E':
+      selectEntityLayer();
+      return;
+    case 'Z':
+      selectZoneLayer();
+      return;
+    default:
+      selectNamedLayer(name);
+  }
 };
 
 let $obs_container = null;
