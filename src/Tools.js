@@ -643,12 +643,7 @@ $('#btn-add-tree').on('click', (e) => {
   };
 });
 
-const shouldShowZones = () => {
-  return getZoneVisibility();
-};
-
 export const Tools = {
-  shouldShowZones: shouldShowZones,
   updateRstringInfo: updateRstringInfo,
   savePalettePositions: savePalettePositions,
   updateLocationFunction: updateLocationFunction,
