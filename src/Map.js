@@ -22,7 +22,7 @@ const HIGHLIGHT_B = 1;
 const TALLENT_R = 1;
 const TALLENT_G = 1;
 const TALLENT_B = 1;
-const TALLENT_A = 1;
+const TALLENT_A = 0.5;
 
 const animateAlpha = (t, swag) => {
   return Math.sin(t / swag) * 0.3 + 0.5;
@@ -853,7 +853,7 @@ Map.prototype = {
     this.renderContainer = $canvas;
     this.gl = this.renderContainer[0].getContext('webgl'); // we're targeting Electron not the Internet at large so
                                                            // don't worry about failing to get a GL context
-    this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
+    this.gl.clearColor(0.5, 0.5, 0.5, 1.0);
 
     const readShader = (path) => {
       const p = jetpack.path(appPath, 'app', path);
@@ -895,7 +895,7 @@ Map.prototype = {
       0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[0])
     );
 
-    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.SRC_ALPHA, this.gl.DST_ALPHA);
     this.gl.enable(this.gl.BLEND);
 
     this.vertexbuffer = this.gl.createBuffer();
