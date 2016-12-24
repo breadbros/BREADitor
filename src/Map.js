@@ -22,7 +22,7 @@ const HIGHLIGHT_B = 1;
 const TALLENT_R = 1;
 const TALLENT_G = 1;
 const TALLENT_B = 1;
-const TALLENT_A = .5;
+const TALLENT_A = 1;
 
 const animateAlpha = (t, swag) => {
   return Math.sin(t / swag) * 0.3 + 0.5;
@@ -1209,8 +1209,8 @@ Map.prototype = {
     this.maybeRenderMarchingAnts(gl, this.visibleHoverTile);
 
     // uncomment these to get frame render times
-    const tock = new Date().getTime();
-    console.log((tock-tick) + 'ms to render');
+    // const tock = new Date().getTime();
+    // console.log((tock-tick) + 'ms to render');
   },
 
   cleanEntities: function () {

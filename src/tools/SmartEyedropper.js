@@ -2,7 +2,8 @@ import { getTXTyFromMouse } from '../Tools';
 import { selectLayer, getObsVisibility } from '../js/ui/LayersPalette';
 import { setTileSelectorUI } from '../TileSelector';
 import { setActiveZone, scrollZonePalletteToZone, getZoneVisibility } from '../js/ui/ZonesPalette';
-import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToEntity } from '../js/ui/EntityPalette';
+import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToEntity, addEntityToHighlight,
+         clearAllEntitysFromHighlight } from '../js/ui/EntityPalette';
 
 const $ = require('jquery');
 
@@ -164,6 +165,7 @@ export default () => {
         if (ret.type === 'TILE') {
           selectLayer(ret.layer.name);
           setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
+          clearAllEntitysFromHighlight();
           return;
         }
 
@@ -172,6 +174,7 @@ export default () => {
           window.$$$toggle_pallete('entity', true);
           selectEntityByIndex(ret.eIdx);
           scrollEntityPalletteToEntity(ret.eIdx);
+          addEntityToHighlight(ret.ent);
 
           debugger;
           //selectLayer(ret.layer.name);

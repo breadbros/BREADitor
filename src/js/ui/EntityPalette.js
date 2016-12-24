@@ -69,12 +69,25 @@ const select_entity_from_pallete = (evt) => {
   return $it_me;
 };
 
+let highlightedEnts = new Set();
+
+export const addEntityToHighlight = (ent) => {
+  ent.MAPED_HIGHLIGHTED = true;
+  highlightedEnts.add(ent);
+};
+
+export const clearAllEntitysFromHighlight = (ent) => {
+  highlightedEnts.forEach((e) => {
+    delete e.MAPED_HIGHLIGHTED;
+  });
+
+  highlightedEnts = new Set();
+};
+
 export const selectEntityByIndex = (idx) => {
   if (!idx) {
     idx = 0;
   }
-
-  window.$$$currentMap.mapData.entities[idx].MAPED_HIGHLIGHTED = true;
 
   const $it_me = $('.entity-row[data-index=' + idx + ']');
   _select_entity_ui_inner($it_me);
