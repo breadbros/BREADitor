@@ -74,7 +74,29 @@ const determineEntityCollision = (ent, clickSet, map, tileSize) => {
     const hitbox = data.hitbox;
 
     // todo THIS is the lazy rect way, without calculating for empty pixels and things underneath.  FIX.
-    return isInRectangle(clickSet[2], clickSet[3], px - hitbox[0], py - hitbox[1], dims[0], dims[1]);
+    if (isInRectangle(clickSet[2], clickSet[3], px - hitbox[0], py - hitbox[1], dims[0], dims[1])) {
+      const gl = map.renderContainer[0].getContext('webgl');
+      const img = map.entityTextures[data.image];
+
+      const fb = gl.createFramebuffer();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, img.tex, 0);
+      // const canRead = (gl.checkFramebufferStatus(gl.FRAMEBUFFER) == gl.FRAMEBUFFER_COMPLETE);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+      // one pixel and one pixel only
+      const pixel = new Uint8Array(4);
+
+      // pixels should now be [137,96,40,1];
+      gl.readPixels(861,565, 1,1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+
+      // BUT PIXEL IS NOT [137,96,40,1] IT IS [0,0,0,0] >:(
+      // pixel
+      debugger;
+
+    } else {
+      return false;
+    }
   }
 };
 
