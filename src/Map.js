@@ -861,6 +861,8 @@ Map.prototype = {
       return res;
     };
 
+    this.fillShader = new ShaderProgram(
+      this.gl, readShader('shaders/simple-vert.glsl'), readShader('shaders/color-frag.glsl'));
     this.tilemapShader = new ShaderProgram(
       this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemap-frag.glsl'));
     this.spriteShader = new ShaderProgram(
@@ -895,7 +897,6 @@ Map.prototype = {
       0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[0])
     );
 
-    this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.SRC_ALPHA, this.gl.DST_ALPHA);
     this.gl.enable(this.gl.BLEND);
 
     this.vertexbuffer = this.gl.createBuffer();
@@ -1081,8 +1082,12 @@ Map.prototype = {
   renderTilesAndEntityLayers: function (gl, tick) {
     const tallEntities = [];
 
+    // render each layer in turn
+
+    this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.SRC_ALPHA, this.gl.DST_ALPHA);
     const len = this.layerRenderOrder.length;
     for (let i = 0; i < len; i++) {
+
       // something about optimization means this runs 2x faster if renderLayer is its own function
       // <Tene> 100% glad that I've avoided javascript so far
       this.renderLayer(gl, i, tallEntities, tick);
@@ -1134,8 +1139,8 @@ Map.prototype = {
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
     gl.texImage2D(
-    gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
-    gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex])
+      gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
+      gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex])
     );
 
     const a_position = this.tilemapShader.attribute('a_position');
@@ -1196,7 +1201,7 @@ Map.prototype = {
       h: this.renderContainer.height()
     };
 
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    this.renderBackground(gl);
 
     this.renderTilesAndEntityLayers(gl, tick);
 
@@ -1211,6 +1216,32 @@ Map.prototype = {
     // uncomment these to get frame render times
     // const tock = new Date().getTime();
     // console.log((tock-tick) + 'ms to render');
+  },
+
+  renderBackground: function (gl) {
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // fill the map part of display with transparent pixels, first
+
+    this.gl.blendFunc(this.gl.ONE, this.gl.ZERO);
+
+    this.fillShader.use();
+
+    gl.uniform4f(this.fillShader.uniform('u_camera'),
+      Math.floor(this.camera[0]) / this.vspData[this.layers[0].vsp].tilesize.width,
+      Math.floor(this.camera[1]) / this.vspData[this.layers[0].vsp].tilesize.height,
+      this.camera[2] * this.renderContainerDimensions.w / this.vspData[this.layers[0].vsp].tilesize.width,
+      this.camera[2] * this.renderContainerDimensions.h / this.vspData[this.layers[0].vsp].tilesize.height
+    );
+
+    gl.uniform4f(this.fillShader.uniform('u_color'), 0, 0, 0, 0);
+
+    const a_position = this.fillShader.attribute('a_position');
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+    gl.enableVertexAttribArray(a_position);
+    gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
   },
 
   cleanEntities: function () {
