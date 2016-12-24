@@ -972,8 +972,8 @@ Map.prototype = {
       gl.uniform4f(this.tilemapShader.uniform('u_camera'),
                 Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
                 Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-                this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-                this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+                this.camera[2] * this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width,
+                this.camera[2] * this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height
             );
 
       gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
@@ -1022,8 +1022,8 @@ Map.prototype = {
       gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
         Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
         Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-        this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-        this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+        this.camera[2] * this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width,
+        this.camera[2] * this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height
       );
 
       gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
@@ -1086,8 +1086,8 @@ Map.prototype = {
       gl.uniform4f(this.tilemapShader.uniform('u_camera'),
         Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
         Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-        this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-        this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+        this.camera[2] * this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width,
+        this.camera[2] * this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height
       );
 
       gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
@@ -1141,8 +1141,8 @@ Map.prototype = {
         this.selectionShader.uniform('u_camera'),
         Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
         Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-        this.camera[2] * this.renderContainer.width() / this.vspData[vsp].tilesize.width,
-        this.camera[2] * this.renderContainer.height() / this.vspData[vsp].tilesize.height
+        this.camera[2] * this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width,
+        this.camera[2] * this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height
       );
       gl.uniform4f(
         this.selectionShader.uniform('u_dimensions'),
@@ -1165,6 +1165,11 @@ Map.prototype = {
 
   render: function () {
     const gl = this.gl;
+
+    this.renderContainerDimensions = {
+      w: this.renderContainer.width(),
+      h: this.renderContainer.height()
+    };
 
     gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -1249,8 +1254,8 @@ Map.prototype = {
       this.spriteShader.uniform('u_camera'),
       Math.floor(layer.parallax.X * this.camera[0]) / tilesize.width,
       Math.floor(layer.parallax.Y * this.camera[1]) / tilesize.height,
-      this.camera[2] * this.renderContainer.width() / tilesize.width,
-      this.camera[2] * this.renderContainer.height() / tilesize.height
+      this.camera[2] * this.renderContainerDimensions.w / tilesize.width,
+      this.camera[2] * this.renderContainerDimensions.h / tilesize.height
     );
 
     gl.uniform4f(this.spriteShader.uniform('u_tint'), tint[0], tint[1], tint[2], tint[3]);
@@ -1269,8 +1274,10 @@ Map.prototype = {
 
   resize: function () {
     if (!this.renderContainer || !this.gl) { return; }
-    this.renderContainer.attr('width', this.renderContainer.width());
-    this.renderContainer.attr('height', this.renderContainer.height());
-    this.gl.viewport(0, 0, this.renderContainer.width(), this.renderContainer.height());
+    var w = this.renderContainer.width();
+    var h = this.renderContainer.height();
+    this.renderContainer.attr('width', w);
+    this.renderContainer.attr('height', h);
+    this.gl.viewport(0, 0, w, h);
   }
 };
