@@ -1064,64 +1064,71 @@ Map.prototype = {
   renderTilesAndEntityLayers: function (gl) {
     const tallEntities = [];
 
-    for (let i = 0; i < (this.layerRenderOrder.length); i++) {
-      const layerIndex = parseInt(this.layerRenderOrder[i], 10) - 1;
-      const layer = this.mapData.layers[layerIndex];
-
-      if (this.layerRenderOrder[i] === 'E') {
-        this.drawEntities(i, this, this.fakeEntityLayer, tallEntities);
-        continue;
-      }
-      if (isNaN(layerIndex)) {
-        continue;
-      }
-      if (layer.MAPED_HIDDEN) {
-        continue;
-      }
-
-      const vsp = layer.vsp;
-
-      this.tilemapShader.use();
-
-      gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-        Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-        Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-        this.camera[2] * this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width,
-        this.camera[2] * this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height
-      );
-
-      gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
-        layer.dimensions.X,
-        layer.dimensions.Y,
-        this.vspData[vsp].tiles_per_row,
-        this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
-      );
-
-      gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
-
-      const u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
-      gl.uniform1i(u_tileLibrary, 0);
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
-
-      const u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
-      gl.uniform1i(u_tileLayout, 1);
-      gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
-      gl.texImage2D(
-        gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
-        gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex])
-      );
-
-      const a_position = this.tilemapShader.attribute('a_position');
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-      gl.enableVertexAttribArray(a_position);
-      gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
-
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-      this.drawEntities(i, this, layer, tallEntities);
+    var len = this.layerRenderOrder.length;
+    for (let i = 0; i < len; i++) {
+      // something about optimization means this runs 2x faster if renderLayer is its own function
+      // <Tene> 100% glad that I've avoided javascript so far    
+      this.renderLayer(gl, i, tallEntities);
     }
+  },
+
+  renderLayer: function(gl, i, tallEntities) {
+    const layerIndex = parseInt(this.layerRenderOrder[i], 10) - 1;
+    const layer = this.mapData.layers[layerIndex];
+
+    if (this.layerRenderOrder[i] === 'E') {
+      this.drawEntities(i, this, this.fakeEntityLayer, tallEntities);
+      return;
+    }
+    if (isNaN(layerIndex)) {
+      return;
+    }
+    if (layer.MAPED_HIDDEN) {
+      return;
+    }
+
+    const vsp = layer.vsp;
+
+    this.tilemapShader.use();
+
+    gl.uniform4f(this.tilemapShader.uniform('u_camera'),
+      Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
+      Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+      this.camera[2] * this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width,
+      this.camera[2] * this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height
+    );
+
+    gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
+      layer.dimensions.X,
+      layer.dimensions.Y,
+      this.vspData[vsp].tiles_per_row,
+      this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+    );
+
+    gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
+
+    const u_tileLibrary = this.tilemapShader.uniform('u_tileLibrary');
+    gl.uniform1i(u_tileLibrary, 0);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
+
+    const u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
+    gl.uniform1i(u_tileLayout, 1);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+    gl.texImage2D(
+    gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
+    gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex])
+    );
+
+    const a_position = this.tilemapShader.attribute('a_position');
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
+    gl.enableVertexAttribArray(a_position);
+    gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    this.drawEntities(i, this, layer, tallEntities);
   },
 
   maybeRenderMarchingAnts: function (gl, selection) {
