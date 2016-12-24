@@ -15,8 +15,17 @@ import { getSelectedLayer } from './js/ui/LayersPalette.js';
 
 const ENTITY_PREVIEW_ALPHA = 0.75;
 
-const animateAlpha = (t,swag) => {
-  return Math.sin(t / swag) * 0.5 + 0.5;
+const HIGHLIGHT_R = 1;
+const HIGHLIGHT_G = 1;
+const HIGHLIGHT_B = 1;
+
+const TALLENT_R = 1;
+const TALLENT_G = 1;
+const TALLENT_B = 1;
+const TALLENT_A = .5;
+
+const animateAlpha = (t, swag) => {
+  return Math.sin(t / swag) * 0.3 + 0.5;
 };
 
 const buildTileDataTexture = (data) => {
@@ -941,9 +950,7 @@ Map.prototype = {
             map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA]);
           }
           if (entities[e].MAPED_HIGHLIGHTED) {
-            const a = animateAlpha(tick, 100);
-            map.renderEntity(entities[e], layer, [1, 1, 1, a]);
-            console.log(a);
+            map.renderEntity(entities[e], layer, [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)]);
           } else {
             map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
           }
@@ -961,7 +968,7 @@ Map.prototype = {
         map.spriteShader.use();
         for (const e in tallEntities) {
           const entity = tallEntities[e];
-          map.renderEntity(entity, layer, [1, 1, 1, 1], map.entityData[entity.filename].regions['Tall_Redraw']);
+          map.renderEntity(entity, layer, [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A], map.entityData[entity.filename].regions['Tall_Redraw']);
         }
       }
     }
@@ -1074,15 +1081,15 @@ Map.prototype = {
   renderTilesAndEntityLayers: function (gl, tick) {
     const tallEntities = [];
 
-    var len = this.layerRenderOrder.length;
+    const len = this.layerRenderOrder.length;
     for (let i = 0; i < len; i++) {
       // something about optimization means this runs 2x faster if renderLayer is its own function
       // <Tene> 100% glad that I've avoided javascript so far
-      this.renderLayer(gl, i, tallEntities);
+      this.renderLayer(gl, i, tallEntities, tick);
     }
   },
 
-  renderLayer: function(gl, i, tallEntities) {
+  renderLayer: function (gl, i, tallEntities, tick) {
     const layerIndex = parseInt(this.layerRenderOrder[i], 10) - 1;
     const layer = this.mapData.layers[layerIndex];
 
@@ -1202,8 +1209,8 @@ Map.prototype = {
     this.maybeRenderMarchingAnts(gl, this.visibleHoverTile);
 
     // uncomment these to get frame render times
-    // const tock = new Date().getTime();
-    // console.log((tock-tick) + 'ms to render');
+    const tock = new Date().getTime();
+    console.log((tock-tick) + 'ms to render');
   },
 
   cleanEntities: function () {
