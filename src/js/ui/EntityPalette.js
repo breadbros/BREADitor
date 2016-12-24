@@ -74,6 +74,8 @@ export const selectEntityByIndex = (idx) => {
     idx = 0;
   }
 
+  window.$$$currentMap.mapData.entities[idx].MAPED_HIGHLIGHTED = true;
+
   const $it_me = $('.entity-row[data-index=' + idx + ']');
   _select_entity_ui_inner($it_me);
   return $it_me;
