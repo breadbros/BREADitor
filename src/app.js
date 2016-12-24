@@ -43,6 +43,18 @@ const bootstrapMap = (mapFile, tiledataFile) => {
 
                 window.$$$currentMap = currentMap;
 
+                if (typeof window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE === 'undefined') {
+                  window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE = true;
+                }
+
+                if (typeof window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE === 'undefined') {
+                  window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE = true;
+                }
+
+                if (typeof window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE === 'undefined') {
+                  window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE = true;
+                }
+
                 LayersWidget.initLayersWidget(currentMap);
                 initInfoWidget(currentMap);
                 ZonesWidget.initZonesWidget(currentMap);

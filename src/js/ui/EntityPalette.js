@@ -361,7 +361,6 @@ function _entity_click(evt, id) {
   });
 }
 
-
 export const update_entity = (dialog, ent_id) => {
   const entity_name = $('#entity_name').val(); // TODO: validate uniqueness
   const entity_filename = $('#entity_filename').val(); // TODO: validate existance
@@ -396,7 +395,7 @@ export const update_entity = (dialog, ent_id) => {
 
   const loc_l = $('#entity_location_layer').val();
 
-  vals = {
+  const vals = {
     loc_tx: loc_tx,
     loc_ty: loc_ty,
     loc_px: loc_px,
@@ -414,7 +413,7 @@ export const update_entity = (dialog, ent_id) => {
     entity_autofaces: entity_autofaces
   };
 
-  if( _update_entity_inner(vals) ) {
+  if (_update_entity_inner(vals)) {
     dialog.dialog('close');
   }
 };
@@ -493,12 +492,11 @@ export const _update_entity_inner = (ent_id, valDict) => {
 // TODO: ent_name should be a uuid
 // TODO: until then, make sure ent_name is verified unique
 const relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {
-  var myboy;
-  var ents = window.$$$currentMap.entities;
+  let myboy = null;
+  const ents = window.$$$currentMap.entities;
 
-  for (var i = ents[old_layer].length - 1; i >= 0; i--) {
-    if (ents[old_layer][i].name == ent_name) {
-
+  for (let i = ents[old_layer].length - 1; i >= 0; i--) {
+    if (ents[old_layer][i].name === ent_name) {
       if (!ents[new_layer]) {
         ents[new_layer] = [];
       }
@@ -510,7 +508,10 @@ const relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {
     }
   }
 
-  window.alert("FAILED TO MOVE entity '" + ent_name + "' from layer '" + old_layer + "' to layer '" + new_layer + "'.  FOR REASONS.");
+  window.alert(
+    "FAILED TO MOVE entity '" + ent_name + "' from layer '" + old_layer +
+    "' to layer '" + new_layer + "'.  FOR REASONS."
+  );
 };
 
 export const scrollEntityPalletteToEntity = (entToFocus) => {
