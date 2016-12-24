@@ -22,7 +22,7 @@ const HIGHLIGHT_B = 1;
 const TALLENT_R = 1;
 const TALLENT_G = 1;
 const TALLENT_B = 1;
-const TALLENT_A = 0.5;
+const TALLENT_A = 0.75;
 
 const animateAlpha = (t, swag) => {
   return Math.sin(t / swag) * 0.3 + 0.5;
@@ -944,19 +944,20 @@ Map.prototype = {
         map.spriteShader.use();
 
         for (let e = 0; e < entities.length; e++) {
+          var mask = (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw'] ? map.entityData[entities[e].filename].regions['Tall_Redraw'] : null);
+
           if (showEntityPreview &&
               map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
               (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
           ) {
-            map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA]);
+            map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA], null, mask);
           }
           if (entities[e].MAPED_HIGHLIGHTED) {
-            map.renderEntity(entities[e], layer, [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)]);
+            map.renderEntity(entities[e], layer, [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)], null, mask);
           } else {
-            map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
+            map.renderEntity(entities[e], layer, [1, 1, 1, 1], null, mask);
           }
-          if (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions &&
-              map.entityData[entities[e].filename].regions['Tall_Redraw']) {
+          if (mask) {
             tallEntities.push(entities[e]);
           }
         }
@@ -1106,6 +1107,14 @@ Map.prototype = {
       return;
     }
     if (layer.MAPED_HIDDEN) {
+      if (this.getEntityTallRedrawLayer() === layer) {
+        this.spriteShader.use();
+        for (const e in tallEntities) {
+          const entity = tallEntities[e];
+          this.renderEntity(entity, layer, [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A], this.entityData[entity.filename].regions['Tall_Redraw']);
+        }
+      }
+
       return;
     }
 
@@ -1272,13 +1281,13 @@ Map.prototype = {
     return e;
   },
 
-  renderEntity: function (entity, layer, tint, clip) {
+  renderEntity: function (entity, layer, tint, clip, mask) {
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
     const entityData = this._getEntityData(entity);
     const entityTexture = this.entityTextures[entityData.image];
 
-    clip = (clip === undefined ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
+    clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
 
     const a_vertices = this.spriteShader.attribute('a_vertices');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
@@ -1311,14 +1320,61 @@ Map.prototype = {
     fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
     fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
 
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-      tx, -ty, fx, fy,
-      tx + tw, -ty, fx + fw, fy,
-      tx, -ty - th, fx, fy + fh,
-      tx + tw, -ty - th, fx + fw, fy + fh,
-      tx, -ty - th, fx, fy + fh,
-      tx + tw, -ty, fx + fw, fy
-    ]), this.gl.STATIC_DRAW);
+    let verts = [];
+    if (!mask) {
+      verts.push(tx, -ty, fx, fy);
+      verts.push(tx + tw, -ty, fx + fw, fy);
+      verts.push(tx, -ty - th, fx, fy + fh);
+      verts.push(tx + tw, -ty - th, fx + fw, fy + fh);
+      verts.push(tx, -ty - th, fx, fy + fh);
+      verts.push(tx + tw, -ty, fx + fw, fy);
+    } else {
+        let tm = [
+          mask[0] / tilesize.width,
+          mask[1] / tilesize.height,
+          mask[2] / tilesize.width,
+          mask[3] / tilesize.height
+        ];
+        let fm = [
+          mask[0] / entityTexture.img.width,
+          mask[1] / entityTexture.img.height,
+          mask[2] / entityTexture.img.width,
+          mask[3] / entityTexture.img.height,
+        ]
+
+        if (mask[1] > 0) {
+          verts.push(tx, -ty, fx, fy);
+          verts.push(tx + tw, -ty, fx + fw, fy);
+          verts.push(tx, -ty - tm[1], fx, fy + fm[1]);
+          verts.push(tx + tw, -ty - tm[1], fx + fw, fy + fm[1]);
+          verts.push(tx, -ty - tm[1], fx, fy + fm[1]);
+          verts.push(tx + tw, -ty, fx + fw, fy);
+        }
+        if (mask[0] > 0) {
+          verts.push(tx, -ty, fx, fy);
+          verts.push(tx + tm[0], -ty, fx + fm[0], fy);
+          verts.push(tx, -ty - th, fx, fy + fh);
+          verts.push(tx + tm[0], -ty - th, fx + fm[0], fy + fh);
+          verts.push(tx, -ty - th, fx, fy + fh);
+          verts.push(tx + tm[0], -ty, fx + fm[0], fy);
+        }
+        if (mask[0] + mask[2] < entityData.dims[0]) {
+          verts.push(tx + tm[0] + tm[2], -ty, fx + fm[0] + fm[2], fy);
+          verts.push(tx + tw, -ty, fx + fw, fy);
+          verts.push(tx + tm[0] + tm[2], -ty - th, fx + fm[0] + fm[2], fy + fh);
+          verts.push(tx + tw, -ty - th, fx + fw, fy + fh);
+          verts.push(tx + tm[0] + tm[2], -ty - th, fx + fm[0] + fm[2], fy + fh);
+          verts.push(tx + tw, -ty, fx + fw, fy);
+        }
+        // assume we at least have the "below the mask" part of the entity to draw
+        verts.push(tx, -ty - tm[1] - tm[3], fx, fy + fm[1] + fm[3]);
+        verts.push(tx + tw, -ty - tm[1] - tm[3], fx + fw, fy + fm[1] + fm[3]);
+        verts.push(tx, -ty - th, fx, fy + fh);
+        verts.push(tx + tw, -ty - th, fx + fw, fy + fh);
+        verts.push(tx, -ty - th, fx, fy + fh);
+        verts.push(tx + tw, -ty - tm[1] - tm[3], fx + fw, fy + fm[1] + fm[3]);
+    }
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(verts), this.gl.STATIC_DRAW);
 
     gl.uniform4f(
       this.spriteShader.uniform('u_camera'),
@@ -1335,7 +1391,7 @@ Map.prototype = {
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, entityTexture.tex);
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.drawArrays(gl.TRIANGLES, 0, verts.length / 4);
   },
 
   cleanUpCallbacks: function () {
