@@ -101,6 +101,9 @@ const seekResultFromLayers = (map, clickSet) => {
     }
     if ($.isNumeric(layerCode)) {
       const layer = map.getLayerByRStringCode(layerCode);
+      if (layer.MAPED_HIDDEN) {
+        continue;
+      }
 
       if (map.entities[layer.name]) {
         ret = checkEntities(map.entities[layer.name], layer, map, clickSet);
