@@ -907,7 +907,6 @@ function get_layernames_by_rstring_order() {
   return ret;
 };
 
-
 let template = "<div>Name: <input id='layer_name'></div>";
 template += "<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> ";
 template += "   y: <input id='layer_parallax_y' value='1' size=3></div>";
@@ -970,11 +969,11 @@ function _layer_click(evt, layerIdx) {
       $template.find('#layer_opacity').val(layer.alpha);
       $template.find('#layer_vsp').val(layer.vsp);
       $template.find('#layer_idx').text(layerIdx);
-      newLayerId = layerIdx;
-
       $template.find('#layer_is_tall_redraw_layer').prop(
-        'checked', layerIdx === window.$$$currentMap.getEntityTallRedrawLayer()
+        'checked', layer === window.$$$currentMap.getEntityTallRedrawLayer()
       );
+
+      newLayerId = layerIdx;
     } else {
       title = 'Add New Layer';
       newLayerId = window.$$$currentMap.mapData.layers.length;
