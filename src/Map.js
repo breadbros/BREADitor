@@ -861,8 +861,8 @@ Map.prototype = {
       return res;
     };
 
-    this.fillShader = new ShaderProgram(
-      this.gl, readShader('shaders/simple-vert.glsl'), readShader('shaders/color-frag.glsl'));
+    this.checkerShader = new ShaderProgram(
+      this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/check-frag.glsl'));
     this.tilemapShader = new ShaderProgram(
       this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemap-frag.glsl'));
     this.spriteShader = new ShaderProgram(
@@ -1223,20 +1223,30 @@ Map.prototype = {
 
     // fill the map part of display with transparent pixels, first
 
+    var layer = this.layers[0]; // sigh
+
     this.gl.blendFunc(this.gl.ONE, this.gl.ZERO);
 
-    this.fillShader.use();
+    this.checkerShader.use();
 
-    gl.uniform4f(this.fillShader.uniform('u_camera'),
-      Math.floor(this.camera[0]) / this.vspData[this.layers[0].vsp].tilesize.width,
-      Math.floor(this.camera[1]) / this.vspData[this.layers[0].vsp].tilesize.height,
-      this.camera[2] * this.renderContainerDimensions.w / this.vspData[this.layers[0].vsp].tilesize.width,
-      this.camera[2] * this.renderContainerDimensions.h / this.vspData[this.layers[0].vsp].tilesize.height
+    gl.uniform4f(this.checkerShader.uniform('u_camera'),
+      Math.floor(this.camera[0]) / this.vspData[layer.vsp].tilesize.width,
+      Math.floor(this.camera[1]) / this.vspData[layer.vsp].tilesize.height,
+      this.camera[2] * this.renderContainerDimensions.w / this.vspData[layer.vsp].tilesize.width,
+      this.camera[2] * this.renderContainerDimensions.h / this.vspData[layer.vsp].tilesize.height
     );
 
-    gl.uniform4f(this.fillShader.uniform('u_color'), 0, 0, 0, 0);
+    gl.uniform4f(this.checkerShader.uniform('u_dimensions'),
+      layer.dimensions.X,
+      layer.dimensions.Y,
+      this.vspData[layer.vsp].tiles_per_row,
+      this.vspImages[layer.vsp].height / this.vspData[layer.vsp].tilesize.height
+    );
 
-    const a_position = this.fillShader.attribute('a_position');
+    gl.uniform4f(this.checkerShader.uniform('u_colorA'), 0.75, 0.75, 0.75, 1.0);
+    gl.uniform4f(this.checkerShader.uniform('u_colorB'), 1.0, 1.0, 1.0, 1.0);
+
+    const a_position = this.checkerShader.attribute('a_position');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
     gl.enableVertexAttribArray(a_position);
     gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
