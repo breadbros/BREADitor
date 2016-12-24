@@ -15,6 +15,10 @@ import { getSelectedLayer } from './js/ui/LayersPalette.js';
 
 const ENTITY_PREVIEW_ALPHA = 0.75;
 
+const animateAlpha = (t,swag) => {
+  return Math.sin(t / swag) * 0.5 + 0.5;
+};
+
 const buildTileDataTexture = (data) => {
   const out = new Uint8Array(data.length * 4);
   for (let i = 0; i < data.length; i++) {
@@ -920,7 +924,7 @@ Map.prototype = {
     }
   },
 
-  drawEntities: function (i, map, layer, tallEntities) {
+  drawEntities: function (i, map, layer, tallEntities, tick) {
     // Layered Entities
     if (getNormalEntityVisibility()) {
       if (map.entities[layer.name] && map.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name)) {
@@ -936,7 +940,13 @@ Map.prototype = {
           ) {
             map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA]);
           }
-          map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
+          if (entities[e].MAPED_HIGHLIGHTED) {
+            const a = animateAlpha(tick, 100);
+            map.renderEntity(entities[e], layer, [1, 1, 1, a]);
+            console.log(a);
+          } else {
+            map.renderEntity(entities[e], layer, [1, 1, 1, 1]);
+          }
           if (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions &&
               map.entityData[entities[e].filename].regions['Tall_Redraw']) {
             tallEntities.push(entities[e]);
@@ -1061,13 +1071,13 @@ Map.prototype = {
     }
   },
 
-  renderTilesAndEntityLayers: function (gl) {
+  renderTilesAndEntityLayers: function (gl, tick) {
     const tallEntities = [];
 
     var len = this.layerRenderOrder.length;
     for (let i = 0; i < len; i++) {
       // something about optimization means this runs 2x faster if renderLayer is its own function
-      // <Tene> 100% glad that I've avoided javascript so far    
+      // <Tene> 100% glad that I've avoided javascript so far
       this.renderLayer(gl, i, tallEntities);
     }
   },
@@ -1077,7 +1087,7 @@ Map.prototype = {
     const layer = this.mapData.layers[layerIndex];
 
     if (this.layerRenderOrder[i] === 'E') {
-      this.drawEntities(i, this, this.fakeEntityLayer, tallEntities);
+      this.drawEntities(i, this, this.fakeEntityLayer, tallEntities, tick);
       return;
     }
     if (isNaN(layerIndex)) {
@@ -1128,7 +1138,7 @@ Map.prototype = {
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    this.drawEntities(i, this, layer, tallEntities);
+    this.drawEntities(i, this, layer, tallEntities, tick);
   },
 
   maybeRenderMarchingAnts: function (gl, selection) {
@@ -1172,6 +1182,7 @@ Map.prototype = {
 
   render: function () {
     const gl = this.gl;
+    const tick = Date.now();
 
     this.renderContainerDimensions = {
       w: this.renderContainer.width(),
@@ -1180,7 +1191,7 @@ Map.prototype = {
 
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    this.renderTilesAndEntityLayers(gl);
+    this.renderTilesAndEntityLayers(gl, tick);
 
     this.maybeRenderObstructions(gl);
 
@@ -1189,6 +1200,10 @@ Map.prototype = {
     this.maybeRenderMarchingAnts(gl, this.selection);
 
     this.maybeRenderMarchingAnts(gl, this.visibleHoverTile);
+
+    // uncomment these to get frame render times
+    // const tock = new Date().getTime();
+    // console.log((tock-tick) + 'ms to render');
   },
 
   cleanEntities: function () {
