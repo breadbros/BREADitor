@@ -93,20 +93,7 @@ export const verifyMap = (mapfile) => {
     }
   }
 
-  if (!mapData.tallentitylayer) {
-    const stack = mapData.renderstring.split(',');
-    while (stack.length) {
-      const rCode = stack.pop();
-      if (!$.isNumeric(rCode)) {
-        continue;
-      }
-
-      mapData.tallentitylayer = mapData.layers[(parseInt(rCode) - 1)].name;
-    }
-    throw new Error('no tallentitylayer, and couldnt default to a valid candidate');
-  } else if ($.isNumeric(mapData.tallentitylayer)) {
-    mapData.tallentitylayer = mapData.layers[mapData.tallentitylayer].name; // convert to name
-  } else {
+  if (typeof mapData.tallentitylayer === 'string') {
     const truth = new Set();
     mapData.layers.map((a) => {
       truth.add(a.name === mapData.tallentitylayer);
@@ -114,6 +101,31 @@ export const verifyMap = (mapfile) => {
 
     if (!truth.has(true)) {
       throw new Error('looking for mapData.tallentitylayer "' + mapData.tallentitylayer + '", but could not find it');
+    }
+  }
+
+  if ($.isNumeric(mapData.tallentitylayer)) {
+    try {
+      mapData.tallentitylayer = mapData.layers[mapData.tallentitylayer].name; // convert to name
+    } catch (e) {
+      console.error(e);
+      mapData.tallentitylayer = false;
+    }
+  }
+
+  if (!mapData.tallentitylayer) {
+    const stack = mapData.renderstring.split(',');
+    while (stack.length && !mapData.tallentitylayer) {
+      const rCode = stack.pop();
+      if (!$.isNumeric(rCode)) {
+        continue;
+      }
+
+      mapData.tallentitylayer = mapData.layers[(parseInt(rCode) - 1)].name;
+    }
+
+    if (!mapData.tallentitylayer) {
+      throw new Error('no tallentitylayer, and couldnt default to a valid candidate');
     }
   }
 
@@ -580,6 +592,12 @@ export const getYfromFlat = (idx, numColumns) => {
 
 Map.prototype = {
   addEntityWithoutSort(entity, location) {
+    // TODO we just shouldnt save any "MAPED_" properties in the first place.
+    // TODO we should have a universal MAPED_CONF type that lives parallel to objects, not in them
+    if (entity.MAPED_USEDEFAULT) {
+      delete entity.MAPED_USEDEFAULT;
+    }
+
     if (!this.entities[location.layer]) {
       this.entities[location.layer] = [];
     }
@@ -591,11 +609,13 @@ Map.prototype = {
 
       if (entity.filename.endsWith('chr')) {
         console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
+        entity.MAPED_USEDEFAULT = true;
         return;
       }
 
       if (!entity.filename.endsWith('chr') && !entity.filename.endsWith('json')) {
         console.warn("entity ('" + entity.filename + "') has an unknown format.  Skipping for now.");
+        entity.MAPED_USEDEFAULT = true;
         return;
       }
 
@@ -610,12 +630,6 @@ Map.prototype = {
       }
 
       if (data) {
-        // TODO we just shouldnt save any "MAPED_" properties in the first place.
-        // TODO we should have a universal MAPED_CONF type that lives parallel to objects, not in them
-        if (entity.MAPED_USEDEFAULT) {
-          delete entity.MAPED_USEDEFAULT;
-        }
-
         this.entityData[entity.filename] = data;
 
         for (const name in data.animations) {
@@ -1165,11 +1179,15 @@ Map.prototype = {
     this.maybeRenderMarchingAnts(gl, this.visibleHoverTile);
   },
 
-  _getEntityData: function (entity) {
-    // if( entity.name && entity.filename == "chrs_json/object_tree2.json" ) {
-    //   entity.MAPED_USEDEFAULT = false;
-    // }
+  cleanEntities: function () {
+    for (let i = this.mapData.entities.length - 1; i >= 0; i--) {
+      if (this.mapData.entities[i].MAPED_USEDEFAULT) {
+        delete this.mapData.entities[i].MAPED_USEDEFAULT;
+      }
+    }
+  },
 
+  _getEntityData: function (entity) {
     const e = entity.MAPED_USEDEFAULT ? this.entityData['__default__'] : this.entityData[entity.filename];
 
     if (!entity.MAPED_USEDEFAULT && e === this.entityData['__default__']) {

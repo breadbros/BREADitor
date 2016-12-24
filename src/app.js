@@ -232,6 +232,7 @@ $('body').on('keydown', (e) => {
 
     const map = window.$$$currentMap;
     map.compactifyZones(); // TODO this should probably happen not-here?
+    map.cleanEntities(); // TODO this should probably happen not-here?
 
     let mapfile = map.filenames.mapfile;
     let datafile = map.filenames.mapdatafile;
