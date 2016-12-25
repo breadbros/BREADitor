@@ -22,7 +22,19 @@ const HIGHLIGHT_B = 1;
 const TALLENT_R = 1;
 const TALLENT_G = 1;
 const TALLENT_B = 1;
-const TALLENT_A = 0.75;
+const TALLENT_A = 1;
+
+export const cleanEntities = (mapData) => {
+  for (let i = mapData.entities.length - 1; i >= 0; i--) {
+    if (mapData.entities[i].MAPED_USEDEFAULT) {
+      delete mapData.entities[i].MAPED_USEDEFAULT;
+    }
+
+    if (mapData.entities[i].MAPED_HIGHLIGHTED) {
+      delete mapData.entities[i].MAPED_HIGHLIGHTED;
+    }
+  }
+};
 
 const animateAlpha = (t, swag) => {
   return Math.sin(t / swag) * 0.3 + 0.5;
@@ -460,22 +472,29 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   const defaultEntityLayer = this.fakeEntityLayer.name;
 
-  this.entityData = {
-    '__default__': {
-      animations: { 'Idle Down': [ [ [ 0, 100 ] ], 'Looping' ] },
-      animation: 'Idle Down',
-      dims: [ 16, 32 ],
-      hitbox: [ 0, 16, 16, 16 ],
-      regions: {},
-      frames: 1,
-      image: '__default__',
-      inner_pad: 0,
-      outer_pad: 0,
-      per_row: 1
-    }
+  this.resetEntityData = () => {
+    this.entityData = {
+      '__default__': {
+        animations: { 'Idle Down': [ [ [ 0, 100 ] ], 'Looping' ] },
+        animation: 'Idle Down',
+        dims: [ 16, 32 ],
+        hitbox: [ 0, 16, 16, 16 ],
+        regions: {},
+        frames: 1,
+        image: '__default__',
+        inner_pad: 0,
+        outer_pad: 0,
+        per_row: 1
+      }
+    };
   };
 
+  this.resetEntityData();
+
   this.createEntityRenderData = () => {
+    const tilewidth = this.vspData['default'].tilesize.width;
+    const tileheight = this.vspData['default'].tilesize.height;
+
     console.info('createEntityRenderData...');
     this.entities = {};
     for (i = 0; i < this.mapData.entities.length; i++) {
@@ -483,6 +502,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       console.info(entity);
 
       entity.location.layer = entity.location.layer || defaultEntityLayer;
+
+      entity.location.px = entity.location.px || entity.location.tx * tilewidth;
+      entity.location.py = entity.location.py || entity.location.ty * tileheight;
+
       this.addEntityWithoutSort(entity, entity.location, false);
     }
 
@@ -956,7 +979,9 @@ Map.prototype = {
         map.spriteShader.use();
 
         for (let e = 0; e < entities.length; e++) {
-          var mask = (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions && map.entityData[entities[e].filename].regions['Tall_Redraw'] ? map.entityData[entities[e].filename].regions['Tall_Redraw'] : null);
+          const mask = (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions &&
+                         map.entityData[entities[e].filename].regions['Tall_Redraw'] ?
+                         map.entityData[entities[e].filename].regions['Tall_Redraw'] : null);
 
           if (showEntityPreview &&
               map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
@@ -965,7 +990,9 @@ Map.prototype = {
             map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA], null, mask);
           }
           if (entities[e].MAPED_HIGHLIGHTED) {
-            map.renderEntity(entities[e], layer, [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)], null, mask);
+            map.renderEntity(
+              entities[e], layer, [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)], null, mask
+            );
           } else {
             map.renderEntity(entities[e], layer, [1, 1, 1, 1], null, mask);
           }
@@ -982,7 +1009,20 @@ Map.prototype = {
         map.spriteShader.use();
         for (const e in tallEntities) {
           const entity = tallEntities[e];
-          map.renderEntity(entity, layer, [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A], map.entityData[entity.filename].regions['Tall_Redraw']);
+
+          if (entity.MAPED_HIGHLIGHTED) {
+            map.renderEntity(
+              entity, layer,
+              [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)],
+              map.entityData[entity.filename].regions['Tall_Redraw']
+            );
+          } else {
+            map.renderEntity(
+              entity, layer,
+              [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A],
+              map.entityData[entity.filename].regions['Tall_Redraw']
+            );
+          }
         }
       }
     }
@@ -1273,14 +1313,6 @@ Map.prototype = {
     gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
-  },
-
-  cleanEntities: function () {
-    for (let i = this.mapData.entities.length - 1; i >= 0; i--) {
-      if (this.mapData.entities[i].MAPED_USEDEFAULT) {
-        delete this.mapData.entities[i].MAPED_USEDEFAULT;
-      }
-    }
   },
 
   _getEntityData: function (entity) {

@@ -51,10 +51,6 @@ const determineEntityCollision = (ent, clickSet, map, tileSize) => {
   let px = null;
   let py = null;
 
-  if( ent === map.mapData.entities[56] ) {
-    debugger;
-  }
-
   if ($.isNumeric(ent.location.px) && $.isNumeric(ent.location.py)) {
     px = ent.location.px;
     py = ent.location.py;

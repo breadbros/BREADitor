@@ -1,4 +1,4 @@
-import { Map, verifyTileData, verifyMap } from './Map.js';
+import { Map, verifyTileData, verifyMap, cleanEntities } from './Map.js';
 import {
   clickSmartdropper, clickEyedropper, clickDrawBrush, clickMove, clickSelect, selectAll, clickFloodFill,
   initTools, updateRstringInfo, updateLocationFunction
@@ -244,7 +244,6 @@ $('body').on('keydown', (e) => {
 
     const map = window.$$$currentMap;
     map.compactifyZones(); // TODO this should probably happen not-here?
-    map.cleanEntities(); // TODO this should probably happen not-here?
 
     let mapfile = map.filenames.mapfile;
     let datafile = map.filenames.mapdatafile;
@@ -253,11 +252,16 @@ $('body').on('keydown', (e) => {
       datafile = mapfile.replace('.map.json', '.map.data.json'); // todo this is shit.
     }
 
+    const mapData = JSON.parse(JSON.stringify(map.mapData));
+    const tileData = JSON.parse(JSON.stringify(map.mapRawTileData));
+
+    cleanEntities(mapData); // TODO this should probably happen not-here?
+
     console.info('saving', mapfile);
     console.info('saving', datafile);
 
-    jetpack.write(mapfile, map.mapData);
-    jetpack.write(datafile, map.mapRawTileData);
+    jetpack.write(mapfile, mapData);
+    jetpack.write(datafile, tileData);
 
     console.log('HELLO I AM $$$SAVE');
   };

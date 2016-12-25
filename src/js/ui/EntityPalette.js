@@ -499,6 +499,7 @@ export const _update_entity_inner = (ent_id, valDict) => {
 
   redraw_palette();
 
+  window.$$$currentMap.resetEntityData(); // TODO: NO NO NO NO NONONONNONONNONO
   window.$$$currentMap.createEntityRenderData(); // TODO: NO NO NO NO NONONONNONONNONO
 
   return true;
