@@ -15,7 +15,7 @@ import { getSelectedLayer } from './js/ui/LayersPalette.js';
 
 const ENTITY_PREVIEW_ALPHA = 0.75;
 
-const HIGHLIGHT_R = 1;
+const HIGHLIGHT_R = 0;
 const HIGHLIGHT_G = 1;
 const HIGHLIGHT_B = 1;
 
@@ -685,6 +685,18 @@ Map.prototype = {
         console.warn("Could not find '" + entity.filename + "', using the default. Path: ", datafile);
         entity.MAPED_USEDEFAULT = true;
       }
+    }
+
+    if (entity.filename.endsWith('chr')) {
+      console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
+      entity.MAPED_USEDEFAULT = true;
+      return;
+    }
+
+    if (!entity.filename.endsWith('chr') && !entity.filename.endsWith('json')) {
+      console.warn("entity ('" + entity.filename + "') has an unknown format.  Skipping for now.");
+      entity.MAPED_USEDEFAULT = true;
+      return;
     }
 
     if (!entity.MAPED_USEDEFAULT) {

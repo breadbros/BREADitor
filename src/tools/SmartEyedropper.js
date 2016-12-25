@@ -51,6 +51,10 @@ const determineEntityCollision = (ent, clickSet, map, tileSize) => {
   let px = null;
   let py = null;
 
+  if( ent === map.mapData.entities[56] ) {
+    debugger;
+  }
+
   if ($.isNumeric(ent.location.px) && $.isNumeric(ent.location.py)) {
     px = ent.location.px;
     py = ent.location.py;
@@ -82,18 +86,30 @@ const determineEntityCollision = (ent, clickSet, map, tileSize) => {
       gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, img.tex, 0);
       // const canRead = (gl.checkFramebufferStatus(gl.FRAMEBUFFER) == gl.FRAMEBUFFER_COMPLETE);
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
       // one pixel and one pixel only
       const pixel = new Uint8Array(4);
 
       // pixels should now be [137,96,40,1];
-      gl.readPixels(861,565, 1,1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+      gl.readPixels(
+        data.hitbox[0] + clickSet[2] - ent.location.px,
+        data.hitbox[1] + clickSet[3] - ent.location.py,
+        1, 1,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        pixel
+      );
 
-      // BUT PIXEL IS NOT [137,96,40,1] IT IS [0,0,0,0] >:(
-      // pixel
-      debugger;
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
+      if (pixel[3] === 0) {
+        return false;
+      // TODO make "transparent" color configurable
+      } else if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
+        return false;
+      }
+
+      return true;
     } else {
       return false;
     }
@@ -195,13 +211,13 @@ export default () => {
         }
 
         if (ret.type === 'ENTITY') {
+          clearAllEntitysFromHighlight();
           selectLayer(ret.layerName);
           window.$$$toggle_pallete('entity', true);
           selectEntityByIndex(ret.eIdx);
           scrollEntityPalletteToEntity(ret.eIdx);
           addEntityToHighlight(ret.ent);
 
-          debugger;
           //selectLayer(ret.layer.name);
           //setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
           return;
