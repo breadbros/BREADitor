@@ -9,7 +9,7 @@ beforeEach(() => {
   vals.entity_speed = 1234;
 
   state = window.$$$currentMap;
-  window.$$$currentMap = { createEntityRenderData: () => {} }; // STUB
+  window.$$$currentMap = { createEntityRenderData: () => {}, resetEntityData: () => {} }; // STUB
 });
 
 afterEach(()=>{
