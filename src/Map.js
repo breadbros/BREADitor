@@ -492,6 +492,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.resetEntityData();
 
   this.createEntityRenderData = () => {
+    if (!this.mapData.entities || !this.mapData.entities.length) {
+      return;
+    }
+
     const tilewidth = this.vspData['default'].tilesize.width;
     const tileheight = this.vspData['default'].tilesize.height;
 
@@ -970,6 +974,10 @@ Map.prototype = {
   },
 
   drawEntities: function (i, map, layer, tallEntities, tick) {
+    if (!map.entities) {
+      return;
+    }
+
     // Layered Entities
     if (getNormalEntityVisibility()) {
       if (map.entities[layer.name] && map.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name)) {
@@ -1140,7 +1148,6 @@ Map.prototype = {
     this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.SRC_ALPHA, this.gl.DST_ALPHA);
     const len = this.layerRenderOrder.length;
     for (let i = 0; i < len; i++) {
-
       // something about optimization means this runs 2x faster if renderLayer is its own function
       // <Tene> 100% glad that I've avoided javascript so far
       this.renderLayer(gl, i, tallEntities, tick);
@@ -1163,7 +1170,20 @@ Map.prototype = {
         this.spriteShader.use();
         for (const e in tallEntities) {
           const entity = tallEntities[e];
-          this.renderEntity(entity, layer, [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A], this.entityData[entity.filename].regions['Tall_Redraw']);
+
+          if (entity.MAPED_HIGHLIGHTED) {
+            this.renderEntity(
+              entity, layer,
+              [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)],
+              this.entityData[entity.filename].regions['Tall_Redraw']
+            );
+          } else {
+            this.renderEntity(
+              entity, layer,
+              [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A],
+              this.entityData[entity.filename].regions['Tall_Redraw']
+            );
+          }
         }
       }
 

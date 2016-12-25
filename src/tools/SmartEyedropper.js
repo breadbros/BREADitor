@@ -170,6 +170,8 @@ export default () => {
         return;
       }
 
+      clearAllEntitysFromHighlight();
+
       const clickSet = getTXTyFromMouse(map, e);
 
       // TODO if Zones are visible, check zone first.
@@ -202,7 +204,6 @@ export default () => {
         if (ret.type === 'TILE') {
           selectLayer(ret.layer.name);
           setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
-          clearAllEntitysFromHighlight();
           return;
         }
 
