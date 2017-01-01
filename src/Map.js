@@ -379,13 +379,13 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   tmpZones = this.mapRawTileData.zone_data;
   this.zoneData = new Array(this.tileData[0].length);
 
-  console.info('unpacking zones...');
+  // console.info('unpacking zones...');
   $.each(tmpZones, (idx) => {
     // todo verify this is right
-    console.info('unpacking zone', tmpZones[idx].z, 'to coordinates', tmpZones[idx].x, tmpZones[idx].y);
+    // console.info('unpacking zone', tmpZones[idx].z, 'to coordinates', tmpZones[idx].x, tmpZones[idx].y);
     this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
   });
-  console.info('zones ->', this.zoneData);
+  // console.info('zones ->', this.zoneData);
 
   this.vspData = {};
 
@@ -644,8 +644,15 @@ Map.prototype = {
     this.entities[location.layer].push(entity);
 
     if (!this.entityData[entity.filename]) {
-      const datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
+      let datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
       let data = null;
+
+      if (entity.filename.endsWith('chr')) {
+        if (jetpack.exists(datafile + '.json')) {
+          entity.filename = entity.filename + '.json';
+          datafile = datafile + '.json';
+        }
+      }
 
       if (entity.filename.endsWith('chr')) {
         console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
