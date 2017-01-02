@@ -40,6 +40,10 @@ const new_layer_click = (evt) => {
   _layer_click(evt);
 };
 
+export const newLayerOnNewMap = (evt, onComplete) => {
+  _layer_click(evt, null, onComplete);
+};
+
 export const selectNamedLayer = (name) => {
   const $list = $('.layer_name');
   for (let i = $list.length - 1; i >= 0; i--) {
@@ -922,8 +926,10 @@ function setup_template() {
   const $dims_x = $template.find('#layer_dims_x');
   const $dims_y = $template.find('#layer_dims_y');
 
-  $dims_x.val(window.$$$currentMap.mapSizeInTiles[0]);
-  $dims_y.val(window.$$$currentMap.mapSizeInTiles[1]);
+  if (window.$$$currentMap) {
+    $dims_x.val(window.$$$currentMap.mapSizeInTiles[0]);
+    $dims_y.val(window.$$$currentMap.mapSizeInTiles[1]);
+  }
 
   return $template;
 }
@@ -936,7 +942,7 @@ const closeEditLayerDialog = () => {
   }
 };
 
-function _layer_click(evt, layerIdx) {
+function _layer_click(evt, layerIdx, onComplete) {
   evt.stopPropagation();
 
   if (dialog) {
@@ -974,19 +980,23 @@ function _layer_click(evt, layerIdx) {
       );
 
       newLayerId = layerIdx;
-    } else {
+    } else if (window.$$$currentMap) {
       title = 'Add New Layer';
       newLayerId = window.$$$currentMap.mapData.layers.length;
+    } else {
+      title = 'Create Base Layer';
+      newLayerId = 0;
     }
 
     $('#modal-dialog').show();
+
     dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
       title: title,
       buttons: {
         Save: () => {
-          update_layer(dialog, newLayerId);
+          update_layer(dialog, newLayerId, onComplete);
         },
         'Cancel': function () {
           closeEditLayerDialog();
@@ -999,7 +1009,7 @@ function _layer_click(evt, layerIdx) {
   });
 }
 
-const update_layer = (dialog, layer_id) => {
+const update_layer = (dialog, layer_id, onComplete) => {
   const name = dialog.find('#layer_name').val();
   const par_x = dialog.find('#layer_parallax_x').val();
   const par_y = dialog.find('#layer_parallax_y').val();
@@ -1037,10 +1047,26 @@ const update_layer = (dialog, layer_id) => {
     return;
   }
 
-  const map = window.$$$currentMap;
-  const layers = map.mapData.layers;
+  let map = null;
+  let layers = null;
 
-  const nameSet = map.mapData.layers.map((l) => { return l.name; });
+  if (onComplete) {
+    map = {};
+    map.mapRawTileData = {};
+    map.mapRawTileData.tile_data = [];
+    map.layerLookup = {};
+    map.layerRenderOrder= [];
+    map.setEntityTallRedrawLayerByName = () => {
+      console.warn('Haha, this function does NOTHING!');
+    };
+
+    layers = [];
+  } else {
+    map = window.$$$currentMap;
+    layers = map.mapData.layers;
+  }
+
+  const nameSet = layers.map((l) => { return l.name; });
 
   if (nameSet.indexOf(name) !== -1) {
     if (layers[layer_id] && layers[layer_id].name !== name) {
@@ -1089,10 +1115,16 @@ const update_layer = (dialog, layer_id) => {
     map.setEntityTallRedrawLayerByName(name);
   }
 
-  redraw_palette(map);
-  updateRstringInfo();
+  if (!onComplete) {
+    redraw_palette(map);
+    updateRstringInfo();
+  }
 
   closeEditLayerDialog();
+
+  if (onComplete) {
+    onComplete(map, layers);
+  }
 };
 
 export const LayersWidget = {

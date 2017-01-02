@@ -246,6 +246,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.dataPath = '';
   }
 
+  // TODO probably need a better concept of project management
   this.mapedConfigFile = path.join(this.dataPath, '$$$_MAPED.json');
 
   this.updateLocationFn = updateLocationFunction;

@@ -5,7 +5,7 @@ import {
 } from './Tools.js';
 import { Palettes } from './Palettes.js';
 import {
-  LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix
+  LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix, newLayerOnNewMap
 } from './js/ui/LayersPalette.js';
 import { cut, copy, paste } from './js/ui/CutCopyPaste.js';
 import { ZonesWidget } from './js/ui/ZonesPalette.js';
@@ -73,7 +73,8 @@ ipcRenderer.on('main-menu', (event, arg) => {
   if (typeof arg.accelerator === 'string') {
     const el = document.activeElement;
     if (el.type && el.type === 'text') {
-      console.info('in a textfield, ignoring the accelerator');
+      // NOTE - enabling this console log slows all data entry RIGHT the fuck down
+      // console.info('in a textfield, ignoring the accelerator');
       return;
     }
     // console.log(document.activeElement);
@@ -82,6 +83,9 @@ ipcRenderer.on('main-menu', (event, arg) => {
   }
 
   switch (arg.msg) {
+    case 'new':
+      window.$$$new();
+      break;
     case 'save':
       window.$$$save();
       break;
@@ -237,19 +241,105 @@ $('body').on('keydown', (e) => {
     handleRedo();
   });
 
-  console.log('$$$save should be initialized...');
+/*
+
+*/
+
+  window._newStep3_resolution = function (map, layers) {
+    debugger;
+    const { dialog } = require('electron').remote;
+
+    dialog.showSaveDialog(
+      {title: 'New Map Filename', filters: [{ name: 'text', extensions: ['map.json'] }]},
+      (filename) => {
+        if (filename) {
+          let raw = {
+            legacy_obstruction_data: map.mapRawTileData.tile_data[0], // Array[37500]
+            tile_data: map.mapRawTileData.tile_data, // Array[6]
+            zone_data: []
+          };
+
+          raw = JSON.parse(JSON.stringify(raw));
+
+          const blankMap = {
+            notes: [],
+            name: 'NO NAME', // TODO allow name entry
+            vsp: {
+              default: path.basename(window.newMapData.default_vspfile),
+              obstructions: path.basename(window.newMapData.obs_vspfile)
+            },
+            music: '', // TODO do something with music
+            renderstring: '1,E,R',
+            initscript: 'start', // TODO allow editing of initscript?
+            starting_coordinates: [0, 0],
+            layers: layers,
+            zones: [{
+              name: 'NULL_ZONE',
+              activation_script: '',
+              activation_chance: 0,
+              can_by_adjacent_activated: false
+            }],
+            entities: []
+          };
+
+          window._save(filename, {
+            mapData: blankMap,
+            mapRawTileData: raw
+          });
+        }
+      }
+    );
+  };
+
+  window._newStep2_chooseObsVSP = function (res) {
+    window.newMapData.obs_vspfile = res[0];
+
+    newLayerOnNewMap(new window.Event(null), window._newStep3_resolution);
+  };
+
+  window._newStep1_chooseDefaultVSP = function (res) {
+    window.newMapData.default_vspfile = res[0];
+
+    const { dialog } = require('electron').remote;
+    dialog.showOpenDialog(
+      {
+        title: 'Choose Obstruction VSP',
+        filters: [{ name: 'text', extensions: ['obsvsp.json'] }]
+      },
+      window._newStep2_chooseObsVSP
+    );
+  };
+
+  window.$$$new = function () {
+    window.newMapData = {};
+
+    const { dialog } = require('electron').remote;
+    dialog.showOpenDialog(
+      {
+        title: 'Choose default VSP',
+        filters: [{ name: 'text', extensions: ['vsp.json'] }]
+      },
+      window._newStep1_chooseDefaultVSP
+    );
+  };
+
   window.$$$save = function (newName) {
+    window.$$$currentMap.compactifyZones();
+    window._save(newName, window.$$$currentMap);
+  };
+
+  window._save = function (newName, map) {
     const app = require('electron').remote.app;
     const jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
-    const map = window.$$$currentMap;
-    map.compactifyZones(); // TODO this should probably happen not-here?
-
-    let mapfile = map.filenames.mapfile;
-    let datafile = map.filenames.mapdatafile;
+    let mapfile = null;
+    let datafile = null;
     if (typeof newName !== 'undefined') {
       mapfile = newName;
       datafile = mapfile.replace('.map.json', '.map.data.json'); // todo this is shit.
+    } else {
+      mapfile = map.filenames.mapfile;
+      datafile = map.filenames.mapdatafile;
     }
 
     const mapData = JSON.parse(JSON.stringify(map.mapData));
@@ -325,8 +415,6 @@ $('body').on('keydown', (e) => {
       const $node = $(node_selector);
       $node.hide();
     });
-
-    Palettes.savePalettePositions();
   };
 
   window.$$$load = function () {
