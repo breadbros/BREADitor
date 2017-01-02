@@ -106,6 +106,24 @@ const grue_zoom = (zoomout, map, evt) => {
   zoomFn(map, evt, zoomout);
 };
 
+export const centerMapOnXY = (map, x, y, w, h) => {
+  if ($.isNumeric(w)) {
+    x += w / 2;
+  }
+
+  if ($.isNumeric(h)) {
+    y += h / 2;
+  }
+
+  zero_zoom(map); // TODO fix the last two lines of this function so they work with zoom levels.
+
+  const windowWidth = map.renderContainerDimensions.w;
+  const windowHeight = map.renderContainerDimensions.h;
+
+  map.camera[0] = x - windowWidth / 2;
+  map.camera[1] = y - windowHeight / 2;
+};
+
 export const getTXTyFromMouse = (map, evt) => {
   const mapOffsetX = map.camera[0];
   const mapOffsetY = map.camera[1];
@@ -118,7 +136,7 @@ export const getTXTyFromMouse = (map, evt) => {
   const tX = parseInt(oX / 16);
   const tY = parseInt(oY / 16);
 
-  /// tile coords then pixel coords
+  // tile coords then pixel coords
   return [tX, tY, oX, oY];
 };
 

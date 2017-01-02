@@ -1311,7 +1311,7 @@ Map.prototype = {
 
     // fill the map part of display with transparent pixels, first
 
-    var layer = this.layers[0]; // sigh
+    const layer = this.layers[0];
 
     this.gl.blendFunc(this.gl.ONE, this.gl.ZERO);
 

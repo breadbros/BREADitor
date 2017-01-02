@@ -1,5 +1,7 @@
 import { modal_error } from './Util.js';
 import { LayersWidget } from './LayersPalette.js';
+import { centerMapOnXY } from '../../Tools';
+
 const $ = require('jquery');
 
 let _entityLayersExpanded = false;
@@ -94,20 +96,28 @@ export const selectEntityByIndex = (idx) => {
   return $it_me;
 };
 
+const singleclick_handler = (evt) => {
+  clearAllEntitysFromHighlight();
+
+  const $ent = select_entity_from_pallete(evt);
+  const ent = currentEntities[$ent.data('index')];
+
+  addEntityToHighlight(ent);
+
+  const hitbox = window.$$$currentMap.entityData[ent.filename].hitbox;
+  centerMapOnXY(window.$$$currentMap, ent.location.px - hitbox[0], ent.location.py - hitbox[1], hitbox[2], hitbox[3]);
+};
+
+const doubleclick_handler = (evt) => {
+  const $it_me = select_entity_from_pallete(evt);
+  edit_entity_click(evt, $it_me.data('index'));
+};
+
 const redraw_palette = () => {
   const $list = $('.entity-list');
   $list.html('');
 
   $('#entity-number').text(currentEntities.length);
-
-  const singleclick_handler = (evt) => {
-    select_entity_from_pallete(evt);
-  };
-
-  const doubleclick_handler = (evt) => {
-    const $it_me = select_entity_from_pallete(evt);
-    edit_entity_click(evt, $it_me.data('index'));
-  };
 
   for (let i = 0; i < currentEntities.length; i++) {
     const $tmp = $("<li class='entity-row' data-index='" + i +
