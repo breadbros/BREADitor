@@ -319,6 +319,16 @@ $('body').on('keydown', (e) => {
     Palettes.savePalettePositions();
   };
 
+  window.$$$hide_all_windows = function () {
+    window.$$$palette_registry.map((pal) => {
+      const node_selector = '.' + pal;
+      const $node = $(node_selector);
+      $node.hide();
+    });
+
+    Palettes.savePalettePositions();
+  };
+
   window.$$$load = function () {
     const { dialog } = require('electron').remote;
 
@@ -386,7 +396,8 @@ $('body').on('keydown', (e) => {
   Palettes.setupPaletteListeners();
 
   window.appPath = path.dirname(require.main.filename);
-  window.$$$load();
+  window.$$$hide_all_windows();
+  // window.$$$load();
 
     // loadByFilename(['../app/map_assets/farmsville.map.json']);
 
