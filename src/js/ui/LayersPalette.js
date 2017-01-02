@@ -1037,10 +1037,13 @@ const update_layer = (dialog, layer_id) => {
     return;
   }
 
-  const nameSet = window.$$$currentMap.mapData.layers.map((l) => { return l.name; });
+  const map = window.$$$currentMap;
+  const layers = map.mapData.layers;
+
+  const nameSet = map.mapData.layers.map((l) => { return l.name; });
 
   if (nameSet.indexOf(name) !== -1) {
-    if (window.$$$currentMap.mapData.layers[layer_id] && window.$$$currentMap.mapData.layers[layer_id].name !== name) {
+    if (layers[layer_id] && layers[layer_id].name !== name) {
       modal_error('Invalid input: name (' + name + ') is not unique on this map.  Try a new, unique name.');
       return;
     }
@@ -1062,31 +1065,31 @@ const update_layer = (dialog, layer_id) => {
     vsp: vsp
   };
 
-  if (layer_id === window.$$$currentMap.mapData.layers.length) {
-    window.$$$currentMap.mapData.layers.push(layer);
-    const layersLength = window.$$$currentMap.mapData.layers.length;
-    window.$$$currentMap.layerLookup[name] = window.$$$currentMap.mapData.layers[layersLength - 1];
-    window.$$$currentMap.layerRenderOrder.push('' + (layersLength));
-    window.$$$currentMap.mapRawTileData.tile_data.push(new Array((dims_x * dims_y)).fill(0));
+  if (layer_id === layers.length) {
+    layers.push(layer);
+    const layersLength = layers.length;
+    map.layerLookup[name] = layers[layersLength - 1];
+    map.layerRenderOrder.push('' + (layersLength));
+    map.mapRawTileData.tile_data.push(new Array((dims_x * dims_y)).fill(0));
   } else {
     // TODO do all layer-name-updating here
-    if (name !== window.$$$currentMap.mapData.layers[layer_id].name) {
-      const oldName = window.$$$currentMap.mapData.layers[layer_id].name;
+    if (name !== layers[layer_id].name) {
+      const oldName = layers[layer_id].name;
 
-      window.$$$currentMap.layerLookup[name] = window.$$$currentMap.layerLookup[oldName];
-      delete window.$$$currentMap.layerLookup[oldName];
+      map.layerLookup[name] = map.layerLookup[oldName];
+      delete map.layerLookup[oldName];
     }
 
     for (const k in layer) {
-      window.$$$currentMap.mapData.layers[layer_id][k] = layer[k];
+      layers[layer_id][k] = layer[k];
     }
   }
 
   if (window.document.getElementById('layer_is_tall_redraw_layer').checked) {
-    window.$$$currentMap.setEntityTallRedrawLayerByName(name);
+    map.setEntityTallRedrawLayerByName(name);
   }
 
-  redraw_palette(window.$$$currentMap);
+  redraw_palette(map);
   updateRstringInfo();
 
   closeEditLayerDialog();
