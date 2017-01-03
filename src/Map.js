@@ -644,6 +644,7 @@ Map.prototype = {
     }
     this.entities[location.layer].push(entity);
 
+    // TODO this section is full of asset-healing code that's super Sully-specific.  Clean it up for general release.
     if (!this.entityData[entity.filename]) {
       let datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
       let data = null;
@@ -652,6 +653,13 @@ Map.prototype = {
         if (jetpack.exists(datafile + '.json')) {
           entity.filename = entity.filename + '.json';
           datafile = datafile + '.json';
+        } else {
+          const lastDitch = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename);
+
+          if (jetpack.exists(lastDitch)) {
+            entity.filename = entity.filename + '.json';
+            datafile = lastDitch + '.json';
+          }
         }
       }
 

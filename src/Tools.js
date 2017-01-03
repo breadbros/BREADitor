@@ -9,6 +9,9 @@ import selectGenerator from './tools/Select';
 import floodFillGenerator from './tools/FloodFill';
 import dragGenerator from './tools/Drag';
 
+const canvasBuffer = require('electron-canvas-to-buffer');
+const fs = require('fs');
+
 export const updateLocationFunction = (map) => {
   const x = map.camera[0];
   const y = map.camera[1];
@@ -320,6 +323,34 @@ $('#btn-add-tree').on('click', (e) => {
     mousedown: () => {},
     moousewheel: () => {}
   };
+});
+
+/*
+const canvasBuffer = require('electron-canvas-to-buffer');
+const fs = require('fs');
+*/
+
+$('#btn-dump-screen').on('click', () => {
+  const map = window.$$$currentMap;
+  const canvas = document.getElementsByClassName('map_canvas')[0];
+  map.camera[0] = 0;
+  map.camera[1] = 0;
+  map.camera[2] = 1;
+
+  const w = map.layers[0].dimensions.X * map.vspData[map.layers[0].vsp].tilesize.width;
+  const h = map.layers[0].dimensions.X * map.vspData[map.layers[0].vsp].tilesize.height;
+
+  $('.map_canvas_container').width(w+100);
+  $('.map_canvas_container').height(h+100);
+
+  $('.map_canvas').width(w);
+  $('.map_canvas').height(h);
+
+  const buffer = canvasBuffer(canvas, 'image/png');
+
+  fs.writeFile('C:\\tmp\\test-image.png', buffer, function (err) {
+    throw err;
+  });
 });
 
 export const Tools = {
