@@ -230,6 +230,11 @@ $('body').on('keydown', (e) => {
       TilesetSelectorWidget.renderTilesetSelectorWidget();
     }
 
+    if (window.$$$SCREENSHOT) {
+      window.$$$SCREENSHOT();
+      window.$$$SCREENSHOT = null;
+    }
+
     window.requestAnimationFrame(tick);
   };
   window.requestAnimationFrame(tick);
@@ -502,4 +507,3 @@ $('body').on('keydown', (e) => {
     );
     */
 })();
-

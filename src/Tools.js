@@ -333,24 +333,35 @@ const fs = require('fs');
 $('#btn-dump-screen').on('click', () => {
   const map = window.$$$currentMap;
   const canvas = document.getElementsByClassName('map_canvas')[0];
+  const $canvas = $(canvas);
+
+  const savedCamera = [map.camera[0], map.camera[1], map.camera[2]];
   map.camera[0] = 0;
   map.camera[1] = 0;
   map.camera[2] = 1;
 
   const w = map.layers[0].dimensions.X * map.vspData[map.layers[0].vsp].tilesize.width;
-  const h = map.layers[0].dimensions.X * map.vspData[map.layers[0].vsp].tilesize.height;
+  const h = map.layers[0].dimensions.Y * map.vspData[map.layers[0].vsp].tilesize.height;
 
-  $('.map_canvas_container').width(w+100);
-  $('.map_canvas_container').height(h+100);
+  const savedW = $canvas.width();
+  const savedH = $canvas.height();
 
-  $('.map_canvas').width(w);
-  $('.map_canvas').height(h);
+  $canvas.width(w);
+  $canvas.height(h);
+  map.resize();
 
-  const buffer = canvasBuffer(canvas, 'image/png');
+  window.$$$SCREENSHOT = () => {
+    const buffer = canvasBuffer(canvas, 'image/png');
+    fs.writeFile('C:\\tmp\\test-image.png', buffer, function (err) {
+      // reset the map even if there was an error
+      map.camera = [savedCamera[0], savedCamera[1], savedCamera[2]];
+      $canvas.width(savedW);
+      $canvas.height(savedH);
+      map.resize();
 
-  fs.writeFile('C:\\tmp\\test-image.png', buffer, function (err) {
-    throw err;
-  });
+      if (err) throw err;
+    });
+  }
 });
 
 export const Tools = {
