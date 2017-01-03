@@ -6,7 +6,7 @@ import { getSelectedLayer } from '../js/ui/LayersPalette';
 export default () => {
   return {
     'mousedown': function (map, e) {
-      console.log('DRAW->mousedown...');
+    //   console.log('DRAW->mousedown...');
 
       if (!getSelectedLayer()) {
         console.log('You havent selected a layer yet.');
