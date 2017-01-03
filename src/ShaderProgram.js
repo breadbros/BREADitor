@@ -1,5 +1,6 @@
 export var ShaderProgram = function (gl, vertexSource, fragmentSource) {
   this.gl = gl;
+  this.lookup = {};
 
   var vertexShader = gl.createShader(gl.VERTEX_SHADER);
   gl.shaderSource(vertexShader, vertexSource);
@@ -30,10 +31,12 @@ ShaderProgram.prototype = {
   },
 
   uniform: function (u_name) {
-    return this.gl.getUniformLocation(this.program, u_name);
+    if (this.lookup[u_name] === undefined) this.lookup[u_name] = this.gl.getUniformLocation(this.program, u_name);
+    return this.lookup[u_name];
   },
 
   attribute: function (a_name) {
-    return this.gl.getAttribLocation(this.program, a_name);
+    if (this.lookup[a_name] === undefined) this.lookup[a_name] = this.gl.getAttribLocation(this.program, a_name);
+    return this.lookup[a_name];
   }
 };
