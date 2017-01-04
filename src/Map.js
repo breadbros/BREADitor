@@ -1325,6 +1325,10 @@ Map.prototype = {
   renderBackground: function (gl) {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
+    if (window.$$$SCREENSHOT) {
+      return;
+    }
+
     // fill the map part of display with transparent pixels, first
 
     const layer = this.layers[0];
@@ -1487,8 +1491,8 @@ Map.prototype = {
 
   resize: function () {
     if (!this.renderContainer || !this.gl) { return; }
-    var w = this.renderContainer.width();
-    var h = this.renderContainer.height();
+    const w = this.renderContainer.width();
+    const h = this.renderContainer.height();
     this.renderContainer.attr('width', w);
     this.renderContainer.attr('height', h);
     this.gl.viewport(0, 0, w, h);
