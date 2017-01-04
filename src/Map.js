@@ -670,9 +670,16 @@ Map.prototype = {
       }
 
       if (!entity.filename.endsWith('chr') && !entity.filename.endsWith('json')) {
-        console.warn("entity ('" + entity.filename + "') has an unknown format.  Skipping for now.");
-        entity.MAPED_USEDEFAULT = true;
-        return;
+        const lastDitch = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename + '.chr.json');
+
+        if (jetpack.exists(lastDitch)) {
+          entity.filename = jetpack.path('chrs', entity.filename + '.chr.json');
+          datafile = lastDitch;
+        } else {
+          console.warn("entity ('" + entity.filename + "') has an unknown format.  Skipping for now. (1)");
+          entity.MAPED_USEDEFAULT = true;
+          return;
+        }
       }
 
       try {
@@ -737,7 +744,7 @@ Map.prototype = {
     }
 
     if (!entity.filename.endsWith('chr') && !entity.filename.endsWith('json')) {
-      console.warn("entity ('" + entity.filename + "') has an unknown format.  Skipping for now.");
+      console.warn("entity ('" + entity.filename + "') has an unknown format.  Skipping for now. (2)");
       entity.MAPED_USEDEFAULT = true;
       return;
     }

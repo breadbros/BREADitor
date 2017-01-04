@@ -740,7 +740,7 @@ const redraw_palette = (map) => {
         parallaxDomNode = nodeLayer.find('.layer_parallax');
         parallaxDomNode.text(mapLayer.parallax.X + ':' + mapLayer.parallax.Y);
 
-        if (!mapLayer.alpha) {
+        if (!$.isNumeric(mapLayer.alpha)) {
           debugger;
         }
 

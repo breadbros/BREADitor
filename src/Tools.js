@@ -359,9 +359,11 @@ $('#btn-dump-screen').on('click', () => {
       $canvas.height(savedH);
       map.resize();
 
-      if (err) throw err;
+      if (err)  {
+        throw err;
+      }
     });
-  }
+  };
 });
 
 export const Tools = {
