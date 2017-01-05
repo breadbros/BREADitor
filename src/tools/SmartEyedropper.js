@@ -1,4 +1,4 @@
-import { getTXTyFromMouse } from '../Tools';
+import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
 import { selectLayer, getObsVisibility } from '../js/ui/LayersPalette';
 import { setTileSelectorUI } from '../TileSelector';
 import { setActiveZone, scrollZonePalletteToZone, getZoneVisibility } from '../js/ui/ZonesPalette';
@@ -163,6 +163,11 @@ const seekResultFromLayers = (map, clickSet) => {
 export default () => {
   return {
     'mousedown': function (map, e) {
+      if (isTileSelectorMap(map)) {
+        _toolLogic['EYEDROPPER']['mousedown'](map, e);
+        return;
+      }
+
       console.log('EYEDROPPER->mousedown...');
 
       if (!(e.button === 0)) {

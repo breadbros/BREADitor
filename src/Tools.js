@@ -330,6 +330,10 @@ const canvasBuffer = require('electron-canvas-to-buffer');
 const fs = require('fs');
 */
 
+export const isTileSelectorMap = (map) => {
+  return (map.layers.length === 1 && map.layers[0].name === 'Dynamic Tileselector VspMap Layer xTreem 7');
+};
+
 $('#btn-dump-screen').on('click', () => {
   const map = window.$$$currentMap;
   const canvas = document.getElementsByClassName('map_canvas')[0];
@@ -352,7 +356,7 @@ $('#btn-dump-screen').on('click', () => {
 
   window.$$$SCREENSHOT = () => {
     const buffer = canvasBuffer(canvas, 'image/png');
-    fs.writeFile('C:\\tmp\\test-image.png', buffer, function (err) {
+    fs.writeFile('C:\\tmp\\dump-image.png', buffer, function (err) {
       // reset the map even if there was an error
       map.camera = [savedCamera[0], savedCamera[1], savedCamera[2]];
       $canvas.width(savedW);

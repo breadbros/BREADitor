@@ -1,6 +1,6 @@
 import { getCurrentlySelectedTile } from '../TileSelector';
 import { getSelectedLayer } from '../js/ui/LayersPalette';
-import { getTXTyFromMouse } from '../Tools';
+import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
 
 // TODO can I test this without exporting it?  ES6 'friend' maybe?
 const doFloodFill = (map, e) => {
@@ -82,6 +82,11 @@ export default () => {
   return {
     doFloodFill: doFloodFill,
     'mousedown': function (map, e) {
+      if (isTileSelectorMap(map)) {
+        _toolLogic['EYEDROPPER']['mousedown'](map, e);
+        return;
+      }
+
       doFloodFill(map, e);
     },
     'button_element': '#btn-tool-flood-fill',

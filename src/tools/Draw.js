@@ -1,4 +1,4 @@
-import { getTXTyFromMouse, _toolLogic } from '../Tools';
+import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
 import { getActiveZone } from '../js/ui/ZonesPalette';
 import { getCurrentlySelectedTile } from '../TileSelector';
 import { getSelectedLayer } from '../js/ui/LayersPalette';
@@ -7,6 +7,11 @@ export default () => {
   return {
     'mousedown': function (map, e) {
     //   console.log('DRAW->mousedown...');
+
+      if (isTileSelectorMap(map)) {
+        _toolLogic['EYEDROPPER']['mousedown'](map, e);
+        return;
+      }
 
       if (!getSelectedLayer()) {
         console.log('You havent selected a layer yet.');
