@@ -71,6 +71,12 @@ export const paste = (map, tX, tY, newLayer) => {
   const pasteSet = [];
 
   for (let i = pasteboard.length - 1; i >= 0; i--) {
+    // out of bounds detection
+    // TODO do we need to detect negatives?  MAAAAYBE?
+    if (pasteboard[i][0] + tX >= map.layers[0].dimensions.X || pasteboard[i][1] + tY >= map.layers[0].dimensions.Y) {
+      continue;
+    }
+
     pasteSet.push([
       pasteboard[i][0] + tX,
       pasteboard[i][1] + tY,
