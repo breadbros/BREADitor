@@ -1,4 +1,5 @@
 import { setTileSelectorUI } from '../TileSelector';
+import { checkEntities, doEntitySelection } from './SmartEyedropper';
 import { getTXTyFromMouse } from '../Tools';
 import { setActiveZone, scrollZonePalletteToZone } from '../js/ui/ZonesPalette';
 
@@ -23,9 +24,9 @@ export default () => {
       let tIdx = null;
       let zIdx = -1;
 
-      const result = getTXTyFromMouse(map, e);
-      const tX = result[0];
-      const tY = result[1];
+      const clickSet = getTXTyFromMouse(map, e);
+      const tX = clickSet[0];
+      const tY = clickSet[1];
 
       const doVSPselector = (tX, tY, map) => {
         map.selection.deselect();
@@ -48,6 +49,15 @@ export default () => {
             doVSPselector(tX, tY, map);
             tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
             break;
+
+          case 997:
+
+            const ent = checkEntities(map.entities['Entity Layer (E)'], null, map, clickSet);
+            if (ent) {
+              doEntitySelection(ent);
+              return;
+            }
+
           default:
             throw new Error('SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN');
         }

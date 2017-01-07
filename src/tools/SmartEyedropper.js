@@ -7,7 +7,7 @@ import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToE
 
 const $ = require('jquery');
 
-const checkEntities = (ents, layer, map, click) => {
+export const checkEntities = (ents, layer, map, click) => {
   const tileSize = layer ? map.vspData[layer.vsp].tilesize : map.vspData['default'].tilesize;
 
   for (let i = ents.length - 1; i >= 0; i--) {
@@ -24,6 +24,17 @@ const checkEntities = (ents, layer, map, click) => {
 
   return false;
 };
+
+export const doEntitySelection = (ret) => {
+
+  clearAllEntitysFromHighlight();
+  selectLayer(ret.layerName);
+  window.$$$toggle_pallete('entity', true);
+  selectEntityByIndex(ret.eIdx);
+  scrollEntityPalletteToEntity(ret.eIdx);
+  addEntityToHighlight(ret.ent);
+}
+
 
 const checkTiles = (map, layer, click) => {
   const tX = click[0];
@@ -213,12 +224,7 @@ export default () => {
         }
 
         if (ret.type === 'ENTITY') {
-          clearAllEntitysFromHighlight();
-          selectLayer(ret.layerName);
-          window.$$$toggle_pallete('entity', true);
-          selectEntityByIndex(ret.eIdx);
-          scrollEntityPalletteToEntity(ret.eIdx);
-          addEntityToHighlight(ret.ent);
+          doEntitySelection(ret);
 
           //selectLayer(ret.layer.name);
           //setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);

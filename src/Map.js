@@ -506,6 +506,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       const entity = this.mapData.entities[i];
       console.info(entity);
 
+      // if (!this.mapData.entities[i].animation) {
+      //   debugger;
+      // }
+
       entity.location.layer = entity.location.layer || defaultEntityLayer;
 
       entity.location.px = entity.location.px || entity.location.tx * tilewidth;
@@ -670,7 +674,9 @@ Map.prototype = {
       }
 
       if (!entity.filename.endsWith('chr') && !entity.filename.endsWith('json')) {
-        const lastDitch = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename + '.chr.json');
+        const lastDitch = jetpack.path(
+          this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename + '.chr.json'
+        );
 
         if (jetpack.exists(lastDitch)) {
           entity.filename = jetpack.path('chrs', entity.filename + '.chr.json');

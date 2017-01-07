@@ -43,6 +43,14 @@ const bootstrapMap = (mapFile, tiledataFile) => {
 
                 window.$$$currentMap = currentMap;
 
+                for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
+                  if (!m.mapData.entities[i].animation) {
+                    alert('Theres an entity', i, 'with unset animation; ALERT GRUE wtf'); // TODO this is very bad
+                    // mapData.entities[i].animation =
+                    // mapData.entities[0].filename
+                  }
+                }
+
                 if (typeof window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE === 'undefined') {
                   window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE = true;
                 }
