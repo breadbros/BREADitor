@@ -650,6 +650,7 @@ Map.prototype = {
 
     // TODO this section is full of asset-healing code that's super Sully-specific.  Clean it up for general release.
     if (!this.entityData[entity.filename]) {
+      const originalDatafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
       let datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
       let data = null;
 
@@ -663,17 +664,49 @@ Map.prototype = {
           if (jetpack.exists(lastDitch)) {
             entity.filename = entity.filename + '.json';
             datafile = lastDitch + '.json';
+          } else {
+            datafile = null;
           }
         }
       }
 
-      if (entity.filename.endsWith('chr')) {
-        console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
-        entity.MAPED_USEDEFAULT = true;
-        return;
+      // if (entity.filename.endsWith('chr')) {
+      //   console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
+      //   entity.MAPED_USEDEFAULT = true;
+      //   return;
+      // }
+
+      if( entity.filename === 'pc_dexter.chr.json' ) {
+        debugger;
       }
 
-      if (!entity.filename.endsWith('chr') && !entity.filename.endsWith('json')) {
+      if (datafile === null && !entity.filename.endsWith('json')) {
+        const lastDitch = jetpack.path(
+          this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename + '.chr.json'
+        );
+
+        if (jetpack.exists(lastDitch)) {
+          entity.filename = jetpack.path(entity.filename + '.chr.json');
+          datafile = lastDitch;
+        } else {
+          datafile = null;
+        }
+      }
+
+      if (datafile === null && !entity.filename.startsWith('chr')) {
+        const lastDitch = jetpack.path(
+          this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename
+        );
+
+        if (jetpack.exists(lastDitch)) {
+          entity.filename = jetpack.path('chrs', entity.filename);
+          datafile = lastDitch;
+        } else {
+          datafile = null;
+        }
+      }
+
+      if (datafile === null && !entity.filename.startsWith('chr') && !entity.filename.endsWith('json')) {
         const lastDitch = jetpack.path(
           this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename + '.chr.json'
         );
@@ -682,9 +715,7 @@ Map.prototype = {
           entity.filename = jetpack.path('chrs', entity.filename + '.chr.json');
           datafile = lastDitch;
         } else {
-          console.warn("entity ('" + entity.filename + "') has an unknown format.  Skipping for now. (1)");
-          entity.MAPED_USEDEFAULT = true;
-          return;
+          datafile = null;
         }
       }
 
@@ -696,6 +727,7 @@ Map.prototype = {
           console.error('Couldnt read a json entity file:', entity.filename);
         }
         console.warn("Totally couldnt read datafile: '" + datafile + "'");
+        data = null;
       }
 
       if (data) {
@@ -739,6 +771,7 @@ Map.prototype = {
         console.log('NOT USING DEFAULT ENTITY FOR ', data.image);
       } else {
         console.warn("Could not find '" + entity.filename + "', using the default. Path: ", datafile);
+        debugger;
         entity.MAPED_USEDEFAULT = true;
       }
     }
