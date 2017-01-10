@@ -9,6 +9,8 @@ import selectGenerator from './tools/Select';
 import floodFillGenerator from './tools/FloodFill';
 import dragGenerator from './tools/Drag';
 
+import jetpack from 'fs-jetpack';
+
 const canvasBuffer = require('electron-canvas-to-buffer');
 const fs = require('fs');
 
@@ -363,12 +365,84 @@ $('#btn-dump-screen').on('click', () => {
       $canvas.height(savedH);
       map.resize();
 
-      if (err)  {
+      if (err) {
         throw err;
       }
     });
   };
 });
+
+export const auditSullyMaps = () => {
+
+  var path = require('path')
+  const mapFiles = [];
+
+  function fromDir(startPath,filter){
+      if (!fs.existsSync(startPath)){
+          console.log("no dir ",startPath);
+          return;
+      }
+
+      var files=fs.readdirSync(startPath);
+      for(var i=0;i<files.length;i++){
+          var filename=path.join(startPath,files[i]);
+          var stat = fs.lstatSync(filename);
+          if (stat.isDirectory()){
+              fromDir(filename,filter); //recurse
+          }
+          else if (filename.indexOf(filter)>=0) {
+              // console.log('-- found: ',filename);
+              mapFiles.push(filename);
+          };
+      };
+  };
+
+  fromDir('c:\\tmp', '.map.json');
+
+  for (let i = mapFiles.length - 1; i >= 0; i--) {
+    const m = jetpack.read(mapFiles[i], 'json');
+
+    for (let j = m.entities.length - 1; j >= 0; j--) {
+      let name = m.entities[j].filename;
+
+      if (name.startsWith('chrs_json')) {
+        if (name.endsWith('.json')) {
+          continue;
+        } else {
+          debugger; // SHOULDNT HAPPEN AFAIK
+        }
+      } else if (name.startsWith('chrs')) {
+        if (name.endsWith('.json')) {
+          continue;
+        } else if (name.endsWith('.chr')) {
+          name = name + '.json';
+        } else if (name.indexOf('.') === -1) {
+          name = name + '.chr.json';
+        } else {
+          debugger; // SHOUNT HAPPEN AFAIK
+        }
+      } else { // no folder
+        if (name.endsWith('.json')) {
+          debugger; // idk wtf
+        } else if (name.endsWith('.chr')) {
+          name = 'chrs/' + name + '.json';
+        } else if (name.indexOf('.') === -1) {
+          name = 'chrs/' + name + '.chr.json';
+        } else {
+          debugger; // SHOUNT HAPPEN AFAIK
+        }
+      }
+
+      console.log( 'changing', m.entities[j].filename, 'to', name );
+      m.entities[j].filename = name;
+    }
+
+    jetpack.write(mapFiles[i], m);
+  }
+  debugger;
+};
+
+// auditSullyMaps();
 
 export const Tools = {
   grue_zoom: grue_zoom
