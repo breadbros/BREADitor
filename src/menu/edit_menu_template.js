@@ -8,6 +8,12 @@ export const editMenuTemplate = {
     { type: 'separator' },
     { label: 'Swap Selected Tiles', accelerator: 'X', click: function () { send('tile-swap', 'X'); } },
     { label: 'Tool: Brush', accelerator: 'B', click: function () { send('tool-brush', 'B'); } },
+
+    { label: '', accelerator: 'W', click: function () { send('move-selected-tile', 'W'); } },
+    { label: '', accelerator: 'A', click: function () { send('move-selected-tile', 'A'); } },
+    { label: '', accelerator: 'S', click: function () { send('move-selected-tile', 'S'); } },
+    { label: '', accelerator: 'D', click: function () { send('move-selected-tile', 'D'); } },
+
     { label: 'Tool: Eyedropper', accelerator: 'I', click: function () { send('tool-eyedropper', 'I'); } },
     { label: 'Tool: Eyedropper', accelerator: 'Shift+I', click: function () { send('tool-smartdropper', 'I'); } },
     { label: 'Tool: Move', accelerator: 'V', click: function () { send('tool-move', 'V'); } },

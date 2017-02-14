@@ -57,7 +57,7 @@ export default () => {
               doEntitySelection(ent);
               return;
             }
-
+            break;
           default:
             throw new Error('SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN');
         }

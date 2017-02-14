@@ -29,14 +29,54 @@ let selectedTilesPerVSP = {};
 let _last_vsp = null;
 let _last_map = null;
 
+export const moveSelectedTile = (wasd) => {
+  if (!(wasd === 'W' || wasd === 'A' || wasd === 'S' || wasd === 'D')) {
+    console.error('wasd was called with non-wasd chr: ' + wasd);
+    return false;
+  }
+
+  if (!$('#tool-title').text() === 'Draw') {
+    console.error('mode not Draw, was: ' + $('#tool-title').text());
+    return false;
+  }
+
+  let newTile = null;
+
+  switch(wasd) {
+    case 'W':
+      newTile = leftTile() - 20;
+      break;
+    case 'A':
+      newTile = leftTile() - 1;
+      break;
+    case 'S':
+      newTile = leftTile() + 20;
+      break;
+    case 'D':
+      newTile = leftTile() + 1;
+      break;
+    default:
+      break;
+  }
+
+  console.log('DO BOUNDS CHECKING HERE FOR FUCKS SAKE');
+
+  if (newTile !== null) {
+    setCurrentlySelectedTile(newTile);
+    return true;
+  }
+
+  return false;
+};
+
 export const debugSelectedTiles = () => {
-  var i = selectedTilesPerVSP;
+  const i = selectedTilesPerVSP;
   debugger;
 };
 
-$("#btn-tool-debugger").on( "click", () => {
+$('#btn-tool-debugger').on('click', () => {
   debugSelectedTiles();
-} );
+});
 
 const leftTile = (val) => {
   if (_last_vsp === null) {

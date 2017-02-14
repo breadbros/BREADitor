@@ -13,7 +13,7 @@ import { EntitiesWidget } from './js/ui/EntityPalette.js';
 import { TilesetSelectorWidget } from './js/ui/TilesetSelectorPalette.js';
 import { handleUndo, handleRedo } from './UndoRedo';
 import { ipcRenderer } from 'electron';
-import { toggleSelectedTiles } from './TileSelector';
+import { toggleSelectedTiles, moveSelectedTile } from './TileSelector';
 
 const path = require('path');
 const $ = require('jquery');
@@ -115,6 +115,9 @@ ipcRenderer.on('main-menu', (event, arg) => {
       break;
     case 'tool-brush':
       clickDrawBrush();
+      break;
+    case 'move-selected-tile':
+      moveSelectedTile(arg.accelerator);
       break;
     case 'tool-eyedropper':
       clickEyedropper();
