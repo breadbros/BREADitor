@@ -41,7 +41,6 @@ export const moveSelectedTile = (wasd) => {
   }
 
   let newTile = null;
-
   switch(wasd) {
     case 'W':
       newTile = leftTile() - 20;
@@ -150,7 +149,6 @@ export const toggleSelectedTiles = (map) => {
 };
 
 export const setCurrentlySelectedTile = (idx) => {
-  debugger;
   leftTile(idx);
 };
 

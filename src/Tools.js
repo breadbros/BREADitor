@@ -54,6 +54,14 @@ const setCurrentHoverTile = (map, mouseEvt) => {
 
 export const zoomLevels = [0.125, 0.25, 0.5, 1, 2, 4, 8, 16];
 
+export const deriveMapZoomForCamera = (map) => {
+  return zoomLevels[map.zoom_level];
+};
+
+export const deriveMapZoomForPixels = (map) => {
+  return 1/zoomLevels[map.zoom_level];
+};
+
 const baseZoomIndex = 3;
 
 export const zero_zoom = (map) => {
@@ -65,6 +73,14 @@ export const zero_zoom = (map) => {
 
   console.log('map.zoom_level', map.zoom_level);
   console.log('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
+};
+
+export const two_zoom_seriously_all_zoom_functions_suck_kill_them_all = (map) => {
+  map.zoom_level = zoomLevels.indexOf(0.5);
+  map.camera[2] = zoomLevels[map.zoom_level];
+
+  map.camera[0] = 0;
+  map.camera[1] = 0;
 };
 
 const zoomFn = function (map, e, zoomout) {
@@ -333,6 +349,10 @@ const fs = require('fs');
 */
 
 export const isTileSelectorMap = (map) => {
+  if (map.isTileSelectorMap) {
+    return map.isTileSelectorMap;
+  }
+
   return (map.layers.length === 1 && map.layers[0].name === 'Dynamic Tileselector VspMap Layer xTreem 7');
 };
 

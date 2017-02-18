@@ -1,4 +1,4 @@
-import { _toolLogic } from '../Tools';
+import { _toolLogic, isTileSelectorMap } from '../Tools';
 
 export default () => {
   return {
@@ -6,11 +6,19 @@ export default () => {
     'last_mouse': [0, 0],
 
     'mousedown': function (map, e) {
+      if (isTileSelectorMap(map)) {
+        return;
+      }
+
       _toolLogic.DRAG.dragging = true;
       window.$MAP_WINDOW.draggable('disable');
       _toolLogic.DRAG.last_mouse = [ e.clientX, e.clientY ];
     },
     'mousemove': function (map, e) {
+      if (isTileSelectorMap(map)) {
+        return;
+      }
+
       if (_toolLogic.DRAG.dragging) {
         map.camera[0] += (_toolLogic.DRAG.last_mouse[0] - e.clientX) * map.camera[2];
         map.camera[1] += (_toolLogic.DRAG.last_mouse[1] - e.clientY) * map.camera[2];
@@ -18,6 +26,10 @@ export default () => {
       }
     },
     'mouseup': function (map, e) {
+      if (isTileSelectorMap(map)) {
+        return;
+      }
+
       _toolLogic.DRAG.dragging = false;
       map.updateLocationFn(map);
       window.$MAP_WINDOW.draggable('enable');

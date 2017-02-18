@@ -1,5 +1,8 @@
 import { Map } from '../../Map.js';
-import { Tools, zero_zoom, zoomLevels, updateLocationFunction, initTools } from '../../Tools.js';
+import {
+  two_zoom_seriously_all_zoom_functions_suck_kill_them_all, zoomLevels, updateLocationFunction, initTools,
+  deriveMapZoomForPixels
+} from '../../Tools.js';
 const $ = require('jquery');
 
 let old_map = null;
@@ -76,18 +79,8 @@ const create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer)
 
     initTools($('.tileset_selector_canvas'), vsp_map);
 
-    $('#btn-vsp-zoomin').click(function (e) {
-      Tools.grue_zoom(false, vsp_map, e);
-      $('#vsp-zoom-label').text((zoomLevels[vsp_map.zoom_level] * 100) + '%');
-    });
-
-    $('#btn-vsp-zoomout').click(function (e) {
-      Tools.grue_zoom(true, vsp_map, e);
-      $('#vsp-zoom-label').text((zoomLevels[vsp_map.zoom_level] * 100) + '%');
-    });
-
     $('#btn-vsp-zero').click(function (e) {
-      zero_zoom(vsp_map);
+      two_zoom_seriously_all_zoom_functions_suck_kill_them_all(vsp_map);
       $('#vsp-zoom-label').text((zoomLevels[vsp_map.zoom_level] * 100) + '%');
     });
 
@@ -114,6 +107,23 @@ const finalize_process = (newMap, newLayer) => {
   old_layer = newLayer;
 
   vsp_map.render();
+
+  two_zoom_seriously_all_zoom_functions_suck_kill_them_all(vsp_map);
+
+  set_height_for_scrollbars(vsp_map);
+};
+
+const set_height_for_scrollbars = (vsp_map) => {
+  const tileWidth = vsp_map.vspData[vsp_map.layers[0].vsp].tilesize.width;
+  const tileHeight = vsp_map.vspData[vsp_map.layers[0].vsp].tilesize.height;
+
+  const tilesWide = vsp_map.layers[0].dimensions.X;
+  const tilesHigh = vsp_map.layers[0].dimensions.Y;
+
+  const zoomMultiplier = deriveMapZoomForPixels(vsp_map);
+
+  $('.tileset_selector_canvas').width(tileWidth * tilesWide * zoomMultiplier);
+  $('.tileset_selector_canvas').height(tileHeight * tilesHigh * zoomMultiplier);
 };
 
 let obsLayerData = null;
