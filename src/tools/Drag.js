@@ -20,8 +20,8 @@ export default () => {
       }
 
       if (_toolLogic.DRAG.dragging) {
-        map.camera[0] += (_toolLogic.DRAG.last_mouse[0] - e.clientX) * map.camera[2];
-        map.camera[1] += (_toolLogic.DRAG.last_mouse[1] - e.clientY) * map.camera[2];
+        map.camera[0] += (_toolLogic.DRAG.last_mouse[0] - e.clientX) / map.camera[2];
+        map.camera[1] += (_toolLogic.DRAG.last_mouse[1] - e.clientY) / map.camera[2];
         _toolLogic.DRAG.last_mouse = [ e.clientX, e.clientY ];
       }
     },

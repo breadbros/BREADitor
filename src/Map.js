@@ -771,7 +771,7 @@ Map.prototype = {
         console.log('NOT USING DEFAULT ENTITY FOR ', data.image);
       } else {
         console.warn("Could not find '" + entity.filename + "', using the default. Path: ", datafile);
-        debugger;
+        // debugger;
         entity.MAPED_USEDEFAULT = true;
       }
     }
@@ -1113,8 +1113,8 @@ Map.prototype = {
       gl.uniform4f(this.tilemapShader.uniform('u_camera'),
                 Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
                 Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-                this.camera[2] * this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width,
-                this.camera[2] * this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height
+                this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
+                this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
             );
 
       gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
@@ -1163,8 +1163,8 @@ Map.prototype = {
       gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
         Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
         Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-        this.camera[2] * this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width,
-        this.camera[2] * this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height
+        this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
+        this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
       );
 
       gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
@@ -1259,8 +1259,8 @@ Map.prototype = {
     gl.uniform4f(this.tilemapShader.uniform('u_camera'),
       Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
       Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-      this.camera[2] * this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width,
-      this.camera[2] * this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height
+      this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
+      this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
     );
 
     gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
@@ -1313,8 +1313,8 @@ Map.prototype = {
         this.selectionShader.uniform('u_camera'),
         Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
         Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
-        this.camera[2] * this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width,
-        this.camera[2] * this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height
+        this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
+        this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
       );
       gl.uniform4f(
         this.selectionShader.uniform('u_dimensions'),
@@ -1379,8 +1379,8 @@ Map.prototype = {
     gl.uniform4f(this.checkerShader.uniform('u_camera'),
       Math.floor(this.camera[0]) / this.vspData[layer.vsp].tilesize.width,
       Math.floor(this.camera[1]) / this.vspData[layer.vsp].tilesize.height,
-      this.camera[2] * this.renderContainerDimensions.w / this.vspData[layer.vsp].tilesize.width,
-      this.camera[2] * this.renderContainerDimensions.h / this.vspData[layer.vsp].tilesize.height
+      this.renderContainerDimensions.w / this.vspData[layer.vsp].tilesize.width / this.camera[2],
+      this.renderContainerDimensions.h / this.vspData[layer.vsp].tilesize.height / this.camera[2]
     );
 
     gl.uniform4f(this.checkerShader.uniform('u_dimensions'),
@@ -1510,8 +1510,8 @@ Map.prototype = {
       this.spriteShader.uniform('u_camera'),
       Math.floor(layer.parallax.X * this.camera[0]) / tilesize.width,
       Math.floor(layer.parallax.Y * this.camera[1]) / tilesize.height,
-      this.camera[2] * this.renderContainerDimensions.w / tilesize.width,
-      this.camera[2] * this.renderContainerDimensions.h / tilesize.height
+      this.renderContainerDimensions.w / tilesize.width / this.camera[2],
+      this.renderContainerDimensions.h / tilesize.height / this.camera[2]
     );
 
     gl.uniform4f(this.spriteShader.uniform('u_tint'), tint[0], tint[1], tint[2], tint[3]);
