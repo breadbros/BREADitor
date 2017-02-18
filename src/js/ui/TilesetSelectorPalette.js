@@ -85,6 +85,8 @@ const create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer)
     });
 
     finalize_process(newMap, newLayer);
+
+    window.$$$currentTilsesetSelectorMap = m;
   });
 };
 
@@ -160,7 +162,9 @@ const initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
     vsp_mapdata = create_dynamic_map(newLayer.vsp);
     vsp_tiledata = create_dynamic_tiledata(vsp_mapdata, newLayer);
 
-    create_map(vsp_mapdata, vsp_tiledata, updateLocationFunction, newMap, newLayer);
+    create_map(
+      vsp_mapdata, vsp_tiledata, updateLocationFunction, newMap, newLayer
+    );
   }
 };
 

@@ -29,9 +29,14 @@ let selectedTilesPerVSP = {};
 let _last_vsp = null;
 let _last_map = null;
 
-export const moveSelectedTile = (wasd) => {
+export const moveSelectedTile = (wasd, map) => {
   if (!(wasd === 'W' || wasd === 'A' || wasd === 'S' || wasd === 'D')) {
     console.error('wasd was called with non-wasd chr: ' + wasd);
+    return false;
+  }
+
+  if(!map) {
+    console.error('no tileset map currently exists');
     return false;
   }
 
@@ -41,7 +46,7 @@ export const moveSelectedTile = (wasd) => {
   }
 
   let newTile = null;
-  switch(wasd) {
+  switch (wasd) {
     case 'W':
       newTile = leftTile() - 20;
       break;
@@ -62,6 +67,7 @@ export const moveSelectedTile = (wasd) => {
 
   if (newTile !== null) {
     setCurrentlySelectedTile(newTile);
+    setTileSelectorUI('#left-palette', leftTile(), map, 0, _last_vsp);
     return true;
   }
 

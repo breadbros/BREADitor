@@ -59,7 +59,7 @@ export const deriveMapZoomForCamera = (map) => {
 };
 
 export const deriveMapZoomForPixels = (map) => {
-  return 1/zoomLevels[map.zoom_level];
+  return 1 / zoomLevels[map.zoom_level];
 };
 
 const baseZoomIndex = 3;

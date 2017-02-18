@@ -117,7 +117,7 @@ ipcRenderer.on('main-menu', (event, arg) => {
       clickDrawBrush();
       break;
     case 'move-selected-tile':
-      moveSelectedTile(arg.accelerator);
+      moveSelectedTile(arg.accelerator, window.$$$currentTilsesetSelectorMap);
       break;
     case 'tool-eyedropper':
       clickEyedropper();
