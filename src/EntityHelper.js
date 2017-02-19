@@ -66,8 +66,8 @@ export const zero_zoom = (map) => {
 };
 
 const zoomFn = function (map, e, zoomout) {
-  const mouseX = map.camera[0] + (e.offsetX ? e.offsetX : e.clientX) * map.camera[2];
-  const mouseY = map.camera[1] + (e.offsetY ? e.offsetY : e.clientY) * map.camera[2];
+  const mouseX = map.camera[0] + (e.offsetX ? e.offsetX : e.clientX) / map.camera[2];
+  const mouseY = map.camera[1] + (e.offsetY ? e.offsetY : e.clientY) / map.camera[2];
 
   if (typeof map.zoom_level === 'undefined') {
     if (zoomLevels.indexOf(map.camera[2]) === -1) {
@@ -90,8 +90,8 @@ const zoomFn = function (map, e, zoomout) {
 
   map.camera[2] = zoomLevels[map.zoom_level];
 
-  map.camera[0] = mouseX - ((e.offsetX ? e.offsetX : e.clientX) * map.camera[2]);
-  map.camera[1] = mouseY - ((e.offsetY ? e.offsetY : e.clientY) * map.camera[2]);
+  map.camera[0] = mouseX - ((e.offsetX ? e.offsetX : e.clientX) / map.camera[2]);
+  map.camera[1] = mouseY - ((e.offsetY ? e.offsetY : e.clientY) / map.camera[2]);
 
   console.log('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
 };
@@ -133,8 +133,8 @@ export const getTXTyFromMouse = (map, evt) => {
   const mouseOffsetX = evt.offsetX;
   const mouseOffsetY = evt.offsetY;
 
-  const oX = mapOffsetX + mouseOffsetX * map.camera[2];
-  const oY = mapOffsetY + mouseOffsetY * map.camera[2];
+  const oX = mapOffsetX + mouseOffsetX / map.camera[2];
+  const oY = mapOffsetY + mouseOffsetY / map.camera[2];
 
   const tX = parseInt(oX / 16);
   const tY = parseInt(oY / 16);
@@ -311,8 +311,8 @@ $('#btn-add-tree').on('click', (e) => {
       const mouseOffsetY = evt.offsetY;
       const tilesize = map.vspData[vsp].tilesize;
 
-      map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX * map.camera[2])) / tilesize.width);
-      map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY * map.camera[2])) / tilesize.height);
+      map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX / map.camera[2])) / tilesize.width);
+      map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY / map.camera[2])) / tilesize.height);
     },
     mouseup: (map, evt) => {
       map.entityPreview.location.layer = getSelectedLayer().layer.name;
