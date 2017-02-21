@@ -76,7 +76,7 @@ export const zero_zoom = (map) => {
 };
 
 export const two_zoom_seriously_all_zoom_functions_suck_kill_them_all = (map) => {
-  map.zoom_level = zoomLevels.indexOf(0.5);
+  map.zoom_level = zoomLevels.indexOf(2);
   map.camera[2] = zoomLevels[map.zoom_level];
 
   map.camera[0] = 0;
