@@ -28,10 +28,10 @@ export default () => {
       const tX = clickSet[0];
       const tY = clickSet[1];
 
-      const doVSPselector = (tX, tY, map) => {
-        map.selection.deselect();
-        map.selection.add(tX, tY, 1, 1);
-      };
+      // const doVSPselector = (tX, tY, map) => {
+      //   map.selection.deselect();
+      //   map.selection.add(tX, tY, 1, 1);
+      // };
 
       // TODO: using a valid integer as a sentinel is stupid. using sentinels is stupid. you're stupid, grue.
       if (getSelectedLayer().map_tileData_idx > 900) {
@@ -46,7 +46,7 @@ export default () => {
             return;
           case 998:
             console.log('OBS!');
-            doVSPselector(tX, tY, map);
+            // doVSPselector(tX, tY, map);
             tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
             break;
 
@@ -65,10 +65,10 @@ export default () => {
         // TODO seriously branching code here is not a good idea for complexity reasons.  rework later?
         if (map.mapData.isTileSelectorMap) {
           tIdx = map.getTile(tX, tY, 0);
-          doVSPselector(tX, tY, map);
+          // doVSPselector(tX, tY, map);
         } else {
           tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
-          doVSPselector(tX, tY, map);
+          // doVSPselector(tX, tY, map);
         }
       }
 

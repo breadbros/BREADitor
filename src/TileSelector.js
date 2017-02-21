@@ -35,7 +35,7 @@ export const moveSelectedTile = (wasd, map) => {
     return false;
   }
 
-  if(!map) {
+  if (!map) {
     console.error('no tileset map currently exists');
     return false;
   }
@@ -137,10 +137,23 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
     throw new Error('Unknwon slotIdx: ' + slotIdx);
   }
 
+  if (whichOne === '#left-palette') {
+    updateTileSelectorPaletteMapAnts(vspIDX);
+  }
+
   updateInfoWindow();
 
   const loc = map.getVSPTileLocation(whichVSP, vspIDX);
   $(whichOne).css('background-position', '-' + (loc.x * 2) + 'px -' + (loc.y * 2) + 'px'); // (offset *2)
+};
+
+export const updateTileSelectorPaletteMapAnts = (vspIdx) => { // TODO should this be in the TileSelectorPalette?
+  const tY = parseInt(vspIdx / 20); // TODO calculate this from the per_row value of the actual VSP.
+  const tX = parseInt(vspIdx % 20); // TODO calculate this from the per_row value of the actual VSP.
+
+  // TODO do not use window.$$$currentTilsesetSelectorMap
+  window.$$$currentTilsesetSelectorMap.selection.deselect();
+  window.$$$currentTilsesetSelectorMap.selection.add(tX, tY, 1, 1);
 };
 
 export const toggleSelectedTiles = (map) => {
