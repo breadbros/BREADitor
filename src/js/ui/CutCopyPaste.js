@@ -13,6 +13,7 @@ const addToPasteboard = (dx, dy, originalLayer, tile) => {
 };
 
 export const copy = (map) => {
+debugger;
   _cut_or_copy(map, false);
 };
 

@@ -208,7 +208,18 @@ $('body').on('keydown', (e) => {
 
   if (e.key === 'c' || e.key === 'C') {
     console.log('edit-copy, but the one on the document.  SIGH WINDOWS.');
-    copy(window.$$$currentMap);
+
+
+    if (window.$$$currentMap.selection.tiles && window.$$$currentMap.selection.tiles.length) {
+      copy(window.$$$currentMap);
+    } else if(
+      window.$$$currentTilsesetSelectorMap.selection.tiles &&
+      window.$$$currentTilsesetSelectorMap.selection.tiles.length) {
+
+      copy(window.$$$currentTilsesetSelectorMap);
+    }
+
+
     return;
   }
 
