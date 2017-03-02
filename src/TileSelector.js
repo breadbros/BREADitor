@@ -84,6 +84,9 @@ $('#btn-tool-debugger').on('click', () => {
 });
 
 const leftTile = (val) => {
+
+console.log("left _last_vsp: ", _last_vsp, val, typeof val);
+
   if (_last_vsp === null) {
     return 0;
   }
@@ -92,10 +95,14 @@ const leftTile = (val) => {
     selectedTilesPerVSP[_last_vsp].leftTile = parseInt(val);
   }
 
+console.log("left2 _last_vsp: ", _last_vsp);
+
   return selectedTilesPerVSP[_last_vsp].leftTile;
 };
 
 const rightTile = (val) => {
+console.log("right _last_vsp: ", _last_vsp, val, typeof val);
+
   if (_last_vsp === null) {
     return 0;
   }
@@ -103,15 +110,16 @@ const rightTile = (val) => {
   if (typeof val !== 'undefined') {
     selectedTilesPerVSP[_last_vsp].rightTile = parseInt(val);
   }
-
+console.log("right2 _last_vsp: ", _last_vsp);
   return selectedTilesPerVSP[_last_vsp].rightTile;
 };
 
 export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
-  if (_last_map !== map) {
-    selectedTilesPerVSP = {};
-    _last_map = map;
-  }
+  // TODO this should only change if the vsp is different not the map
+  // if (_last_map !== map) {
+  //   selectedTilesPerVSP = {};
+  //   _last_map = map;
+  // }
 
   if (!selectedTilesPerVSP[whichVSP]) {
     console.info('generating new placeholder tiles for', whichVSP);
@@ -160,11 +168,11 @@ export const toggleSelectedTiles = (map) => {
   const _left = parseInt(leftTile());
   const _right = parseInt(rightTile());
 
-  leftTile(_right);
-  rightTile(_left);
+  // leftTile(_right);
+  // rightTile(_left);
 
-  setTileSelectorUI('#left-palette', leftTile(), map, 0, _last_vsp);
-  setTileSelectorUI('#right-palette', rightTile(), map, 1, _last_vsp);
+  setTileSelectorUI('#left-palette', _right, map, 0, _last_vsp);
+  setTileSelectorUI('#right-palette', _left, map, 1, _last_vsp);
 };
 
 export const setCurrentlySelectedTile = (idx) => {

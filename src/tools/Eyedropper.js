@@ -65,10 +65,8 @@ export default () => {
         // TODO seriously branching code here is not a good idea for complexity reasons.  rework later?
         if (map.mapData.isTileSelectorMap) {
           tIdx = map.getTile(tX, tY, 0);
-          // doVSPselector(tX, tY, map);
         } else {
           tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
-          // doVSPselector(tX, tY, map);
         }
       }
 
