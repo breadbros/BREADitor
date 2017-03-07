@@ -1097,6 +1097,8 @@ const update_layer = (dialog, layer_id, onComplete) => {
     map.layerLookup[name] = layers[layersLength - 1];
     map.layerRenderOrder.push('' + (layersLength));
     map.mapRawTileData.tile_data.push(new Array((dims_x * dims_y)).fill(0));
+
+    map.updateRstring(map.layerRenderOrder.join(','));
   } else {
     // TODO do all layer-name-updating here
     if (name !== layers[layer_id].name) {
@@ -1117,7 +1119,7 @@ const update_layer = (dialog, layer_id, onComplete) => {
 
   if (!onComplete) {
     redraw_palette(map);
-    updateRstringInfo();
+    // updateRstringInfo();
   }
 
   closeEditLayerDialog();
