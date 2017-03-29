@@ -45,9 +45,9 @@ const bootstrapMap = (mapFile, tiledataFile) => {
 
                 for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
                   if (!m.mapData.entities[i].animation) {
-                    alert('Theres an entity', i, 'with unset animation; ALERT GRUE wtf'); // TODO this is very bad
-                    // mapData.entities[i].animation =
+                    alert('Theres an entity ' + i + ' with unset animation; ALERT GRUE wtf'); // TODO this is very bad
                     // mapData.entities[0].filename
+                    m.mapData.entities[i].animation = "Idle Down"; // TOD no no no
                   }
                 }
 
