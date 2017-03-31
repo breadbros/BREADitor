@@ -723,6 +723,7 @@ Map.prototype = {
         // TODO: use aen's loaders in MAPPO and convert binary chrs to images and json files, motherfucker!
         data = jetpack.read(datafile, 'json');
       } catch (e) {
+        window.alert('Failure while attempting to parse json for ' + datafile + '\nReason: \n' + e );
         if (entity.filename.endsWith('json')) {
           console.error('Couldnt read a json entity file:', entity.filename);
         }
