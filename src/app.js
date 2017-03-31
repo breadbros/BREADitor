@@ -45,9 +45,10 @@ const bootstrapMap = (mapFile, tiledataFile) => {
 
                 for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
                   if (!m.mapData.entities[i].animation) {
-                    alert('Theres an entity ' + i + ' with unset animation; ALERT GRUE wtf'); // TODO this is very bad
+                    // TODO this is very bad
+                    window.alert('Theres an entity ' + i + ' with unset animation; ALERT GRUE wtf');
                     // mapData.entities[0].filename
-                    m.mapData.entities[i].animation = "Idle Down"; // TOD no no no
+                    m.mapData.entities[i].animation = 'Idle Down'; // TOD no no no
                   }
                 }
 
@@ -209,16 +210,14 @@ $('body').on('keydown', (e) => {
   if (e.key === 'c' || e.key === 'C') {
     console.log('edit-copy, but the one on the document.  SIGH WINDOWS.');
 
-
     if (window.$$$currentMap.selection.tiles && window.$$$currentMap.selection.tiles.length) {
       copy(window.$$$currentMap);
-    } else if(
+    } else if (
       window.$$$currentTilsesetSelectorMap.selection.tiles &&
-      window.$$$currentTilsesetSelectorMap.selection.tiles.length) {
-
+      window.$$$currentTilsesetSelectorMap.selection.tiles.length
+    ) {
       copy(window.$$$currentTilsesetSelectorMap);
     }
-
 
     return;
   }
@@ -273,7 +272,6 @@ $('body').on('keydown', (e) => {
 */
 
   window._newStep3_resolution = function (map, layers) {
-    debugger;
     const { dialog } = require('electron').remote;
 
     dialog.showSaveDialog(
