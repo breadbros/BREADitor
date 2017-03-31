@@ -484,6 +484,10 @@ export const _update_entity_inner = (ent_id, valDict) => {
   let old_layer;
   let new_layer;
 
+  if(!currentEntities[ent_id]) {
+    currentEntities[ent_id] = {};
+  }
+
   let k;
   for (k in ent) {
     if (ent.hasOwnProperty(k)) {
