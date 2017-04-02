@@ -662,13 +662,15 @@ Map.prototype = {
           const lastDitch = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename);
 
           if (jetpack.exists(lastDitch)) {
-            entity.filename = entity.filename + '.json';
+            entity.filename = 'chrs' + '/' + entity.filename + '.json';
             datafile = lastDitch + '.json';
           } else {
             datafile = null;
           }
         }
       }
+
+      console.log(entity.filename);
 
       // if (entity.filename.endsWith('chr')) {
       //   console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
