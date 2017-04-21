@@ -465,6 +465,10 @@ export const _update_entity_inner = (ent_id, valDict) => {
     return false;
   }
 
+  if (!valDict.entity_facing) {
+    valDict.entity_facing = 'Down';
+  }
+
   ent = {
     'name': valDict.entity_name,
     'filename': valDict.entity_filename,
