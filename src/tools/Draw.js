@@ -29,6 +29,18 @@ export default () => {
       const tX = result[0];
       const tY = result[1];
 
+      const dims = getSelectedLayer().layer.dimensions;
+
+      if (tX < 0 || tX >= dims.X) {
+        console.log('Invalid tx to draw on for this layer, tried: ' + tX);
+        return;
+      }
+
+      if (tY < 0 || tY >= dims.Y) {
+        console.log('Invalid ty to draw on for this layer, tried: ' + tY);
+        return;
+      }
+
       // TODO: Again, this is dumb.  LALALA.
       if (getSelectedLayer().map_tileData_idx === 999) {
         map.setZone(tX, tY, getActiveZone());
