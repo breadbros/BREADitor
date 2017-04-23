@@ -210,3 +210,44 @@ test('update_entity mutates autoface', () => {
 
   expect(getCurrentEntities()[0].autofaces).toEqual('burrito');
 });
+
+
+test('update_entity 0s on tx/ty are good' , () => {
+  setCurrentEntities([{
+    'location': {
+      'tx': 'A',
+      'ty': 'B',
+      'px': 'C',
+      'py': 'D'
+    }
+  }]);
+
+  vals.loc_tx = 0;
+  vals.loc_ty = 0;
+  _update_entity_inner(0, vals);
+
+  expect(getCurrentEntities()[0].location.tx).toEqual(0);
+  expect(getCurrentEntities()[0].location.ty).toEqual(0);
+  expect(getCurrentEntities()[0].location.px).toBeUndefined();
+  expect(getCurrentEntities()[0].location.py).toBeUndefined();
+});
+
+test('update_entity 0s on px/py are good' , () => {
+  setCurrentEntities([{
+    'location': {
+      'tx': 'A',
+      'ty': 'B',
+      'px': 'C',
+      'py': 'D'
+    }
+  }]);
+
+  vals.loc_px = 1;
+  vals.loc_py = 2;
+  _update_entity_inner(0, vals);
+
+  expect(getCurrentEntities()[0].location.tx).toBeUndefined();
+  expect(getCurrentEntities()[0].location.ty).toBeUndefined();
+  expect(getCurrentEntities()[0].location.px).toEqual(1);
+  expect(getCurrentEntities()[0].location.py).toEqual(2);
+});

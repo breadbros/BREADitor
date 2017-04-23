@@ -84,9 +84,6 @@ $('#btn-tool-debugger').on('click', () => {
 });
 
 const leftTile = (val) => {
-
-console.log("left _last_vsp: ", _last_vsp, val, typeof val);
-
   if (_last_vsp === null) {
     return 0;
   }
@@ -95,14 +92,10 @@ console.log("left _last_vsp: ", _last_vsp, val, typeof val);
     selectedTilesPerVSP[_last_vsp].leftTile = parseInt(val);
   }
 
-console.log("left2 _last_vsp: ", _last_vsp);
-
   return selectedTilesPerVSP[_last_vsp].leftTile;
 };
 
 const rightTile = (val) => {
-console.log("right _last_vsp: ", _last_vsp, val, typeof val);
-
   if (_last_vsp === null) {
     return 0;
   }
@@ -110,7 +103,7 @@ console.log("right _last_vsp: ", _last_vsp, val, typeof val);
   if (typeof val !== 'undefined') {
     selectedTilesPerVSP[_last_vsp].rightTile = parseInt(val);
   }
-console.log("right2 _last_vsp: ", _last_vsp);
+
   return selectedTilesPerVSP[_last_vsp].rightTile;
 };
 

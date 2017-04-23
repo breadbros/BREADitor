@@ -4,6 +4,58 @@
 		"selected_items":
 		[
 			[
+				"unde",
+				"toBeUndefined"
+			],
+			[
+				"curr",
+				"currently"
+			],
+			[
+				"vsp",
+				"vsp_map"
+			],
+			[
+				"zoom",
+				"zoom_level"
+			],
+			[
+				"zoo",
+				"zoomLevels"
+			],
+			[
+				"file",
+				"filename"
+			],
+			[
+				"animatio",
+				"animation"
+			],
+			[
+				"cu",
+				"currentMap"
+			],
+			[
+				"til",
+				"tileSize"
+			],
+			[
+				"select",
+				"selectNamedLayer"
+			],
+			[
+				"ret",
+				"return"
+			],
+			[
+				"E",
+				"Eyedropper"
+			],
+			[
+				"entit",
+				"entity_layer"
+			],
+			[
 				"set",
 				"setObsVisibility"
 			],
@@ -70,10 +122,6 @@
 			[
 				"layers-",
 				"layers-list"
-			],
-			[
-				"select",
-				"selectZoneLayer"
 			],
 			[
 				"tmp",
@@ -210,64 +258,16 @@
 			[
 				"fon",
 				"font-family"
-			],
-			[
-				"file",
-				"filenames"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/Tools.FloodFill.test.js",
+			"file": "src/TileSelector.js",
 			"settings":
 			{
-				"buffer_size": 2527,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/helpers/FakeMap.js",
-			"settings":
-			{
-				"buffer_size": 651,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "README.md",
-			"settings":
-			{
-				"buffer_size": 4130,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/js/ui/ZonesPalette.js",
-			"settings":
-			{
-				"buffer_size": 6430,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/js/ui/LayersPalette.js",
-			"settings":
-			{
-				"buffer_size": 27539,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/Tools.js",
-			"settings":
-			{
-				"buffer_size": 21261,
+				"buffer_size": 4964,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -276,34 +276,79 @@
 			"file": "src/Map.js",
 			"settings":
 			{
-				"buffer_size": 41387,
+				"buffer_size": 53737,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/tools/Draw.js",
+			"settings":
+			{
+				"buffer_size": 2497,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/NPC/npc_miami_vice.json",
+			"settings":
+			{
+				"buffer_size": 825,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_whale_herbert.json",
+			"settings":
+			{
+				"buffer_size": 688,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "src/js/ui/EntityPalette.js",
 			"settings":
 			{
-				"buffer_size": 15422,
+				"buffer_size": 17127,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/blue_tank.json",
+			"file": "src/js/ui/EntityPalette.test.js",
 			"settings":
 			{
-				"buffer_size": 802,
+				"buffer_size": 5761,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/js/ui/TilesetSelectorPalette.js",
+			"file": "src/js/ui/CutCopyPaste.test.js",
 			"settings":
 			{
-				"buffer_size": 5075,
+				"buffer_size": 4466,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "__mocks__/fs-jetpack.js",
+			"settings":
+			{
+				"buffer_size": 477,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/helpers/FakeMap.js",
+			"settings":
+			{
+				"buffer_size": 730,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -345,52 +390,88 @@
 	[
 		"/C/grue/Breaditor",
 		"/C/grue/Breaditor/__mocks__",
+		"/C/grue/Breaditor/src",
 		"/C/grue/Breaditor/src/js",
-		"/C/grue/Breaditor/src/js/ui"
+		"/C/grue/Breaditor/src/js/ui",
+		"/C/grue/Breaditor/src/tools"
 	],
 	"file_history":
 	[
+		"/C/grue/Breaditor/src/helpers/FakeMap.js",
+		"/C/grue/Breaditor/package.json",
+		"/C/grue/Breaditor/src/UndoRedo.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_splash.json",
+		"/C/grue/Breaditor/src/app.js",
+		"/C/grue/Breaditor/src/EntityHelper.js",
 		"/C/grue/Breaditor/app/app.html",
+		"/C/grue/Breaditor/src/tools/Eyedropper.js",
+		"/C/grue/Breaditor/src/Tools.js",
+		"/C/Users/grue/Desktop/DUAL setup-maped4-dev.ahk",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol_new_1.map.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol_new_1.map.data.json",
+		"/C/grue/Breaditor/src/js/ui/CutCopyPaste.js",
+		"/C/grue/Breaditor/src/tools/Drag.js",
+		"/C/grue/Breaditor/src/js/ui/TilesetSelectorPalette.js",
 		"/C/grue/Breaditor/src/js/ui/LayersPalette.js",
 		"/C/grue/Breaditor/src/Map.js",
+		"/C/grue/Breaditor/src/TileSelector.js",
 		"/C/grue/Breaditor/src/stylesheets/main.less",
+		"/C/grue/Breaditor/src/stylesheets/jquery-ui-fixes.less",
+		"/C/grue/Breaditor/src/menu/edit_menu_template.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.data.json",
+		"/C/Users/grue/Dropbox/Hyptosis-Sully-2017/Notes.txt",
+		"/C/grue/Breaditor/src/js/ui/CutCopyPaste.test.js",
+		"/C/grue/Breaditor/src/Tools.UndoRedo.test.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.obsvsp.json",
+		"/C/grue/Breaditor/src/tools/SmartEyedropper.js",
+		"/C/grue/xnavERGE/Examples/Sully/Sully/bin/x86/Release/Content/conversations/farmsville/Zealot_3.txt",
+		"/C/grue/Breaditor/src/js/ui/EntityPalette.js",
+		"/C/grue/Breaditor/src/js/ui/EntityPalette.test.js",
+		"/C/grue/Breaditor/src/Map.test.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol_b5.map.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol.vsp.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/undersea_crystal.tiles.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/underwater_crystalcaves.map.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/mcdarin_cottage.map.data.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/mcdarin_cottage.map.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/jujube.exterior.vsp.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/jujube.exterior.obsvsp.json",
+		"/C/grue/Breaditor/src/tools/Draw.js",
+		"/C/grue/Breaditor/src/tools/FloodFill.js",
+		"/C/grue/Breaditor/src/tools/FloodFill.test.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/paradise.vsp.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/paradise_nuevo.map.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol.obsvsp.json",
+		"/C/grue/Breaditor/src/menu/file_menu_template.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/blue_tank.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/$$$_MAPED.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.vsp.json",
+		"/C/grue/Breaditor/src/Palettes.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_swarm_bat.json",
+		"/C/grue/XNAVERGE/SullyContentMapscripts/Farmsville.cs",
+		"/C/Users/grue/Desktop/kill-bash.bat",
+		"/C/grue/Breaditor/src/js/ui/ZonesPalette.js",
+		"/C/grue/Breaditor/src/Tools.FloodFill.test.js",
 		"/C/grue/Breaditor/app/themes/ui-darkness/jquery-ui.theme.css",
 		"/C/grue/Breaditor/app/stylesheets/jquery-ui-fixes.css",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.json",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-bottom-brown.json",
-		"/C/Users/grue/Desktop/DUAL setup-maped4-dev.ahk",
 		"/C/Users/grue/Desktop/SMALL setup-maped4-dev - Copy.ahk",
-		"/C/grue/Breaditor/src/menu/edit_menu_template.js",
-		"/C/grue/Breaditor/src/app.js",
-		"/C/grue/Breaditor/src/helpers/FakeMap.js",
-		"/C/grue/Breaditor/src/Tools.js",
-		"/C/grue/Breaditor/src/js/ui/CutCopyPaste.js",
-		"/C/grue/Breaditor/src/TileSelector.js",
 		"/C/grue/Breaditor/__mocks__/electron.js",
 		"/C/grue/Breaditor/__mocks__/fs-jetpack.js",
-		"/C/grue/Breaditor/src/UndoRedo.js",
 		"/C/grue/Breaditor/src/menu/window_menu_template.js",
 		"/C/grue/Breaditor/README.md",
-		"/C/grue/Breaditor/src/js/ui/ZonesPalette.js",
-		"/C/grue/Breaditor/src/Map.test.js",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.json",
 		"/C/grue/Breaditor/src/menu/prod_menu_template.js",
 		"/C/grue/Breaditor/src/background.js",
 		"/C/grue/Breaditor/src/main/SendMsgToMainWindow.js",
 		"/C/grue/Breaditor/src/menu/layers_menu_template.js",
-		"/C/grue/Breaditor/src/menu/file_menu_template.js",
 		"/C/grue/Breaditor/src/js/ui/Util.js",
-		"/C/grue/Breaditor/src/js/ui/EntityPalette.js",
-		"/C/grue/Breaditor/src/js/ui/TilesetSelectorPalette.js",
 		"/C/grue/Breaditor/app/stylesheets/main.css",
 		"/C/grue/Breaditor/src/ShaderProgram.js",
 		"/C/grue/Breaditor/src/menu/dev_menu_template.js",
-		"/C/grue/Breaditor/src/js/ui/EntityPalette.test.js",
-		"/C/grue/Breaditor/src/Tools.UndoRedo.test.js",
 		"/C/grue/Breaditor/.eslintrc",
 		"/C/grue/Breaditor/src/helpers/FakeMap.test.js",
-		"/C/grue/Breaditor/src/Palettes.js",
-		"/C/grue/Breaditor/package.json",
 		"/C/grue/Breaditor/tasks/build_app.js",
 		"/C/grue/Breaditor/tasks/build_tests.js",
 		"/C/grue/Breaditor/tasks/start.js",
@@ -400,7 +481,6 @@
 		"/C/grue/Breaditor/.babelrc",
 		"/C/grue/Breaditor/src/main/MainWindowReference.js",
 		"/C/grue/Breaditor/app/background.js",
-		"/C/grue/Breaditor/src/stylesheets/jquery-ui-fixes.less",
 		"/C/grue/Breaditor/app/app.js",
 		"/C/grue/Breaditor/src/shim/Shim.js",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-bottom.json",
@@ -444,40 +524,7 @@
 		"/C/grue/maped4/app/hello_world/hello_universe.spec.js",
 		"/C/grue/maped4/app/Tools.spec.js",
 		"/C/grue/maped4/app/js/ui/TilesetSelectorPalette.spec.js",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/$$$_MAPED.json",
-		"/C/grue/maped4/app/app.js",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/underwater_lower.map.data.json",
-		"/C/grue/maped4/app/app.html",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.vsp.json",
-		"/C/Users/grue/Downloads/Win_Sully_20051211/island.vc",
-		"/C/Users/grue/Downloads/Win_Sully_20051211/vc/util/inet_talk.vc",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-water.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/conversations/evil_lab_f2/Teacher_Take_Rod_3a.txt",
-		"/C/grue/maped4/build/app.html",
-		"/C/Users/grue/AppData/Local/Temp/Rar$DIa0.112/jquery-ui.js",
-		"/C/grue/maped4/build/package.json",
-		"/C/grue/maped4/app/node_modules/jquery-ui/jquery-ui.js",
-		"/C/grue/maped4/build/node_modules/jquery/dist/jquery.js",
-		"/C/grue/maped4/build/node_modules/jquery/dist/jquery.min.js",
-		"/C/grue/maped4/build/node_modules/jquery-ui/jquery-ui.js",
-		"/C/grue/maped4/node_modules/rollup/src/Module.js",
-		"/C/grue/maped4/app/js/ui/EntityPalette.js",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/mt-jujube.json",
-		"/C/grue/maped4/gulpfile.js",
-		"/C/grue/maped4/tasks/start.js",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/undersea_cave/lower/lower_bg.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/jujubmt-e.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/underwater_lower.map.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/undersea_cave/lower/lower_parallax.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/undersea_cave/lower/lower_fg.json",
-		"/C/grue/maped4/app/map_assets/chrs_map/undersea_cave/lower/lower_fg.json",
-		"/C/grue/maped4/app/map_assets/chrs_map/undersea_cave/lower/lower_parallax.json",
-		"/C/grue/maped4/app/map_assets/underwater_cave.vsp.json",
-		"/C/grue/maped4/app/map_assets/farmsville.map.json",
-		"/C/grue/maped4/app/map_assets/chrs_map/undersea_cave/lower/lower_bg.json",
-		"/C/grue/maped4/app/map_assets/underwater_lower.map.json",
-		"/C/tmp/farmsville.map.json",
-		"/C/grue/maped4/app/map_assets/farmsville.vsp.json"
+		"/C/grue/maped4/app/app.js"
 	],
 	"find":
 	{
@@ -488,6 +535,10 @@
 		"height": 176.0,
 		"where_history":
 		[
+			"C:\\grue\\Breaditor\\,*.js",
+			"C:\\grue\\xnavERGE",
+			"C:\\grue\\Breaditor\\,*.js",
+			"*.js",
 			"",
 			"C:\\grue\\Breaditor",
 			"C:\\grue\\Breaditor\\",
@@ -537,134 +588,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"setObsVisibility",
-			"getObsVisibility",
-			"obsla",
-			"$$$toggle_pallete",
-			"dblc",
-			"shitty_",
-			"setup_shitty_obstruction_layer",
-			"'Entities",
-			"Entities",
-			"addLayerEntityEyeballHandler",
-			"handleEntityEyeball",
-			"entity",
-			"getObs",
-			"_zoneVisibility",
-			"window.$$$\n",
-			"getZoneVisibility",
-			"MAPED_HIDDEN",
-			"localSto",
-			"position",
-			"MAPED_HIDDEN",
-			"eyeball",
-			"mapData.tallentitylayer",
-			"Tall",
-			"visible_div",
-			"layer_name",
-			"redraw_palette",
-			"layers",
-			"eyeball",
-			"cannot shouldShowEn",
-			"newLayerId",
-			"update_layer",
-			"layer_id",
-			"zone",
-			"update_lucency",
-			"dialog",
-			"close",
-			"click",
-			"layer_idx",
-			"template",
-			"\"",
-			"redraw_palette",
-			"new_la",
-			"_layer_click\n_layer_click\nnew_layer_click",
-			"_layer_click\nnew_layer_click",
-			"_layer_click",
-			"newLayerId",
-			"update_layer",
-			"layer_id",
-			"mapData.layers",
-			"_layer_click",
-			"Edit ",
-			"oh yeah",
-			"_layer_click",
-			"dialog",
-			"ui-dia",
-			"ui-dialog-titlebar-close",
-			"\"",
-			"layer",
-			"later",
-			"\"\"\"",
-			"\\\"",
-			"\"",
-			"layer[",
-			"layer.",
-			"setup_temp",
-			"tallentitylayer",
-			"tall",
-			"Map =",
-			"Map",
-			"mapData",
-			"_layer_click",
-			"dblcl",
-			"_layer_click",
-			"Allow editing of the layer's name here",
-			"layer",
-			"tall",
-			"mapData",
-			"tallentitylayer",
-			"Tall",
-			"jetpack",
-			"MAPED_USEDEFAULT",
-			"entity.animation",
-			"MAPED_USEDEFAULT",
-			"entity",
-			"drawEntities",
-			"renderTilesAndEntityLayers",
-			"render",
-			"MAPED 4",
-			"maped 4",
-			"maped4",
-			"getPas",
-			"paste",
-			"getPasteboard",
-			"changeSelectedLayer",
-			"999",
-			"'FLOOD'",
-			"check_validity",
-			"map.layers[0].dimensions.Y",
-			"vspData",
-			"mock",
-			"initializeTileSelectorsForMap",
-			"_last_vsp",
-			"_last_vsp\n_last_vsp",
-			"_last_vsp",
-			"leftTile",
-			"setCurrentlySelectedTile",
-			"layerData",
-			"leftTile",
-			"getCurrentlySelectedTile",
-			"getTXTyFromMouse",
-			"changeSelectedLayer",
-			"_selected_layer",
-			"e",
-			"doFloodFill",
-			"change_many_tiles",
-			"pasteSet",
-			"change_many_tiles",
-			"UndoRedo",
-			"change_one_",
-			"change_one_tile",
+			"let pasteboard",
+			"autofaces",
+			"auto",
+			"burrito",
+			"entity_location_tx",
+			"loc_tx",
+			"entity_facing",
+			"datafile",
+			".json",
+			"this.entityData",
+			"entityData =",
+			"_getEntityData",
+			"entityData =",
+			"updateRstring",
+			"updateRstringInfo",
+			"updateRstring",
+			"rstring",
 			"new",
-			"left",
-			"let",
-			"btn",
-			"zoomOut",
-			"mousewhee",
-			"zoomOut",
-			"grue_zoom"
+			"updateRstringInfo",
+			"rstring",
+			"debugger",
+			"window.$$$current",
+			"copy = ",
+			"edit-copy",
+			"debugS",
+			"debugger",
+			"last_map",
+			"selectedTilesPerVSP",
+			"toggleSelectedTiles",
+			"setTileSelectorUI",
+			"_last_vsp",
+			"toggle",
+			"toggleSelectedTiles",
+			"two_zoom_seriously_all_zoom_functions_suck_kill_them_all",
+			"zoom",
+			"doVSPselector",
+			"updateTileSelectorPaletteMapAnts",
+			"per",
+			"doVSPselector",
+			"map.selection.",
+			"map.selection",
+			"setTileSelectorUI",
+			"selection",
+			"setTileSelectorUI",
+			"moveSelectedTile",
+			"moveSelectedTile(",
+			"create_map",
+			"window.$$$",
+			"moveSelectedTile",
+			"setTileSelectorUI",
+			"\\bmap =",
+			"map",
+			"setCurrentlySelectedTile",
+			"vsp",
+			"zoom_level",
+			"create_dynamic_map",
+			"tileset_selector_canvas",
+			"overflow",
+			"isTileSelectorMap",
+			"create_dynamic_map",
+			"isTileSelectorMap",
+			"map",
+			"create_map",
+			"new Map",
+			"map.zoom_level",
+			"zero_zoom",
+			"btn-vsp-zoomout",
+			"tile",
+			"zoom",
+			"$$$save",
+			"app.",
+			"window.$$$save",
+			"$$$saveAs",
+			"human_name",
+			"'Eye",
+			"Eyedropper",
+			"current ",
+			"current",
+			"grue",
+			"c:",
+			"c:\\",
+			"jetpack.write",
+			"jetpack write",
+			"jetpack",
+			"datafile",
+			"lastDitch",
+			"Could not find ",
+			"dexter",
+			"wORSHIPPING, THOUGH",
+			"\"filename\": \"",
+			"entit",
+			"result",
+			"clickSet",
+			"determineEntityCollision",
+			"click",
+			"checkEntities",
+			"addEntityWithoutSort",
+			"animation =",
+			"seekResultFromLayers",
+			"checkEntities",
+			"createEntityRenderData",
+			"update_entity",
+			"save",
+			"verifyMap",
+			"ent",
+			"verifyMap",
+			"copy(",
+			"_cut_or_copy",
+			"addToPasteboard",
+			"pasteboard",
+			"paste",
+			"getSelectedLayer",
+			"mouse",
+			"mousedown",
+			"smartEyedropperGenerator",
+			"Smart",
+			"SmartTi",
+			"COLOR_BUFFER_BIT",
+			"renderBackground",
+			"as an unknown format",
+			"enti",
+			"$$$SCREENSHOT",
+			".$$$SCREENSHOT",
+			"window.$$$currentMap",
+			"path",
+			"chr",
+			"entities to sort",
+			"window.newMapData.default_vspfile"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -672,6 +723,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"_toolLogic",
 			"'",
 			"// TODO",
 			"map",
@@ -693,24 +745,24 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 9,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/Tools.FloodFill.test.js",
+					"file": "src/TileSelector.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2527,
+						"buffer_size": 4964,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1243,
-								1243
+								2477,
+								2477
 							]
 						],
 						"settings":
@@ -720,27 +772,57 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 434.0,
+						"translation.y": 2436.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/helpers/FakeMap.js",
+					"file": "src/Map.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 651,
+						"buffer_size": 53737,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								557,
-								557
+								19474,
+								19474
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 19554.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/tools/Draw.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2497,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1130,
+								1130
 							]
 						],
 						"settings":
@@ -757,200 +839,50 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "README.md",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 4130,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4121,
-								4129
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Markdown/Markdown.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2948.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
 					"buffer": 3,
-					"file": "src/js/ui/ZonesPalette.js",
+					"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/NPC/npc_miami_vice.json",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6430,
+						"buffer_size": 825,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5235,
-								5176
+								0,
+								825
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 8903.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/js/ui/LayersPalette.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 27539,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7220,
-								7220
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 9306.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/Tools.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 21261,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								20509,
-								20509
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 24786.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/Map.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 41387,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								22498,
-								22511
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 23611.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "src/js/ui/EntityPalette.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 15422,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								264,
-								264
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/blue_tank.json",
+					"buffer": 4,
+					"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_whale_herbert.json",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 802,
+						"buffer_size": 688,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								802,
-								802
+								294,
+								294
 							]
 						],
 						"settings":
@@ -967,20 +899,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "src/js/ui/TilesetSelectorPalette.js",
+					"buffer": 5,
+					"file": "src/js/ui/EntityPalette.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5075,
+						"buffer_size": 17127,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1112,
-								1112
+								14803,
+								14803
 							]
 						],
 						"settings":
@@ -990,10 +922,126 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 382.0,
+						"translation.y": 14005.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/js/ui/EntityPalette.test.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5761,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4774,
+								4774
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6352.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/js/ui/CutCopyPaste.test.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4466,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2091,
+								2091
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 866.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "__mocks__/fs-jetpack.js",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 477,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								387,
+								387
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/helpers/FakeMap.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 730,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								668,
+								668
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -1001,7 +1049,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 44.0
+		"height": 39.0
 	},
 	"input":
 	{
@@ -1048,16 +1096,180 @@
 		"selected_items":
 		[
 			[
-				"entit",
+				"fakemap",
+				"src\\helpers\\FakeMap.js"
+			],
+			[
+				"tileselector.js",
+				"src\\TileSelector.js"
+			],
+			[
+				"package.json",
+				"package.json"
+			],
+			[
+				"undo",
+				"src\\UndoRedo.js"
+			],
+			[
+				"cutcopyp",
+				"src\\js\\ui\\CutCopyPaste.test.js"
+			],
+			[
+				"map.js",
+				"src\\Map.js"
+			],
+			[
+				"entitypal",
 				"src\\js\\ui\\EntityPalette.js"
+			],
+			[
+				"layer",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"cutcopypas",
+				"src\\js\\ui\\CutCopyPaste.js"
+			],
+			[
+				"eye",
+				"src\\tools\\Eyedropper.js"
+			],
+			[
+				"css",
+				"src\\stylesheets\\main.less"
+			],
+			[
+				"eyedropper",
+				"src\\tools\\Eyedropper.js"
+			],
+			[
+				"tools.",
+				"src\\Tools.js"
+			],
+			[
+				"tilesel",
+				"src\\TileSelector.js"
+			],
+			[
+				"app",
+				"src\\app.js"
+			],
+			[
+				"eyedrop",
+				"src\\tools\\Eyedropper.js"
+			],
+			[
+				"smart",
+				"src\\tools\\SmartEyedropper.js"
+			],
+			[
+				"entitypalet",
+				"src\\js\\ui\\EntityPalette.js"
+			],
+			[
+				"entity",
+				"src\\js\\ui\\EntityPalette.test.js"
+			],
+			[
+				"undotest",
+				"src\\Tools.UndoRedo.test.js"
+			],
+			[
+				"tets.js",
+				"src\\Map.test.js"
+			],
+			[
+				"test",
+				"src\\tools\\FloodFill.test.js"
+			],
+			[
+				"cutcop",
+				"src\\js\\ui\\CutCopyPaste.js"
+			],
+			[
+				"fill",
+				"src\\tools\\FloodFill.js"
+			],
+			[
+				"draw",
+				"src\\tools\\Draw.js"
 			],
 			[
 				"tools",
 				"src\\Tools.js"
 			],
 			[
+				"layerspalette",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"layers",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"app.js",
+				"src\\app.js"
+			],
+			[
+				"palettes",
+				"src\\Palettes.js"
+			],
+			[
+				"fakema",
+				"src\\helpers\\FakeMap.js"
+			],
+			[
 				"map",
 				"src\\Map.js"
+			],
+			[
+				"map.",
+				"src\\Map.js"
+			],
+			[
+				"lay",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"zonespalette",
+				"src\\js\\ui\\ZonesPalette.js"
+			],
+			[
+				"app.",
+				"src\\app.js"
+			],
+			[
+				"sma",
+				"src\\tools\\SmartEyedropper.js"
+			],
+			[
+				"zones",
+				"src\\js\\ui\\ZonesPalette.js"
+			],
+			[
+				"layerspal",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"floodfill",
+				"src\\tools\\FloodFill.test.js"
+			],
+			[
+				"tools.js",
+				"src\\Tools.js"
+			],
+			[
+				"main",
+				"src\\stylesheets\\main.less"
+			],
+			[
+				"tilses",
+				"src\\TileSelector.js"
+			],
+			[
+				"entit",
+				"src\\js\\ui\\EntityPalette.js"
 			],
 			[
 				"mai",
@@ -1068,24 +1280,8 @@
 				"src\\stylesheets\\main.less"
 			],
 			[
-				"layers",
-				"src\\js\\ui\\LayersPalette.js"
-			],
-			[
-				"layerspal",
-				"src\\js\\ui\\LayersPalette.js"
-			],
-			[
 				"tools.flo",
 				"src\\Tools.FloodFill.test.js"
-			],
-			[
-				"cutcop",
-				"src\\js\\ui\\CutCopyPaste.js"
-			],
-			[
-				"app",
-				"src\\app.js"
 			],
 			[
 				"menu",
@@ -1108,16 +1304,8 @@
 				"src\\helpers\\FakeMap.js"
 			],
 			[
-				"layerspalette",
-				"src\\js\\ui\\LayersPalette.js"
-			],
-			[
 				"readme",
 				"README.md"
-			],
-			[
-				"fakemap",
-				"src\\helpers\\FakeMap.js"
 			],
 			[
 				"undore",
@@ -1144,10 +1332,6 @@
 				"src\\ShaderProgram.js"
 			],
 			[
-				"app.js",
-				"src\\app.js"
-			],
-			[
 				"dev_menu_",
 				"src\\menu\\dev_menu_template.js"
 			],
@@ -1156,28 +1340,8 @@
 				"src\\js\\ui\\Util.js"
 			],
 			[
-				"entity",
-				"src\\js\\ui\\EntityPalette.js"
-			],
-			[
 				"entitypalette.test.js",
 				"src\\js\\ui\\EntityPalette.test.js"
-			],
-			[
-				"map.js",
-				"src\\Map.js"
-			],
-			[
-				"layer",
-				"src\\js\\ui\\LayersPalette.js"
-			],
-			[
-				"tools.js",
-				"src\\Tools.js"
-			],
-			[
-				"tools.",
-				"src\\Tools.js"
 			],
 			[
 				"test.js",
@@ -1196,10 +1360,6 @@
 				"src\\menu\\file_menu_template.js"
 			],
 			[
-				"map.",
-				"src\\Map.js"
-			],
-			[
 				"package",
 				"package.json"
 			],
@@ -1210,10 +1370,6 @@
 			[
 				"palete",
 				"src\\js\\ui\\LayersPalette.js"
-			],
-			[
-				"zones",
-				"src\\js\\ui\\ZonesPalette.js"
 			],
 			[
 				"window_m",
