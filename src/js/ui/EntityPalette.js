@@ -415,6 +415,8 @@ export const update_entity = (dialog, ent_id) => {
   const loc_px = parseInt($('#entity_location_px').val());
   const loc_py = parseInt($('#entity_location_py').val());
 
+  debugger;
+
   console.log('loc_tx, loc_ty, loc_px, loc_py:');
   console.log(loc_tx, loc_ty, loc_px, loc_py);
 
@@ -444,6 +446,15 @@ export const update_entity = (dialog, ent_id) => {
 };
 
 export const _update_entity_inner = (ent_id, valDict) => {
+
+  if( valDict.loc_py === 0 ) {
+    valDict.loc_ty = 0;
+  }
+
+  if( valDict.loc_px === 0 ) {
+    valDict.loc_tx = 0;
+  }
+
   // TODO : PX/PY?
   const loc = {
     tx: valDict.loc_tx,
@@ -495,15 +506,9 @@ export const _update_entity_inner = (ent_id, valDict) => {
   let k;
   for (k in ent) {
     if (ent.hasOwnProperty(k)) {
-      // console.info('overwriting ent[' + ent_id + '].' + k, 'with', ent[k]);
       currentEntities[ent_id][k] = ent[k];
     }
   }
-
-  // console.info('currentEntities[' + ent_id + ']', currentEntities[ent_id]);
-
-  // maaaybe?
-  // currentEntities[ent_id] = ent;
 
   if (currentEntities[ent_id] && currentEntities[ent_id].location) {
     old_layer = currentEntities[ent_id].location.layer;
