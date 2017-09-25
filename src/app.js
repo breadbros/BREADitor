@@ -192,8 +192,12 @@ ipcRenderer.on('main-menu', (event, arg) => {
   }
 });
 
-// TODO this is evil.
-// This registers
+// TODO this are evil.
+window.isShiftKeyPressed = false;
+$(document).on('keyup keydown', function(e){
+  window.isShiftKeyPressed = e.shiftKey; 
+});
+
 $('body').on('keydown', (e) => {
   if (!(e.ctrlKey || e.cmdKey)) { // TODO verify this on mac, cmdKey is a guess.
     return;
