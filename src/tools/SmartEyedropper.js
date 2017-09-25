@@ -32,6 +32,7 @@ export const doEntitySelection = (ret) => {
   window.$$$toggle_pallete('entity', true);
   selectEntityByIndex(ret.eIdx);
   scrollEntityPalletteToEntity(ret.eIdx);
+  ret.ent.INDEX = ret.eIdx;
   addEntityToHighlight(ret.ent);
 }
 

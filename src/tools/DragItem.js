@@ -1,5 +1,5 @@
-// import { getTXTyFromMouse, _toolLogic } from '../Tools';
-import { getSelectedEntities } from '../js/ui/EntityPalette';
+import { getTXTyFromMouse, _toolLogic } from '../Tools';
+import { getSelectedEntities, update_entity_location } from '../js/ui/EntityPalette';
 
 // window.isShiftKeyPressed
 // getSelectedEntities
@@ -7,16 +7,24 @@ import { getSelectedEntities } from '../js/ui/EntityPalette';
 export default () => {
   return {
     'mousedown': function (map, e) {
-      debugger;
-      // if (!getSelectedEntities()) {
-      //   console.log('You havent selected a layer yet.');
-      //   window.alert('You havent selected a layer yet.');
-      //   return;
-      // }
 
-      // const result = getTXTyFromMouse(map, e);
-      // const tX = result[0];
-      // const tY = result[1];
+      const entList = getSelectedEntities();
+
+      if( entList.length != 1 ) {
+        alert("Invald number of entities selected.  Need 1, got " + entList.length );
+        return;
+      }
+
+      const ent = entList[0];
+
+      const result = getTXTyFromMouse(map, e);
+
+      update_entity_location(ent.INDEX, {
+        tx: result[0],
+        ty: result[1],
+        px: null,
+        py: null
+      });
 
       // map.selection.deselect();
 

@@ -87,7 +87,7 @@ export const clearAllEntitysFromHighlight = (ent) => {
 };
 
 export const getSelectedEntities = () => {
-  return highlightedEnts;
+  return Array.from(highlightedEnts);
 }
 
 export const selectEntityByIndex = (idx) => {
@@ -105,6 +105,7 @@ const singleclick_handler = (evt) => {
 
   const $ent = select_entity_from_pallete(evt);
   const ent = currentEntities[$ent.data('index')];
+  ent.INDEX = $ent.data('index');
 
   addEntityToHighlight(ent);
 
@@ -447,6 +448,36 @@ export const update_entity = (dialog, ent_id) => {
   }
 };
 
+export const update_entity_location = (ent_id, valDict) => {
+  if (!$.isNumeric(ent_id) || ent_id < 0) {
+    modal_error('Invalid input: ent_id (' + ent_id + ') is invalid.');
+    return false;
+  }
+
+  if( valDict.tx ) {
+    currentEntities[ent_id].location.tx = valDict.tx;
+    currentEntities[ent_id].location.px = null;
+  }
+
+  if( valDict.ty ) {
+    currentEntities[ent_id].location.ty = valDict.ty;
+    currentEntities[ent_id].location.py = null;
+  }
+
+  currentEntities[ent_id].location.px = valDict.px || currentEntities[ent_id].location.px;
+  currentEntities[ent_id].location.py = valDict.py || currentEntities[ent_id].location.py;
+
+  if( valDict.py === 0 ) {
+    currentEntities[ent_id].location.ty = 0;
+  }
+
+  if( valDict.px === 0 ) {
+    currentEntities[ent_id].location.tx = 0;
+  }
+
+  do_the_no_things();
+};
+
 export const _update_entity_inner = (ent_id, valDict) => {
 
   if( valDict.loc_py === 0 ) {
@@ -522,12 +553,16 @@ export const _update_entity_inner = (ent_id, valDict) => {
     relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);
   }
 
+  do_the_no_things();
+
+  return true;
+};
+
+const do_the_no_things = () => {
   redraw_palette();
 
   window.$$$currentMap.resetEntityData(); // TODO: NO NO NO NO NONONONNONONNONO
   window.$$$currentMap.createEntityRenderData(); // TODO: NO NO NO NO NONONONNONONNONO
-
-  return true;
 };
 
 // TODO: ent_name should be a uuid
