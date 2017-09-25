@@ -7,7 +7,8 @@ import smartEyedropperGenerator from './tools/SmartEyedropper';
 import drawGenerator from './tools/Draw';
 import selectGenerator from './tools/Select';
 import floodFillGenerator from './tools/FloodFill';
-import dragGenerator from './tools/Drag';
+import moveViewportGenerator from './tools/MoveViewport';
+import dragItemGenerator from './tools/DragItem'
 
 import jetpack from 'fs-jetpack';
 
@@ -178,7 +179,8 @@ export const selectAll = (map) => {
 // TODO once we know the common verbs and nouns for palette tools, we really should extract each one into its own file
 // TODO and test the bejeezus out of them.  There's some janky-ass jank in here!
 export const _toolLogic = {
-  'DRAG': dragGenerator(),
+  'DRAG-ITEM': dragItemGenerator(),
+  'MOVE-VIEWPORT': moveViewportGenerator(),
   'FLOOD': floodFillGenerator(),
   'SMART-EYEDROPPER': smartEyedropperGenerator(),
 
@@ -199,6 +201,10 @@ export const updateRstringInfo = () => {
   $('#info-rstring').text(window.$$$currentMap.layerRenderOrder.join(','));
 };
 
+export const clickDragItem = () => {
+  $(_toolLogic['DRAG-ITEM'].button_element).click();
+};
+
 export const clickFloodFill = () => {
   $(_toolLogic['FLOOD'].button_element).click();
 };
@@ -211,8 +217,8 @@ export const clickSmartdropper = () => {
   $(_toolLogic['SMART-EYEDROPPER'].button_element).click();
 };
 
-export const clickMove = () => {
-  $(_toolLogic['DRAG'].button_element).click();
+export const clickMoveViewport = () => {
+  $(_toolLogic['MOVE-VIEWPORT'].button_element).click();
 };
 
 export const clickSelect = () => {
@@ -311,13 +317,13 @@ $('#btn-add-tree').on('click', (e) => {
     mousemove: (map, evt) => {
       if (!getSelectedLayer()) {
         window.alert('select a layer first.');
-        window.TOOLMODE = 'DRAG';
+        window.TOOLMODE = 'MOVE-VIEWPORT';
         return;
       }
 
       if (!currentLayerCanHaveEntityOnIt()) {
         window.alert('invalid layer for entity placement.');
-        window.TOOLMODE = 'DRAG';
+        window.TOOLMODE = 'MOVE-VIEWPORT';
         return;
       }
 
@@ -336,7 +342,7 @@ $('#btn-add-tree').on('click', (e) => {
       map.entityPreview.location.layer = getSelectedLayer().layer.name;
       map.addEntity(map.entityPreview, map.entityPreview.location);
       map.entityPreview = null;
-      window.TOOLMODE = 'DRAG';
+      window.TOOLMODE = 'MOVE-VIEWPORT';
     },
     mousedown: () => {},
     moousewheel: () => {}

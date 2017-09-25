@@ -1,7 +1,7 @@
 import { Map, verifyTileData, verifyMap, cleanEntities } from './Map.js';
 import {
-  clickSmartdropper, clickEyedropper, clickDrawBrush, clickMove, clickSelect, selectAll, clickFloodFill,
-  initTools, updateRstringInfo, updateLocationFunction
+  clickSmartdropper, clickEyedropper, clickDrawBrush, clickMoveViewport, clickSelect, selectAll, clickFloodFill,
+  initTools, updateRstringInfo, updateLocationFunction, clickDragItem
 } from './Tools.js';
 import { Palettes } from './Palettes.js';
 import {
@@ -126,8 +126,11 @@ ipcRenderer.on('main-menu', (event, arg) => {
     case 'tool-smartdropper':
       clickSmartdropper();
       break;
-    case 'tool-move':
-      clickMove();
+    case 'tool-move-viewport':
+      clickMoveViewport();
+      break;
+    case 'tool-drag-item':
+      clickDragItem();
       break;
     case 'tool-flood-fill':
       clickFloodFill();

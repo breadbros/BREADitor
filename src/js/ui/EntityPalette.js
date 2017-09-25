@@ -86,6 +86,10 @@ export const clearAllEntitysFromHighlight = (ent) => {
   highlightedEnts = new Set();
 };
 
+export const getSelectedEntities = () => {
+  return highlightedEnts;
+}
+
 export const selectEntityByIndex = (idx) => {
   if (!idx) {
     idx = 0;
@@ -414,8 +418,6 @@ export const update_entity = (dialog, ent_id) => {
 
   const loc_px = parseInt($('#entity_location_px').val());
   const loc_py = parseInt($('#entity_location_py').val());
-
-  debugger;
 
   console.log('loc_tx, loc_ty, loc_px, loc_py:');
   console.log(loc_tx, loc_ty, loc_px, loc_py);
