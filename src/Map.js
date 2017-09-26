@@ -863,6 +863,13 @@ Map.prototype = {
   },
 
   setTile: function (tileX, tileY, layerIdx, tileIdx) {
+    if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
+      console.warn('attempted to set a tile out of layer bounds. ('+tileX+','+tileY+')');
+      console.info('layerIdx: ' + layerIdx);
+      console.info(this.layers[layerIdx].dimensions)
+      return;
+    }
+
     const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
 
     if (layerIdx === 998) { // TODO the obs sentinel is the WORST
