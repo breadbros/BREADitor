@@ -480,6 +480,16 @@ export const update_entity_location = (ent_id, valDict) => {
 
 export const _update_entity_inner = (ent_id, valDict) => {
 
+  if( !valDict.loc_tx && valDict.loc_tx !== 0 && !valDict.loc_px && valDict.loc_px !== 0 ) {
+    modal_error('Invalid input: no valid x values given.');
+    return false;
+  }
+
+  if( !valDict.loc_ty && valDict.loc_ty !== 0 && !valDict.loc_py && valDict.loc_py !== 0 ) {
+    modal_error('Invalid input: no valid y values given.');
+    return false;
+  }
+
   if( valDict.loc_py === 0 ) {
     valDict.loc_ty = 0;
   }
