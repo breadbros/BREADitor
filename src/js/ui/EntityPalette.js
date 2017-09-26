@@ -454,12 +454,12 @@ export const update_entity_location = (ent_id, valDict) => {
     return false;
   }
 
-  if( valDict.tx ) {
+  if( valDict.tx || valDict.tx === 0 ) {
     currentEntities[ent_id].location.tx = valDict.tx;
     currentEntities[ent_id].location.px = null;
   }
 
-  if( valDict.ty ) {
+  if( valDict.ty || valDict.ty === 0 ) {
     currentEntities[ent_id].location.ty = valDict.ty;
     currentEntities[ent_id].location.py = null;
   }
