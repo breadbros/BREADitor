@@ -511,6 +511,26 @@ export const update_entity_location = (ent_id, valDict) => {
   do_the_no_things();
 };
 
+const is_valid_animation = (chr_filepath, animation_name) => {
+  const fullpath = jetpack.path(window.$$$currentMap.dataPath, window.$$$currentMap.mapedConfigData.path_to_chrs, chr_filepath);
+  console.log( 'fullpath to entity for animation verificaiton: ' + fullpath );
+
+  const data = jetpack.read(fullpath, 'json');
+
+  if(!data) {
+    console.error('Invalid entity filepath: ' + fullpath);
+    return false;
+  }
+
+  if( !data.animations ) {
+    console.error('Entity has no animations: ' + fullpath);
+    return false;
+  }
+
+  console.info('data.animations['+animation_name+']: ' + data.animations[animation_name]);
+  return !!data.animations[animation_name];
+};
+
 export const _update_entity_inner = (ent_id, valDict) => {
 
   if( !valDict.loc_tx && valDict.loc_tx !== 0 && !valDict.loc_px && valDict.loc_px !== 0 ) {
@@ -575,13 +595,14 @@ export const _update_entity_inner = (ent_id, valDict) => {
   let old_layer;
   let new_layer;
 
-  let old_animation;
-  let new_animation;
-
-  debugger;
-
   if (!currentEntities[ent_id]) {
     currentEntities[ent_id] = {};
+  }
+
+  // todo lookahead in the new file to see if the new animation name is valid.
+  if( !is_valid_animation(ent.filename, ent.animation) ) {
+    alert(ent.filename +' does not have animation ' + ent.animation );
+    ent.animation = '';
   }
 
   let k;
