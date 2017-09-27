@@ -398,8 +398,26 @@ $('body').on('keydown', (e) => {
     const dataName = fileName.replace('.map.json', '.map.data.json');
     // const vspName = fileName.replace('.map.json', '.vsp.json');
 
+    saveMostRecentMapLocation(fileName);
+
     // TODO: verify that all three of these files, you know... exist?
     bootstrapMap(fileName, dataName);
+  };
+
+  const saveMostRecentMapLocation = (filename) => {
+    const app = require('electron').remote.app;
+    const jetpack = require('fs-jetpack').cwd(app.getAppPath());
+    const path = require('path');
+
+    const appConfigPath = path.join(app.getAppPath(), '$$$_BREDITOR_MOST_RECENT.json');
+    let appConfigData = jetpack.read(appConfigPath, 'json');
+    if( !appConfigData ) { 
+      appConfigData = {};
+    }
+
+    appConfigData.abs_path_to_maps = path.dirname(filename);
+
+    jetpack.write(appConfigPath, appConfigData);
   };
 
   window.$$$about_breaditor = function () {
@@ -450,12 +468,23 @@ $('body').on('keydown', (e) => {
   };
 
   window.$$$load = function () {
+    const app = require('electron').remote.app;
     const { dialog } = require('electron').remote;
+    const dataPath = app.getAppPath();
+    const jetpack = require('fs-jetpack').cwd(dataPath);
+    const path = require('path');
 
-    dialog.showOpenDialog(
-      {filters: [{ name: 'text', extensions: ['map.json'] }]},
-      loadByFilename
-    );
+    const appConfigData = jetpack.read(path.join(dataPath, '$$$_BREDITOR_MOST_RECENT.json'), 'json');
+
+    const options = {
+      filters: [{ name: 'text', extensions: ['map.json'] }]
+    };
+
+    if(appConfigData && appConfigData.abs_path_to_maps) {
+      options.defaultPath = appConfigData.abs_path_to_maps;
+    }
+
+    dialog.showOpenDialog( options, loadByFilename );
   };
 
   window.$$$saveAs = function () {
@@ -516,6 +545,7 @@ $('body').on('keydown', (e) => {
   Palettes.setupPaletteListeners();
 
   window.appPath = path.dirname(require.main.filename);
+
   window.$$$hide_all_windows();
   // window.$$$load();
 

@@ -224,7 +224,7 @@ const setup_template = (ent, id) => {
       dialog.showOpenDialog({
           title: 'Choose a new entity file',
           defaultPath: absPathToChrs,
-          filters: ['*.json'],
+          filters: [{ name: 'text', extensions: ['.json'] }],
           openFile: true,
           openDirectory: false,
           multiSelections: false
