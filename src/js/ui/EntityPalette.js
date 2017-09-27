@@ -2,6 +2,9 @@ import { modal_error } from './Util.js';
 import { LayersWidget } from './LayersPalette.js';
 import { centerMapOnXY } from '../../Tools';
 
+const { dialog } = require('electron').remote;
+const jetpack = require('fs-jetpack');
+
 const $ = require('jquery');
 
 let _entityLayersExpanded = false;
@@ -215,7 +218,32 @@ const setup_template = (ent, id) => {
     $template.find('#entity_autofaces').prop('checked', ent.autofaces);
 
     $template.find('#entity_filename').click(() => {
-      window.alert('Pop up file dialog here.');
+
+      const absPathToChrs = jetpack.path(window.$$$currentMap.dataPath, window.$$$currentMap.mapedConfigData.path_to_chrs);
+
+      dialog.showOpenDialog({
+          title: 'Choose a new entity file',
+          defaultPath: absPathToChrs,
+          filters: ['*.json'],
+          openFile: true,
+          openDirectory: false,
+          multiSelections: false
+        }, function(filepath) {
+
+          let path = '';
+
+          path = filepath[0];
+
+          if( filepath[0].indexOf(absPathToChrs) === 0 ) {
+            path = filepath[0].substring(absPathToChrs.length).replace(/\\/g, '/'); 
+            if( path.indexOf('/') === 0 ) {
+              path = path.substring(1);
+            }
+          }
+
+          $('#entity_filename').val(path);
+        }
+      );
     });
 
     let entData;
@@ -542,6 +570,9 @@ export const _update_entity_inner = (ent_id, valDict) => {
   let old_layer;
   let new_layer;
 
+  let old_animation;
+  let new_animation;
+
   if (!currentEntities[ent_id]) {
     currentEntities[ent_id] = {};
   }
@@ -552,6 +583,8 @@ export const _update_entity_inner = (ent_id, valDict) => {
       currentEntities[ent_id][k] = ent[k];
     }
   }
+
+  debugger;
 
   if (currentEntities[ent_id] && currentEntities[ent_id].location) {
     old_layer = currentEntities[ent_id].location.layer;
