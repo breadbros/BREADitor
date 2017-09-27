@@ -224,7 +224,7 @@ const setup_template = (ent, id) => {
       dialog.showOpenDialog({
           title: 'Choose a new entity file',
           defaultPath: absPathToChrs,
-          filters: [{ name: 'text', extensions: ['.json'] }],
+          filters: [{ name: 'text', extensions: ['json'] }],
           openFile: true,
           openDirectory: false,
           multiSelections: false
@@ -577,6 +577,8 @@ export const _update_entity_inner = (ent_id, valDict) => {
 
   let old_animation;
   let new_animation;
+
+  debugger;
 
   if (!currentEntities[ent_id]) {
     currentEntities[ent_id] = {};
