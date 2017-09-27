@@ -1,9 +1,9 @@
 import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
 import { selectLayer, getObsVisibility } from '../js/ui/LayersPalette';
 import { setTileSelectorUI } from '../TileSelector';
-import { setActiveZone, scrollZonePalletteToZone, getZoneVisibility } from '../js/ui/ZonesPalette';
+import { setActiveZone, scrollZonePalletteToZone, getZoneVisibility, show_edit_zone_dialog } from '../js/ui/ZonesPalette';
 import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToEntity, addEntityToHighlight,
-         clearAllEntitysFromHighlight } from '../js/ui/EntityPalette';
+         clearAllEntitysFromHighlight, show_edit_entity_dialog } from '../js/ui/EntityPalette';
 
 const $ = require('jquery');
 
@@ -173,12 +173,32 @@ const seekResultFromLayers = (map, clickSet) => {
 };
 
 export default () => {
+
+  let curThing = {};
+
   return {
+    'dblclick': function (map, e) {
+
+      switch(curThing.type) {
+        case 'entity':
+          show_edit_entity_dialog(curThing.id);
+          return;
+
+        case 'zone':
+          show_edit_zone_dialog(curThing.id);
+          return;
+
+        default:
+          console.log( 'dblckick smartdropper, unknown item type: ' + curThing.type );
+      }
+    },
     'mousedown': function (map, e) {
       if (isTileSelectorMap(map)) {
         _toolLogic['EYEDROPPER']['mousedown'](map, e);
         return;
       }
+
+      curThing = {};
 
       console.log('EYEDROPPER->mousedown...');
 
@@ -201,6 +221,8 @@ export default () => {
           window.$$$toggle_pallete('zones', true);
           setActiveZone(zIdx);
           scrollZonePalletteToZone(zIdx);
+
+          curThing = { type: 'zone', id: zIdx };
           return;
         }
       }
@@ -226,7 +248,7 @@ export default () => {
 
         if (ret.type === 'ENTITY') {
           doEntitySelection(ret);
-
+          curThing = { type: 'entity', id: ret.eIdx };
           //selectLayer(ret.layer.name);
           //setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
           return;

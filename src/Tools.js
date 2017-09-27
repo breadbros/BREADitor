@@ -278,6 +278,9 @@ export const initTools = (renderContainer, map) => {
   renderContainer.on('mouseup', function (e) {
     tools('mouseup', map, e);
   });
+  renderContainer.on('dblclick', function (e) {
+    tools('dblclick', map, e);
+  });
   renderContainer.on('mousewheel', function (e) {
     tools('mousewheel', map, e);
   });

@@ -355,6 +355,11 @@ function edit_entity_click(evt, id) {
   _entity_click(evt, id);
 }
 
+export const show_edit_entity_dialog = (id) => {
+  const evt = { stopPropagation: () => {} };
+  _entity_click(evt, id);
+}
+
 function _entity_click(evt, id) {
   evt.stopPropagation();
 

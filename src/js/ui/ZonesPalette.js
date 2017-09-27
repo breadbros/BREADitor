@@ -110,6 +110,11 @@ function edit_zone_click(evt, id) {
   _zone_click(evt, id);
 }
 
+export const show_edit_zone_dialog = (id) => {
+  const evt = { stopPropagation: () => {} };
+  _zone_click(evt, id);
+}
+
 function _zone_click(evt, id) {
   evt.stopPropagation();
 
