@@ -635,19 +635,8 @@ export const getYfromFlat = (idx, numColumns) => {
   return parseInt(flatval / numColumns, 10);
 };
 
-Map.prototype = {
-  addEntityWithoutSort(entity, location) {
-    // TODO we just shouldnt save any "MAPED_" properties in the first place.
-    // TODO we should have a universal MAPED_CONF type that lives parallel to objects, not in them
-    if (entity.MAPED_USEDEFAULT) {
-      delete entity.MAPED_USEDEFAULT;
-    }
-
-    if (!this.entities[location.layer]) {
-      this.entities[location.layer] = [];
-    }
-    this.entities[location.layer].push(entity);
-
+Map.prototype = {  
+  sullyDataHealing(entity) {
     // TODO this section is full of asset-healing code that's super Sully-specific.  Clean it up for general release.
     if (!this.entityData[entity.filename]) {
       const originalDatafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
@@ -668,18 +657,6 @@ Map.prototype = {
             datafile = null;
           }
         }
-      }
-
-      console.log(entity.filename);
-
-      // if (entity.filename.endsWith('chr')) {
-      //   console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
-      //   entity.MAPED_USEDEFAULT = true;
-      //   return;
-      // }
-
-      if( entity.filename === 'pc_dexter.chr.json' ) {
-        debugger;
       }
 
       if (datafile === null && !entity.filename.endsWith('json')) {
@@ -749,26 +726,7 @@ Map.prototype = {
           }
         }
 
-        if (!this.entityTextures[data.image]) {
-          // TODO maybe make this definable in this.mapedConfigData too?
-          let imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image);
-          if (!jetpack.inspect(imagePath)) {
-            imagePath += '.png'; // TODO this is stupid and bad and wrong.
-          }
-          if (!jetpack.inspect(imagePath)) {
-            console.warn("Couldn't load image", data.image, 'for entity', entity.filename, '; falling back.');
-                        // this.entityData[entity.filename].image = '__default__';
-            entity.MAPED_USEDEFAULT = true;
-            return;
-          }
-
-          console.info("Adding '" + imagePath + "' to entityTextures cache...");
-          this.toLoad++;
-          this.entityTextures[data.image] = {};
-          this.entityTextures[data.image].img = new window.Image();
-          this.entityTextures[data.image].img.onload = this.doneLoading;
-          this.entityTextures[data.image].img.src = imagePath;
-        }
+        this.maybeAddEntityTexture(data, entity);
 
         entity.MAPED_USEDEFAULT = false;
         console.log('NOT USING DEFAULT ENTITY FOR ', data.image);
@@ -778,6 +736,44 @@ Map.prototype = {
         entity.MAPED_USEDEFAULT = true;
       }
     }
+  },
+
+  maybeAddEntityTexture(data, entity) {
+    if (!this.entityTextures[data.image]) {
+      // TODO maybe make this definable in this.mapedConfigData too?
+      let imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image);
+      if (!jetpack.inspect(imagePath)) {
+        imagePath += '.png'; // TODO this is stupid and bad and wrong.
+      }
+      if (!jetpack.inspect(imagePath)) {
+        console.warn("Couldn't load image", data.image, 'for entity', entity.filename, '; falling back.');
+                    // this.entityData[entity.filename].image = '__default__';
+        entity.MAPED_USEDEFAULT = true;
+        return;
+      }
+
+      console.info("Adding '" + imagePath + "' to entityTextures cache...");
+      this.toLoad++;
+      this.entityTextures[data.image] = {};
+      this.entityTextures[data.image].img = new window.Image();
+      this.entityTextures[data.image].img.onload = this.doneLoading;
+      this.entityTextures[data.image].img.src = imagePath;
+    }
+  },
+
+  addEntityWithoutSort(entity, location) {
+    // TODO we just shouldnt save any "MAPED_" properties in the first place.
+    // TODO we should have a universal MAPED_CONF type that lives parallel to objects, not in them
+    if (entity.MAPED_USEDEFAULT) {
+      delete entity.MAPED_USEDEFAULT;
+    }
+
+    if (!this.entities[location.layer]) {
+      this.entities[location.layer] = [];
+    }
+    this.entities[location.layer].push(entity);
+
+    this.sullyDataHealing(entity);
 
     if (entity.filename.endsWith('chr')) {
       console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
