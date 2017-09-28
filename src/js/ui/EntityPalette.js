@@ -9,6 +9,23 @@ const $ = require('jquery');
 
 let _entityLayersExpanded = false;
 
+const set_animation_dropdown = ($template, animationKeyset, ent) => {
+  const $entAnim = $template.find('#entity_animation');
+
+  // / repopulate animation select
+  $entAnim.empty();
+  $.each(animationKeyset, (key, value) => {
+    $entAnim.append(
+        $('<option></option>')
+        .attr('value', value)
+        .text(value)
+      );
+  });
+
+  // / set value.
+  $entAnim.val(ent.animation);
+}
+
 export const setNormalEntityVisibility = (val) => {
   window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE = !!val;
 };
@@ -242,6 +259,10 @@ const setup_template = (ent, id) => {
           }
 
           $('#entity_filename').val(path);
+
+          const anims = get_animations_by_filepath(path);
+          const animationKeyset = Object.keys(anims);
+          set_animation_dropdown($template, animationKeyset, ent);
         }
       );
     });
@@ -256,20 +277,7 @@ const setup_template = (ent, id) => {
 
     // = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];
     const animationKeyset = Object.keys(entData.animations);
-    const $entAnim = $template.find('#entity_animation');
-
-    // / repopulate animation select
-    $entAnim.empty();
-    $.each(animationKeyset, (key, value) => {
-      $entAnim.append(
-          $('<option></option>')
-          .attr('value', value)
-          .text(value)
-        );
-    });
-
-    // / set value.
-    $entAnim.val(ent.animation);
+    set_animation_dropdown($template, animationKeyset, ent);
 
     const $entFace = $template.find('#entity_facing');
     const faceKeyset = ['Up', 'Down', 'Left', 'Right'];
@@ -511,7 +519,7 @@ export const update_entity_location = (ent_id, valDict) => {
   do_the_no_things();
 };
 
-const is_valid_animation = (chr_filepath, animation_name) => {
+const get_animations_by_filepath = (chr_filepath) => {
   const fullpath = jetpack.path(window.$$$currentMap.dataPath, window.$$$currentMap.mapedConfigData.path_to_chrs, chr_filepath);
   console.log( 'fullpath to entity for animation verificaiton: ' + fullpath );
 
@@ -519,16 +527,22 @@ const is_valid_animation = (chr_filepath, animation_name) => {
 
   if(!data) {
     console.error('Invalid entity filepath: ' + fullpath);
-    return false;
+    return [];
   }
 
   if( !data.animations ) {
     console.error('Entity has no animations: ' + fullpath);
-    return false;
+    return [];
   }
 
-  console.info('data.animations['+animation_name+']: ' + data.animations[animation_name]);
-  return !!data.animations[animation_name];
+  return data.animations;
+};
+
+const is_valid_animation = (chr_filepath, animation_name) => {
+  const animations = get_animations_by_filepath(chr_filepath);
+
+  console.info('data.animations['+animation_name+']: ' + animations[animation_name]);
+  return !!animations[animation_name];
 };
 
 export const _update_entity_inner = (ent_id, valDict) => {
@@ -611,8 +625,6 @@ export const _update_entity_inner = (ent_id, valDict) => {
       currentEntities[ent_id][k] = ent[k];
     }
   }
-
-  debugger;
 
   if (currentEntities[ent_id] && currentEntities[ent_id].location) {
     old_layer = currentEntities[ent_id].location.layer;
