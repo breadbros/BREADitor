@@ -504,11 +504,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.entities = {};
     for (i = 0; i < this.mapData.entities.length; i++) {
       const entity = this.mapData.entities[i];
-      console.info(entity);
-
-      // if (!this.mapData.entities[i].animation) {
-      //   debugger;
-      // }
+//      console.info(entity);
 
       entity.location.layer = entity.location.layer || defaultEntityLayer;
 
@@ -711,25 +707,7 @@ Map.prototype = {
       }
 
       if (data) {
-        this.entityData[entity.filename] = data;
-
-        for (const name in data.animations) {
-                    // convert short-hand to useful-hand
-          if (typeof data.animations[name][0] === 'string') {
-            const chunks = data.animations[name][0].split(' ');
-            const t = parseInt(chunks.shift().substring(1), 10);
-
-            data.animations[name][0] = [];
-            for (let f = 0; f < chunks.length; f++) {
-              data.animations[name][0].push([parseInt(chunks[f], 10), t]);
-            }
-          }
-        }
-
         this.maybeAddEntityTexture(data, entity);
-
-        entity.MAPED_USEDEFAULT = false;
-        console.log('NOT USING DEFAULT ENTITY FOR ', data.image);
       } else {
         console.warn("Could not find '" + entity.filename + "', using the default. Path: ", datafile);
         // debugger;
@@ -739,6 +717,22 @@ Map.prototype = {
   },
 
   maybeAddEntityTexture(data, entity) {
+    this.entityData[entity.filename] = data;
+
+    for (const name in data.animations) {
+                // convert short-hand to useful-hand
+      if (typeof data.animations[name][0] === 'string') {
+        const chunks = data.animations[name][0].split(' ');
+        const t = parseInt(chunks.shift().substring(1), 10);
+
+        data.animations[name][0] = [];
+        for (let f = 0; f < chunks.length; f++) {
+          data.animations[name][0].push([parseInt(chunks[f], 10), t]);
+        }
+      }
+    }
+
+    console.log("this.entityTextures["+data.image+"] " + this.entityTextures[data.image])
     if (!this.entityTextures[data.image]) {
       // TODO maybe make this definable in this.mapedConfigData too?
       let imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image);
@@ -756,9 +750,13 @@ Map.prototype = {
       this.toLoad++;
       this.entityTextures[data.image] = {};
       this.entityTextures[data.image].img = new window.Image();
-      this.entityTextures[data.image].img.onload = this.doneLoading;
+      const fn = this.doneLoading;
+      this.entityTextures[data.image].img.onload = function() { console.log('done loading ' + data.image); fn(); }
       this.entityTextures[data.image].img.src = imagePath;
     }
+
+    entity.MAPED_USEDEFAULT = false;
+    console.log('NOT USING DEFAULT ENTITY FOR ', data.image);
   },
 
   addEntityWithoutSort(entity, location) {

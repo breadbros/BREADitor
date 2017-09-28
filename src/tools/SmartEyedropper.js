@@ -177,6 +177,7 @@ export default () => {
   let curThing = {};
 
   return {
+    'mousemove': () => {},
     'dblclick': function (map, e) {
 
       switch(curThing.type) {

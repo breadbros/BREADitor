@@ -263,6 +263,9 @@ const setup_template = (ent, id) => {
           const anims = get_animations_by_filepath(path);
           const animationKeyset = Object.keys(anims);
           set_animation_dropdown($template, animationKeyset, ent);
+
+          const data = get_entity_data(path);
+          window.$$$currentMap.maybeAddEntityTexture(data, ent);
         }
       );
     });
@@ -519,11 +522,17 @@ export const update_entity_location = (ent_id, valDict) => {
   do_the_no_things();
 };
 
-const get_animations_by_filepath = (chr_filepath) => {
+const get_entity_data = (chr_filepath) => {
   const fullpath = jetpack.path(window.$$$currentMap.dataPath, window.$$$currentMap.mapedConfigData.path_to_chrs, chr_filepath);
   console.log( 'fullpath to entity for animation verificaiton: ' + fullpath );
 
   const data = jetpack.read(fullpath, 'json');
+
+  return data;  
+}
+
+const get_animations_by_filepath = (chr_filepath) => {
+  const data = get_entity_data(chr_filepath);
 
   if(!data) {
     console.error('Invalid entity filepath: ' + fullpath);
@@ -636,16 +645,17 @@ export const _update_entity_inner = (ent_id, valDict) => {
     relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);
   }
 
-  do_the_no_things();
+  do_the_no_things(currentEntities[ent_id]); // these args seem dumb
 
   return true;
 };
 
-const do_the_no_things = () => {
+const do_the_no_things = (entity) => {
   redraw_palette();
 
   window.$$$currentMap.resetEntityData(); // TODO: NO NO NO NO NONONONNONONNONO
   window.$$$currentMap.createEntityRenderData(); // TODO: NO NO NO NO NONONONNONONNONO
+  window.$$$currentMap.setCanvas($('.map_canvas'));
 };
 
 // TODO: ent_name should be a uuid
