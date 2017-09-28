@@ -86,6 +86,11 @@ ipcRenderer.on('main-menu', (event, arg) => {
       // console.info('in a textfield, ignoring the accelerator');
       return;
     }
+
+    if( arg.msg == 'tool-move-viewport' && el.type) {
+      return;
+    }
+
     // console.log(document.activeElement);
     // var el = document.activeElement;
     // debugger;
