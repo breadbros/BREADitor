@@ -249,6 +249,11 @@ const setup_template = (ent, id) => {
 
           let path = '';
 
+          if(!filepath) {
+            console.log("No filepath to new entity!");
+            return;
+          }
+
           path = filepath[0];
 
           if( filepath[0].indexOf(absPathToChrs) === 0 ) {
