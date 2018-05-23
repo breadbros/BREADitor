@@ -515,8 +515,6 @@ export const update_entity = (dialog, ent_id) => {
     entity_autofaces: entity_autofaces
   };
 
-  debugger;
-
   if (_update_entity_inner(ent_id, vals)) {
     dialog.dialog('close');
   }
