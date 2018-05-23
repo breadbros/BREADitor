@@ -1436,7 +1436,7 @@ Map.prototype = {
     let tx;
     let ty;
 
-    if (entity.location.px && entity.location.px) {
+    if (entity.location.px && entity.location.py) {
       tx = entity.location.px / tilesize.width;
       ty = entity.location.py / tilesize.height;
     } else {

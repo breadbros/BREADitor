@@ -321,8 +321,15 @@ const setup_template = (ent, id) => {
 };
 
 function assert_tileness() {
-  const loc_tx = parseInt($('#entity_location_tx').val());
-  const loc_ty = parseInt($('#entity_location_ty').val());
+
+  let tx = $('#entity_location_tx').val();
+  if(!tx) { tx = 0; }
+
+  let ty = $('#entity_location_ty').val()
+  if(!ty) { ty = 0; }
+
+  const loc_tx = parseInt(tx);
+  const loc_ty = parseInt(ty);
 
   $('#entity_location_px').val(loc_tx * 16);  // TODO should be tilesize not 16
   $('#entity_location_py').val(loc_ty * 16);  // TODO should be tilesize not 16
@@ -463,16 +470,32 @@ export const update_entity = (dialog, ent_id) => {
   const entity_animation = $('#entity_animation').val();
   const entity_facing = $('#entity_facing').val();
 
-  const loc_tx = parseInt($('#entity_location_tx').val());
-  const loc_ty = parseInt($('#entity_location_ty').val());
+  let loc_tx = parseInt($('#entity_location_tx').val());
+  let loc_ty = parseInt($('#entity_location_ty').val());
 
-  const loc_px = parseInt($('#entity_location_px').val());
-  const loc_py = parseInt($('#entity_location_py').val());
+  let loc_px = parseInt($('#entity_location_px').val());
+  let loc_py = parseInt($('#entity_location_py').val());
 
   console.log('loc_tx, loc_ty, loc_px, loc_py:');
   console.log(loc_tx, loc_ty, loc_px, loc_py);
 
   const loc_l = $('#entity_location_layer').val();
+
+  if(!loc_tx && loc_tx !== 0) {
+    loc_tx = null;
+  }
+
+  if(!loc_ty && loc_ty !== 0) {
+    loc_ty = null;
+  }
+
+  if(!loc_px && loc_px !== 0) {
+    loc_px = null;
+  }
+
+  if(!loc_py && loc_py !== 0) {
+    loc_py = null;
+  }
 
   const vals = {
     loc_tx: loc_tx,
@@ -491,6 +514,8 @@ export const update_entity = (dialog, ent_id) => {
     entity_is_an_obstruction: entity_is_an_obstruction,
     entity_autofaces: entity_autofaces
   };
+
+  debugger;
 
   if (_update_entity_inner(ent_id, vals)) {
     dialog.dialog('close');
