@@ -476,7 +476,12 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.resetEntityData = () => {
     this.entityData = {
       '__default__': {
-        animations: { 'Idle Down': [ [ [ 0, 100 ] ], 'Looping' ] },
+        animations: { 
+          'Idle Down': [ [ [ 0, 100 ] ], 'Looping' ],
+          'Idle Up': [ [ [ 0, 100 ] ], 'Looping' ],
+          'Idle Left': [ [ [ 0, 100 ] ], 'Looping' ],
+          'Idle Right': [ [ [ 0, 100 ] ], 'Looping' ]
+        },
         animation: 'Idle Down',
         dims: [ 16, 32 ],
         hitbox: [ 0, 16, 16, 16 ],
