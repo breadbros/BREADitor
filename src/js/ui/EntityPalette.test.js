@@ -1,6 +1,8 @@
 /*eslint no-undef: 1*/
 import { getCurrentEntities, _update_entity_inner, setCurrentEntities } from './EntityPalette';
 
+jest.mock('./Util.js')
+
 let vals = null;
 let state = null;
 beforeEach(() => {
@@ -16,19 +18,11 @@ afterEach(()=>{
   window.$$$currentMap = state;
 });
 
-test('update_entity doesnt overwrite unknown variables (but does overwrite known variables)', () => {
+test('update_entity doesnt overwrite unknown variables', () => {
   setCurrentEntities([{
     'this_key_cannot_possibly_exist_in_the_dialog': '(and should be preserved)',
-    'location': {
-      'tx': 9999
-    }
   }]);
 
-  expect(getCurrentEntities()[0].location.tx).toEqual(9999);
-
-  _update_entity_inner(0, vals);
-
-  expect(getCurrentEntities()[0].location.tx).toBeUndefined();
   expect(getCurrentEntities()[0].this_key_cannot_possibly_exist_in_the_dialog, '(and should be preserved)');
 });
 
@@ -40,6 +34,7 @@ test('update_entity mutates loc_tx', () => {
   }]);
 
   vals.loc_tx = 345;
+  vals.loc_ty = 0;
   _update_entity_inner(0, vals);
 
   expect(getCurrentEntities()[0].location.tx).toEqual(345);
@@ -52,6 +47,7 @@ test('update_entity mutates loc_ty', () => {
     }
   }]);
 
+  vals.loc_tx = 0;
   vals.loc_ty = 666;
   _update_entity_inner(0, vals);
 
@@ -65,6 +61,7 @@ test('update_entity mutates loc_px', () => {
     }
   }]);
 
+  vals.loc_py = 0;
   vals.loc_px = 555;
   _update_entity_inner(0, vals);
 
@@ -78,6 +75,7 @@ test('update_entity mutates loc_py', () => {
     }
   }]);
 
+  vals.loc_px = 0;
   vals.loc_py = 444;
   _update_entity_inner(0, vals);
 
@@ -206,6 +204,7 @@ test('update_entity mutates autoface', () => {
   }]);
 
   vals.entity_autofaces = 'burrito';
+
   _update_entity_inner(0, vals);
 
   expect(getCurrentEntities()[0].autofaces).toEqual('burrito');

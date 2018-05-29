@@ -1,4 +1,4 @@
-import { modal_error } from './Util.js';
+import { modal_error, do_the_no_things } from './Util.js';
 import { LayersWidget } from './LayersPalette.js';
 import { centerMapOnXY } from '../../Tools';
 
@@ -547,7 +547,7 @@ export const update_entity_location = (ent_id, valDict) => {
     currentEntities[ent_id].location.tx = 0;
   }
 
-  do_the_no_things();
+  do_the_no_things(null, redraw_palette);
 };
 
 const get_entity_data = (chr_filepath) => {
@@ -582,34 +582,45 @@ const is_valid_animation = (chr_filepath, animation_name) => {
   return !!animations[animation_name];
 };
 
+const _loc_helper = (valDict) => {
+
+  let loc = {};
+
+  if( valDict.loc_l ) {
+    loc.layer = valDict.loc_l;
+  }
+
+  if( !(typeof valDict.loc_tx === 'number' || typeof valDict.loc_px === 'number') ) {
+    //modal_error('Invalid input: no valid x values given.');
+    return loc;
+  }
+
+  if( !(typeof valDict.loc_ty !== 'number' || typeof valDict.loc_py !== 'number') ) {
+    //modal_error('Invalid input: no valid y values given.');
+    return loc;
+  }
+
+  // if( valDict.loc_py === 0 ) {
+  //   console.info("Cooercing loc_ty to 0.");
+  //   valDict.loc_ty = 0;
+  // }
+
+  // if( valDict.loc_px === 0 ) {
+  //   console.info("Cooercing loc_tx to 0.");
+  //   valDict.loc_tx = 0;
+  // }
+
+  loc.tx = valDict.loc_tx;
+  loc.ty = valDict.loc_ty;
+  loc.px = valDict.loc_px;
+  loc.py = valDict.loc_py;
+
+  return loc;
+};
+
 export const _update_entity_inner = (ent_id, valDict) => {
 
-  if( !valDict.loc_tx && valDict.loc_tx !== 0 && !valDict.loc_px && valDict.loc_px !== 0 ) {
-    modal_error('Invalid input: no valid x values given.');
-    return false;
-  }
-
-  if( !valDict.loc_ty && valDict.loc_ty !== 0 && !valDict.loc_py && valDict.loc_py !== 0 ) {
-    modal_error('Invalid input: no valid y values given.');
-    return false;
-  }
-
-  if( valDict.loc_py === 0 ) {
-    valDict.loc_ty = 0;
-  }
-
-  if( valDict.loc_px === 0 ) {
-    valDict.loc_tx = 0;
-  }
-
-  // TODO : PX/PY?
-  const loc = {
-    tx: valDict.loc_tx,
-    ty: valDict.loc_ty,
-    px: valDict.loc_px,
-    py: valDict.loc_py,
-    layer: valDict.loc_l
-  };
+  const loc = _loc_helper(valDict);
 
   let ent = null;
 
@@ -650,11 +661,14 @@ export const _update_entity_inner = (ent_id, valDict) => {
     currentEntities[ent_id] = {};
   }
 
-  // todo lookahead in the new file to see if the new animation name is valid.
-  if( !is_valid_animation(ent.filename, ent.animation) ) {
-    alert(ent.filename +' does not have animation ' + ent.animation );
-    ent.animation = '';
+  if( ent.animation != valDict.entity_animation ) {
+    // todo lookahead in the new file to see if the new animation name is valid.
+    if( !is_valid_animation(ent.filename, ent.animation) ) {
+      alert(ent.filename +' does not have animation ' + ent.animation );
+      ent.animation = '';
+    }
   }
+
 
   let k;
   for (k in ent) {
@@ -673,18 +687,11 @@ export const _update_entity_inner = (ent_id, valDict) => {
     relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);
   }
 
-  do_the_no_things(currentEntities[ent_id]); // these args seem dumb
+  do_the_no_things(currentEntities[ent_id], redraw_palette); // these args seem dumb
 
   return true;
 };
 
-const do_the_no_things = (entity) => {
-  redraw_palette();
-
-  window.$$$currentMap.resetEntityData(); // TODO: NO NO NO NO NONONONNONONNONO
-  window.$$$currentMap.createEntityRenderData(); // TODO: NO NO NO NO NONONONNONONNONO
-  window.$$$currentMap.setCanvas($('.map_canvas'));
-};
 
 // TODO: ent_name should be a uuid
 // TODO: until then, make sure ent_name is verified unique
