@@ -8,7 +8,7 @@ const clearPasteboard = () => {
   pasteboard = [];
 };
 
-const addToPasteboard = (dx, dy, originalLayer, tile) => {
+export const addToPasteboard = (dx, dy, originalLayer, tile) => {
   pasteboard.push([dx, dy, originalLayer, tile]);
 };
 
