@@ -49,6 +49,7 @@
     "electron": "^1.4.10",
     "electron-builder": "^8.6.0",
     "electron-mocha": "^3.0.0",
+    "eslint-plugin-react": "^7.9.1",
     "gulp": "^3.9.0",
     "gulp-batch": "^1.0.5",
     "gulp-less": "^3.0.3",

@@ -5,6 +5,10 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
          setNormalEntityVisibility, getNormalEntityVisibility,
          setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js';
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
+
+import { resize_layer } from './Util.js';
+
+
 const $ = require('jquery');
 
 let list;
@@ -1075,14 +1079,19 @@ const update_layer = (dialog, layer_id, onComplete) => {
     }
   }
 
+  let old_dim_x; 
+  let old_dim_y;
+  const new_dim_x = parseInt(dims_x);
+  const new_dim_y = parseInt(dims_y);
+
   alpha = parseFloat(alpha);
 
   layer = {
     name: name,
     alpha: alpha,
     dimensions: {
-      X: parseInt(dims_x),
-      Y: parseInt(dims_y)
+      X: new_dim_x,
+      Y: new_dim_y
     },
     parallax: {
       X: parseFloat(par_x),
@@ -1092,6 +1101,8 @@ const update_layer = (dialog, layer_id, onComplete) => {
   };
 
   if (layer_id === layers.length) {
+    old_dim_x = new_dim_x;
+    old_dim_y = new_dim_y;
     layers.push(layer);
     const layersLength = layers.length;
     map.layerLookup[name] = layers[layersLength - 1];
@@ -1100,6 +1111,9 @@ const update_layer = (dialog, layer_id, onComplete) => {
 
     map.updateRstring(map.layerRenderOrder.join(','));
   } else {
+    old_dim_x = layers[layer_id].dimensions.X;
+    old_dim_y = layers[layer_id].dimensions.Y;
+
     // TODO do all layer-name-updating here
     if (name !== layers[layer_id].name) {
       const oldName = layers[layer_id].name;
@@ -1111,6 +1125,11 @@ const update_layer = (dialog, layer_id, onComplete) => {
     for (const k in layer) {
       layers[layer_id][k] = layer[k];
     }
+  }
+
+  if( old_dim_y != new_dim_y || old_dim_x != new_dim_x ) {
+    console.log( "Resizing layer..." );
+    map.mapRawTileData.tile_data[layer_id] = resize_layer( map.mapRawTileData.tile_data[layer_id], old_dim_x, old_dim_y, new_dim_x, new_dim_y );
   }
 
   if (window.document.getElementById('layer_is_tall_redraw_layer').checked) {
