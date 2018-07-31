@@ -11,6 +11,7 @@ export const windowMenuTemplate = {
     { label: 'Zones', click: function () { send('zones'); } },
     { label: 'Entities', click: function () { send('entity'); } },
     { label: 'Tileset Selector', click: function () { send('tileset-selector'); } },
+    { label: 'Screenview Indicator', click: function () { send('screenview-indicator'); } },
     { type: 'separator' },
     {
       label: 'Collect all visible palettes',

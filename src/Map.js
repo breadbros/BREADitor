@@ -606,8 +606,29 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     };
   };
 
+  this.windowOverlayMaker = function() {
+    return {
+      map: null,
+      on: false,
+
+      viewport: {
+        x: 0,
+        y: 0,
+        width: 320,
+        height: 240
+      },
+      shade: {
+        color: [.5,.5,0],
+        opacity: .5
+      }
+    };
+  };
+
   this.selection = this.selectionMaker();
   this.selection.map = this;
+
+  this.windowOverlay = this.windowOverlayMaker();
+  this.windowOverlay.map = this;
 
   this.visibleHoverTile = this.selectionMaker();
   this.visibleHoverTile.map = this;
@@ -862,11 +883,15 @@ Map.prototype = {
   },
 
   setTile: function (tileX, tileY, layerIdx, tileIdx) {
-    if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
-      console.warn('attempted to set a tile out of layer bounds. ('+tileX+','+tileY+')');
-      console.info('layerIdx: ' + layerIdx);
-      console.info(this.layers[layerIdx].dimensions)
-      return;
+    
+    /// jesus, right?  One day this won't be a thing, he lied to himself.
+    if( layerIdx !== 998 ) {
+      if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
+        console.warn('attempted to set a tile out of layer bounds. ('+tileX+','+tileY+')');
+        console.info('layerIdx: ' + layerIdx);
+        console.info(this.layers[layerIdx].dimensions)
+        return;
+      }
     }
 
     const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
@@ -1344,6 +1369,31 @@ Map.prototype = {
     }
   },
 
+  maybeRenderScreenviewOverlay: function(gl, overlay) {
+
+    /*
+      overlay = {
+        on: boolean,
+        viewport: {
+          x: int,
+          y: int,
+          width: int,
+          height: int
+        },
+        shade: {
+          color: default to [0,0,0],
+          opacity: default to .5
+        }
+      }
+    */
+
+    if( overlay.on ) {
+      // gl.viewport(overlay.viewport.x, overlay.viewport.y, overlay.viewport.width, overlay.viewport.height);
+      gl.clearColor(overlay.shade.color[0], overlay.shade.color[2], overlay.shade.color[3], overlay.shade.opacity);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+    }
+  },
+
   render: function () {
     const gl = this.gl;
     const tick = Date.now();
@@ -1364,6 +1414,8 @@ Map.prototype = {
     this.maybeRenderMarchingAnts(gl, this.selection);
 
     this.maybeRenderMarchingAnts(gl, this.visibleHoverTile);
+
+    this.maybeRenderScreenviewOverlay(gl, this.windowOverlay);
 
     // uncomment these to get frame render times
     // const tock = new Date().getTime();

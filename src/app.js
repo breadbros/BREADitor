@@ -18,6 +18,18 @@ import { toggleSelectedTiles, moveSelectedTile } from './TileSelector';
 const path = require('path');
 const $ = require('jquery');
 
+const initScreen = (map) => {
+  $('#screenview-indicator-switch').prop('checked', map.windowOverlay.on);
+  $('#screenview-indicator-x').val(map.windowOverlay.viewport.x);
+  $('#screenview-indicator-y').val(map.windowOverlay.viewport.y);
+  $('#screenview-indicator-width').val(map.windowOverlay.viewport.width);
+  $('#screenview-indicator-height').val(map.windowOverlay.viewport.height);
+
+  $('#screenview-indicator-switch').click( () => {
+    map.windowOverlay.on = $('#screenview-indicator-switch').prop('checked');
+  } );
+}
+
 const initInfoWidget = (map) => {
   $('#info-mapname').attr('src', map.mapPath);
 
@@ -66,6 +78,7 @@ const bootstrapMap = (mapFile, tiledataFile) => {
 
                 LayersWidget.initLayersWidget(currentMap);
                 initInfoWidget(currentMap);
+                initScreen(currentMap);
                 ZonesWidget.initZonesWidget(currentMap);
                 EntitiesWidget.initEntitiesWidget(currentMap);
 
@@ -194,6 +207,9 @@ ipcRenderer.on('main-menu', (event, arg) => {
       break;
     case 'edit-select-all':
       selectAll(window.$$$currentMap);
+      break;
+    case 'screenview-indicator':
+      alert('screenview-indicator! Yay1112');
       break;
     default:
       console.error('Unknown action from main-menu:', arg);
@@ -512,7 +528,8 @@ $('body').on('keydown', (e) => {
     'zones-palette',
     'entity-palette',
     'info-palette',
-    'tileset-selector-palette'
+    'tileset-selector-palette',
+    'screenview-indicator-palette'
   ];
 
   window.$$$toggle_pallete = function (pal, forceShow) {
