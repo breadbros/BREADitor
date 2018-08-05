@@ -615,7 +615,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         x: 0,
         y: 0,
         width: 320,
-        height: 240
+        height: 180
       },
       shade: {
         color: [.5,.5,0],
