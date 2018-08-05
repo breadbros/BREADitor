@@ -28,6 +28,11 @@ const initScreen = (map) => {
   $('#screenview-indicator-switch').click( () => {
     map.windowOverlay.on = $('#screenview-indicator-switch').prop('checked');
   } );
+
+  $('#screenview-indicator-x').on('change', (ev) => map.windowOverlay.viewport.x = parseInt($(ev.target).val(), 10));
+  $('#screenview-indicator-y').on('change', (ev) => map.windowOverlay.viewport.y = parseInt($(ev.target).val(), 10));
+  $('#screenview-indicator-width').on('change', (ev) => map.windowOverlay.viewport.width = parseInt($(ev.target).val(), 10));
+  $('#screenview-indicator-height').on('change', (ev) => map.windowOverlay.viewport.height = parseInt($(ev.target).val(), 10));
 }
 
 const initInfoWidget = (map) => {
