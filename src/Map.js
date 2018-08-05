@@ -1306,7 +1306,7 @@ Map.prototype = {
 
     this.tilemapShader.use();
 
-    if (viewport === null) viewport = { x:0, y:0 };
+    viewport = { x:0, y:0 }; // TODO
 
     gl.uniform4f(this.tilemapShader.uniform('u_camera'),
       Math.floor(layer.parallax.X * this.camera[0] - viewport.x) / this.vspData[vsp].tilesize.width,
@@ -1480,7 +1480,7 @@ Map.prototype = {
 
     this.checkerShader.use();
 
-    if (!viewport) viewport = { x: 0, y: 0 };
+    viewport = { x: 0, y: 0 }; // TODO
 
     gl.uniform4f(this.checkerShader.uniform('u_camera'),
       Math.floor(this.camera[0] - viewport.x) / this.vspData[layer.vsp].tilesize.width,
@@ -1612,7 +1612,7 @@ Map.prototype = {
     }
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(verts), this.gl.STATIC_DRAW);
 
-    var viewport = overlay.on ? overlay.viewport : { x:0, y:0 };
+    let viewport = {x:0, y:0}; // TODO
 
     gl.uniform4f(
       this.spriteShader.uniform('u_camera'),
