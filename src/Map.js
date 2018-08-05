@@ -1416,10 +1416,10 @@ Map.prototype = {
         this.renderContainerDimensions.h / this.camera[2]
       );
       gl.uniform4f(this.screenviewShader.uniform('u_viewport'),
-        Math.floor(this.camera[0] + overlay.viewport.x),
-        Math.floor(this.camera[1] + overlay.viewport.y),
-        Math.floor(overlay.viewport.width / this.camera[2]),
-        Math.floor(overlay.viewport.height / this.camera[2])
+        Math.floor(overlay.viewport.x),          
+        Math.floor(overlay.viewport.y),         
+        Math.floor(overlay.viewport.width),        
+        Math.floor(overlay.viewport.height)
       );
       gl.uniform4f(this.screenviewShader.uniform('u_color'),
         overlay.shade.color[0],
