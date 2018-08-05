@@ -18,12 +18,17 @@ import { toggleSelectedTiles, moveSelectedTile } from './TileSelector';
 const path = require('path');
 const $ = require('jquery');
 
-const initScreen = (map) => {
+const updateScreenview = (map) => {
   $('#screenview-indicator-switch').prop('checked', map.windowOverlay.on);
   $('#screenview-indicator-x').val(map.windowOverlay.viewport.x);
   $('#screenview-indicator-y').val(map.windowOverlay.viewport.y);
   $('#screenview-indicator-width').val(map.windowOverlay.viewport.width);
-  $('#screenview-indicator-height').val(map.windowOverlay.viewport.height);
+  $('#screenview-indicator-height').val(map.windowOverlay.viewport.height);  
+}
+
+const initScreen = (map) => {
+
+  updateScreenview(map);
 
   $('#screenview-indicator-switch').click( () => {
     map.windowOverlay.on = $('#screenview-indicator-switch').prop('checked');
@@ -52,7 +57,7 @@ const bootstrapMap = (mapFile, tiledataFile) => {
         .then(() => {
           console.log('create map?');
           new Map(
-              mapFile, tiledataFile, updateLocationFunction
+              mapFile, tiledataFile, (map) => {  updateLocationFunction(map); updateScreenview(map); }
           ).ready()
               .then(function (m) {
                 const currentMap = m;
