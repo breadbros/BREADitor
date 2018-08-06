@@ -26,7 +26,7 @@ export default () => {
         
         _toolLogic['MOVE-VIEWPORT'].last_mouse = [ e.clientX, e.clientY ];
       
-        if( map.windowOverlay.on ) {
+        if( map.windowOverlay.on && e.ctrlKey ) {
           console.log('windowOVERLAY DRAG');
           map.windowOverlay.viewport.x -= xdiff;
           map.windowOverlay.viewport.y -= ydiff;
