@@ -81,6 +81,7 @@ const doFloodFill = (map, e) => {
 export default () => {
   return {
     doFloodFill: doFloodFill,
+    'mousemove': () => {},
     'mousedown': function (map, e) {
       if (isTileSelectorMap(map)) {
         _toolLogic['EYEDROPPER']['mousedown'](map, e);

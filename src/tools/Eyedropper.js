@@ -7,6 +7,7 @@ import { getSelectedLayer } from '../js/ui/LayersPalette';
 
 export default () => {
   return {
+    'mousemove': () => {},
     'mousedown': function (map, e) {
       console.log('EYEDROPPER->mousedown...');
 
