@@ -147,13 +147,23 @@ export const centerMapOnXY = (map, x, y, w, h) => {
 };
 
 export const getTXTyFromMouse = (map, evt) => {
+  const mapZoom = map.camera[2];
   const mapOffsetX = map.camera[0];
   const mapOffsetY = map.camera[1];
   const mouseOffsetX = evt.offsetX;
   const mouseOffsetY = evt.offsetY;
+  const selectedLayer = getSelectedLayer();
+  const parallax = (selectedLayer != null) ? selectedLayer.layer.parallax : [1,1]; // If no layer is selected assume parallax (1.0, 1.0)
+  
+  const vpX = (map.windowOverlay.on) ? map.windowOverlay.viewport.x : 0;
+  const vpY = (map.windowOverlay.on) ? map.windowOverlay.viewport.y : 0;
 
-  const oX = mapOffsetX + mouseOffsetX / map.camera[2];
-  const oY = mapOffsetY + mouseOffsetY / map.camera[2];
+  const layerCamX = (mapOffsetX + vpX) * parallax.X;
+  const layerCamY = (mapOffsetY + vpY) * parallax.Y;
+  const adjustedMouseX = (mouseOffsetX / mapZoom) - vpX; // Because the mouse position uses the rendered/scaled value, we need to divide by zoom to bring its scale in line with "internal" values
+  const adjustedMouseY = (mouseOffsetY / mapZoom) - vpY;
+  const oX = layerCamX + adjustedMouseX;
+  const oY = layerCamY + adjustedMouseY;
 
   const tX = parseInt(oX / 16);
   const tY = parseInt(oY / 16);
