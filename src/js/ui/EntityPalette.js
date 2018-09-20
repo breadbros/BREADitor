@@ -590,14 +590,21 @@ const _loc_helper = (valDict) => {
     loc.layer = valDict.loc_l;
   }
 
-  if( !(typeof valDict.loc_tx === 'number' || typeof valDict.loc_px === 'number') ) {
+  loc.tx = valDict.loc_tx;
+  loc.ty = valDict.loc_ty;
+  loc.px = valDict.loc_px;
+  loc.py = valDict.loc_py;
+
+  if( typeof loc.tx !== 'number' && typeof loc.px !== 'number') {
     //modal_error('Invalid input: no valid x values given.');
-    return loc;
+    loc.tx = 0;
+    loc.px = 0;
   }
 
-  if( !(typeof valDict.loc_ty !== 'number' || typeof valDict.loc_py !== 'number') ) {
+  if( typeof loc.ty !== 'number' && typeof loc.py !== 'number')  {
     //modal_error('Invalid input: no valid y values given.');
-    return loc;
+    loc.ty = 0;
+    loc.tx = 0;
   }
 
   // if( valDict.loc_py === 0 ) {
@@ -609,11 +616,6 @@ const _loc_helper = (valDict) => {
   //   console.info("Cooercing loc_tx to 0.");
   //   valDict.loc_tx = 0;
   // }
-
-  loc.tx = valDict.loc_tx;
-  loc.ty = valDict.loc_ty;
-  loc.px = valDict.loc_px;
-  loc.py = valDict.loc_py;
 
   return loc;
 };
