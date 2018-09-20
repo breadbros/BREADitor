@@ -85,6 +85,9 @@ export const two_zoom_seriously_all_zoom_functions_suck_kill_them_all = (map) =>
 };
 
 const zoomFn = function (map, e, zoomout) {
+  if (!map.camera[0] && map.camera[0] !== 0) { map.camera[0] = 0; } // If camera's X position is invalid, reset it.
+  if (!map.camera[1] && map.camera[1] !== 0) { map.camera[1] = 0; } // If camera's Y position is invalid, reset it.
+  
   const mouseX = map.camera[0] + (e.offsetX ? e.offsetX : e.clientX) / map.camera[2];
   const mouseY = map.camera[1] + (e.offsetY ? e.offsetY : e.clientY) / map.camera[2];
 
