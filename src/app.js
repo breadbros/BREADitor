@@ -218,6 +218,15 @@ ipcRenderer.on('main-menu', (event, arg) => {
     case 'edit-select-all':
       selectAll(window.$$$currentMap);
       break;
+    case 'reset-camera':
+      // TODO: This inline implementation is clearly out of step with the rest of these, but I couldn't find a dedicated camera control section anywhere (and didn't want to build one just for this)
+      const ResetCamera = (map) => {
+        map.camera[0] = 0; // X
+        map.camera[1] = 0; // Y
+        map.camera[2] = 1; // Zoom (1x)
+      };
+      ResetCamera(window.$$$currentMap);
+      break;
     case 'screenview-indicator':
       alert('screenview-indicator! Yay1112');
       break;

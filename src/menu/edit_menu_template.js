@@ -25,6 +25,9 @@ export const editMenuTemplate = {
     { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:', click: function () { send('edit-copy'); } },
     { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:', click: function () { send('edit-paste'); } },
     { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:',
-      click: function () { send('edit-select-all'); } }
+      click: function () { send('edit-select-all'); } },
+    
+    { type: 'separator' },
+    { label: 'Reset Camera', accelerator: 'CmdOrCtrl+0', click: function () { send('reset-camera'); } },
   ]
 };
