@@ -1522,7 +1522,10 @@ Map.prototype = {
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
     const entityData = this._getEntityData(entity);
-    const entityTexture = this.entityTextures[entityData.image];
+    const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
+    if (!entityTexture) {
+      alert("Entity '" + entity.name + "' at (" + entity.location.tx + "," + entity.location.ty + ") with image path `" + entityData.image + "` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.");
+    }
 
     clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
 
