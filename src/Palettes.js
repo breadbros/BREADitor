@@ -93,7 +93,28 @@ const setupPaletteListeners = () => {
       }
     });
 
-    $('.resizable-window').resizable();
+    var draggables = $('.resizable-window');
+
+    $.each(draggables, (idx) => {
+      var me = $(draggables[idx]);
+      var options = {};
+
+      const checkAndAdd = (name, key) => {
+        const val = me.data(name);
+        if(val) {
+          options[key] = val; 
+        }
+      }
+
+      checkAndAdd("minwidth", "minWidth");
+      checkAndAdd("maxwidth", "maxWidth");
+      checkAndAdd("minheight", "minHeight");
+      checkAndAdd("minwidth", "minWidth");
+
+      console.log(me.attr("class"), options)
+
+      me.resizable(options);
+    } );
 
     window.$MAP_WINDOW = $('.map-palette.resizable-window');
 
