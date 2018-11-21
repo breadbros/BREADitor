@@ -24,6 +24,9 @@ const TALLENT_G = 1;
 const TALLENT_B = 1;
 const TALLENT_A = 1;
 
+export let checkerColorA = [0.75, 0.75, 0.75, 1.0];
+export let checkerColorB = [1.0, 1.0, 1.0, 1.0];
+
 export const cleanEntities = (mapData) => {
   for (let i = mapData.entities.length - 1; i >= 0; i--) {
     if (mapData.entities[i].MAPED_USEDEFAULT) {
@@ -302,6 +305,14 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   };
 
   this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
+
+  if( this.mapedConfigData.checkerColorA ) {
+    checkerColorA = this.mapedConfigData.checkerColorA;
+  }
+
+  if(this.mapedConfigData.checkerColorB) {
+    checkerColorB = this.mapedConfigData.checkerColorB;
+  }
 
   this.filenames.vspfiles = this.mapData.vsp;
 
@@ -1497,8 +1508,8 @@ Map.prototype = {
       this.vspImages[layer.vsp].height / this.vspData[layer.vsp].tilesize.height
     );
 
-    gl.uniform4f(this.checkerShader.uniform('u_colorA'), 0.75, 0.75, 0.75, 1.0);
-    gl.uniform4f(this.checkerShader.uniform('u_colorB'), 1.0, 1.0, 1.0, 1.0);
+    gl.uniform4f(this.checkerShader.uniform('u_colorA'), checkerColorA[0], checkerColorA[1], checkerColorA[2], checkerColorA[3] );
+    gl.uniform4f(this.checkerShader.uniform('u_colorB'), checkerColorB[0], checkerColorB[1], checkerColorB[2], checkerColorB[3]);
 
     const a_position = this.checkerShader.attribute('a_position');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
