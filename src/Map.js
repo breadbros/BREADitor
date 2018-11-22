@@ -27,6 +27,8 @@ const TALLENT_A = 1;
 export let checkerColorA = [0.75, 0.75, 0.75, 1.0];
 export let checkerColorB = [1.0, 1.0, 1.0, 1.0];
 
+let lastKnownPath = '';
+
 export const cleanEntities = (mapData) => {
   for (let i = mapData.entities.length - 1; i >= 0; i--) {
     if (mapData.entities[i].MAPED_USEDEFAULT) {
@@ -244,13 +246,16 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   if (FILELOAD_MODE) {
     this.filenames.mapfile = mapfile;
     this.filenames.mapdatafile = mapdatafile;
-    this.dataPath = path.dirname(mapdatafile);
+    lastKnownPath = this.dataPath = path.dirname(mapdatafile);
+    
+    // TODO probably need a better concept of project management
+    this.mapedConfigFile = path.join(this.dataPath, '$$$_MAPED.json');
   } else {
     this.dataPath = '';
+    
+    // TODO probably need a better concept of project management
+    this.mapedConfigFile = path.join(lastKnownPath, '$$$_MAPED.json');
   }
-
-  // TODO probably need a better concept of project management
-  this.mapedConfigFile = path.join(this.dataPath, '$$$_MAPED.json');
 
   this.updateLocationFn = updateLocationFunction;
 
@@ -306,12 +311,16 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
 
-  if( this.mapedConfigData.checkerColorA ) {
-    checkerColorA = this.mapedConfigData.checkerColorA;
-  }
+  if(this.mapedConfigData) {
+    if( this.mapedConfigData.checkerColorA ) {
+      checkerColorA = this.mapedConfigData.checkerColorA;
+    }
 
-  if(this.mapedConfigData.checkerColorB) {
-    checkerColorB = this.mapedConfigData.checkerColorB;
+    if(this.mapedConfigData.checkerColorB) {
+      checkerColorB = this.mapedConfigData.checkerColorB;
+    }    
+  } else {
+    alert(`Failed to read config file expected at ${this.mapedConfigFile}`);
   }
 
   this.filenames.vspfiles = this.mapData.vsp;
