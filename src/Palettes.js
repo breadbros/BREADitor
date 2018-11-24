@@ -47,20 +47,6 @@ const paletteCloseListener = ($pal_close_button) => {
   savePalettePositions();
 };
 
-// setup palette listeners
-$(document).ready(() => {
-  window.$$$palette_registry.map((pal) => {
-    const node_selector = '.' + pal;
-    const $node = $(node_selector);
-    // palette motion save listener
-    $node.mouseup(() => { capturePaletteMovementForRestore($node); });
-
-    // palette "X" button listener
-    const $node2 = $(node_selector + ' button.close-palette');
-    $node2.click(() => { paletteCloseListener($node2); });
-  });
-});
-
 export const savePalettePositions = () => {
   window.$$$palette_registry.map((pal) => {
     const node_selector = '.' + pal;
@@ -72,54 +58,64 @@ export const savePalettePositions = () => {
 
 let garbage_zsort = 1;
 
-const setupPaletteListeners = () => {
-  $(function () {
-    $('.draggable-window').draggable({
-      handle: 'h3',
-      stop: function (event, ui) {
-                // console.log("draggable STOP");
-                // console.log(event);
-      },
-      start: function (event, ui) {
-                // / map palette is always on bottom.
-        if ($(event.target).hasClass('map-palette')) {
-          return;
-        }
+export const setupPaletteListeners = () => {
+  window.$$$palette_registry.map((pal) => {
+    const node_selector = '.' + pal;
+    const $node = $(node_selector);
+    // palette motion save listener
+    $node.mouseup(() => { capturePaletteMovementForRestore($node); });
 
-        $(event.target).css('z-index', garbage_zsort);
-        correctResizeWidget(event.target);
-
-        garbage_zsort += 2;
-      }
-    });
-
-    var draggables = $('.resizable-window');
-
-    $.each(draggables, (idx) => {
-      var me = $(draggables[idx]);
-      var options = {};
-
-      const checkAndAdd = (name, key) => {
-        const val = me.data(name);
-        if(val) {
-          options[key] = val; 
-        }
-      }
-
-      checkAndAdd("minwidth", "minWidth");
-      checkAndAdd("maxwidth", "maxWidth");
-      checkAndAdd("minheight", "minHeight");
-      checkAndAdd("minwidth", "minWidth");
-
-      console.log(me.attr("class"), options)
-
-      me.resizable(options);
-    } );
-
-    window.$MAP_WINDOW = $('.map-palette.resizable-window');
-
-    $('.map .map_canvas').draggable('disable');
+    // palette "X" button listener
+    const $node2 = $(node_selector + ' button.close-palette');
+    $node2.click(() => { paletteCloseListener($node2); });
   });
+
+
+  $('.draggable-window').draggable({
+    handle: 'h3',
+    stop: function (event, ui) {
+              // console.log("draggable STOP");
+              // console.log(event);
+    },
+    start: function (event, ui) {
+              // / map palette is always on bottom.
+      if ($(event.target).hasClass('map-palette')) {
+        return;
+      }
+
+      $(event.target).css('z-index', garbage_zsort);
+      correctResizeWidget(event.target);
+
+      garbage_zsort += 2;
+    }
+  });
+
+  var draggables = $('.resizable-window');
+
+  $.each(draggables, (idx) => {
+    var me = $(draggables[idx]);
+    var options = {};
+
+    const checkAndAdd = (name, key) => {
+      const val = me.data(name);
+      if(val) {
+        options[key] = val; 
+      }
+    }
+
+    checkAndAdd("minwidth", "minWidth");
+    checkAndAdd("maxwidth", "maxWidth");
+    checkAndAdd("minheight", "minHeight");
+    checkAndAdd("minwidth", "minWidth");
+
+    console.log(me.attr("class"), options)
+
+    me.resizable(options);
+  } );
+
+  window.$MAP_WINDOW = $('.map-palette.resizable-window');
+
+  $('.map .map_canvas').draggable('disable');
 };
 
 const correctResizeWidget = (node, newZ) => {
@@ -137,8 +133,22 @@ const correctResizeWidget = (node, newZ) => {
   $(node).children('.ui-icon-gripsmall-diagonal-se').css('z-index', z + 1);
 };
 
+function setupPaletteRegistry() {
+  window.$$$palette_registry = [
+    'map-palette',
+    'tool-palette',
+    'layers-palette',
+    'zones-palette',
+    'entity-palette',
+    'info-palette',
+    'tileset-selector-palette',
+    'screenview-indicator-palette'
+  ];
+}
+
 export const Palettes = {
   correctResizeWidget: correctResizeWidget,
+  setupPaletteRegistry: setupPaletteRegistry,
   setupPaletteListeners: setupPaletteListeners,
   savePalettePositions: savePalettePositions
 };

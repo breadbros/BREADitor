@@ -243,7 +243,11 @@ export const clickDrawBrush = () => {
 };
 
 const setupToolClick = (toolObj, toolName) => {
-  $(toolObj.button_element).click(function (e) {
+  const $node = $(toolObj.button_element);
+  
+  console.log("setting up toolClick for", toolName, $node);
+
+  $node.click(function (e) {
     $('#tool-title').text(toolObj.human_name);
 
     $('.tool-palette button').removeClass('selected');
@@ -251,6 +255,7 @@ const setupToolClick = (toolObj, toolName) => {
     $(this).addClass('selected');
 
     window.TOOLMODE = toolName;
+    $('#info-curTool').text(window.TOOLMODE); //TODO we should use react already, dammit. 
 
     if (toolObj.init_fn) {
       toolObj.init_fn(e, toolName, toolObj);
@@ -265,7 +270,6 @@ const setupTools = () => {
     }
   }
 };
-setupTools();
 
 const tools = (action, map, evt) => {
   const mode = window.TOOLMODE;
@@ -282,6 +286,9 @@ const tools = (action, map, evt) => {
 };
 
 export const initTools = (renderContainer, map) => {
+  setupTools();
+  hackToolsInit();
+
   renderContainer.on('mousedown', function (e) {
     tools('mousedown', map, e);
   });
@@ -305,65 +312,104 @@ const updateZoomText = () => {
   $('#info-zoom').text(txt);
 };
 
-$('#btn-tool-zoomin').click(function (e) {
-  grue_zoom(false, window.$$$currentMap);
-  updateZoomText();
-});
-
-$('#btn-tool-zoomout').click(function (e) {
-  grue_zoom(true, window.$$$currentMap);
-  updateZoomText();
-});
-
-$('#btn-tool-drag').click();
-
 const currentLayerCanHaveEntityOnIt = () => {
   return getSelectedLayer().map_tileData_idx < 900 || getSelectedLayer().map_tileData_idx === 997;
 };
 
-$('#btn-add-tree').on('click', (e) => {
-  window.TOOLMODE = 'TREE';
-  window.$$$currentMap.entityPreview = {
-    location: { tx: 0, ty: 0 },
-    animation: 'Idle Down',
-    filename: 'chrs_json/object_tree2.json'
-  };
+const hackToolsInit = () => {
+  $('#btn-tool-zoomin').click(function (e) {
+    grue_zoom(false, window.$$$currentMap);
+    updateZoomText();
+  });
 
-  _toolLogic.TREE = {
-    mousemove: (map, evt) => {
-      if (!getSelectedLayer()) {
-        window.alert('select a layer first.');
+  $('#btn-tool-zoomout').click(function (e) {
+    grue_zoom(true, window.$$$currentMap);
+    updateZoomText();
+  });
+
+  $('#btn-tool-drag').click();
+
+  $('#btn-add-tree').on('click', (e) => {
+    window.TOOLMODE = 'TREE';
+    window.$$$currentMap.entityPreview = {
+      location: { tx: 0, ty: 0 },
+      animation: 'Idle Down',
+      filename: 'chrs_json/object_tree2.json'
+    };
+
+    _toolLogic.TREE = {
+      mousemove: (map, evt) => {
+        if (!getSelectedLayer()) {
+          window.alert('select a layer first.');
+          window.TOOLMODE = 'MOVE-VIEWPORT';
+          return;
+        }
+
+        if (!currentLayerCanHaveEntityOnIt()) {
+          window.alert('invalid layer for entity placement.');
+          window.TOOLMODE = 'MOVE-VIEWPORT';
+          return;
+        }
+
+        const vsp = getSelectedLayer().layer.vsp || 'default';
+
+        const mapOffsetX = map.camera[0];
+        const mapOffsetY = map.camera[1];
+        const mouseOffsetX = evt.offsetX;
+        const mouseOffsetY = evt.offsetY;
+        const tilesize = map.vspData[vsp].tilesize;
+
+        map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX / map.camera[2])) / tilesize.width);
+        map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY / map.camera[2])) / tilesize.height);
+      },
+      mouseup: (map, evt) => {
+        map.entityPreview.location.layer = getSelectedLayer().layer.name;
+        map.addEntity(map.entityPreview, map.entityPreview.location);
+        map.entityPreview = null;
         window.TOOLMODE = 'MOVE-VIEWPORT';
-        return;
-      }
+      },
+      mousedown: () => {},
+      moousewheel: () => {}
+    };
+  });
 
-      if (!currentLayerCanHaveEntityOnIt()) {
-        window.alert('invalid layer for entity placement.');
-        window.TOOLMODE = 'MOVE-VIEWPORT';
-        return;
-      }
+  $('#btn-dump-screen').on('click', () => {
+    const map = window.$$$currentMap;
+    const canvas = document.getElementsByClassName('map_canvas')[0];
+    const $canvas = $(canvas);
 
-      const vsp = getSelectedLayer().layer.vsp || 'default';
+    const savedCamera = [map.camera[0], map.camera[1], map.camera[2]];
+    map.camera[0] = 0;
+    map.camera[1] = 0;
+    map.camera[2] = 1;
 
-      const mapOffsetX = map.camera[0];
-      const mapOffsetY = map.camera[1];
-      const mouseOffsetX = evt.offsetX;
-      const mouseOffsetY = evt.offsetY;
-      const tilesize = map.vspData[vsp].tilesize;
+    const w = map.layers[0].dimensions.X * map.vspData[map.layers[0].vsp].tilesize.width;
+    const h = map.layers[0].dimensions.Y * map.vspData[map.layers[0].vsp].tilesize.height;
 
-      map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX / map.camera[2])) / tilesize.width);
-      map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY / map.camera[2])) / tilesize.height);
-    },
-    mouseup: (map, evt) => {
-      map.entityPreview.location.layer = getSelectedLayer().layer.name;
-      map.addEntity(map.entityPreview, map.entityPreview.location);
-      map.entityPreview = null;
-      window.TOOLMODE = 'MOVE-VIEWPORT';
-    },
-    mousedown: () => {},
-    moousewheel: () => {}
-  };
-});
+    const savedW = $canvas.width();
+    const savedH = $canvas.height();
+
+    $canvas.width(w);
+    $canvas.height(h);
+    map.resize();
+
+    window.$$$SCREENSHOT = () => {
+      const buffer = canvasBuffer(canvas, 'image/png');
+      fs.writeFile('C:\\tmp\\dump-image.png', buffer, function (err) {
+        // reset the map even if there was an error
+        map.camera = [savedCamera[0], savedCamera[1], savedCamera[2]];
+        $canvas.width(savedW);
+        $canvas.height(savedH);
+        map.resize();
+
+        if (err) {
+          throw err;
+        }
+      });
+    };
+  });
+
+};
 
 /*
 const canvasBuffer = require('electron-canvas-to-buffer');
@@ -378,41 +424,7 @@ export const isTileSelectorMap = (map) => {
   return (map.layers.length === 1 && map.layers[0].name === 'Dynamic Tileselector VspMap Layer xTreem 7');
 };
 
-$('#btn-dump-screen').on('click', () => {
-  const map = window.$$$currentMap;
-  const canvas = document.getElementsByClassName('map_canvas')[0];
-  const $canvas = $(canvas);
 
-  const savedCamera = [map.camera[0], map.camera[1], map.camera[2]];
-  map.camera[0] = 0;
-  map.camera[1] = 0;
-  map.camera[2] = 1;
-
-  const w = map.layers[0].dimensions.X * map.vspData[map.layers[0].vsp].tilesize.width;
-  const h = map.layers[0].dimensions.Y * map.vspData[map.layers[0].vsp].tilesize.height;
-
-  const savedW = $canvas.width();
-  const savedH = $canvas.height();
-
-  $canvas.width(w);
-  $canvas.height(h);
-  map.resize();
-
-  window.$$$SCREENSHOT = () => {
-    const buffer = canvasBuffer(canvas, 'image/png');
-    fs.writeFile('C:\\tmp\\dump-image.png', buffer, function (err) {
-      // reset the map even if there was an error
-      map.camera = [savedCamera[0], savedCamera[1], savedCamera[2]];
-      $canvas.width(savedW);
-      $canvas.height(savedH);
-      map.resize();
-
-      if (err) {
-        throw err;
-      }
-    });
-  };
-});
 
 export const auditSullyMaps = () => {
 
