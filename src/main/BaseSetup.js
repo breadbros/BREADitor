@@ -134,10 +134,12 @@ function setupChording() {
 }
 
 // TODO: jesus pull this apart and clean it up.
+
+/**
+ * Setup the rest of the app ;D
+ */
 function setupTheRestOfTheApp() {
-// Setup the rest of the app
-  
-  debugger;
+
   Palettes.setupPaletteRegistry();
 
   window.$$$currentMap = null;
