@@ -142,6 +142,9 @@ function setupTheRestOfTheApp() {
 
   Palettes.setupPaletteRegistry();
 
+  if(window.$$$currentMap) {
+    window.$$$currentMap.selfDestruct();
+  }
   window.$$$currentMap = null;
 
   const tick = function (timestamp) {

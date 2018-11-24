@@ -223,6 +223,20 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     );
   }
 
+  this.selfDestruct = () => {
+    for (let i = this.vspImages.length - 1; i >= 0; i--) {
+      console.log("deleting vspImages",i,this.vspImages[i]);
+      delete this.vspImages[i];
+    }
+
+    for ( let key in this.entityTextures ) {
+      if (this.entityTextures.hasOwnProperty(key)) {
+        console.log("deleting entityTextures",key,this.entityTextures[key].img);
+        delete this.entityTextures[key].img;
+      }
+    }
+  };
+
   let tallentitylayer_layerref = null;
   this.getEntityTallRedrawLayer = () => {
     return tallentitylayer_layerref;
@@ -798,7 +812,7 @@ Map.prototype = {
       this.entityTextures[data.image].img = new window.Image();
       const fn = this.doneLoading;
       this.entityTextures[data.image].img.onload = function() { console.log('done loading ' + data.image); fn(); }
-      this.entityTextures[data.image].img.src = imagePath;
+      this.entityTextures[data.image].img.src = imagePath;  
     }
 
     entity.MAPED_USEDEFAULT = false;
@@ -1001,10 +1015,10 @@ Map.prototype = {
     console.info('Setting canvas on map');
     if (this.renderContainer) { this.cleanUpCallbacks(); }
 
-        // set up callbacks
+    // set up callbacks
     $(window).on('resize', this.resize.bind(this));
 
-        // set up context
+    // set up context
     this.renderContainer = $canvas;
     this.gl = this.renderContainer[0].getContext('webgl'); // we're targeting Electron not the Internet at large so
                                                            // don't worry about failing to get a GL context
