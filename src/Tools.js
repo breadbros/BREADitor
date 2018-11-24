@@ -244,6 +244,7 @@ export const clickDrawBrush = () => {
 
 const setupToolClick = (toolObj, toolName) => {
   const $node = $(toolObj.button_element);
+  $node.off('click'); // kill old ones...
   
   console.log("setting up toolClick for", toolName, $node);
 
@@ -317,11 +318,13 @@ const currentLayerCanHaveEntityOnIt = () => {
 };
 
 const hackToolsInit = () => {
+  $('#btn-tool-zoomin').off('click');
   $('#btn-tool-zoomin').click(function (e) {
     grue_zoom(false, window.$$$currentMap);
     updateZoomText();
   });
 
+  $('#btn-tool-zoomout').off('click');
   $('#btn-tool-zoomout').click(function (e) {
     grue_zoom(true, window.$$$currentMap);
     updateZoomText();
@@ -329,6 +332,7 @@ const hackToolsInit = () => {
 
   $('#btn-tool-drag').click();
 
+  $('#btn-add-tree').off('click');
   $('#btn-add-tree').on('click', (e) => {
     window.TOOLMODE = 'TREE';
     window.$$$currentMap.entityPreview = {
@@ -373,6 +377,7 @@ const hackToolsInit = () => {
     };
   });
 
+  $('#btn-dump-screen').off('click');
   $('#btn-dump-screen').on('click', () => {
     const map = window.$$$currentMap;
     const canvas = document.getElementsByClassName('map_canvas')[0];
