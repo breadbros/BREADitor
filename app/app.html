@@ -26,6 +26,13 @@
         <script type="text/javascript">
             $(document).keypress(function(event) {
                 if( event.charCode === 32 ) { // let's not scroll down on spacebar presses?
+
+                    // but only if we're not trying to change a value.
+                    $focused = $(':focus');
+                    if($focused.is('textarea') || $focused.is('input')) {
+                        return;
+                    }
+                    
                     event.preventDefault();
                 }
             });
