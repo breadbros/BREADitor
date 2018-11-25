@@ -192,12 +192,20 @@ function setupTheRestOfTheApp() {
 }
 
 export function autoloadMostRecentMapIfAvailable() {
+  const fs = require('fs');
+
   const opts = loadMostRecentFileOption(); 
 
   if(opts.abs_path_to_maps && opts.most_recent_map) {
     const filepath = path.join(opts.abs_path_to_maps, opts.most_recent_map);
-    console.info(`${filepath} specified to autoload...`);
-    loadByFilename(filepath);
+
+    if( fs.existsSync(filepath) ) {
+      console.info(`${filepath} specified to autoload...`);
+      loadByFilename(filepath);
+    } else {
+      console.info(`${filepath} specified to autoload... but it wasn't there.`);
+    }
+    
   } else {
     console.info('No map specified to autoload.');
   }
@@ -593,7 +601,6 @@ function loadByFilename(fileNames) {
 
   saveMostRecentMapLocation(fileName);
 
-  debugger;
   // TODO: verify that all three of these files, you know... exist?
   bootstrapMap(fileName, dataName);
 };
