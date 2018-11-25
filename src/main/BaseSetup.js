@@ -335,6 +335,8 @@ export function setupWindowFunctions() {
     jetpack.write(mapfile, mapData);
     jetpack.write(datafile, tileData);
 
+    saveMostRecentMapLocation(mapfile);
+
     console.log('HELLO I AM $$$SAVE');
   };
 
