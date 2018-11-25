@@ -135,6 +135,22 @@ function setupChording() {
 
 // TODO: jesus pull this apart and clean it up.
 
+const tick = function (timestamp) {
+  if (window.$$$currentMap) {
+    window.$$$currentMap.render();
+    TilesetSelectorWidget.renderTilesetSelectorWidget();
+  }
+
+  if (window.$$$SCREENSHOT) {
+    window.$$$SCREENSHOT();
+    window.$$$SCREENSHOT = null;
+  }
+
+  window.requestAnimationFrame(tick);
+};
+
+
+
 /**
  * Setup the rest of the app ;D
  */
@@ -147,20 +163,10 @@ function setupTheRestOfTheApp() {
   }
   window.$$$currentMap = null;
 
-  const tick = function (timestamp) {
-    if (window.$$$currentMap) {
-      window.$$$currentMap.render();
-      TilesetSelectorWidget.renderTilesetSelectorWidget();
-    }
-
-    if (window.$$$SCREENSHOT) {
-      window.$$$SCREENSHOT();
-      window.$$$SCREENSHOT = null;
-    }
-
+  if(!window.$$$RAF_INIT) {
+    window.$$$RAF_INIT = true;
     window.requestAnimationFrame(tick);
-  };
-  window.requestAnimationFrame(tick);
+  }
 
   $('#btn-tool-undo').click(() => {
     handleUndo();
