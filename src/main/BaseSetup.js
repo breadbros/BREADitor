@@ -33,6 +33,22 @@ const updateScreenview = (map) => {
   $('#screenview-indicator-height').val(map.windowOverlay.viewport.height);  
 }
 
+/// TODO: why have both $$$_BREDITOR_MOST_RECENT.json and $$$_MAPED.json... 🤔
+/// I guess one should be in the appdir to at least point to the project directory...
+const loadMostRecentFileOption = () => {
+  /// TODO: is there a reason for requiring these in-block like this, or is it just cargo cult copypasta? 
+  const app = require('electron').remote.app;
+  const jetpack = require('fs-jetpack').cwd(app.getAppPath());
+  const dataPath = app.getAppPath();
+
+  const options = {};
+
+  const appConfigData = jetpack.read(path.join(dataPath, '$$$_BREDITOR_MOST_RECENT.json'), 'json');
+  window.$$$_most_recent_options = appConfigData;
+
+  return appConfigData;
+}
+
 const initScreen = (map) => {
 
   updateScreenview(map);
@@ -155,7 +171,6 @@ const tick = function (timestamp) {
  * Setup the rest of the app ;D
  */
 function setupTheRestOfTheApp() {
-
   Palettes.setupPaletteRegistry();
 
   if(window.$$$currentMap) {
@@ -174,6 +189,18 @@ function setupTheRestOfTheApp() {
   $('#btn-tool-redo').click(() => {
     handleRedo();
   });
+}
+
+export function autoloadMostRecentMapIfAvailable() {
+  const opts = loadMostRecentFileOption(); 
+
+  if(opts.abs_path_to_maps && opts.most_recent_map) {
+    const filepath = path.join(opts.abs_path_to_maps, opts.most_recent_map);
+    console.info(`${filepath} specified to autoload...`);
+    loadByFilename(filepath);
+  } else {
+    console.info('No map specified to autoload.');
+  }
 }
 
 /**
@@ -303,38 +330,6 @@ export function setupWindowFunctions() {
     console.log('HELLO I AM $$$SAVE');
   };
 
-  const loadByFilename = (fileNames) => {
-    if (fileNames === undefined) {
-      return;
-    }
-
-    const fileName = fileNames[0];
-
-    const dataName = fileName.replace('.map.json', '.map.data.json');
-    // const vspName = fileName.replace('.map.json', '.vsp.json');
-
-    saveMostRecentMapLocation(fileName);
-
-    // TODO: verify that all three of these files, you know... exist?
-    bootstrapMap(fileName, dataName);
-  };
-
-  const saveMostRecentMapLocation = (filename) => {
-    const app = require('electron').remote.app;
-    const jetpack = require('fs-jetpack').cwd(app.getAppPath());
-    const path = require('path');
-
-    const appConfigPath = path.join(app.getAppPath(), '$$$_BREDITOR_MOST_RECENT.json');
-    let appConfigData = jetpack.read(appConfigPath, 'json');
-    if( !appConfigData ) { 
-      appConfigData = {};
-    }
-
-    appConfigData.abs_path_to_maps = path.dirname(filename);
-
-    jetpack.write(appConfigPath, appConfigData);
-  };
-
   window.$$$about_breaditor = function () {
     window.alert(
       'Breaditor is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.' +
@@ -389,14 +384,13 @@ export function setupWindowFunctions() {
     const jetpack = require('fs-jetpack').cwd(dataPath);
     const path = require('path');
 
-    const appConfigData = jetpack.read(path.join(dataPath, '$$$_BREDITOR_MOST_RECENT.json'), 'json');
 
     const options = {
       filters: [{ name: 'text', extensions: ['map.json'] }]
     };
 
-    if(appConfigData && appConfigData.abs_path_to_maps) {
-      options.defaultPath = appConfigData.abs_path_to_maps;
+    if( window.$$$_most_recent_options.abs_path_to_maps ) {
+      options.defaultPath = window.$$$_most_recent_options.abs_path_to_maps;
     }
 
     dialog.showOpenDialog( options, loadByFilename );
@@ -587,7 +581,41 @@ export function setupIPCRenderer() {
   });
 }
 
-function bootstrapMap (mapFile, tiledataFile) {
+function loadByFilename(fileNames) {
+  if (fileNames === undefined) {
+    return;
+  }
+
+  const fileName = Array.isArray(fileNames) ? fileNames[0] : fileNames;
+  
+  const dataName = fileName.replace('.map.json', '.map.data.json');
+  // const vspName = fileName.replace('.map.json', '.vsp.json');
+
+  saveMostRecentMapLocation(fileName);
+
+  debugger;
+  // TODO: verify that all three of these files, you know... exist?
+  bootstrapMap(fileName, dataName);
+};
+
+function saveMostRecentMapLocation(filename) {
+  const app = require('electron').remote.app;
+  const jetpack = require('fs-jetpack').cwd(app.getAppPath());
+  const path = require('path');
+
+  const appConfigPath = path.join(app.getAppPath(), '$$$_BREDITOR_MOST_RECENT.json');
+  let appConfigData = jetpack.read(appConfigPath, 'json');
+  if( !appConfigData ) { 
+    appConfigData = {};
+  }
+
+  appConfigData.abs_path_to_maps = path.dirname(filename);
+  appConfigData.most_recent_map = path.basename(filename);
+
+  jetpack.write(appConfigPath, appConfigData);
+};
+
+function bootstrapMap(mapFile, tiledataFile) {
 
   // replace entire contents of the body with a fresh copy.
   const $body = $('body');
