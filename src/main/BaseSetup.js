@@ -305,12 +305,12 @@ export function setupWindowFunctions() {
     );
   };
 
-  window.$$$save = function (newName) {
+  window.$$$save = function (newName, isSaveAs) {
     window.$$$currentMap.compactifyZones();
-    window._save(newName, window.$$$currentMap);
+    window._save(newName, window.$$$currentMap, isSaveAs);
   };
 
-  window._save = function (newName, map) {
+  window._save = function (newName, map, reloadAfterSave) {
     const app = require('electron').remote.app;
     const jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
@@ -336,8 +336,11 @@ export function setupWindowFunctions() {
     jetpack.write(datafile, tileData);
 
     saveMostRecentMapLocation(mapfile);
-
-    console.log('HELLO I AM $$$SAVE');
+debugger;
+    if(reloadAfterSave) {
+      console.info("Reloading map after saveas...");
+      loadByFilename(mapfile);
+    }
   };
 
   window.$$$about_breaditor = function () {
@@ -413,7 +416,7 @@ export function setupWindowFunctions() {
       {filters: [{ name: 'text', extensions: ['map.json'] }]},
       (filename) => {
         if (filename) {
-          window.$$$save(filename);
+          window.$$$save(filename, true);
         }
       }
     );
