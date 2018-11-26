@@ -157,10 +157,20 @@ const redraw_palette = () => {
   $('#entity-number').text(currentEntities.length);
 
   for (let i = 0; i < currentEntities.length; i++) {
+    const myBaseData = $$$currentMap.entityData[currentEntities[i].filename];
+
     const $tmp = $("<li class='entity-row' data-index='" + i +
-             "'><span class='entity-index'></span><span class='entity-name'></span></li>");
-    $tmp.find('.entity-index').text(i);
+             "'><span class='entity-index'></span><span class='is-maybe-tall'></span><span class='entity-name'></span></li>");
+    
     $tmp.find('.entity-name').text(currentEntities[i].name);
+
+    if(myBaseData.regions && myBaseData.regions.Tall_Redraw) {
+      $tmp.find('.entity-index').html(i + ' <img src=images/icons/svg/pine.svg style="width: 16px; height: 16px; position: relative; top: 2px;">');     
+    } else {
+      $tmp.find('.entity-index').text(i);
+    }
+
+    
 
     $tmp.click(singleclick_handler);
     $tmp.dblclick(doubleclick_handler);
