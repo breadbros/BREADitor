@@ -87,7 +87,7 @@ export function baseHTMLTemplate() {
             </div>
 
             <button id="zones-new">New</button>
-            <button id="zones-spreadsheet">Spreadsheet Mode</button>
+            <!-- <button id="zones-spreadsheet">Spreadsheet Mode</button> -->
         </div>
 
         <div class="entity-palette ui-widget-content draggable-window resizable-window" data-minWidth="280">
@@ -101,7 +101,7 @@ export function baseHTMLTemplate() {
             </div>
 
             <button id="entity-new">New</button>
-            <button id="entity-spreadsheet">Spreadsheet Mode</button>
+            <!-- <button id="entity-spreadsheet">Spreadsheet Mode</button> -->
         </div>
 
         <div class="info-palette ui-widget-content draggable-window resizable-window" data-minWidth="200">

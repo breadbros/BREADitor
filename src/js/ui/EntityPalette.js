@@ -78,6 +78,18 @@ const initEntitiesWidget = (map) => {
   currentEntities = map.mapData.entities;
 
   redraw_palette();
+
+  $('.entity-palette').resize(function () {
+    fixContainerSize();
+  });
+
+  $('.entity-palette #entity-new').click((evt) => {
+    new_entity_click(evt);
+  });
+
+  $('.entity-palette #entity-spreadsheet').click(() => {
+    window.alert('SPREAD THAT SHEET entity SHEIT');
+  });
 };
 
 const _select_entity_ui_inner = ($node) => {
@@ -130,7 +142,7 @@ const singleclick_handler = (evt) => {
   addEntityToHighlight(ent);
 
   const hitbox = window.$$$currentMap.entityData[ent.filename].hitbox;
-  centerMapOnXY(window.$$$currentMap, ent.location.px - hitbox[0], ent.location.py - hitbox[1], hitbox[2], hitbox[3]);
+  //centerMapOnXY(window.$$$currentMap, ent.location.px - hitbox[0], ent.location.py - hitbox[1], hitbox[2], hitbox[3]);
 };
 
 const doubleclick_handler = (evt) => {
@@ -164,20 +176,9 @@ const fixContainerSize = () => {
   const palette = $('.entity-palette');
   const container = $('.entity-palette .window-container');
 
-  container.height(palette.height() - 70);
+  container.height(palette.height() - 95);
 };
 
-$('.entity-palette').resize(function () {
-  fixContainerSize();
-});
-
-$('.entity-palette #entity-new').click((evt) => {
-  new_entity_click(evt);
-});
-
-$('.entity-palette #entity-spreadsheet').click(() => {
-  window.alert('SPREAD THAT SHEET entity SHEIT');
-});
 
 let template = "<div>Name: <input id='entity_name'></div>";
 template += "<div>Filename: <input id='entity_filename'></div>";

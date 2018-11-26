@@ -543,7 +543,6 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.entities = {};
     for (i = 0; i < this.mapData.entities.length; i++) {
       const entity = this.mapData.entities[i];
-//      console.info(entity);
 
       entity.location.layer = entity.location.layer || defaultEntityLayer;
 
@@ -557,7 +556,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       if (this.entities[i]) {
         console.info('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
         this.entities[i].sort(function (a, b) {
-          return a.location.ty - b.location.ty;
+          if(a.location.py != b.location.py) {
+            return a.location.py - b.location.py;
+          }
+          return a.location.px - b.location.px;
         });
       }
     }

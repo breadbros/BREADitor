@@ -7,6 +7,18 @@ const initZonesWidget = (map) => {
   currentZones = map.mapData.zones;
 
   redraw_palette();
+
+  $('.zones-palette').resize(function () {
+    fixContainerSize();
+  });
+
+  $('.zones-palette #zones-new').click((evt) => {
+    new_zone_click(evt);
+  });
+
+  $('.zones-palette #zones-spreadsheet').click(() => {
+    window.alert('SPREAD THAT SHEET ZONE SHEIT');
+  });
 };
 
 function _select_zone_ui_inner($node) {
@@ -69,18 +81,6 @@ const fixContainerSize = () => {
 
   container.height(palette.height() - 70);
 };
-
-$('.zones-palette').resize(function () {
-  fixContainerSize();
-});
-
-$('.zones-palette #zones-new').click((evt) => {
-  new_zone_click(evt);
-});
-
-$('.zones-palette #zones-spreadsheet').click(() => {
-  window.alert('SPREAD THAT SHEET ZONE SHEIT');
-});
 
 const template = "<div>Name: <input id='zone_name'></div>" +
   "<div>Activation Script: <input id='zone_activation_script'></div>" +
