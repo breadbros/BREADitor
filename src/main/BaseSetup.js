@@ -624,8 +624,40 @@ function saveMostRecentMapLocation(filename) {
   appConfigData.abs_path_to_maps = path.dirname(filename);
   appConfigData.most_recent_map = path.basename(filename);
 
+  if(!appConfigData.recent_maps) {
+    appConfigData.recent_maps = [];
+  }
+
+  appConfigData.recent_maps.unshift({
+    basePath: appConfigData.abs_path_to_maps,
+    map: appConfigData.most_recent_map    
+  });
+
+  appConfigData.recent_maps = dedupeRecentMaps(appConfigData.recent_maps);
+
   jetpack.write(appConfigPath, appConfigData);
 };
+
+const MAX_RECENT_MAPS = 3;
+
+function dedupeRecentMaps(mapQueue) {
+  var hitList = {};
+  var newQueue = [];
+
+  for (var i = 0; i < mapQueue.length; i++) {
+    const key = mapQueue[i].basePath +  mapQueue[i].map;
+    if(!hitList[key]) {
+      newQueue.push(mapQueue[i]);
+      hitList[key] = true;
+    }
+    
+    if(newQueue.length >= MAX_RECENT_MAPS) {
+      return newQueue;
+    }
+  }
+
+  return newQueue;
+}
 
 function bootstrapMap(mapFile, tiledataFile) {
 
