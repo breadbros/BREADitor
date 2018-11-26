@@ -2,6 +2,8 @@ const $ = require('jquery');
 const app = require('electron').remote.app;
 const jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
+import {setLayerSelectCallback} from './js/ui/LayersPalette';
+
 // TODO currently this isn't allowing the multiple-vsp thing to really be "right".
 // TODO need to have virtual palletes per vsp & switch between them when you switch to a layer with a different palette.
 const initializeTileSelectorsForMap = (imageFile) => {
@@ -76,7 +78,6 @@ export const moveSelectedTile = (wasd, map) => {
 
 export const debugSelectedTiles = () => {
   const i = selectedTilesPerVSP;
-  debugger;
 };
 
 $('#btn-tool-debugger').on('click', () => {
@@ -124,10 +125,12 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
 
   if (_last_vsp !== whichVSP) {
     console.info('_last_vsp !== whichVSP', _last_vsp, whichVSP);
-    initializeTileSelectorsForMap(map.vspData[whichVSP].source_image);
 
     _last_vsp = whichVSP;
-  }
+
+    // setLayerSelectCallback(afterFn); //TODO: sideeffecty :( 
+    initializeTileSelectorsForMap(map.vspData[whichVSP].source_image);
+  } 
 
   // TODO: This slotIdx paradigm is dumb.  Kill it.
   if (slotIdx === 0) {
@@ -146,6 +149,7 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
 
   const loc = map.getVSPTileLocation(whichVSP, vspIDX);
   $(whichOne).css('background-position', '-' + (loc.x * 2) + 'px -' + (loc.y * 2) + 'px'); // (offset *2)
+
 };
 
 export const updateTileSelectorPaletteMapAnts = (vspIdx) => { // TODO should this be in the TileSelectorPalette?
@@ -153,8 +157,12 @@ export const updateTileSelectorPaletteMapAnts = (vspIdx) => { // TODO should thi
   const tX = parseInt(vspIdx % 20); // TODO calculate this from the per_row value of the actual VSP.
 
   // TODO do not use window.$$$currentTilsesetSelectorMap
-  window.$$$currentTilsesetSelectorMap.selection.deselect();
-  window.$$$currentTilsesetSelectorMap.selection.add(tX, tY, 1, 1);
+  try {
+    window.$$$currentTilsesetSelectorMap.selection.deselect();
+    window.$$$currentTilsesetSelectorMap.selection.add(tX, tY, 1, 1);
+  } catch(e) {
+    console.error('Caught a race condition around tileSelectorMap init and the pallete ants.  Non-fatal but annoying.   Please fix.');
+  }
 };
 
 export const toggleSelectedTiles = (map) => {

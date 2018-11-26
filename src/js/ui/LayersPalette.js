@@ -53,12 +53,13 @@ export const selectNamedLayer = (name) => {
   for (let i = $list.length - 1; i >= 0; i--) {
     const $node = $($list[i]);
     if ($node.text().trim().startsWith(name)) {
+      console.info(`Clicking named layer '${name}'..`);
       $node.closest('li').click();
       return true;
     }
   }
 
-  console.warn('No such named layer', name, 'found on this map');
+  console.warn(`No such named layer '${name}' found on this map.`);
 
   return false;
 };
@@ -111,6 +112,24 @@ export const selectEntityLayer = () => {
   closeEditLayerDialog();
 };
 
+export function doLayerSelect($layer_container, layer_idx, dialog, map, evt) {
+  const selClass = 'selected';
+
+  removeAllSelectedLayers(selClass);
+
+  changeSelectedLayer({
+    map_tileData_idx: layer_idx,
+    layer: layers[layer_idx],
+    $container: $layer_container
+  });
+  $layer_container.addClass(selClass);
+
+  TilesetSelectorWidget.initTilesetSelectorWidget(map, layers[layer_idx], null);
+  if (dialog) {
+    _layer_click(evt, layer_idx);
+  }
+}
+
 export const selectLayer = (name) => {
   switch (name) {
     case 'O':
@@ -126,6 +145,16 @@ export const selectLayer = (name) => {
       selectNamedLayer(name);
   }
 };
+
+let __layerSelectCallback = null;
+export function setLayerSelectCallback(fn) {
+  console.info('setting layerSelectCallback...', fn);
+  __layerSelectCallback = fn;
+}
+
+function getLayerSelectCallback() {
+  return __layerSelectCallback;
+}
 
 let $obs_container = null;
 export const selectObstructionLayer = () => {
@@ -149,11 +178,10 @@ export const selectObstructionLayer = () => {
     $container: $obs_container
   });
 
-  TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData);
-
-  $obs_container.addClass(selClass);
-
-  closeEditLayerDialog();
+  TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData, () => {
+    $obs_container.addClass(selClass);
+    closeEditLayerDialog();
+  });
 };
 
 let layers = null;
@@ -295,22 +323,7 @@ const redraw_palette = (map) => {
 
   const addLayerSelectHandler = ($layer_container, i) => {
     $layer_container.on('click', (evt) => {
-      const selClass = 'selected';
-
-      removeAllSelectedLayers(selClass);
-
-      changeSelectedLayer({
-        map_tileData_idx: i,
-        layer: layers[i],
-        $container: $layer_container
-      });
-      $layer_container.addClass(selClass);
-
-      TilesetSelectorWidget.initTilesetSelectorWidget(map, layers[i]);
-
-      if (dialog) {
-        _layer_click(evt, i);
-      }
+      doLayerSelect($layer_container, i, dialog, map, evt);
 
       evt.stopPropagation();
     });

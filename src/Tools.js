@@ -156,7 +156,7 @@ export const getTXTyFromMouse = (map, evt) => {
   const mouseOffsetX = evt.offsetX;
   const mouseOffsetY = evt.offsetY;
   const selectedLayer = getSelectedLayer();
-  const parallax = (selectedLayer != null) ? selectedLayer.layer.parallax : [1,1]; // If no layer is selected assume parallax (1.0, 1.0)
+  const parallax = (selectedLayer != null) ? selectedLayer.layer.parallax : {X:1.0, Y:1.0}; // If no layer is selected assume parallax (1.0, 1.0)
   
   const vpX = (map.windowOverlay.on) ? map.windowOverlay.viewport.x : 0;
   const vpY = (map.windowOverlay.on) ? map.windowOverlay.viewport.y : 0;
