@@ -164,7 +164,7 @@ const redraw_palette = () => {
     
     $tmp.find('.entity-name').text(currentEntities[i].name);
 
-    if(myBaseData.regions && myBaseData.regions.Tall_Redraw) {
+    if(myBaseData && myBaseData.regions && myBaseData.regions.Tall_Redraw) {
       $tmp.find('.entity-index').html(i + ' <img src=images/icons/svg/pine.svg style="width: 16px; height: 16px; position: relative; top: 2px;">');     
     } else {
       $tmp.find('.entity-index').text(i);
