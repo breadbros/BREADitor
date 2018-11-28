@@ -1,4 +1,3 @@
-
 import { baseHTMLTemplate } from './BaseTemplate';
 
 import { TilesetSelectorWidget } from '../js/ui/TilesetSelectorPalette.js';
@@ -7,7 +6,9 @@ import { Palettes } from '../Palettes.js';
 import { LayersWidget } from '../js/ui/LayersPalette.js'; //, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix, newLayerOnNewMap
 import { ZonesWidget } from '../js/ui/ZonesPalette.js';
 import { EntitiesWidget } from '../js/ui/EntityPalette.js';
-import { initTools, updateRstringInfo, updateLocationFunction } from '../Tools.js';
+import { initTools, updateRstringInfo, updateLocationFunction, selectAll } from '../Tools.js';
+import { cut, copy, paste } from '../js/ui/CutCopyPaste';
+import { handleUndo, handleRedo } from '../UndoRedo';
 
 const path = require('path');
 
@@ -106,6 +107,7 @@ function setupChording() {
       if (window.$$$currentMap.selection.tiles && window.$$$currentMap.selection.tiles.length) {
         copy(window.$$$currentMap);
       } else if (
+        window.$$$currentTilsesetSelectorMap && 
         window.$$$currentTilsesetSelectorMap.selection.tiles &&
         window.$$$currentTilsesetSelectorMap.selection.tiles.length
       ) {
