@@ -85,8 +85,17 @@ function setupShiftKeyPressed() {
   });
 }
 
+let __setupChording_once = false;
+
 // TODO: verify all this cannot be done with accelerators
 function setupChording() {
+  if(__setupChording_once) {
+    return;
+  }
+
+  debugger;
+  // this is dumb.
+  __setupChording_once = true;
 
   $('body').on('keydown', (e) => {
     if (!(e.ctrlKey || e.cmdKey)) { // TODO verify this on mac, cmdKey is a guess.
