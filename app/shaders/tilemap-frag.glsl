@@ -6,6 +6,11 @@ uniform sampler2D u_tileLayout;
 uniform float u_opacity;
 
 void main() {
+    if (v_position[0] > 1.0 || v_position[0] < -1.0 || v_position[1] > 1.0 || v_position[1] < -1.0) {
+        gl_FragColor = vec4(0, 0, 0, 0);
+        return;
+    }
+
     vec4 color = vec4(0, 0, 0, 0);
     vec4 tileInfo = texture2D(u_tileLayout, v_position) * 255.0;
     float index = dot(tileInfo, vec4(1.0, 256.0, 65536.0, 16777216.0));
