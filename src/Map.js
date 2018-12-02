@@ -24,8 +24,8 @@ const TALLENT_G = 1;
 const TALLENT_B = 1;
 const TALLENT_A = 1;
 
-export let checkerColorA = [0.75, 0.75, 0.75, 1.0];
-export let checkerColorB = [1.0, 1.0, 1.0, 1.0];
+export const checkerColorA = [0.75, 0.75, 0.75, 1.0];
+export const checkerColorB = [1.0, 1.0, 1.0, 1.0];
 
 let lastKnownPath = '';
 
@@ -325,13 +325,16 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
 
+  this.checkerColorA = checkerColorA;
+  this.checkerColorB = checkerColorB;
+
   if(this.mapedConfigData) {
-    if( this.mapedConfigData.checkerColorA ) {
-      checkerColorA = this.mapedConfigData.checkerColorA;
+    if( this.mapedConfigData.checkerColorA && !this.mapData.isTileSelectorMap ) {
+      this.checkerColorA = this.mapedConfigData.checkerColorA;
     }
 
-    if(this.mapedConfigData.checkerColorB) {
-      checkerColorB = this.mapedConfigData.checkerColorB;
+    if( this.mapedConfigData.checkerColorB && !this.mapData.isTileSelectorMap  ) {
+      this.checkerColorB = this.mapedConfigData.checkerColorB;
     }    
   } else {
     alert(`Failed to read config file expected at ${this.mapedConfigFile}`);
@@ -1551,8 +1554,8 @@ Map.prototype = {
       this.vspImages[layer.vsp].height / this.vspData[layer.vsp].tilesize.height
     );
 
-    gl.uniform4f(this.checkerShader.uniform('u_colorA'), checkerColorA[0], checkerColorA[1], checkerColorA[2], checkerColorA[3] );
-    gl.uniform4f(this.checkerShader.uniform('u_colorB'), checkerColorB[0], checkerColorB[1], checkerColorB[2], checkerColorB[3]);
+    gl.uniform4f(this.checkerShader.uniform('u_colorA'), this.checkerColorA[0], this.checkerColorA[1], this.checkerColorA[2], this.checkerColorA[3] );
+    gl.uniform4f(this.checkerShader.uniform('u_colorB'), this.checkerColorB[0], this.checkerColorB[1], this.checkerColorB[2], this.checkerColorB[3]);
 
     const a_position = this.checkerShader.attribute('a_position');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
