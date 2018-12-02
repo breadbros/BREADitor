@@ -251,7 +251,7 @@ export function setupWindowFunctions() {
         }, 'Save new map': function () {
           const wid = parseInt($('#newmap-width').val());
           const hig = parseInt($('#newmap-height').val());
-debugger;
+
           window.$$$currentMap.layers.length = 1;
           window.$$$currentMap.layers[0] = {
             "name":"New Layer",

@@ -1324,7 +1324,8 @@ Map.prototype = {
     }
 
     if (!layer) {
-      debugger;
+      console.warn('sub-tick escape for when youre making a new map. this is dumb and bad.');
+      return; 
     }
 
     if (layer.MAPED_HIDDEN) {
