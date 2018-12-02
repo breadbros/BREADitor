@@ -904,9 +904,10 @@ Map.prototype = {
   },
 
   getTile: function (tileX, tileY, layerIdx) {
-    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    let idx;
 
     if (layerIdx === 998) { // TODO the obs sentinel is the WORST
+      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
       if (this.legacyObsData) { // we are in the main map.
         return this.legacyObsData[idx];
       } else if (this.tileData && this.tileData.length === 1) { // we are in the obs map
@@ -916,6 +917,8 @@ Map.prototype = {
           'Something very strange happened where you were trying to access obs data when there was both no obs ' +
           'tiledata and multiple non-obs tile layers.');
       }
+    } else { // we are on a normal  layer
+      idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
     }
 
     return this.tileData[layerIdx][idx];
@@ -933,7 +936,7 @@ Map.prototype = {
       }
     }
 
-    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    const idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
 
     if (layerIdx === 998) { // TODO the obs sentinel is the WORST
       this.legacyObsData[idx] = tileIdx;
