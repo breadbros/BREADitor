@@ -358,9 +358,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       this.layerRenderOrder = rstring.split(',');
     } else if (typeof rstring.length === 'number') {
       console.log("Setting new rstring: '");
-      console.log(rstring);
-
-      this.layerRenderOrder = rstring;
+      this.layerRenderOrder = rstring.map( (r) => ""+r );
+      console.log(this.layerRenderOrder);
     } else {
       throw new Error('What fresh hell is this.  What are you throwing at updateRstring?!');
     }
@@ -372,27 +371,31 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.updateRstring(this.mapData.renderstring);
   this.mapSizeInTiles = [0, 0];
-  this.layerLookup = {};
 
   // YOU BIG FAT PHONY
-  this.layerLookup[this.fakeEntityLayer.name] = this.fakeEntityLayer;
 
-  // populate this.layerLookup
-  for (i = 0; i < this.mapData.layers.length; i++) {
-    console.log(i);
-    console.log(this.mapData.layers[i].name);
+  this.regenerateLayerLookup = () => {
+    this.layerLookup = {};
+    this.layerLookup[this.fakeEntityLayer.name] = this.fakeEntityLayer;
 
-    if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
-      this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
+    // populate this.layerLookup
+    for (let i = 0; i < this.mapData.layers.length; i++) {
+      console.log(i);
+      console.log(this.mapData.layers[i].name);
+
+      if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
+        this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
+      }
+      if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) {
+        this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
+      }
+
+      const layerName = this.uniqueLayerName(this.mapData.layers[i].name);
+      this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
+      this.layerLookup[layerName] = this.mapData.layers[i];
     }
-    if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) {
-      this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
-    }
-
-    const layerName = this.uniqueLayerName(this.mapData.layers[i].name);
-    this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
-    this.layerLookup[layerName] = this.mapData.layers[i];
   }
+  this.regenerateLayerLookup();
 
   // TODO: this branch-code is bad
   if (!this.mapData.isTileSelectorMap) {

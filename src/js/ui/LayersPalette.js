@@ -189,7 +189,6 @@ let map = null;
 function initLayersWidget(_map) {
   map = _map;
   layers = map.mapData.layers;
-
   redraw_palette(map);
 };
 
@@ -224,6 +223,7 @@ const removeAllSelectedLayers = (selClass) => {
 
 const redraw_palette = (map) => {
   list = $('.layers-palette .layers-list');
+  list.html("");
   let newLayerContainer = null;
   let l = null;
 
@@ -507,8 +507,10 @@ const redraw_palette = (map) => {
     setup_shitty_layer_seperator($list);
 
     // ZONES
+    console.log("map.layerRenderOrder: " + map.layerRenderOrder);
 
     for (let i = map.layerRenderOrder.length - 1; i >= 0; i--) {
+      console.log(i);
       rstring_cur_target = map.layerRenderOrder[i];
       rstring_ref = parseInt(rstring_cur_target, 10);
       if (isNaN(rstring_ref)) {
@@ -539,6 +541,7 @@ const redraw_palette = (map) => {
 
       for (let j = childs.length - 1; j >= 0; j--) {
         cur_kid = $(childs[j]);
+
         if (cur_kid.data('rstring_ref') === rstring_cur_target) {
           $list.append(cur_kid); // re-add to list
           childs.splice(j, 1); // remove from childs array
@@ -649,7 +652,7 @@ const redraw_palette = (map) => {
       dialog = $('#modal-dialog').dialog({
         modal: true,
         buttons: {
-          Save: () => { update_lucency(layer, dialog, special); },
+          'Save': () => { update_lucency(layer, dialog, special); },
           'Cancel': function () {
             dialog.dialog('close');
           }
@@ -979,6 +982,16 @@ function _layer_click(evt, layerIdx, onComplete) {
 
     let title = null;
 
+    const buttonsLol = [{
+      id: "confirm-layer",
+      text: "Save",
+      click: () => { update_layer(dialog, newLayerId, onComplete); }
+    }, {
+      id: "cancel-layer",
+      text: "Cancel",
+      click: function () { closeEditLayerDialog(); }
+    }];
+
     if (typeof layerIdx === 'number') {
       const layer = window.$$$currentMap.mapData.layers[layerIdx]; // TODO needs better accessor
 
@@ -997,6 +1010,52 @@ function _layer_click(evt, layerIdx, onComplete) {
       );
 
       newLayerId = layerIdx;
+
+      buttonsLol.unshift({
+        id: "delete-layer",
+        text: "DELETE",
+        click: () => { if( confirm('Are you sure?') ) {
+          const me = layer;
+          const myIdx = layerIdx;
+
+          if(myIdx === 0) {
+            alert('You cannot delete the base layer (index 0) presently.');
+            return;
+          }
+
+          if(layer === window.$$$currentMap.getEntityTallRedrawLayer()) {
+            alert('You cannot delete the tall redraw layer.  Please set it to another layer and try again.');
+            return;
+          }
+
+          window.$$$currentMap.layers.splice(myIdx, 1);
+
+          const newOrder = [];
+          const oldOrder = window.$$$currentMap.layerRenderOrder;
+          for(let i=0; i<oldOrder.length; i++) {
+            const targ = oldOrder[i];
+            if(!$.isNumeric(targ)) {
+              newOrder.push(targ);
+            } else {
+              const num = parseInt(targ);
+              if(num === myIdx+1) {
+                continue;
+              } else if(num > myIdx) {
+                newOrder.push(""+num-1);
+              } else {
+                newOrder.push(""+num);
+              }
+            }
+          }
+
+          window.$$$currentMap.updateRstring(newOrder);
+          window.$$$currentMap.regenerateLayerLookup();
+
+          initLayersWidget(window.$$$currentMap);
+
+          closeEditLayerDialog();
+        } },
+      });
     } else if (window.$$$currentMap) {
       title = 'Add New Layer';
       newLayerId = window.$$$currentMap.mapData.layers.length;
@@ -1011,14 +1070,7 @@ function _layer_click(evt, layerIdx, onComplete) {
       width: 500,
       modal: true,
       title: title,
-      buttons: {
-        Save: () => {
-          update_layer(dialog, newLayerId, onComplete);
-        },
-        'Cancel': function () {
-          closeEditLayerDialog();
-        }
-      },
+      buttons: buttonsLol,
       close: function () {
         $('#modal-dialog').html('');
       }
