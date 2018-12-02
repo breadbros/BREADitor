@@ -27,10 +27,11 @@ export const FakeMap = () => {
 
   const setMatrix = (newMatrix) => {
     matrix = newMatrix;
+
   };
 
   return {
-    layers: [{dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}], // TODO kill map.layers[0].dimensions.X/Y as dim source of truth
+    layers: [{dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}, {dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}], // TODO kill map.layers[0].dimensions.X/Y as dim source of truth
     getTile: getTile,
     setTile: setTile,
     getLayerData: getLayerData,

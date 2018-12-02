@@ -71,7 +71,6 @@ export const MakeUndoRedoStack = (_map) => {
         continue;
       }
 
-      console.log(`[${layerIdx}] (${tileX}, ${tileY}) = ${tileIdx}`);
       map.setTile(
         tileX, tileY,
         layerIdx, tileIdx
