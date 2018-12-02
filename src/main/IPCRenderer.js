@@ -25,6 +25,12 @@ export function setupIPCRenderer() {
         return;
       }
 
+      if (el.type && el.type === 'number') {
+        // NOTE - enabling this console log slows all data entry RIGHT the fuck down
+        // console.info('in a textfield, ignoring the accelerator');
+        return;
+      }
+
       if( arg.msg == 'tool-move-viewport' && el.type) {
         return;
       }

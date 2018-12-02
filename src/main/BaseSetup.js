@@ -223,56 +223,109 @@ export function setupFreshApp() {
 }
 
 export function setupWindowFunctions() {
+  const newMapDialog = () => {
+    const path = require('path');
+    
+    const maps = window.$$$_most_recent_options.recent_maps;
 
-  window._newStep3_resolution = function (map, layers) {
-    const { dialog } = require('electron').remote;
+    let $template = `
+      Width  <input id="newmap-width" type="number"><br/>
+      Height  <input id="newmap-height" type="number"><br/>
+    `;
 
-    dialog.showSaveDialog(
-      {title: 'New Map Filename', filters: [{ name: 'text', extensions: ['map.json'] }]},
-      (filename) => {
-        if (filename) {
-          let raw = {
-            legacy_obstruction_data: map.mapRawTileData.tile_data[0], // Array[37500]
-            tile_data: map.mapRawTileData.tile_data, // Array[6]
+    const title = 'Create new map';
+
+    $('#modal-dialog').html('');
+    $('#modal-dialog').append($template);
+    $('#modal-dialog').show();
+
+    window.$$$hide_all_windows();
+
+    const dialog = $('#modal-dialog').dialog({
+      width: 500,
+      modal: true,
+      title: title,
+      buttons: {
+        'Cancel': function () {
+          $('#modal-dialog').dialog( "close" );
+        }, 'Save new map': function () {
+          const wid = parseInt($('#newmap-width').val());
+          const hig = parseInt($('#newmap-height').val());
+debugger;
+          window.$$$currentMap.layers.length = 1;
+          window.$$$currentMap.layers[0] = {
+            "name":"New Layer",
+            "parallax":{"X":1,"Y":1},
+            "dimensions":{"X":wid,"Y":hig},
+            "alpha":1,
+            "vsp":"default"
+          };
+
+          const oneLayerSize = wid*hig;
+
+          window.$$$currentMap.zoneData = Array(oneLayerSize);
+          window.$$$currentMap.legacyObsData = Array.apply(null, Array(oneLayerSize)).map(Number.prototype.valueOf,0);
+          const blankLayerData = Array.apply(null, Array(oneLayerSize)).map(Number.prototype.valueOf,0);
+          window.$$$currentMap.mapRawTileData = {
+            tile_data: [blankLayerData],
+            legacy_obstruction_data: window.$$$currentMap.legacyObsData,
             zone_data: []
           };
 
-          raw = JSON.parse(JSON.stringify(raw));
-
-          const blankMap = {
-            notes: [],
-            name: 'NO NAME', // TODO allow name entry
-            vsp: {
-              default: path.basename(window.newMapData.default_vspfile),
-              obstructions: path.basename(window.newMapData.obs_vspfile)
+          window.$$$currentMap.entities = {}
+          window.$$$currentMap.entityData = {};
+          window.$$$currentMap.entityTextures = {};
+          window.$$$currentMap.mapData = {
+            "notes": [],
+            "name": "",
+            "vsp": {
+              "default": path.basename(window.newMapData.default_vspfile),
+              "obstructions": path.basename(window.newMapData.obs_vspfile)
             },
-            music: '', // TODO do something with music
-            renderstring: '1,E,R',
-            initscript: 'start', // TODO allow editing of initscript?
-            starting_coordinates: [0, 0],
-            layers: layers,
-            zones: [{
-              name: 'NULL_ZONE',
-              activation_script: '',
-              activation_chance: 0,
-              can_by_adjacent_activated: false
+            "music": "",
+            "renderstring": "1,E,R",
+            "initscript": "start",
+            "starting_coordinates": [0, 0],
+            "layers": [{
+              "name": "New Layer",
+              "parallax": {
+                "X": 1,
+                "Y": 1
+              },
+              "dimensions": {
+                "X": wid,
+                "Y": hig
+              },
+              "alpha": 1,
+              "vsp": "default"
             }],
-            entities: []
+            "zones": [{
+              "name": "NULL_ZONE",
+              "activation_script": "",
+              "activation_chance": 0,
+              "can_by_adjacent_activated": false
+            }],
+            "entities": [],
+            "tallentitylayer": "New Layer",
+            "MAPED_ENTLAYER_VISIBLE": true,
+            "MAPED_ZONELAYER_VISIBLE": true,
+            "MAPED_OBSLAYER_VISIBLE": true
           };
-
-          window._save(filename, {
-            mapData: blankMap,
-            mapRawTileData: raw
-          });
+          
+          window.$$$saveAs();
+          window.$$$show_all_windows();
         }
+      },
+      close: function () {
+        $('#modal-dialog').html('');
       }
-    );
+    });
   };
 
   window._newStep2_chooseObsVSP = function (res) {
     window.newMapData.obs_vspfile = res[0];
 
-    newLayerOnNewMap(new window.Event(null), window._newStep3_resolution);
+    newMapDialog();
   };
 
   window._newStep1_chooseDefaultVSP = function (res) {

@@ -439,6 +439,9 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   if (this.dataPath && this.mapData.vsp.obstructions) {
     const tmppath = path.join(this.dataPath, this.mapData.vsp.obstructions);
     this.obsLayerData = jetpack.read(tmppath, 'json');
+    if (!this.obsLayerData) {
+      debugger;
+    }
     if (!this.obsLayerData.vsp) {
       this.obsLayerData.vsp = 'obstructions';
     }
@@ -1319,6 +1322,11 @@ Map.prototype = {
     if (isNaN(layerIndex)) {
       return;
     }
+
+    if (!layer) {
+      debugger;
+    }
+
     if (layer.MAPED_HIDDEN) {
       if (this.getEntityTallRedrawLayer() === layer) {
         this.spriteShader.use();
