@@ -93,7 +93,6 @@ function setupChording() {
     return;
   }
 
-  debugger;
   // this is dumb.
   __setupChording_once = true;
 

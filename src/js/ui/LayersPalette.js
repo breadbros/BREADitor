@@ -1143,6 +1143,16 @@ const update_layer = (dialog, layer_id, onComplete) => {
   if( old_dim_y != new_dim_y || old_dim_x != new_dim_x ) {
     console.log( "Resizing layer..." );
     map.mapRawTileData.tile_data[layer_id] = resize_layer( map.mapRawTileData.tile_data[layer_id], old_dim_x, old_dim_y, new_dim_x, new_dim_y );
+    
+    // OOOOOH MY GOOOOOOD...
+    // todo: move away from this godawful "layer 0 is the size of the map" paradigm.
+    if(layer_id === 0) {
+      map.mapSizeInTiles = [new_dim_x, new_dim_y];
+      map.regenerateZoneData();
+
+      map.legacyObsData = map.mapRawTileData.legacy_obstruction_data = resize_layer( map.mapRawTileData.legacy_obstruction_data, old_dim_x, old_dim_y, new_dim_x, new_dim_y );
+    }
+    map.setCanvas($('.map_canvas'));
   }
 
   if (window.document.getElementById('layer_is_tall_redraw_layer').checked) {

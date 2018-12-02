@@ -410,17 +410,20 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.legacyObsData = this.mapRawTileData.legacy_obstruction_data;
   this.tileData = this.mapRawTileData.tile_data;
 
-  let tmpZones = null;
-  tmpZones = this.mapRawTileData.zone_data;
-  this.zoneData = new Array(this.tileData[0].length);
+  this.regenerateZoneData = () => {
+    const tmpZones = this.mapRawTileData.zone_data;
+    this.zoneData = new Array(this.mapRawTileData.tile_data[0].length);
 
-  // console.info('unpacking zones...');
-  $.each(tmpZones, (idx) => {
-    // todo verify this is right
-    // console.info('unpacking zone', tmpZones[idx].z, 'to coordinates', tmpZones[idx].x, tmpZones[idx].y);
-    this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
-  });
-  // console.info('zones ->', this.zoneData);
+    // console.info('unpacking zones...');
+    $.each(tmpZones, (idx) => {
+      // todo verify this is right
+      // console.info('unpacking zone', tmpZones[idx].z, 'to coordinates', tmpZones[idx].x, tmpZones[idx].y);
+      this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
+    });
+    // console.info('zones ->', this.zoneData);
+  };
+
+  this.regenerateZoneData();
 
   this.vspData = {};
 
