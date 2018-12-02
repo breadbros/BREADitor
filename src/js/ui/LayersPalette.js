@@ -1198,8 +1198,10 @@ const update_layer = (dialog, layer_id, onComplete) => {
     
     // OOOOOH MY GOOOOOOD...
     // todo: move away from this godawful "layer 0 is the size of the map" paradigm.
+    //   getting there! just the legacyObsData relies on it now?
+
+    map.calculateSize();
     if(layer_id === 0) {
-      map.mapSizeInTiles = [new_dim_x, new_dim_y];
       map.regenerateZoneData();
 
       map.legacyObsData = map.mapRawTileData.legacy_obstruction_data = resize_layer( map.mapRawTileData.legacy_obstruction_data, old_dim_x, old_dim_y, new_dim_x, new_dim_y );
