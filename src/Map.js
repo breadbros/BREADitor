@@ -375,6 +375,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   // YOU BIG FAT PHONY
 
   this.regenerateLayerLookup = () => {
+    this.calculateSize();
+
     this.layerLookup = {};
     this.layerLookup[this.fakeEntityLayer.name] = this.fakeEntityLayer;
 
@@ -382,13 +384,6 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     for (let i = 0; i < this.mapData.layers.length; i++) {
       console.log(i);
       console.log(this.mapData.layers[i].name);
-
-      if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
-        this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
-      }
-      if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) {
-        this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
-      }
 
       const layerName = this.uniqueLayerName(this.mapData.layers[i].name);
       this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
@@ -1089,16 +1084,7 @@ Map.prototype = {
     this.selectionVertexBuffer = this.gl.createBuffer();
     this.screenviewVertexBuffer = this.gl.createBuffer();
 
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-      0.0, 0.0,
-      this.mapSizeInTiles[0], 0.0,
-      0.0, -this.mapSizeInTiles[1],
-      0.0, -this.mapSizeInTiles[1],
-      this.mapSizeInTiles[0], 0.0,
-      this.mapSizeInTiles[0], -this.mapSizeInTiles[1]
-    ]), this.gl.STATIC_DRAW);
-
+    this.calculateSize();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.screenviewVertexBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
       -1.0, -1.0,
@@ -1126,6 +1112,32 @@ Map.prototype = {
 
     if (this.onLoad) {
       this.onLoad(this);
+    }
+  },
+
+  calculateSize: function() {
+    this.mapSizeInTiles = [0, 0];
+    for (let i = 0; i < this.mapData.layers.length; i++) {
+      if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
+        this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
+      }
+      if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) {
+        this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
+      }
+    }
+
+    // this could get called before this.gl is created, potentially, so don't blow up
+    // if that's the case
+    if (this.gl) {
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
+      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
+        0.0, 0.0,
+        this.mapSizeInTiles[0], 0.0,
+        0.0, -this.mapSizeInTiles[1],
+        0.0, -this.mapSizeInTiles[1],
+        this.mapSizeInTiles[0], 0.0,
+        this.mapSizeInTiles[0], -this.mapSizeInTiles[1]
+      ]), this.gl.STATIC_DRAW);
     }
   },
 
