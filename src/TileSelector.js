@@ -4,9 +4,10 @@ const jetpack = require('fs-jetpack').cwd(app.getAppPath());
 
 import {setLayerSelectCallback} from './js/ui/LayersPalette';
 
+let thisisdumb = false;
 // TODO currently this isn't allowing the multiple-vsp thing to really be "right".
 // TODO need to have virtual palletes per vsp & switch between them when you switch to a layer with a different palette.
-const initializeTileSelectorsForMap = (imageFile) => {
+const initializeTileSelectorsForMap = (imageFile, whichvsp) => {
   imageFile = jetpack.path(window.$$$currentMap.dataPath, imageFile);
   imageFile = 'file:///' + imageFile.replace(new RegExp('\\\\', 'g'), '/'); // TODO this is incredibly dirty, right?
 
@@ -21,7 +22,14 @@ const initializeTileSelectorsForMap = (imageFile) => {
 
   $('#left-palette').css('background-size', '2000%');
   $('#right-palette').css('background-size', '2000%');
+
+  if( whichvsp === 'obstructions' && thisisdumb !== whichvsp ) {
+    setDefaultObsTiles();
+  }
+
+  thisisdumb = whichvsp;
 };
+
 
 const updateInfoWindow = () => {
   $('#info-selected-tiles').text(leftTile() + ',' + rightTile() + ' (vsp: ' + _last_vsp + ')');
@@ -129,7 +137,7 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
     _last_vsp = whichVSP;
 
     // setLayerSelectCallback(afterFn); //TODO: sideeffecty :( 
-    initializeTileSelectorsForMap(map.vspData[whichVSP].source_image);
+    initializeTileSelectorsForMap(map.vspData[whichVSP].source_image, whichVSP);
   } 
 
   // TODO: This slotIdx paradigm is dumb.  Kill it.
@@ -169,9 +177,6 @@ export const toggleSelectedTiles = (map) => {
   const _left = parseInt(leftTile());
   const _right = parseInt(rightTile());
 
-  // leftTile(_right);
-  // rightTile(_left);
-
   setTileSelectorUI('#left-palette', _right, map, 0, _last_vsp);
   setTileSelectorUI('#right-palette', _left, map, 1, _last_vsp);
 };
@@ -183,3 +188,8 @@ export const setCurrentlySelectedTile = (idx) => {
 export const getCurrentlySelectedTile = () => {
   return leftTile();
 };
+
+export const setDefaultObsTiles = () => {
+  setTileSelectorUI('#left-palette', 1, map, 0, _last_vsp);
+  setTileSelectorUI('#right-palette', 0, map, 1, _last_vsp);  
+}

@@ -925,7 +925,8 @@ Map.prototype = {
   },
 
   setTile: function (tileX, tileY, layerIdx, tileIdx) {
-    
+    let idx;
+
     /// jesus, right?  One day this won't be a thing, he lied to himself.
     if( layerIdx !== 998 ) {
       if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
@@ -934,9 +935,14 @@ Map.prototype = {
         console.info(this.layers[layerIdx].dimensions)
         return;
       }
+
+      idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
+
+    } else {
+      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
     }
 
-    const idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
+     
 
     if (layerIdx === 998) { // TODO the obs sentinel is the WORST
       this.legacyObsData[idx] = tileIdx;

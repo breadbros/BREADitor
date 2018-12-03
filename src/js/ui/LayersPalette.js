@@ -5,7 +5,7 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
          setNormalEntityVisibility, getNormalEntityVisibility,
          setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js';
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
-
+import { setTileSelectorUI, setDefaultObsTiles } from '../../TileSelector';
 import { resize_layer } from './Util.js';
 
 
@@ -174,6 +174,8 @@ export const selectObstructionLayer = () => {
     Y: window.$$$currentMap.mapSizeInTiles[1]
   }
 
+  const newObs = !_selected_layer || _selected_layer.map_tileData_idx !== 998;
+  
     // TODO: this is disgusting, right?  right.
   changeSelectedLayer({
     map_tileData_idx: 998,
@@ -184,6 +186,10 @@ export const selectObstructionLayer = () => {
   TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData, () => {
     $obs_container.addClass(selClass);
     closeEditLayerDialog();
+
+    if( newObs ) {
+      setDefaultObsTiles();
+    }
   });
 };
 
@@ -219,9 +225,7 @@ export const getSelectedLayer = () => {
 };
 
 const removeAllSelectedLayers = (selClass) => {
-  if (window && getSelectedLayer()) {
-    getSelectedLayer().$container.removeClass(selClass);
-  }
+  $("li.layer.selected").removeClass(selClass);
 };
 
 const redraw_palette = (map) => {

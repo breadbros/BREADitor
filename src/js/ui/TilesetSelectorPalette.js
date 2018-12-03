@@ -130,7 +130,7 @@ const set_height_for_scrollbars = (vsp_map) => {
 
 let obsLayerData = null;
 
-const initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
+const initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata, callback) => {
   if (optionalTiledata) {
     obsLayerData = optionalTiledata;
 
@@ -163,6 +163,10 @@ const initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
     vsp_tiledata = create_dynamic_tiledata(vsp_mapdata, newLayer);
 
     create_map(vsp_mapdata, vsp_tiledata, updateLocationFunction, newMap, newLayer);
+  }
+
+  if(callback) {
+    callback();
   }
 };
 
