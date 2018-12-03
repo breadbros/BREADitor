@@ -413,15 +413,12 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.regenerateZoneData = () => {
     const tmpZones = this.mapRawTileData.zone_data;
-    this.zoneData = new Array(this.mapRawTileData.tile_data[0].length);
+    this.zoneData = new Array(this.mapSizeInTiles[0] * this.mapSizeInTiles[1]);
 
-    // console.info('unpacking zones...');
     $.each(tmpZones, (idx) => {
-      // todo verify this is right
-      // console.info('unpacking zone', tmpZones[idx].z, 'to coordinates', tmpZones[idx].x, tmpZones[idx].y);
+      console.log('Zone: ', tmpZones[idx].x, tmpZones[idx].y);
       this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
     });
-    // console.info('zones ->', this.zoneData);
   };
 
   this.regenerateZoneData();
@@ -458,7 +455,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.compactifyZones = () => {
     // zone_data: [{x,y,z}, ...]
     const tmpZones = [];
-    const mapWidth = this.mapData.layers[0].dimensions.X; // todo - make canonical width NOT layer 0's.
+    const mapWidth = this.mapSizeInTiles[0]; 
 
     // walk the in-memory zoneData layer, anything with zone >0, add.
     $.each(this.zoneData, (idx) => {
@@ -597,8 +594,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         this.recalculateLines();
       },
       remove: function (x, y, w, h) {
-              // TODO update hull -- it's much harder to recalc the hull on subtraction
-
+        // TODO update hull -- it's much harder to recalc the hull on subtraction
         let ix = null;
         let iy = null;
         let i = null;
@@ -1216,7 +1212,7 @@ Map.prototype = {
       const layer = {
         parallax: { X: 1, Y: 1 },
         alpha: getZoneAlpha(),
-        dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
+        dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[1]}
       };
 
       this.tilemapShader.use();
@@ -1267,7 +1263,7 @@ Map.prototype = {
       const vsp = 'obstructions'; // TODO obstruction layer shouldn't just default like this
       const layer = {
         parallax: { X: 1, Y: 1 },
-        dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
+        dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[1]}
       };
 
       this.obstructionmapShader.use();
@@ -1427,7 +1423,7 @@ Map.prototype = {
       // TODO something smells about getSelectedLayer().layer
       const layer = getSelectedLayer() ? getSelectedLayer().layer : {
         parallax: { X: 1, Y: 1 },
-        dimensions: this.mapData.layers[0].dimensions
+        dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[0]}
       };
 
       const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };

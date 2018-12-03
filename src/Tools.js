@@ -179,14 +179,12 @@ export const selectAll = (map) => {
   _toolLogic.SELECT.isSelecting = true;
   _toolLogic.SELECT.isButtonDown = false;
 
-  // TODO "map.layers[0]" is almost certainly wrong.
-  // TODO make this select all of the CURRENT layer.
-  _toolLogic.SELECT.lastTX = map.layers[0].dimensions.X;
-  _toolLogic.SELECT.lastTY = map.layers[0].dimensions.Y;
+  _toolLogic.SELECT.lastTX = map.mapSizeInTiles[0];
+  _toolLogic.SELECT.lastTY = map.mapSizeInTiles[1];
   _toolLogic.SELECT.startTX = 0;
   _toolLogic.SELECT.startTY = 0;
 
-  map.selection.add(0, 0, map.layers[0].dimensions.X, map.layers[0].dimensions.Y);
+  map.selection.add(0, 0, map.mapSizeInTiles[0], map.mapSizeInTiles[1]);
 };
 
 // TODO once we know the common verbs and nouns for palette tools, we really should extract each one into its own file
@@ -388,8 +386,8 @@ const hackToolsInit = () => {
     map.camera[1] = 0;
     map.camera[2] = 1;
 
-    const w = map.layers[0].dimensions.X * map.vspData[map.layers[0].vsp].tilesize.width;
-    const h = map.layers[0].dimensions.Y * map.vspData[map.layers[0].vsp].tilesize.height;
+    const w = map.mapSizeInTiles[0] * map.vspData[map.layers[0].vsp].tilesize.width;
+    const h = map.mapSizeInTiles[1] * map.vspData[map.layers[0].vsp].tilesize.height;
 
     const savedW = $canvas.width();
     const savedH = $canvas.height();

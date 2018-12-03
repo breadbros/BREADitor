@@ -169,7 +169,10 @@ export const selectObstructionLayer = () => {
   };
 
   // TODO definitely wrong, especially when we start supporting multiple sized layers
-  window.$$$currentMap.obsLayerData.dimensions = window.$$$currentMap.mapData.layers[0].dimensions;
+  window.$$$currentMap.obsLayerData.dimensions = {
+    X: window.$$$currentMap.mapSizeInTiles[0],
+    Y: window.$$$currentMap.mapSizeInTiles[1]
+  }
 
     // TODO: this is disgusting, right?  right.
   changeSelectedLayer({
@@ -205,8 +208,8 @@ export const changeSelectedLayer = (newLayer) => {
   }
   if (!_selected_layer.layer.dimensions) {
     _selected_layer.layer.dimensions = {
-      X: map.layers[0].dimensions.X,
-      Y: map.layers[0].dimensions.Y
+      X: window.$$$currentMap.mapSizeInTiles[0],
+      Y: window.$$$currentMap.mapSizeInTiles[1]
     };
   }
 };
@@ -1196,16 +1199,17 @@ const update_layer = (dialog, layer_id, onComplete) => {
     console.log( "Resizing layer..." );
     map.mapRawTileData.tile_data[layer_id] = resize_layer( map.mapRawTileData.tile_data[layer_id], old_dim_x, old_dim_y, new_dim_x, new_dim_y );
     
-    // OOOOOH MY GOOOOOOD...
-    // todo: move away from this godawful "layer 0 is the size of the map" paradigm.
-    //   getting there! just the legacyObsData relies on it now?
+    const oldx = map.mapSizeInTiles[0];
+    const oldy = map.mapSizeInTiles[1];
 
     map.calculateSize();
-    if(layer_id === 0) {
-      map.regenerateZoneData();
+    map.regenerateZoneData();
+    map.legacyObsData = map.mapRawTileData.legacy_obstruction_data = resize_layer( 
+      map.mapRawTileData.legacy_obstruction_data, 
+      oldx, oldy, 
+      map.mapSizeInTiles[0], map.mapSizeInTiles[1] 
+    );
 
-      map.legacyObsData = map.mapRawTileData.legacy_obstruction_data = resize_layer( map.mapRawTileData.legacy_obstruction_data, old_dim_x, old_dim_y, new_dim_x, new_dim_y );
-    }
     map.setCanvas($('.map_canvas'));
   }
 
