@@ -15,6 +15,10 @@ import jetpack from 'fs-jetpack';
 const canvasBuffer = require('electron-canvas-to-buffer');
 const fs = require('fs');
 
+export const updateInfoDims = (map) => {
+  $('#info-dims').text(map.mapSizeInTiles[0] + 'x' + map.mapSizeInTiles[1]);
+};
+
 export const updateLocationFunction = (map) => {
   const x = map.camera[0];
   const y = map.camera[1];

@@ -5,7 +5,7 @@ const path = require('path');
 const appPath = app.getAppPath();
 const jetpack = require('fs-jetpack').cwd(appPath);
 import { ShaderProgram } from './ShaderProgram.js';
-import { updateRstringInfo, getCurrentHoverTile } from './Tools.js';
+import { updateRstringInfo, getCurrentHoverTile, updateInfoDims } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js';
 const sprintf = require('sprintf-js').sprintf;
@@ -1130,6 +1130,8 @@ Map.prototype = {
         this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
       }
     }
+
+    updateInfoDims(this);
 
     // this could get called before this.gl is created, potentially, so don't blow up
     // if that's the case

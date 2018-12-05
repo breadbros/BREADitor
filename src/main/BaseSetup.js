@@ -6,7 +6,7 @@ import { Palettes } from '../Palettes.js';
 import { LayersWidget } from '../js/ui/LayersPalette.js'; //, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix, newLayerOnNewMap
 import { ZonesWidget } from '../js/ui/ZonesPalette.js';
 import { EntitiesWidget } from '../js/ui/EntityPalette.js';
-import { initTools, updateRstringInfo, updateLocationFunction, selectAll } from '../Tools.js';
+import { initTools, updateRstringInfo, updateLocationFunction, selectAll, updateInfoDims } from '../Tools.js';
 import { cut, copy, paste } from '../js/ui/CutCopyPaste';
 import { handleUndo, handleRedo } from '../UndoRedo';
 
@@ -56,7 +56,7 @@ const initInfoWidget = (map) => {
   const pathParts = map.mapPath.split(path.sep);
   $('#info-mapname').text(pathParts[pathParts.length - 1]);
 
-  $('#info-dims').text(map.mapSizeInTiles[0] + 'x' + map.mapSizeInTiles[1]);
+  updateInfoDims(map);
 };
 
 function killAllElementListeners($elem) {
