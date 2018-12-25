@@ -26,7 +26,7 @@ const _cut_or_copy = (map, isCut) => {
     const curLayer = getSelectedLayer().map_tileData_idx;
     const hull_x = map.selection.hull.x;
     const hull_y = map.selection.hull.y;
-    const mapWidth = map.mapData.layers[0].dimensions.X;
+    const mapWidth = map.mapSizeInTiles[0];
 
     const cutSet = [];
 
@@ -56,7 +56,7 @@ const _cut_or_copy = (map, isCut) => {
   }
 };
 
-export const paste = (map, tX, tY, newLayer) => {
+export const paste = (map, tX, tY, newLayerIdx) => {
   if (typeof tX === 'undefined' || typeof tY === 'undefined') {
     const hoverTile = getCurrentHoverTile();
     if (hoverTile === null) {
@@ -65,22 +65,30 @@ export const paste = (map, tX, tY, newLayer) => {
     }
     tX = hoverTile[0];
     tY = hoverTile[1];
-    newLayer = getSelectedLayer().map_tileData_idx;
+    newLayerIdx = getSelectedLayer().map_tileData_idx;
   }
 
   const pasteSet = [];
 
+  const layerX = map.layers[newLayerIdx].dimensions.X;
+  const layerY = map.layers[newLayerIdx].dimensions.Y;
+
   for (let i = pasteboard.length - 1; i >= 0; i--) {
+    const targetX = pasteboard[i][0] + tX;
+    const targetY = pasteboard[i][1] + tY;
+
+    console.log(`pasting to new layer's (${targetX},${targetY})`)
+
     // out of bounds detection
     // TODO do we need to detect negatives?  MAAAAYBE?
-    if (pasteboard[i][0] + tX >= map.layers[0].dimensions.X || pasteboard[i][1] + tY >= map.layers[0].dimensions.Y) {
+    if (targetX >= layerX || targetY >= layerY) {
       continue;
     }
 
     pasteSet.push([
-      pasteboard[i][0] + tX,
-      pasteboard[i][1] + tY,
-      newLayer,
+      targetX,
+      targetY,
+      newLayerIdx,
       pasteboard[i][3]
     ]);
   }

@@ -5,7 +5,7 @@ const path = require('path');
 const appPath = app.getAppPath();
 const jetpack = require('fs-jetpack').cwd(appPath);
 import { ShaderProgram } from './ShaderProgram.js';
-import { updateRstringInfo, getCurrentHoverTile } from './Tools.js';
+import { updateRstringInfo, getCurrentHoverTile, updateInfoDims } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js';
 const sprintf = require('sprintf-js').sprintf;
@@ -23,6 +23,11 @@ const TALLENT_R = 1;
 const TALLENT_G = 1;
 const TALLENT_B = 1;
 const TALLENT_A = 1;
+
+export const checkerColorA = [0.75, 0.75, 0.75, 1.0];
+export const checkerColorB = [1.0, 1.0, 1.0, 1.0];
+
+let lastKnownPath = '';
 
 export const cleanEntities = (mapData) => {
   for (let i = mapData.entities.length - 1; i >= 0; i--) {
@@ -218,6 +223,20 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     );
   }
 
+  this.selfDestruct = () => {
+    for (let i = this.vspImages.length - 1; i >= 0; i--) {
+      console.log("deleting vspImages",i,this.vspImages[i]);
+      delete this.vspImages[i];
+    }
+
+    for ( let key in this.entityTextures ) {
+      if (this.entityTextures.hasOwnProperty(key)) {
+        console.log("deleting entityTextures",key,this.entityTextures[key].img);
+        delete this.entityTextures[key].img;
+      }
+    }
+  };
+
   let tallentitylayer_layerref = null;
   this.getEntityTallRedrawLayer = () => {
     return tallentitylayer_layerref;
@@ -241,13 +260,16 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   if (FILELOAD_MODE) {
     this.filenames.mapfile = mapfile;
     this.filenames.mapdatafile = mapdatafile;
-    this.dataPath = path.dirname(mapdatafile);
+    lastKnownPath = this.dataPath = path.dirname(mapdatafile);
+    
+    // TODO probably need a better concept of project management
+    this.mapedConfigFile = path.join(this.dataPath, '$$$_MAPED.json');
   } else {
     this.dataPath = '';
+    
+    // TODO probably need a better concept of project management
+    this.mapedConfigFile = path.join(lastKnownPath, '$$$_MAPED.json');
   }
-
-  // TODO probably need a better concept of project management
-  this.mapedConfigFile = path.join(this.dataPath, '$$$_MAPED.json');
 
   this.updateLocationFn = updateLocationFunction;
 
@@ -303,6 +325,21 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
 
+  this.checkerColorA = checkerColorA;
+  this.checkerColorB = checkerColorB;
+
+  if(this.mapedConfigData) {
+    if( this.mapedConfigData.checkerColorA && !this.mapData.isTileSelectorMap ) {
+      this.checkerColorA = this.mapedConfigData.checkerColorA;
+    }
+
+    if( this.mapedConfigData.checkerColorB && !this.mapData.isTileSelectorMap  ) {
+      this.checkerColorB = this.mapedConfigData.checkerColorB;
+    }    
+  } else {
+    alert(`Failed to read config file expected at ${this.mapedConfigFile}`);
+  }
+
   this.filenames.vspfiles = this.mapData.vsp;
 
   // Initialize an undo/redostack just for this map!
@@ -324,9 +361,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       this.layerRenderOrder = rstring.split(',');
     } else if (typeof rstring.length === 'number') {
       console.log("Setting new rstring: '");
-      console.log(rstring);
-
-      this.layerRenderOrder = rstring;
+      this.layerRenderOrder = rstring.map( (r) => ""+r );
+      console.log(this.layerRenderOrder);
     } else {
       throw new Error('What fresh hell is this.  What are you throwing at updateRstring?!');
     }
@@ -338,27 +374,26 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.updateRstring(this.mapData.renderstring);
   this.mapSizeInTiles = [0, 0];
-  this.layerLookup = {};
 
   // YOU BIG FAT PHONY
-  this.layerLookup[this.fakeEntityLayer.name] = this.fakeEntityLayer;
 
-  // populate this.layerLookup
-  for (i = 0; i < this.mapData.layers.length; i++) {
-    console.log(i);
-    console.log(this.mapData.layers[i].name);
+  this.regenerateLayerLookup = () => {
+    this.calculateSize();
 
-    if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
-      this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
+    this.layerLookup = {};
+    this.layerLookup[this.fakeEntityLayer.name] = this.fakeEntityLayer;
+
+    // populate this.layerLookup
+    for (let i = 0; i < this.mapData.layers.length; i++) {
+      console.log(i);
+      console.log(this.mapData.layers[i].name);
+
+      const layerName = this.uniqueLayerName(this.mapData.layers[i].name);
+      this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
+      this.layerLookup[layerName] = this.mapData.layers[i];
     }
-    if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) {
-      this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
-    }
-
-    const layerName = this.uniqueLayerName(this.mapData.layers[i].name);
-    this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
-    this.layerLookup[layerName] = this.mapData.layers[i];
   }
+  this.regenerateLayerLookup();
 
   // TODO: this branch-code is bad
   if (!this.mapData.isTileSelectorMap) {
@@ -376,17 +411,17 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.legacyObsData = this.mapRawTileData.legacy_obstruction_data;
   this.tileData = this.mapRawTileData.tile_data;
 
-  let tmpZones = null;
-  tmpZones = this.mapRawTileData.zone_data;
-  this.zoneData = new Array(this.tileData[0].length);
+  this.regenerateZoneData = () => {
+    const tmpZones = this.mapRawTileData.zone_data;
+    this.zoneData = new Array(this.mapSizeInTiles[0] * this.mapSizeInTiles[1]);
 
-  // console.info('unpacking zones...');
-  $.each(tmpZones, (idx) => {
-    // todo verify this is right
-    // console.info('unpacking zone', tmpZones[idx].z, 'to coordinates', tmpZones[idx].x, tmpZones[idx].y);
-    this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
-  });
-  // console.info('zones ->', this.zoneData);
+    $.each(tmpZones, (idx) => {
+      console.log('Zone: ', tmpZones[idx].x, tmpZones[idx].y);
+      this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
+    });
+  };
+
+  this.regenerateZoneData();
 
   this.vspData = {};
 
@@ -402,6 +437,9 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   if (this.dataPath && this.mapData.vsp.obstructions) {
     const tmppath = path.join(this.dataPath, this.mapData.vsp.obstructions);
     this.obsLayerData = jetpack.read(tmppath, 'json');
+    if (!this.obsLayerData) {
+      debugger;
+    }
     if (!this.obsLayerData.vsp) {
       this.obsLayerData.vsp = 'obstructions';
     }
@@ -417,7 +455,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.compactifyZones = () => {
     // zone_data: [{x,y,z}, ...]
     const tmpZones = [];
-    const mapWidth = this.mapData.layers[0].dimensions.X; // todo - make canonical width NOT layer 0's.
+    const mapWidth = this.mapSizeInTiles[0]; 
 
     // walk the in-memory zoneData layer, anything with zone >0, add.
     $.each(this.zoneData, (idx) => {
@@ -509,7 +547,6 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.entities = {};
     for (i = 0; i < this.mapData.entities.length; i++) {
       const entity = this.mapData.entities[i];
-//      console.info(entity);
 
       entity.location.layer = entity.location.layer || defaultEntityLayer;
 
@@ -523,7 +560,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       if (this.entities[i]) {
         console.info('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
         this.entities[i].sort(function (a, b) {
-          return a.location.ty - b.location.ty;
+          if(a.location.py != b.location.py) {
+            return a.location.py - b.location.py;
+          }
+          return a.location.px - b.location.px;
         });
       }
     }
@@ -554,8 +594,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         this.recalculateLines();
       },
       remove: function (x, y, w, h) {
-              // TODO update hull -- it's much harder to recalc the hull on subtraction
-
+        // TODO update hull -- it's much harder to recalc the hull on subtraction
         let ix = null;
         let iy = null;
         let i = null;
@@ -606,8 +645,29 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     };
   };
 
+  this.windowOverlayMaker = function() {
+    return {
+      map: null,
+      on: false,
+
+      viewport: {
+        x: 0,
+        y: 0,
+        width: 320,
+        height: 180
+      },
+      shade: {
+        color: [.5,.5,0],
+        opacity: .5
+      }
+    };
+  };
+
   this.selection = this.selectionMaker();
   this.selection.map = this;
+
+  this.windowOverlay = this.windowOverlayMaker();
+  this.windowOverlay.map = this;
 
   this.visibleHoverTile = this.selectionMaker();
   this.visibleHoverTile.map = this;
@@ -757,7 +817,7 @@ Map.prototype = {
       this.entityTextures[data.image].img = new window.Image();
       const fn = this.doneLoading;
       this.entityTextures[data.image].img.onload = function() { console.log('done loading ' + data.image); fn(); }
-      this.entityTextures[data.image].img.src = imagePath;
+      this.entityTextures[data.image].img.src = imagePath;  
     }
 
     entity.MAPED_USEDEFAULT = false;
@@ -844,9 +904,10 @@ Map.prototype = {
   },
 
   getTile: function (tileX, tileY, layerIdx) {
-    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    let idx;
 
     if (layerIdx === 998) { // TODO the obs sentinel is the WORST
+      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
       if (this.legacyObsData) { // we are in the main map.
         return this.legacyObsData[idx];
       } else if (this.tileData && this.tileData.length === 1) { // we are in the obs map
@@ -856,20 +917,32 @@ Map.prototype = {
           'Something very strange happened where you were trying to access obs data when there was both no obs ' +
           'tiledata and multiple non-obs tile layers.');
       }
+    } else { // we are on a normal  layer
+      idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
     }
 
     return this.tileData[layerIdx][idx];
   },
 
   setTile: function (tileX, tileY, layerIdx, tileIdx) {
-    if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
-      console.warn('attempted to set a tile out of layer bounds. ('+tileX+','+tileY+')');
-      console.info('layerIdx: ' + layerIdx);
-      console.info(this.layers[layerIdx].dimensions)
-      return;
+    let idx;
+
+    /// jesus, right?  One day this won't be a thing, he lied to himself.
+    if( layerIdx !== 998 ) {
+      if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
+        console.warn('attempted to set a tile out of layer bounds. ('+tileX+','+tileY+')');
+        console.info('layerIdx: ' + layerIdx);
+        console.info(this.layers[layerIdx].dimensions)
+        return;
+      }
+
+      idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
+
+    } else {
+      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
     }
 
-    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+     
 
     if (layerIdx === 998) { // TODO the obs sentinel is the WORST
       this.legacyObsData[idx] = tileIdx;
@@ -956,10 +1029,10 @@ Map.prototype = {
     console.info('Setting canvas on map');
     if (this.renderContainer) { this.cleanUpCallbacks(); }
 
-        // set up callbacks
+    // set up callbacks
     $(window).on('resize', this.resize.bind(this));
 
-        // set up context
+    // set up context
     this.renderContainer = $canvas;
     this.gl = this.renderContainer[0].getContext('webgl'); // we're targeting Electron not the Internet at large so
                                                            // don't worry about failing to get a GL context
@@ -983,6 +1056,8 @@ Map.prototype = {
       this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemap-frag.glsl'));
     this.selectionShader = new ShaderProgram(
       this.gl, readShader('shaders/selection-vert.glsl'), readShader('shaders/selection-frag.glsl'));
+    this.screenviewShader = new ShaderProgram(
+      this.gl, readShader('shaders/screenview-vert.glsl'), readShader('shaders/screenview-frag.glsl'));
 
     this.tileLibraryTextures = {};
     for (const k in this.vspImages) {
@@ -1010,10 +1085,20 @@ Map.prototype = {
     this.gl.enable(this.gl.BLEND);
 
     this.vertexbuffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
-
     this.entityVertexBuffer = this.gl.createBuffer();
     this.selectionVertexBuffer = this.gl.createBuffer();
+    this.screenviewVertexBuffer = this.gl.createBuffer();
+
+    this.calculateSize();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.screenviewVertexBuffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
+      -1.0, -1.0,
+       1.0,  1.0,
+       1.0, -1.0,
+       1.0,  1.0,
+      -1.0, -1.0,
+      -1.0,  1.0
+    ]), this.gl.STATIC_DRAW);
 
     for (const k in this.entityTextures) {
       const texture = this.entityTextures[k];
@@ -1027,20 +1112,39 @@ Map.prototype = {
       this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, texture.img);
     }
 
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-      0.0, 0.0,
-      this.mapSizeInTiles[0], 0.0,
-      0.0, -this.mapSizeInTiles[1],
-      0.0, -this.mapSizeInTiles[1],
-      this.mapSizeInTiles[0], 0.0,
-      this.mapSizeInTiles[0], -this.mapSizeInTiles[1]
-    ]), this.gl.STATIC_DRAW);
-
-        // make sure the size is right
+    // make sure the size is right
     this.resize();
 
     if (this.onLoad) {
       this.onLoad(this);
+    }
+  },
+
+  calculateSize: function() {
+    this.mapSizeInTiles = [0, 0];
+    for (let i = 0; i < this.mapData.layers.length; i++) {
+      if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
+        this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
+      }
+      if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) {
+        this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
+      }
+    }
+
+    updateInfoDims(this);
+
+    // this could get called before this.gl is created, potentially, so don't blow up
+    // if that's the case
+    if (this.gl) {
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
+      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
+        0.0, 0.0,
+        this.mapSizeInTiles[0], 0.0,
+        0.0, -this.mapSizeInTiles[1],
+        0.0, -this.mapSizeInTiles[1],
+        this.mapSizeInTiles[0], 0.0,
+        this.mapSizeInTiles[0], -this.mapSizeInTiles[1]
+      ]), this.gl.STATIC_DRAW);
     }
   },
 
@@ -1081,7 +1185,7 @@ Map.prototype = {
         }
       } else if (map.entityPreview) {
         map.spriteShader.use();
-        map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA]);
+        map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA], null, null);
       }
 
       if (map.getEntityTallRedrawLayer() === layer) {
@@ -1093,13 +1197,15 @@ Map.prototype = {
             map.renderEntity(
               entity, layer,
               [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)],
-              map.entityData[entity.filename].regions['Tall_Redraw']
+              map.entityData[entity.filename].regions['Tall_Redraw'],
+              null, null
             );
           } else {
             map.renderEntity(
               entity, layer,
               [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A],
-              map.entityData[entity.filename].regions['Tall_Redraw']
+              map.entityData[entity.filename].regions['Tall_Redraw'],
+              null, null
             );
           }
         }
@@ -1114,14 +1220,15 @@ Map.prototype = {
       const layer = {
         parallax: { X: 1, Y: 1 },
         alpha: getZoneAlpha(),
-        dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
+        dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[1]}
       };
 
       this.tilemapShader.use();
 
+      const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
       gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-                Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-                Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+                Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
+                Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
                 this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
                 this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
             );
@@ -1164,14 +1271,15 @@ Map.prototype = {
       const vsp = 'obstructions'; // TODO obstruction layer shouldn't just default like this
       const layer = {
         parallax: { X: 1, Y: 1 },
-        dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
+        dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[1]}
       };
 
       this.obstructionmapShader.use();
 
+      const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
       gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
-        Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-        Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+        Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
+        Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
         this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
         this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
       );
@@ -1236,6 +1344,12 @@ Map.prototype = {
     if (isNaN(layerIndex)) {
       return;
     }
+
+    if (!layer) {
+      console.warn('sub-tick escape for when youre making a new map. this is dumb and bad.');
+      return; 
+    }
+
     if (layer.MAPED_HIDDEN) {
       if (this.getEntityTallRedrawLayer() === layer) {
         this.spriteShader.use();
@@ -1246,13 +1360,15 @@ Map.prototype = {
             this.renderEntity(
               entity, layer,
               [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)],
-              this.entityData[entity.filename].regions['Tall_Redraw']
+              this.entityData[entity.filename].regions['Tall_Redraw'],
+              null, null
             );
           } else {
             this.renderEntity(
               entity, layer,
               [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A],
-              this.entityData[entity.filename].regions['Tall_Redraw']
+              this.entityData[entity.filename].regions['Tall_Redraw'],
+              null, null
             );
           }
         }
@@ -1265,9 +1381,10 @@ Map.prototype = {
 
     this.tilemapShader.use();
 
+    const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
     gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-      Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-      Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+      Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
       this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
       this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
     );
@@ -1314,14 +1431,15 @@ Map.prototype = {
       // TODO something smells about getSelectedLayer().layer
       const layer = getSelectedLayer() ? getSelectedLayer().layer : {
         parallax: { X: 1, Y: 1 },
-        dimensions: this.mapData.layers[0].dimensions
+        dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[0]}
       };
 
+      const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
       this.selectionShader.use();
       gl.uniform4f(
         this.selectionShader.uniform('u_camera'),
-        Math.floor(layer.parallax.X * this.camera[0]) / this.vspData[vsp].tilesize.width,
-        Math.floor(layer.parallax.Y * this.camera[1]) / this.vspData[vsp].tilesize.height,
+        Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
+        Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
         this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
         this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
       );
@@ -1341,6 +1459,56 @@ Map.prototype = {
       this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(selection.lines), this.gl.STATIC_DRAW);
 
       gl.drawArrays(gl.LINES, 0, selection.lines.length / 2);
+    }
+  },
+
+  maybeRenderScreenviewOverlay: function(gl, overlay) {
+
+    /*
+      overlay = {
+        on: boolean,
+        viewport: {
+          x: int,
+          y: int,
+          width: int,
+          height: int
+        },
+        shade: {
+          color: default to [0,0,0],
+          opacity: default to .5
+        }
+      }
+    */
+
+    if( overlay.on ) {
+      this.screenviewShader.use();
+      
+      // uniforms...
+      gl.uniform4f(this.screenviewShader.uniform('u_camera'),
+        Math.floor(this.camera[0]),
+        Math.floor(this.camera[1]),
+        this.renderContainerDimensions.w / this.camera[2],
+        this.renderContainerDimensions.h / this.camera[2]
+      );
+      gl.uniform4f(this.screenviewShader.uniform('u_viewport'),
+        Math.floor(overlay.viewport.x),          
+        Math.floor(overlay.viewport.y),         
+        Math.floor(overlay.viewport.width),        
+        Math.floor(overlay.viewport.height)
+      );
+      gl.uniform4f(this.screenviewShader.uniform('u_color'),
+        overlay.shade.color[0],
+        overlay.shade.color[1],
+        overlay.shade.color[2],
+        overlay.shade.opacity
+      );
+
+      const a_position = this.screenviewShader.attribute('a_position');
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.screenviewVertexBuffer);
+      gl.enableVertexAttribArray(a_position);
+      gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+  
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
   },
 
@@ -1365,6 +1533,8 @@ Map.prototype = {
 
     this.maybeRenderMarchingAnts(gl, this.visibleHoverTile);
 
+    this.maybeRenderScreenviewOverlay(gl, this.windowOverlay);
+
     // uncomment these to get frame render times
     // const tock = new Date().getTime();
     // console.log((tock-tick) + 'ms to render');
@@ -1385,9 +1555,10 @@ Map.prototype = {
 
     this.checkerShader.use();
 
+    const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
     gl.uniform4f(this.checkerShader.uniform('u_camera'),
-      Math.floor(this.camera[0]) / this.vspData[layer.vsp].tilesize.width,
-      Math.floor(this.camera[1]) / this.vspData[layer.vsp].tilesize.height,
+      Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[layer.vsp].tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[layer.vsp].tilesize.height,
       this.renderContainerDimensions.w / this.vspData[layer.vsp].tilesize.width / this.camera[2],
       this.renderContainerDimensions.h / this.vspData[layer.vsp].tilesize.height / this.camera[2]
     );
@@ -1399,8 +1570,8 @@ Map.prototype = {
       this.vspImages[layer.vsp].height / this.vspData[layer.vsp].tilesize.height
     );
 
-    gl.uniform4f(this.checkerShader.uniform('u_colorA'), 0.75, 0.75, 0.75, 1.0);
-    gl.uniform4f(this.checkerShader.uniform('u_colorB'), 1.0, 1.0, 1.0, 1.0);
+    gl.uniform4f(this.checkerShader.uniform('u_colorA'), this.checkerColorA[0], this.checkerColorA[1], this.checkerColorA[2], this.checkerColorA[3] );
+    gl.uniform4f(this.checkerShader.uniform('u_colorB'), this.checkerColorB[0], this.checkerColorB[1], this.checkerColorB[2], this.checkerColorB[3]);
 
     const a_position = this.checkerShader.attribute('a_position');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
@@ -1424,7 +1595,10 @@ Map.prototype = {
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
     const entityData = this._getEntityData(entity);
-    const entityTexture = this.entityTextures[entityData.image];
+    const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
+    if (!entityTexture) {
+      alert("Entity '" + entity.name + "' at (" + entity.location.tx + "," + entity.location.ty + ") with image path `" + entityData.image + "` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.");
+    }
 
     clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
 
@@ -1515,10 +1689,11 @@ Map.prototype = {
     }
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(verts), this.gl.STATIC_DRAW);
 
+    const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
     gl.uniform4f(
       this.spriteShader.uniform('u_camera'),
-      Math.floor(layer.parallax.X * this.camera[0]) / tilesize.width,
-      Math.floor(layer.parallax.Y * this.camera[1]) / tilesize.height,
+      Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / tilesize.height,
       this.renderContainerDimensions.w / tilesize.width / this.camera[2],
       this.renderContainerDimensions.h / tilesize.height / this.camera[2]
     );

@@ -5,6 +5,10 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
          setNormalEntityVisibility, getNormalEntityVisibility,
          setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js';
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
+import { setTileSelectorUI, setDefaultObsTiles } from '../../TileSelector';
+import { resize_layer } from './Util.js';
+
+
 const $ = require('jquery');
 
 let list;
@@ -49,12 +53,13 @@ export const selectNamedLayer = (name) => {
   for (let i = $list.length - 1; i >= 0; i--) {
     const $node = $($list[i]);
     if ($node.text().trim().startsWith(name)) {
+      console.info(`Clicking named layer '${name}'..`);
       $node.closest('li').click();
       return true;
     }
   }
 
-  console.warn('No such named layer', name, 'found on this map');
+  console.warn(`No such named layer '${name}' found on this map.`);
 
   return false;
 };
@@ -107,6 +112,24 @@ export const selectEntityLayer = () => {
   closeEditLayerDialog();
 };
 
+export function doLayerSelect($layer_container, layer_idx, dialog, map, evt) {
+  const selClass = 'selected';
+
+  removeAllSelectedLayers(selClass);
+
+  changeSelectedLayer({
+    map_tileData_idx: layer_idx,
+    layer: layers[layer_idx],
+    $container: $layer_container
+  });
+  $layer_container.addClass(selClass);
+
+  TilesetSelectorWidget.initTilesetSelectorWidget(map, layers[layer_idx], null);
+  if (dialog) {
+    _layer_click(evt, layer_idx);
+  }
+}
+
 export const selectLayer = (name) => {
   switch (name) {
     case 'O':
@@ -123,6 +146,16 @@ export const selectLayer = (name) => {
   }
 };
 
+let __layerSelectCallback = null;
+export function setLayerSelectCallback(fn) {
+  console.info('setting layerSelectCallback...', fn);
+  __layerSelectCallback = fn;
+}
+
+function getLayerSelectCallback() {
+  return __layerSelectCallback;
+}
+
 let $obs_container = null;
 export const selectObstructionLayer = () => {
   const selClass = 'selected';
@@ -136,8 +169,13 @@ export const selectObstructionLayer = () => {
   };
 
   // TODO definitely wrong, especially when we start supporting multiple sized layers
-  window.$$$currentMap.obsLayerData.dimensions = window.$$$currentMap.mapData.layers[0].dimensions;
+  window.$$$currentMap.obsLayerData.dimensions = {
+    X: window.$$$currentMap.mapSizeInTiles[0],
+    Y: window.$$$currentMap.mapSizeInTiles[1]
+  }
 
+  const newObs = !_selected_layer || _selected_layer.map_tileData_idx !== 998;
+  
     // TODO: this is disgusting, right?  right.
   changeSelectedLayer({
     map_tileData_idx: 998,
@@ -145,11 +183,14 @@ export const selectObstructionLayer = () => {
     $container: $obs_container
   });
 
-  TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData);
+  TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData, () => {
+    $obs_container.addClass(selClass);
+    closeEditLayerDialog();
 
-  $obs_container.addClass(selClass);
-
-  closeEditLayerDialog();
+    if( newObs ) {
+      setDefaultObsTiles();
+    }
+  });
 };
 
 let layers = null;
@@ -157,7 +198,6 @@ let map = null;
 function initLayersWidget(_map) {
   map = _map;
   layers = map.mapData.layers;
-
   redraw_palette(map);
 };
 
@@ -174,8 +214,8 @@ export const changeSelectedLayer = (newLayer) => {
   }
   if (!_selected_layer.layer.dimensions) {
     _selected_layer.layer.dimensions = {
-      X: map.layers[0].dimensions.X,
-      Y: map.layers[0].dimensions.Y
+      X: window.$$$currentMap.mapSizeInTiles[0],
+      Y: window.$$$currentMap.mapSizeInTiles[1]
     };
   }
 };
@@ -185,13 +225,12 @@ export const getSelectedLayer = () => {
 };
 
 const removeAllSelectedLayers = (selClass) => {
-  if (window && getSelectedLayer()) {
-    getSelectedLayer().$container.removeClass(selClass);
-  }
+  $("li.layer.selected").removeClass(selClass);
 };
 
 const redraw_palette = (map) => {
   list = $('.layers-palette .layers-list');
+  list.html("");
   let newLayerContainer = null;
   let l = null;
 
@@ -291,22 +330,7 @@ const redraw_palette = (map) => {
 
   const addLayerSelectHandler = ($layer_container, i) => {
     $layer_container.on('click', (evt) => {
-      const selClass = 'selected';
-
-      removeAllSelectedLayers(selClass);
-
-      changeSelectedLayer({
-        map_tileData_idx: i,
-        layer: layers[i],
-        $container: $layer_container
-      });
-      $layer_container.addClass(selClass);
-
-      TilesetSelectorWidget.initTilesetSelectorWidget(map, layers[i]);
-
-      if (dialog) {
-        _layer_click(evt, i);
-      }
+      doLayerSelect($layer_container, i, dialog, map, evt);
 
       evt.stopPropagation();
     });
@@ -490,8 +514,10 @@ const redraw_palette = (map) => {
     setup_shitty_layer_seperator($list);
 
     // ZONES
+    console.log("map.layerRenderOrder: " + map.layerRenderOrder);
 
     for (let i = map.layerRenderOrder.length - 1; i >= 0; i--) {
+      console.log(i);
       rstring_cur_target = map.layerRenderOrder[i];
       rstring_ref = parseInt(rstring_cur_target, 10);
       if (isNaN(rstring_ref)) {
@@ -522,6 +548,7 @@ const redraw_palette = (map) => {
 
       for (let j = childs.length - 1; j >= 0; j--) {
         cur_kid = $(childs[j]);
+
         if (cur_kid.data('rstring_ref') === rstring_cur_target) {
           $list.append(cur_kid); // re-add to list
           childs.splice(j, 1); // remove from childs array
@@ -632,7 +659,7 @@ const redraw_palette = (map) => {
       dialog = $('#modal-dialog').dialog({
         modal: true,
         buttons: {
-          Save: () => { update_lucency(layer, dialog, special); },
+          'Save': () => { update_lucency(layer, dialog, special); },
           'Cancel': function () {
             dialog.dialog('close');
           }
@@ -962,6 +989,16 @@ function _layer_click(evt, layerIdx, onComplete) {
 
     let title = null;
 
+    const buttonsLol = [{
+      id: "confirm-layer",
+      text: "Save",
+      click: () => { update_layer(dialog, newLayerId, onComplete); }
+    }, {
+      id: "cancel-layer",
+      text: "Cancel",
+      click: function () { closeEditLayerDialog(); }
+    }];
+
     if (typeof layerIdx === 'number') {
       const layer = window.$$$currentMap.mapData.layers[layerIdx]; // TODO needs better accessor
 
@@ -980,6 +1017,52 @@ function _layer_click(evt, layerIdx, onComplete) {
       );
 
       newLayerId = layerIdx;
+
+      buttonsLol.unshift({
+        id: "delete-layer",
+        text: "DELETE",
+        click: () => { if( confirm('Are you sure?') ) {
+          const me = layer;
+          const myIdx = layerIdx;
+
+          if(myIdx === 0) {
+            alert('You cannot delete the base layer (index 0) presently.');
+            return;
+          }
+
+          if(layer === window.$$$currentMap.getEntityTallRedrawLayer()) {
+            alert('You cannot delete the tall redraw layer.  Please set it to another layer and try again.');
+            return;
+          }
+
+          window.$$$currentMap.layers.splice(myIdx, 1);
+
+          const newOrder = [];
+          const oldOrder = window.$$$currentMap.layerRenderOrder;
+          for(let i=0; i<oldOrder.length; i++) {
+            const targ = oldOrder[i];
+            if(!$.isNumeric(targ)) {
+              newOrder.push(targ);
+            } else {
+              const num = parseInt(targ);
+              if(num === myIdx+1) {
+                continue;
+              } else if(num > myIdx) {
+                newOrder.push(""+num-1);
+              } else {
+                newOrder.push(""+num);
+              }
+            }
+          }
+
+          window.$$$currentMap.updateRstring(newOrder);
+          window.$$$currentMap.regenerateLayerLookup();
+
+          initLayersWidget(window.$$$currentMap);
+
+          closeEditLayerDialog();
+        } },
+      });
     } else if (window.$$$currentMap) {
       title = 'Add New Layer';
       newLayerId = window.$$$currentMap.mapData.layers.length;
@@ -994,14 +1077,7 @@ function _layer_click(evt, layerIdx, onComplete) {
       width: 500,
       modal: true,
       title: title,
-      buttons: {
-        Save: () => {
-          update_layer(dialog, newLayerId, onComplete);
-        },
-        'Cancel': function () {
-          closeEditLayerDialog();
-        }
-      },
+      buttons: buttonsLol,
       close: function () {
         $('#modal-dialog').html('');
       }
@@ -1075,14 +1151,19 @@ const update_layer = (dialog, layer_id, onComplete) => {
     }
   }
 
+  let old_dim_x; 
+  let old_dim_y;
+  const new_dim_x = parseInt(dims_x);
+  const new_dim_y = parseInt(dims_y);
+
   alpha = parseFloat(alpha);
 
   layer = {
     name: name,
     alpha: alpha,
     dimensions: {
-      X: parseInt(dims_x),
-      Y: parseInt(dims_y)
+      X: new_dim_x,
+      Y: new_dim_y
     },
     parallax: {
       X: parseFloat(par_x),
@@ -1097,6 +1178,8 @@ const update_layer = (dialog, layer_id, onComplete) => {
   }
 
   if (layer_id === layers.length) {
+    old_dim_x = new_dim_x;
+    old_dim_y = new_dim_y;
     layers.push(layer);
     const layersLength = layers.length;
     map.layerLookup[name] = layers[layersLength - 1];
@@ -1105,6 +1188,9 @@ const update_layer = (dialog, layer_id, onComplete) => {
 
     map.updateRstring(map.layerRenderOrder.join(','));
   } else {
+    old_dim_x = layers[layer_id].dimensions.X;
+    old_dim_y = layers[layer_id].dimensions.Y;
+
     // TODO do all layer-name-updating here
     if (name !== layers[layer_id].name) {
       const oldName = layers[layer_id].name;
@@ -1116,6 +1202,24 @@ const update_layer = (dialog, layer_id, onComplete) => {
     for (const k in layer) {
       layers[layer_id][k] = layer[k];
     }
+  }
+
+  if( old_dim_y != new_dim_y || old_dim_x != new_dim_x ) {
+    console.log( "Resizing layer..." );
+    map.mapRawTileData.tile_data[layer_id] = resize_layer( map.mapRawTileData.tile_data[layer_id], old_dim_x, old_dim_y, new_dim_x, new_dim_y );
+    
+    const oldx = map.mapSizeInTiles[0];
+    const oldy = map.mapSizeInTiles[1];
+
+    map.calculateSize();
+    map.regenerateZoneData();
+    map.legacyObsData = map.mapRawTileData.legacy_obstruction_data = resize_layer( 
+      map.mapRawTileData.legacy_obstruction_data, 
+      oldx, oldy, 
+      map.mapSizeInTiles[0], map.mapSizeInTiles[1] 
+    );
+
+    map.setCanvas($('.map_canvas'));
   }
 
   if (window.document.getElementById('layer_is_tall_redraw_layer').checked) {

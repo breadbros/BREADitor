@@ -33,8 +33,9 @@ const doFloodFill = (map, e) => {
   workQueue.push(keyify(tX, tY));
 
   const check_validity = (x, y) => {
-    // TODO again, "map.layers[0]" is almost certainly wrong.
-    if (x < 0 || y < 0 || x >= map.layers[0].dimensions.X || y >= map.layers[0].dimensions.Y) {
+    const map = window.$$$currentMap;
+
+    if (x < 0 || y < 0 || x >= map.mapSizeInTiles[0] || y >= map.mapSizeInTiles[1]) {
       return false;
     }
 
@@ -81,6 +82,7 @@ const doFloodFill = (map, e) => {
 export default () => {
   return {
     doFloodFill: doFloodFill,
+    'mousemove': () => {},
     'mousedown': function (map, e) {
       if (isTileSelectorMap(map)) {
         _toolLogic['EYEDROPPER']['mousedown'](map, e);

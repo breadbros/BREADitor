@@ -45,8 +45,9 @@ export default () => {
       if (getSelectedLayer().map_tileData_idx === 999) {
         map.setZone(tX, tY, getActiveZone());
         return;
+
+      // TODO obs do this too right now. 998
       } else {
-        // TODO obs do this too right now. 998
         map.UndoRedo.change_one_tile(
             tX, tY,
             getSelectedLayer().map_tileData_idx,

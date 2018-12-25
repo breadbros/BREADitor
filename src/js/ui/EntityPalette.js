@@ -78,6 +78,18 @@ const initEntitiesWidget = (map) => {
   currentEntities = map.mapData.entities;
 
   redraw_palette();
+
+  $('.entity-palette').resize(function () {
+    fixContainerSize();
+  });
+
+  $('.entity-palette #entity-new').click((evt) => {
+    new_entity_click(evt);
+  });
+
+  $('.entity-palette #entity-spreadsheet').click(() => {
+    window.alert('SPREAD THAT SHEET entity SHEIT');
+  });
 };
 
 const _select_entity_ui_inner = ($node) => {
@@ -130,7 +142,7 @@ const singleclick_handler = (evt) => {
   addEntityToHighlight(ent);
 
   const hitbox = window.$$$currentMap.entityData[ent.filename].hitbox;
-  centerMapOnXY(window.$$$currentMap, ent.location.px - hitbox[0], ent.location.py - hitbox[1], hitbox[2], hitbox[3]);
+  //centerMapOnXY(window.$$$currentMap, ent.location.px - hitbox[0], ent.location.py - hitbox[1], hitbox[2], hitbox[3]);
 };
 
 const doubleclick_handler = (evt) => {
@@ -145,10 +157,20 @@ const redraw_palette = () => {
   $('#entity-number').text(currentEntities.length);
 
   for (let i = 0; i < currentEntities.length; i++) {
+    const myBaseData = $$$currentMap.entityData[currentEntities[i].filename];
+
     const $tmp = $("<li class='entity-row' data-index='" + i +
-             "'><span class='entity-index'></span><span class='entity-name'></span></li>");
-    $tmp.find('.entity-index').text(i);
+             "'><span class='entity-index'></span><span class='is-maybe-tall'></span><span class='entity-name'></span></li>");
+    
     $tmp.find('.entity-name').text(currentEntities[i].name);
+
+    if(myBaseData && myBaseData.regions && myBaseData.regions.Tall_Redraw) {
+      $tmp.find('.entity-index').html(i + ' <img src=images/icons/svg/pine.svg style="width: 16px; height: 16px; position: relative; top: 2px;">');     
+    } else {
+      $tmp.find('.entity-index').text(i);
+    }
+
+    
 
     $tmp.click(singleclick_handler);
     $tmp.dblclick(doubleclick_handler);
@@ -164,20 +186,9 @@ const fixContainerSize = () => {
   const palette = $('.entity-palette');
   const container = $('.entity-palette .window-container');
 
-  container.height(palette.height() - 70);
+  container.height(palette.height() - 95);
 };
 
-$('.entity-palette').resize(function () {
-  fixContainerSize();
-});
-
-$('.entity-palette #entity-new').click((evt) => {
-  new_entity_click(evt);
-});
-
-$('.entity-palette #entity-spreadsheet').click(() => {
-  window.alert('SPREAD THAT SHEET entity SHEIT');
-});
 
 let template = "<div>Name: <input id='entity_name'></div>";
 template += "<div>Filename: <input id='entity_filename'></div>";
@@ -590,14 +601,21 @@ const _loc_helper = (valDict) => {
     loc.layer = valDict.loc_l;
   }
 
-  if( !(typeof valDict.loc_tx === 'number' || typeof valDict.loc_px === 'number') ) {
+  loc.tx = valDict.loc_tx;
+  loc.ty = valDict.loc_ty;
+  loc.px = valDict.loc_px;
+  loc.py = valDict.loc_py;
+
+  if( typeof loc.tx !== 'number' && typeof loc.px !== 'number') {
     //modal_error('Invalid input: no valid x values given.');
-    return loc;
+    loc.tx = 0;
+    loc.px = 0;
   }
 
-  if( !(typeof valDict.loc_ty !== 'number' || typeof valDict.loc_py !== 'number') ) {
+  if( typeof loc.ty !== 'number' && typeof loc.py !== 'number')  {
     //modal_error('Invalid input: no valid y values given.');
-    return loc;
+    loc.ty = 0;
+    loc.tx = 0;
   }
 
   // if( valDict.loc_py === 0 ) {
@@ -609,11 +627,6 @@ const _loc_helper = (valDict) => {
   //   console.info("Cooercing loc_tx to 0.");
   //   valDict.loc_tx = 0;
   // }
-
-  loc.tx = valDict.loc_tx;
-  loc.ty = valDict.loc_ty;
-  loc.px = valDict.loc_px;
-  loc.py = valDict.loc_py;
 
   return loc;
 };

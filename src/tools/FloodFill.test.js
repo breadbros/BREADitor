@@ -52,6 +52,8 @@ test('getCurrentlyExpectedTile / setCurrentlySelectedTile', () => {
 test('test a flood fill', () => {
   changeSelectedLayer({layer: map.layers[0], map_tileData_idx: 0}); // what's going on here this is weird
 
+  map.windowOverlay = {on: false};
+
   expect(map.getTile(0, 0, 0)).toEqual(0);
   expect(map.getTile(0, 1, 0)).toEqual(0);
   expect(map.getTile(0, 2, 0)).toEqual(0);

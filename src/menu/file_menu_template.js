@@ -17,6 +17,10 @@ export const fileMenuTemplate = {
       send('save-as');
     } },
     { type: 'separator' },
+    { label: 'Open Recent...', accelerator: 'CmdOrCtrl+Shift+O', click: function () {
+      send('open-recent');
+    } },
+    { type: 'separator' },
     { label: 'About Application', click: function () {
       send('about');
     } },
