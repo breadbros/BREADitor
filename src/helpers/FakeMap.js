@@ -27,7 +27,6 @@ export const FakeMap = () => {
 
   const setMatrix = (newMatrix) => {
     matrix = newMatrix;
-
   };
 
   return {
