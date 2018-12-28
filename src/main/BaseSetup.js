@@ -56,6 +56,10 @@ const initInfoWidget = (map) => {
   const pathParts = map.mapPath.split(path.sep);
   $('#info-mapname').text(pathParts[pathParts.length - 1]);
 
+  debugger;
+
+  $('#info-vsplist');
+
   updateInfoDims(map);
 };
 
