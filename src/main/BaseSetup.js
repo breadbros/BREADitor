@@ -391,7 +391,8 @@ export function setupWindowFunctions() {
   window.$$$about_breaditor = function () {
     window.alert(
       'Breaditor is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.' +
-      'TODO: make this better.'
+      'TODO: make this better.' + 
+      'TODO: add the licenses jeez.'
     );
   };
 
