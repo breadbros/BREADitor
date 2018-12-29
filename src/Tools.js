@@ -248,7 +248,7 @@ const setupToolClick = (toolObj, toolName) => {
   const $node = $(toolObj.button_element);
   $node.off('click'); // kill old ones...
   
-  console.log("setting up toolClick for", toolName, $node);
+  // console.log("setting up toolClick for", toolName, $node);
 
   $node.click(function (e) {
     $('#tool-title').text(toolObj.human_name);

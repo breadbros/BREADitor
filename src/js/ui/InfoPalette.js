@@ -4,27 +4,75 @@ const {shell} = require('electron');
 
 const path = require('path');
 
+const mapAndFileMenus = [];
+
 export const updateMapAndVSPFileInfo = (map) => {
 
+  if(mapAndFileMenus.length) {
+
+    mapAndFileMenus.forEach( (sel) => {
+      $.contextMenu('destroy', sel);
+      $(sel).off();
+    } );
+  }
+
   $('#info-mapname').attr('src', map.mapPath);
+
+  var mapMenu = $(function() {
+      $.contextMenu({
+          selector: `#info-mapname`, 
+          callback: function(key, options) {
+              switch(key) {
+              	case "JSON":
+              		shell.openItem(map.mapPath);
+              		return;
+              }
+          },
+          items: {
+              "JSON": {name: "Open Map JSON", icon: "fa-edit"},
+          }
+      });
+  });
 
   const pathParts = map.mapPath.split(path.sep);
   $('#info-mapname').text(pathParts[pathParts.length - 1]);
 
   $('#info-vsp-list').html('');
-	
+
+  let vspMenu = null;
+
   Object.keys(map.mapData.vsp).forEach( (keyName) => { 
     const vspPath = map.mapData.vsp[keyName];
-    const $node = $(`<li>${keyName}: ${vspPath}</li>`);
+    const className = `vsp-info-${keyName}`;
+    const $node = $(`<li class="${className}">${keyName}: ${vspPath}</li>`);
 
     const fullpath = path.dirname($$$currentMap.mapPath) + path.sep + vspPath;
 
-    $($node).on( "dblclick", () => {
-    	shell.openItem(fullpath);
-    } );
-
     $('#info-vsp-list').append( $node );  
+
+    vspMenu = $(function() {
+      $.contextMenu({
+          selector: `.${className}`, 
+          callback: function(key, options) {
+              switch(key) {
+              	case "JSON":
+              		shell.openItem(fullpath);
+              		return;
+              	case "Image":
+              		shell.openItem(map.vspImages[keyName].src);
+              		return;
+              }
+          },
+          items: {
+              "JSON": {name: "Open VSP JSON", icon: "fa-edit"},
+              "Image": {name: "Open VSP Image", icon: "fa-palette"},
+          }
+      });
+    });
+
+    mapAndFileMenus.push(vspMenu);
   } );
+  mapAndFileMenus.push(mapMenu);
 
   updateInfoDims(map);
 };

@@ -514,10 +514,7 @@ const redraw_palette = (map) => {
     setup_shitty_layer_seperator($list);
 
     // ZONES
-    console.log("map.layerRenderOrder: " + map.layerRenderOrder);
-
     for (let i = map.layerRenderOrder.length - 1; i >= 0; i--) {
-      console.log(i);
       rstring_cur_target = map.layerRenderOrder[i];
       rstring_ref = parseInt(rstring_cur_target, 10);
       if (isNaN(rstring_ref)) {
