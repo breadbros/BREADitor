@@ -330,7 +330,8 @@ const redraw_palette = (map) => {
 
   const addLayerSelectHandler = ($layer_container, i) => {
     $layer_container.on('click', (evt) => {
-      doLayerSelect($layer_container, i, dialog, map, evt);
+      // TODO: third parameter was 'dialog': where's that coming from
+      doLayerSelect($layer_container, i, false, map, evt);
 
       evt.stopPropagation();
     });
