@@ -190,6 +190,9 @@ export const getCurrentlySelectedTile = () => {
 };
 
 export const setDefaultObsTiles = () => {
-  setTileSelectorUI('#left-palette', 1, map, 0, _last_vsp);
-  setTileSelectorUI('#right-palette', 0, map, 1, _last_vsp);  
+  const map = window.$$$currentMap; // SIGH
+  const obs_vsp_name = 'obstructions';
+
+  setTileSelectorUI('#left-palette', 1, map, 0, obs_vsp_name);
+  setTileSelectorUI('#right-palette', 0, map, 1, obs_vsp_name);  
 }
