@@ -484,7 +484,7 @@ export function setupWindowFunctions() {
 
     $('#modal-dialog').show();
 
-    dialog = $('#modal-dialog').dialog({
+    const dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
       title: title,
