@@ -1171,13 +1171,6 @@ const update_layer = (dialog, layer_id, onComplete) => {
     vsp: vsp
   };
 
-  if(layers[layer_id]) {
-    if( layer.dimensions.X !== layers[layer_id].dimensions.X || layer.dimensions.Y !== layers[layer_id].dimensions.Y ) {
-      alert('OMG LAYER SIZE CHANGING!!!2');
-      throw "lol no";
-    }
-  }
-
   if (layer_id === layers.length) {
     old_dim_x = new_dim_x;
     old_dim_y = new_dim_y;
