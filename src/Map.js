@@ -1274,6 +1274,12 @@ Map.prototype = {
         dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[1]}
       };
 
+      if( this.mapData.obstructions_layer ) {
+        layer.dimensions = this.mapData.obstructions_layer.dimensions;
+      }
+
+      //TODO this.mapData.obstructions_layer.offset
+
       this.obstructionmapShader.use();
 
       const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
@@ -1305,6 +1311,7 @@ Map.prototype = {
       gl.uniform1i(u_tileLayout, 1);
       gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+
       gl.texImage2D(
         gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
         gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData)
