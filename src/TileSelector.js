@@ -190,6 +190,10 @@ export const getCurrentlySelectedTile = () => {
 };
 
 export const setDefaultObsTiles = () => {
+  if(!window.$$$currentMap) {
+    console.error('window.$$$currentMap unset!  Cannot set default obs tiles...');
+    return;
+  }
   const map = window.$$$currentMap; // SIGH
   const obs_vsp_name = 'obstructions';
 
