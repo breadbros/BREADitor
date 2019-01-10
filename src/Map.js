@@ -416,7 +416,6 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.zoneData = new Array(this.mapSizeInTiles[0] * this.mapSizeInTiles[1]);
 
     $.each(tmpZones, (idx) => {
-      console.log('Zone: ', tmpZones[idx].x, tmpZones[idx].y);
       this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
     });
   };

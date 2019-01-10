@@ -391,7 +391,86 @@ const redraw_palette = (map) => {
     });
 
     $obs_container.on('dblclick', function (evt) {
-      alert('summon obstruction eding modal');
+
+      $(() => {
+
+        const map = window.$$$currentMap;
+
+        let dim_x, dim_y, offs_x, offs_y;
+        let warning = '';
+
+        if( map.mapData.obstructions_layer ) {
+          dim_x = map.mapData.obstructions_layer.dimensions.X;
+          dim_y = map.mapData.obstructions_layer.dimensions.Y;
+          offs_x = map.mapData.obstructions_layer.offset.X;
+          offs_y = map.mapData.obstructions_layer.offset.Y;
+        } else {
+          [dim_x, dim_y] = map.mapSizeInTiles;
+          offs_x = 0;
+          offs_y = 0;
+
+          warning = `Warning: using default obs layer dimensions.`;
+
+          if(dim_x*dim_y != map.legacyObsData.length) {
+            const datalen = dim_x*dim_y;
+            warning += `
+              AND the data (length: ${map.legacyObsData.length}) does not match the expected size (${datalen}).  
+              Things are likely not rendering correctly.  
+              Please specify an explicit layer size.
+            `;
+          }
+        }
+
+        let template = `
+          <div class="warning">${warning}</div>
+          <div>
+            Dimensions: x <input id="obs_dim_x" value="${dim_x}" type="number" style="width: 50px;">
+                        y <input id="obs_dim_y" value="${dim_y}" type="number" style="width: 50px;">
+          </div>
+          <div>
+            Offset: x <input id="offs_dim_x" value="${offs_x}" type="number" style="width: 50px;">
+                    y <input id="offs_dim_y" value="${offs_y}" type="number" style="width: 50px;">
+          </div>
+        `;
+
+        $('#modal-dialog').attr('title', 'Change Obstruction Layer attributes');
+        $('#modal-dialog').html(template);
+
+        const do_obs_layer_save = () => {
+          const new_obs_dim_x = parseInt($('#obs_dim_x').val());
+          const new_obs_dim_y = parseInt($('#obs_dim_y').val());
+          const new_obs_offs_x = parseInt($('#offs_dim_x').val());
+          const new_obs_offs_y = parseInt($('#offs_dim_y').val());
+
+          if( dim_x != new_obs_dim_x || dim_y != new_obs_dim_y ) {
+            console.info( "resizing obs layer data..." );
+            map.legacyObsData = resize_layer( map.legacyObsData, dim_x, dim_y, new_obs_dim_x, new_obs_dim_y );
+          }
+
+          map.mapData.obstructions_layer = {};
+          map.mapData.obstructions_layer.dimensions = { X: new_obs_dim_x, Y: new_obs_dim_y };
+          map.mapData.obstructions_layer.offset = { X: new_obs_offs_x, Y: new_obs_offs_y };
+
+          dialog.dialog('close');
+        };
+
+        $('#modal-dialog').show();
+        dialog = $('#modal-dialog').dialog({
+          modal: true,
+          buttons: {
+            'Save': () => { 
+              do_obs_layer_save();
+            },
+            'Cancel': function () {
+              dialog.dialog('close');
+            }
+          },
+          close: function () {
+            $('#modal-dialog').html('');
+          }
+        });
+      });
+
       evt.stopPropagation();
     });
   };
