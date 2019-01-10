@@ -314,15 +314,18 @@ const redraw_palette = (map) => {
     $zone_container = _$zone_container;
     $zone_container.on('click', (evt) => {
       selectZoneLayer();
+
+      if (!getZoneVisibility()) {
+        $('li.layer.selected button.eyeball_button').click();
+      }
+
       evt.stopPropagation();
     });
 
     $zone_container.on('dblclick', (evt) => {
       window.$$$toggle_pallete('zones', true);
 
-      if (!getZoneVisibility()) {
-        $('li.layer.selected button.eyeball_button').click();
-      }
+      alert("Summon zone-editing modal?");
 
       evt.stopPropagation();
     });
@@ -381,14 +384,14 @@ const redraw_palette = (map) => {
     $obs_container = _$obs_container;
     $obs_container.on('click', function (evt) {
       selectObstructionLayer();
+      if (!getObsVisibility()) {
+        $('li.layer.selected button.eyeball_button').click();
+      }
       evt.stopPropagation();
     });
 
     $obs_container.on('dblclick', function (evt) {
-      window.$$$toggle_pallete('tileset-selector', true);
-      if (!getObsVisibility()) {
-        $('li.layer.selected button.eyeball_button').click();
-      }
+      alert('summon obstruction eding modal');
       evt.stopPropagation();
     });
   };
