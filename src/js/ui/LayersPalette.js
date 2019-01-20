@@ -1117,6 +1117,7 @@ function _layer_click(evt, layerIdx, onComplete) {
           }
 
           window.$$$currentMap.layers.splice(myIdx, 1);
+          window.$$$currentMap.mapRawTileData.tile_data.splice(myIdx, 1);
 
           const newOrder = [];
           const oldOrder = window.$$$currentMap.layerRenderOrder;
