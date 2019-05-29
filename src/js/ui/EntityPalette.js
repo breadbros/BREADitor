@@ -170,11 +170,8 @@ const redraw_palette = () => {
       $tmp.find('.entity-index').text(i);
     }
 
-    
-
     $tmp.click(singleclick_handler);
     $tmp.dblclick(doubleclick_handler);
-    $tmp.contextmenu(doubleclick_handler);
 
     $list.append($tmp);
   }
@@ -189,6 +186,31 @@ const fixContainerSize = () => {
   container.height(palette.height() - 95);
 };
 
+$(function() {
+  $.contextMenu({
+    selector: 'li.entity-row', 
+    callback: function(key, options) {
+
+      switch(key) {
+        default:
+          console.log('unknown key: ' + key);
+          return;
+        case 'clone':
+          options.$menu.trigger("contextmenu:hide");
+          var entity_to_copy = $(this).data('index');
+          clone_entity(entity_to_copy);
+          return;
+        case 'edit':
+          $(this).dblclick();
+          return;
+      }
+    },
+    items: {
+        "edit": {name: "Edit", icon: "edit"},
+        "clone": {name: "Clone", icon: "copy"},
+    }
+  });
+});
 
 let template = "<div>Name: <input id='entity_name'></div>";
 template += "<div>Filename: <input id='entity_filename'></div>";
@@ -703,6 +725,38 @@ export const _update_entity_inner = (ent_id, valDict) => {
   do_the_no_things(currentEntities[ent_id], redraw_palette); // these args seem dumb
 
   return true;
+};
+
+const clone_entity = ( ent_index ) => {
+  const e = currentEntities[ent_index];
+
+  const vals = {
+    entity_name: `Copy of ${e.name}`,
+    
+    loc_tx: e.location.tx,
+    loc_ty: e.location.ty,
+    loc_px: e.location.px,
+    loc_py: e.location.py,
+    loc_l: e.location.layer,
+    entity_animation: e.animation,
+    entity_facing: e.facing,
+    entity_wander: e.wander,
+    entity_filename: e.filename,
+    entity_activation_script: e.activation_script,
+    entity_speed: e.speed,
+    entity_pays_attention_to_obstructions: e.pays_attention_to_obstructions,
+    entity_is_an_obstruction: e.is_an_obstruction,
+    entity_autofaces: e.autofaces
+  };
+
+  const new_id = currentEntities.length;
+
+  _update_entity_inner(new_id, vals)
+
+  redraw_palette();
+  
+  selectEntityByIndex(new_id);
+  scrollEntityPalletteToEntity(new_id);
 };
 
 

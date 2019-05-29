@@ -36,7 +36,8 @@
     "fs-jetpack": "^0.10.2",
     "lodash": "^4.17.2",
     "natives": "^1.1.6",
-    "sprintf-js": "^1.0.3"
+    "sprintf-js": "^1.0.3",
+    "ui-contextmenu": "^1.18.1"
   },
   "devDependencies": {
     "babel-jest": "^17.0.2",

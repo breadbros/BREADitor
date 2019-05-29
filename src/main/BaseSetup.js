@@ -116,6 +116,8 @@ function setupChording() {
         window.$$$currentTilsesetSelectorMap.selection.tiles.length
       ) {
         copy(window.$$$currentTilsesetSelectorMap);
+      } else {
+        console.log('FALL THROUGH');
       }
 
       return;
