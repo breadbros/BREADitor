@@ -236,7 +236,7 @@ const setup_template = (ent, id) => {
   if (ent) {
     $('#modal-dialog').attr('title', 'Edit Entity (id: ' + id + ')');
   } else {
-    $('#modal-dialog').attr('title', 'Add New Entity (id: ' + (currentEntities.length - 1) + ')');
+    $('#modal-dialog').attr('title', 'Add New Entity (id: ' + (currentEntities.length) + ')');
   }
 
   if (ent) {
