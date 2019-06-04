@@ -125,12 +125,14 @@ function _zone_click(evt, id) {
   $(() => {
     const $template = setup_template();
 
+    $('#modal-dialog').html('');
+
     if (zone) {
-      $('#modal-dialog').attr('title', 'Edit Zone ' + id + ')');
+      $('#modal-dialog').attr('title', 'Edit Zone (' + id + ')');
     } else {
       $('#modal-dialog').attr('title', 'Add New Zone (id: ' + (currentZones.length - 1) + ')');
     }
-    $('#modal-dialog').html('');
+
     $('#modal-dialog').append($template);
 
     if (zone) {
@@ -146,6 +148,7 @@ function _zone_click(evt, id) {
     dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
+      title: $('#modal-dialog').attr('title'),
       buttons: {
         Save: () => {
           const _id = ($.isNumeric(id) && zone) ? id : currentZones.length;
