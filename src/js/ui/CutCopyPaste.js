@@ -68,10 +68,25 @@ export const paste = (map, tX, tY, newLayerIdx) => {
     newLayerIdx = getSelectedLayer().map_tileData_idx;
   }
 
-  const pasteSet = [];
+  let layerX, layerY;
 
-  const layerX = map.layers[newLayerIdx].dimensions.X;
-  const layerY = map.layers[newLayerIdx].dimensions.Y;
+  if(newLayerIdx >= map.layers.length) {
+    switch(newLayerIdx) {
+      case 998: // obstuctions
+        layerX = map.obsLayerData.dimensions.X; 
+        layerY = map.obsLayerData.dimensions.Y;
+        break;
+      
+      default:
+        alert("unknown layer id: " + newLayerIdx);
+        return;
+    }
+  } else {
+    layerX = map.layers[newLayerIdx].dimensions.X;
+    layerY = map.layers[newLayerIdx].dimensions.Y;
+  }
+
+  const pasteSet = [];
 
   for (let i = pasteboard.length - 1; i >= 0; i--) {
     const targetX = pasteboard[i][0] + tX;
