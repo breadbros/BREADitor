@@ -130,7 +130,7 @@ function _zone_click(evt, id) {
     if (zone) {
       $('#modal-dialog').attr('title', 'Edit Zone (' + id + ')');
     } else {
-      $('#modal-dialog').attr('title', 'Add New Zone (id: ' + (currentZones.length - 1) + ')');
+      $('#modal-dialog').attr('title', 'Add New Zone (id: ' + (currentZones.length) + ')');
     }
 
     $('#modal-dialog').append($template);
