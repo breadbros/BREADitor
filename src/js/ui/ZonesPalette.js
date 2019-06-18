@@ -84,8 +84,9 @@ const fixContainerSize = () => {
 
 const template = "<div>Name: <input id='zone_name'></div>" +
   "<div>Activation Script: <input id='zone_activation_script'></div>" +
-  "<div>Activation Chance: <select id='zone_activation_chance'></select></div>" +
-  "<div>Adjacent Activation?: <input type='checkbox' id='zone_can_by_adjacent_activated'></div>";
+  "<div>Step Activation Chance: <select id='zone_activation_chance'></select></div>" +
+  "<div>Activate on Interact (Adjacent)?: <input type='checkbox' id='zone_can_by_adjacent_activated'></div>" +
+  "<div>Activate on Interact (Same Tile)?: <input type='checkbox' id='zone_can_by_same_tile_activated'></div>";
 
 // {name: "NULL_ZONE", activation_script: "", activation_chance: 0, can_by_adjacent_activated: false}"
 
@@ -142,6 +143,7 @@ function _zone_click(evt, id) {
       $template.find('#zone_activation_script').val(zone.activation_script);
       $template.find('#zone_activation_chance').val(zone.activation_chance);
       $template.find('#zone_can_by_adjacent_activated').prop('checked', zone.can_by_adjacent_activated);
+      $template.find('#zone_can_by_same_tile_activated').prop('checked', zone.zone_can_by_same_tile_activated);
     }
 
     $('#modal-dialog').show();
@@ -171,6 +173,7 @@ const update_zone = (dialog, zone_id) => {
   const script = dialog.find('#zone_activation_script').val();
   const chance = dialog.find('#zone_activation_chance').val();
   const adjAct = dialog.find('#zone_can_by_adjacent_activated').is(':checked');
+  const sameAct = dialog.find('#zone_can_by_same_tile_activated').is(':checked');
 
   if (!$.isNumeric(zone_id) || zone_id < 0) {
     modal_error('Invalid input: zone_id (' + zone_id + ') is invalid.');
@@ -194,7 +197,8 @@ const update_zone = (dialog, zone_id) => {
     name: name,
     activation_script: script,
     activation_chance: chance,
-    can_by_adjacent_activated: adjAct
+    can_by_adjacent_activated: adjAct,
+    zone_can_by_same_tile_activated: sameAct
   };
 
   currentZones[zone_id] = zone;
