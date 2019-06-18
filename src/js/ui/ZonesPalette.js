@@ -93,12 +93,30 @@ const template = "<div>Name: <input id='zone_name'></div>" +
 function setup_template() {
   const $template = $(template);
 
-  const vals = new Array(256);// create an empty array with length 256
   const select = $template.find('#zone_activation_chance');
 
-  $.each(vals, function (idx) {
-    select.append($('<option />').val(idx).text(idx));
-  });
+  const max = 1;
+  const interval = 0.005; // 0.5%
+  const steps = max / interval;
+
+  // Front load list with common values
+  const vals = [ 0.00, 0.125, 0.25, 0.333, 0.50, 0.667, 0.75, 0.95, 1.00 ]; // 0, 1/8, 1/4, 1/3, 1/2, 2/3, 3/4, 1
+  var frontloadCount = vals.length;
+
+  // Full Range of "Detailed" Values (Every 0.5%)
+  for (var i = 0; i <= steps; i++) { // <= so that max gets included
+    var v = (i / steps) * max;
+    vals.push(v);
+  }
+
+  // Add Values To UI Element
+  for (var i = 0; i < vals.length; i++) {
+    var v = vals[i];
+    var p = (v*100).toFixed(1) + "%";
+    var $option = $('<option />').val(v).text(p);
+    if (i < frontloadCount) { $option.css('font-weight', 'bold'); }
+    select.append($option);
+  }
 
   return $template;
 }
