@@ -161,7 +161,7 @@ function _zone_click(evt, id) {
       $template.find('#zone_activation_script').val(zone.activation_script);
       $template.find('#zone_activation_chance').val(zone.activation_chance);
       $template.find('#zone_can_by_adjacent_activated').prop('checked', zone.can_by_adjacent_activated);
-      $template.find('#zone_can_by_same_tile_activated').prop('checked', zone.zone_can_by_same_tile_activated);
+      $template.find('#zone_can_by_same_tile_activated').prop('checked', zone.can_by_same_tile_activated);
     }
 
     $('#modal-dialog').show();
@@ -216,7 +216,7 @@ const update_zone = (dialog, zone_id) => {
     activation_script: script,
     activation_chance: chance,
     can_by_adjacent_activated: adjAct,
-    zone_can_by_same_tile_activated: sameAct
+    can_by_same_tile_activated: sameAct
   };
 
   currentZones[zone_id] = zone;
