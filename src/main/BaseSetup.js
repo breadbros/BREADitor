@@ -190,7 +190,7 @@ export function autoloadMostRecentMapIfAvailable() {
 
   const opts = loadMostRecentFileOption(); 
 
-  if(opts.abs_path_to_maps && opts.most_recent_map) {
+  if(opts && opts.abs_path_to_maps && opts.most_recent_map) {
     const filepath = path.join(opts.abs_path_to_maps, opts.most_recent_map);
 
     if( fs.existsSync(filepath) ) {
@@ -450,7 +450,7 @@ export function setupWindowFunctions() {
       filters: [{ name: 'text', extensions: ['map.json'] }]
     };
 
-    if( window.$$$_most_recent_options.abs_path_to_maps ) {
+    if( window.$$$_most_recent_options && window.$$$_most_recent_options.abs_path_to_maps ) {
       options.defaultPath = window.$$$_most_recent_options.abs_path_to_maps;
     }
 
