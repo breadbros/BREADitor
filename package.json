@@ -61,7 +61,7 @@
     "istanbul": "^0.4.3",
     "jest": "^17.0.3",
     "jest-cli": "^17.0.3",
-    "jquery": "^3.1.1",
+    "jquery": "^3.4.0",
     "minimist": "^1.2.0",
     "mocha": "^3.0.2",
     "precommit-hook-eslint": "^3.0.0",
