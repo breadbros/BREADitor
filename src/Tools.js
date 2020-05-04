@@ -160,13 +160,16 @@ export const getTXTyFromMouse = (map, evt) => {
   const mouseOffsetX = evt.offsetX;
   const mouseOffsetY = evt.offsetY;
   const selectedLayer = getSelectedLayer();
-  const parallax = (selectedLayer != null) ? selectedLayer.layer.parallax : {X:1.0, Y:1.0}; // If no layer is selected assume parallax (1.0, 1.0)
-  
+  const parallax = (selectedLayer != null) ? selectedLayer.layer.parallax : {X:1.0, Y:1.0}; // If no layer is selected, assume parallax (1.0, 1.0)
+  const appliedOffset = (!map.mapData.isTileSelectorMap && (selectedLayer != null && selectedLayer.layer.offset != null)) ? // If a real layer (not tileset's "map") and has an offset defined
+    selectedLayer.layer.offset :
+    {X:0, Y:0};
+
   const vpX = (map.windowOverlay.on) ? map.windowOverlay.viewport.x : 0;
   const vpY = (map.windowOverlay.on) ? map.windowOverlay.viewport.y : 0;
 
-  const layerCamX = (mapOffsetX + vpX) * parallax.X;
-  const layerCamY = (mapOffsetY + vpY) * parallax.Y;
+  const layerCamX = (mapOffsetX - appliedOffset.X + vpX) * parallax.X;
+  const layerCamY = (mapOffsetY - appliedOffset.Y + vpY) * parallax.Y;
   const adjustedMouseX = (mouseOffsetX / mapZoom) - vpX; // Because the mouse position uses the rendered/scaled value, we need to divide by zoom to bring its scale in line with "internal" values
   const adjustedMouseY = (mouseOffsetY / mapZoom) - vpY;
   const oX = layerCamX + adjustedMouseX;
