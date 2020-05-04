@@ -794,28 +794,30 @@ const redraw_palette = (map) => {
   function update_parallax(layer, dialog) {
     let x = $('#new_layer_parallax_x').val().trim();
     let y = $('#new_layer_parallax_y').val().trim();
-    const newParallax = {};
-
-    if (!$.isNumeric(x)) {
-      modal_error('Invalid input: x not numeric.');
-      return;
-    }
-    if (!$.isNumeric(y)) {
-      modal_error('Invalid input: y not numeric.');
-      return;
-    }
-
-    x = parseFloat(x);
-    y = parseFloat(y);
-
-    newParallax.X = x;
-    newParallax.Y = y;
+    const newParallax = _get_validated_xy_float_input(x, y);
+    if (!newParallax) { return; }
 
     layer.parallax = newParallax;
 
     redrawAllLucentAndParallax();
 
     dialog.dialog('close');
+  }
+
+  function _get_validated_xy_float_input(x, y) {
+    if (!$.isNumeric(x)) {
+      modal_error('Invalid input: x not numeric.');
+      return null;
+    }
+    if (!$.isNumeric(y)) {
+      modal_error('Invalid input: y not numeric.');
+      return null;
+    }
+
+    x = parseFloat(x);
+    y = parseFloat(y);
+
+    return {X: x, Y: y};
   }
 
   function formatAlphaAsPercentage(alpha) {
