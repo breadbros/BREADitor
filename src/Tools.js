@@ -375,7 +375,7 @@ const hackToolsInit = () => {
         window.TOOLMODE = 'MOVE-VIEWPORT';
       },
       mousedown: () => {},
-      moousewheel: () => {}
+      mousewheel: () => {}
     };
   });
 
