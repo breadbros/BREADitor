@@ -541,12 +541,10 @@ export const update_entity = (dialog, ent_id) => {
 
   let entity_wander;
 
-  if (ent_id < currentEntities.length) { // edit
-    entity_wander = currentEntities[ent_id].wander; // TODO: allow actual editing of wander.
-    console.log('YOU REALLY NEED TO IMPLEMENT WANDER-EDITING');
+  if (ent_id < currentEntities.length) { 
+    entity_wander = currentEntities[ent_id].wander; 
   } else { // add
     entity_wander = {mode: 'Scripted', delay: 0, initial_movestring: ''};
-    window.alert("Creating new entity with bullshit wander because you haven't actually added it. Dick.");
   }
 
   const entity_animation = $('#entity_animation').val();
@@ -599,6 +597,8 @@ export const update_entity = (dialog, ent_id) => {
 
   if (_update_entity_inner(ent_id, vals)) {
     dialog.dialog('close');
+    selectEntityByIndex(ent_id);
+    scrollEntityPalletteToEntity(ent_id);
   }
 };
 
