@@ -161,6 +161,7 @@ export const getTXTyFromMouse = (map, evt) => {
   const mouseOffsetY = evt.offsetY;
   const selectedLayer = getSelectedLayer();
   const parallax = (selectedLayer != null) ? selectedLayer.layer.parallax : {X:1.0, Y:1.0}; // If no layer is selected, assume parallax (1.0, 1.0)
+
   const appliedOffset = (!map.mapData.isTileSelectorMap && (selectedLayer != null && selectedLayer.layer.offset != null)) ? // If a real layer (not tileset's "map") and has an offset defined
     selectedLayer.layer.offset :
     {X:0, Y:0};

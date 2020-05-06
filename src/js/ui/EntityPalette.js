@@ -9,10 +9,10 @@ const $ = require('jquery');
 
 let _entityLayersExpanded = false;
 
-const set_animation_dropdown = ($template, animationKeyset, ent) => {
+const set_animation_dropdown = ($template, animationKeyset, animation) => {
   const $entAnim = $template.find('#entity_animation');
 
-  // / repopulate animation select
+  // repopulate animation select
   $entAnim.empty();
   $.each(animationKeyset, (key, value) => {
     $entAnim.append(
@@ -22,8 +22,8 @@ const set_animation_dropdown = ($template, animationKeyset, ent) => {
       );
   });
 
-  // / set value.
-  $entAnim.val(ent.animation);
+  // set value.
+  $entAnim.val(animation);
 }
 
 export const setNormalEntityVisibility = (val) => {
@@ -230,6 +230,10 @@ template += "<div class='pixel_coordinates'>Location.py: <input id='entity_locat
 template += "<div>Location.layer: <select id='entity_location_layer'></select></div>";
 template += "<div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly></textarea></div>";
 
+let previousEntityRelPath = '';
+let hasDirtyArt = false;
+let oldData = null;
+let oldEnt = null;
 const setup_template = (ent, id) => {
   const $template = $(template);
 
@@ -238,6 +242,80 @@ const setup_template = (ent, id) => {
   } else {
     $('#modal-dialog').attr('title', 'Add New Entity (id: ' + (currentEntities.length) + ')');
   }
+
+  const entityFilenameClickFn = () => {
+    const absPathToChrs = jetpack.path(window.$$$currentMap.dataPath, window.$$$currentMap.mapedConfigData.path_to_chrs);
+    const curRelPath = $('#entity_filename').val();
+
+    const whatDirToOpenFn = (curPath, absPath, prevRelPath) => { 
+      if( curPath ) { // "edit" mode
+        return curPath;
+      } else { // "new" mode
+        if(prevRelPath) {
+          return jetpack.path(absPath, prevRelPath);
+        } else {
+          return jetpack.path(absPath, curPath);
+        }
+      };
+    }
+
+    // This "could" have been nested trinaries... but NO.
+    const whatDirToOpen = whatDirToOpenFn(curRelPath, absPathToChrs, previousEntityRelPath); 
+    previousEntityRelPath = whatDirToOpen;
+
+    dialog.showOpenDialog({
+        title: 'Choose a new entity file',
+        defaultPath: whatDirToOpen,
+        filters: [{ name: 'text', extensions: ['json'] }],
+        openFile: true,
+        openDirectory: false,
+        multiSelections: false
+      }, function(filepath) {
+
+        let path = '';
+
+        if(!filepath) {
+          console.log("No filepath to new entity!");
+          return;
+        }
+
+        path = filepath[0];
+
+        // if we're an absolute path, reletivize it!
+        if( filepath[0].indexOf(absPathToChrs) === 0 ) {
+          path = filepath[0].substring(absPathToChrs.length).replace(/\\/g, '/'); 
+          if( path.indexOf('/') === 0 ) {
+            path = path.substring(1);
+          }
+        }
+
+        if( $('#entity_filename').val() !== path ) {
+          hasDirtyArt = true;
+        }
+
+        $('#entity_filename').val(path);
+
+        const anims = get_animations_by_filepath(path);
+        const animationKeyset = Object.keys(anims);
+
+        if(ent) {
+          set_animation_dropdown($template, animationKeyset, ent.animation);
+        } else {
+          set_animation_dropdown($template, animationKeyset, animationKeyset.length ? animationKeyset[0] : '');
+        }
+
+        const data = get_entity_data(path);
+        if(ent) {         
+          oldData = get_entity_data(ent.filename);
+          oldEnt = ent;
+          window.$$$currentMap.maybeAddEntityTexture(data, ent);
+        } else {
+          window.$$$currentMap.maybeAddEntityTextureFromFilename(data, path);
+        }
+      }
+    );
+  };
+  $template.find('#entity_filename').click(entityFilenameClickFn);
 
   if (ent) {
     console.log('Editing: ' + ent.name);
@@ -267,51 +345,11 @@ const setup_template = (ent, id) => {
     $template.find('#entity_is_an_obstruction').prop('checked', ent.is_an_obstruction);
     $template.find('#entity_autofaces').prop('checked', ent.autofaces);
 
-    $template.find('#entity_filename').click(() => {
-
-      const absPathToChrs = jetpack.path(window.$$$currentMap.dataPath, window.$$$currentMap.mapedConfigData.path_to_chrs);
-
-      dialog.showOpenDialog({
-          title: 'Choose a new entity file',
-          defaultPath: absPathToChrs,
-          filters: [{ name: 'text', extensions: ['json'] }],
-          openFile: true,
-          openDirectory: false,
-          multiSelections: false
-        }, function(filepath) {
-
-          let path = '';
-
-          if(!filepath) {
-            console.log("No filepath to new entity!");
-            return;
-          }
-
-          path = filepath[0];
-
-          if( filepath[0].indexOf(absPathToChrs) === 0 ) {
-            path = filepath[0].substring(absPathToChrs.length).replace(/\\/g, '/'); 
-            if( path.indexOf('/') === 0 ) {
-              path = path.substring(1);
-            }
-          }
-
-          $('#entity_filename').val(path);
-
-          const anims = get_animations_by_filepath(path);
-          const animationKeyset = Object.keys(anims);
-          set_animation_dropdown($template, animationKeyset, ent);
-
-          const data = get_entity_data(path);
-          window.$$$currentMap.maybeAddEntityTexture(data, ent);
-        }
-      );
-    });
-
     let entData;
     if (window.$$$currentMap.entityData[ent.filename]) {
       entData = window.$$$currentMap.entityData[ent.filename];
     } else {
+      // TODO: load the new entitydata in!
       console.warn('I DO NOT KNOW HOW TO RENDER [' + ent.filename + ']');
       entData = window.$$$currentMap.entityData['__default__'];
     }
@@ -323,7 +361,7 @@ const setup_template = (ent, id) => {
     const $entFace = $template.find('#entity_facing');
     const faceKeyset = ['Up', 'Down', 'Left', 'Right'];
 
-    // / repopulate animation select
+    // repopulate animation select
     $entFace.empty();
     $.each(faceKeyset, (key, value) => {
       $entFace.append(
@@ -333,7 +371,7 @@ const setup_template = (ent, id) => {
         );
     });
 
-    // / set value.
+    // set value.
     $entFace.val(ent.facing);
 
     const $entLocLay = $template.find('#entity_location_layer');
@@ -459,8 +497,19 @@ function _entity_click(evt, id) {
           const _id = ($.isNumeric(id) && ent) ? id : currentEntities.length;
 
           update_entity(dialog, _id);
+
+          hasDirtyArt = false;
         },
         'Cancel': function () {
+
+          if( hasDirtyArt ) {
+            /// put it back!
+            window.$$$currentMap.maybeAddEntityTexture(oldData, oldEnt);
+            oldData = null;
+            oldEnt = null;
+            hasDirtyArt = false;
+          }
+
           dialog.dialog('close');
         }
       },

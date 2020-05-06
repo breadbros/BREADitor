@@ -780,11 +780,24 @@ Map.prototype = {
     }
   },
 
+  maybeAddEntityTextureFromFilename(data, filename) {
+    this._maybeAddEntityTexture(data, false, filename);
+  },
+
   maybeAddEntityTexture(data, entity) {
-    this.entityData[entity.filename] = data;
+    this._maybeAddEntityTexture(data, entity);
+  },
+
+  _maybeAddEntityTexture(data, entity, filename) {
+
+    if(entity) {
+      filename = entity.filename;
+    }
+
+    this.entityData[filename] = data;
 
     for (const name in data.animations) {
-                // convert short-hand to useful-hand
+      // convert short-hand to useful-hand
       if (typeof data.animations[name][0] === 'string') {
         const chunks = data.animations[name][0].split(' ');
         const t = parseInt(chunks.shift().substring(1), 10);
@@ -804,9 +817,12 @@ Map.prototype = {
         imagePath += '.png'; // TODO this is stupid and bad and wrong.
       }
       if (!jetpack.inspect(imagePath)) {
-        console.warn("Couldn't load image", data.image, 'for entity', entity.filename, '; falling back.');
-                    // this.entityData[entity.filename].image = '__default__';
-        entity.MAPED_USEDEFAULT = true;
+        console.warn("Couldn't load image", data.image, 'for entity', filename, '; falling back.');
+                    // this.entityData[filename].image = '__default__';
+        if(entity) {
+          entity.MAPED_USEDEFAULT = false;
+        }
+        
         return;
       }
 
@@ -819,7 +835,9 @@ Map.prototype = {
       this.entityTextures[data.image].img.src = imagePath;  
     }
 
-    entity.MAPED_USEDEFAULT = false;
+    if(entity) {
+      entity.MAPED_USEDEFAULT = false;
+    }
     console.log('NOT USING DEFAULT ENTITY FOR ', data.image);
   },
 
