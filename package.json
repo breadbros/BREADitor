@@ -62,7 +62,7 @@
     "jest": "^17.0.3",
     "jest-cli": "^17.0.3",
     "jquery": "^3.5.0",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.3",
     "mocha": "^3.0.2",
     "precommit-hook-eslint": "^3.0.0",
     "rollup": "^0.36.3",
