@@ -37,6 +37,7 @@ export const FakeMap = () => {
     getLayerData: getLayerData,
     getMatrix: getMatrix,
     setMatrix: setMatrix,
-    getVSPTileLocation: () => { return 1234567890; }
+    getVSPTileLocation: () => { return 1234567890; },
+    isTileSelectorMap: false,
   };
 };
