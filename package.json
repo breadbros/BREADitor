@@ -34,7 +34,7 @@
   "dependencies": {
     "electron-canvas-to-buffer": "^2.0.0",
     "fs-jetpack": "^0.10.2",
-    "lodash": "^4.17.2",
+    "lodash": "^4.17.13",
     "natives": "^1.1.6",
     "sprintf-js": "^1.0.3",
     "ui-contextmenu": "^1.18.1"
