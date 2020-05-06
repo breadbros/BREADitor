@@ -373,8 +373,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   };
 
   this.updateRstring(this.mapData.renderstring);
-  this.mapSizeInTiles = [0, 0];
-
+  this.mapSizeInTiles = {
+    width: 0,
+    height: 0
+  };
   // YOU BIG FAT PHONY
 
   this.regenerateLayerLookup = () => {
@@ -413,10 +415,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.regenerateZoneData = () => {
     const tmpZones = this.mapRawTileData.zone_data;
-    this.zoneData = new Array(this.mapSizeInTiles[0] * this.mapSizeInTiles[1]);
+    this.zoneData = new Array(this.mapSizeInTiles.width * this.mapSizeInTiles.height);
 
     $.each(tmpZones, (idx) => {
-      this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
+      this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles.width)] = tmpZones[idx].z;
     });
   };
 
@@ -454,7 +456,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.compactifyZones = () => {
     // zone_data: [{x,y,z}, ...]
     const tmpZones = [];
-    const mapWidth = this.mapSizeInTiles[0]; 
+    const mapWidth = this.mapSizeInTiles.width; 
 
     // walk the in-memory zoneData layer, anything with zone >0, add.
     $.each(this.zoneData, (idx) => {
@@ -585,7 +587,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         let i = null;
         for (iy = 0; iy < h; iy++) {
           for (ix = 0; ix < w; ix++) {
-            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles.width);
             this.tiles[i] = true;
           }
         }
@@ -599,7 +601,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         let i = null;
         for (iy = 0; iy < h; iy++) {
           for (ix = 0; ix < w; ix++) {
-            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles.width);
             this.tiles[i] = false;
           }
         }
@@ -620,7 +622,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       recalculateLines: function () {
         this.lines = [];
 
-        const mapWidth = this.map.mapSizeInTiles[0];
+        const mapWidth = this.map.mapSizeInTiles.width;
         let x = null;
         let y = null;
         let i = null;
@@ -909,13 +911,13 @@ Map.prototype = {
   },
 
   getZone: function (tileX, tileY) {
-    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
 
     return this.zoneData[idx];
   },
 
   setZone: function (tileX, tileY, zoneIdx) {
-    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
 
     this.zoneData[idx] = zoneIdx;
   },
@@ -924,7 +926,7 @@ Map.prototype = {
     let idx;
 
     if (layerIdx === 998) { // TODO the obs sentinel is the WORST
-      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
       if (this.legacyObsData) { // we are in the main map.
         return this.legacyObsData[idx];
       } else if (this.tileData && this.tileData.length === 1) { // we are in the obs map
@@ -956,7 +958,7 @@ Map.prototype = {
       idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
 
     } else {
-      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
     }
 
      
@@ -1138,13 +1140,16 @@ Map.prototype = {
   },
 
   calculateSize: function() {
-    this.mapSizeInTiles = [0, 0];
+    this.mapSizeInTiles = {
+      width: 0,
+      height: 0
+    };
     for (let i = 0; i < this.mapData.layers.length; i++) {
-      if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
-        this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
+      if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles.width) {
+        this.mapSizeInTiles.width = this.mapData.layers[i].dimensions.X;
       }
-      if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) {
-        this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
+      if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles.height) {
+        this.mapSizeInTiles.height = this.mapData.layers[i].dimensions.Y;
       }
     }
 
@@ -1156,11 +1161,11 @@ Map.prototype = {
       this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
       this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
         0.0, 0.0,
-        this.mapSizeInTiles[0], 0.0,
-        0.0, -this.mapSizeInTiles[1],
-        0.0, -this.mapSizeInTiles[1],
-        this.mapSizeInTiles[0], 0.0,
-        this.mapSizeInTiles[0], -this.mapSizeInTiles[1]
+        this.mapSizeInTiles.width, 0.0,
+        0.0, -this.mapSizeInTiles.height,
+        0.0, -this.mapSizeInTiles.height,
+        this.mapSizeInTiles.width, 0.0,
+        this.mapSizeInTiles.width, -this.mapSizeInTiles.height
       ]), this.gl.STATIC_DRAW);
     }
   },
@@ -1237,7 +1242,7 @@ Map.prototype = {
       const layer = {
         parallax: { X: 1, Y: 1 },
         alpha: getZoneAlpha(),
-        dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[1]}
+        dimensions: {X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.height}
       };
 
       this.tilemapShader.use();
@@ -1288,7 +1293,7 @@ Map.prototype = {
       const vsp = 'obstructions'; // TODO obstruction layer shouldn't just default like this
       const layer = {
         parallax: { X: 1, Y: 1 },
-        dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[1]}
+        dimensions: {X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.height}
       };
 
       if( this.mapData.obstructions_layer ) {
@@ -1457,7 +1462,7 @@ Map.prototype = {
       const layer = getSelectedLayer() ? getSelectedLayer().layer : {
         parallax: { X: 1, Y: 1 },
         offset: {X: 0, Y: 0},
-        dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[0]}
+        dimensions: {X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.width}
       };
       const appliedOffset = (selection.map.mapData.isTileSelectorMap) ? {X:0, Y:0} : layer.offset; // If tileset selector, ignore offset
 
