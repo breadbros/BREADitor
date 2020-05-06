@@ -170,8 +170,8 @@ export const selectObstructionLayer = () => {
 
   // TODO definitely wrong, especially when we start supporting multiple sized layers
   window.$$$currentMap.obsLayerData.dimensions = {
-    X: window.$$$currentMap.mapSizeInTiles[0],
-    Y: window.$$$currentMap.mapSizeInTiles[1]
+    X: window.$$$currentMap.mapSizeInTiles.width,
+    Y: window.$$$currentMap.mapSizeInTiles.height
   }
 
   const newObs = !_selected_layer || _selected_layer.map_tileData_idx !== 998;
@@ -220,8 +220,8 @@ export const changeSelectedLayer = (newLayer) => {
   }
   if (!_selected_layer.layer.dimensions) {
     _selected_layer.layer.dimensions = {
-      X: window.$$$currentMap.mapSizeInTiles[0],
-      Y: window.$$$currentMap.mapSizeInTiles[1]
+      X: window.$$$currentMap.mapSizeInTiles.width,
+      Y: window.$$$currentMap.mapSizeInTiles.height
     };
   }
 };
@@ -1043,8 +1043,8 @@ function setup_template() {
   const $dims_y = $template.find('#layer_dims_y');
 
   if (window.$$$currentMap) {
-    $dims_x.val(window.$$$currentMap.mapSizeInTiles[0]);
-    $dims_y.val(window.$$$currentMap.mapSizeInTiles[1]);
+    $dims_x.val(window.$$$currentMap.mapSizeInTiles.width);
+    $dims_y.val(window.$$$currentMap.mapSizeInTiles.height);
   }
 
   return $template;
@@ -1318,15 +1318,15 @@ const update_layer = (dialog, layer_id, onComplete) => {
     console.log( "Resizing layer..." );
     map.mapRawTileData.tile_data[layer_id] = resize_layer( map.mapRawTileData.tile_data[layer_id], old_dim_x, old_dim_y, new_dim_x, new_dim_y );
     
-    const oldx = map.mapSizeInTiles[0];
-    const oldy = map.mapSizeInTiles[1];
+    const oldx = map.mapSizeInTiles.width;
+    const oldy = map.mapSizeInTiles.height;
 
     map.calculateSize();
     map.regenerateZoneData();
     map.legacyObsData = map.mapRawTileData.legacy_obstruction_data = resize_layer( 
       map.mapRawTileData.legacy_obstruction_data, 
       oldx, oldy, 
-      map.mapSizeInTiles[0], map.mapSizeInTiles[1] 
+      map.mapSizeInTiles.width, map.mapSizeInTiles.height 
     );
 
     map.setCanvas($('.map_canvas'));

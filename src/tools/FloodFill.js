@@ -35,7 +35,7 @@ const doFloodFill = (map, e) => {
   const check_validity = (x, y) => {
     const map = window.$$$currentMap;
 
-    if (x < 0 || y < 0 || x >= map.mapSizeInTiles[0] || y >= map.mapSizeInTiles[1]) {
+    if (x < 0 || y < 0 || x >= map.mapSizeInTiles.width || y >= map.mapSizeInTiles.height) {
       return false;
     }
 

@@ -26,7 +26,7 @@ const _cut_or_copy = (map, isCut) => {
     const curLayer = getSelectedLayer().map_tileData_idx;
     const hull_x = map.selection.hull.x;
     const hull_y = map.selection.hull.y;
-    const mapWidth = map.mapSizeInTiles[0];
+    const mapWidth = map.mapSizeInTiles.width;
 
     const cutSet = [];
 

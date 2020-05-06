@@ -31,7 +31,10 @@ export const FakeMap = () => {
 
   return {
     layers: [{dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}, {dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}],
-    mapSizeInTiles: [3,3],
+    mapSizeInTiles: {
+      width: 3,
+      height: 3
+    },
     getTile: getTile,
     setTile: setTile,
     getLayerData: getLayerData,
