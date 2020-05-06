@@ -212,6 +212,12 @@ export const changeSelectedLayer = (newLayer) => {
       Y: 1
     };
   }
+  if (!_selected_layer.layer.offset) {
+   _selected_layer.layer.offset = {
+      X: 0,
+      Y: 0
+    }; 
+  }
   if (!_selected_layer.layer.dimensions) {
     _selected_layer.layer.dimensions = {
       X: window.$$$currentMap.mapSizeInTiles[0],
@@ -788,28 +794,30 @@ const redraw_palette = (map) => {
   function update_parallax(layer, dialog) {
     let x = $('#new_layer_parallax_x').val().trim();
     let y = $('#new_layer_parallax_y').val().trim();
-    const newParallax = {};
-
-    if (!$.isNumeric(x)) {
-      modal_error('Invalid input: x not numeric.');
-      return;
-    }
-    if (!$.isNumeric(y)) {
-      modal_error('Invalid input: y not numeric.');
-      return;
-    }
-
-    x = parseFloat(x);
-    y = parseFloat(y);
-
-    newParallax.X = x;
-    newParallax.Y = y;
+    const newParallax = _get_validated_xy_float_input(x, y);
+    if (!newParallax) { return; }
 
     layer.parallax = newParallax;
 
     redrawAllLucentAndParallax();
 
     dialog.dialog('close');
+  }
+
+  function _get_validated_xy_float_input(x, y) {
+    if (!$.isNumeric(x)) {
+      modal_error('Invalid input: x not numeric.');
+      return null;
+    }
+    if (!$.isNumeric(y)) {
+      modal_error('Invalid input: y not numeric.');
+      return null;
+    }
+
+    x = parseFloat(x);
+    y = parseFloat(y);
+
+    return {X: x, Y: y};
   }
 
   function formatAlphaAsPercentage(alpha) {
@@ -1022,6 +1030,7 @@ let template = "<div>Name: <input id='layer_name'></div>";
 template += "<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> ";
 template += "   y: <input id='layer_parallax_y' value='1' size=3></div>";
 template += "<div>Dimensions (tiles): w: <input id='layer_dims_x' size=3> h: <input id='layer_dims_y' size=3></div>";
+template += "<div>Offset (pixels): x: <input id='layer_offset_x' value='0' size=3> y: <input id='layer_offset_y' value='0' size=3></div>";
 template += "<div>Alpha: <input id='layer_opacity' value='1' size=3></div>";
 template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
 template += "<div>isTallEntity Redraw Layer? <input type='checkbox' id='layer_is_tall_redraw_layer'></div>";
@@ -1090,6 +1099,8 @@ function _layer_click(evt, layerIdx, onComplete) {
       $template.find('#layer_parallax_y').val(layer.parallax.Y);
       $template.find('#layer_dims_x').val(layer.dimensions.X);
       $template.find('#layer_dims_y').val(layer.dimensions.Y);
+      $template.find('#layer_offset_x').val(layer.offset.X);
+      $template.find('#layer_offset_y').val(layer.offset.Y);
       $template.find('#layer_opacity').val(layer.alpha);
       $template.find('#layer_vsp').val(layer.vsp);
       $template.find('#layer_idx').text(layerIdx);
@@ -1173,18 +1184,23 @@ const update_layer = (dialog, layer_id, onComplete) => {
   const par_y = dialog.find('#layer_parallax_y').val();
   let dims_x = dialog.find('#layer_dims_x').val();
   let dims_y = dialog.find('#layer_dims_y').val();
+  let offset_x = dialog.find('#layer_offset_x').val();
+  let offset_y = dialog.find('#layer_offset_y').val();
   let alpha = dialog.find('#layer_opacity').val();
   const vsp = dialog.find('#layer_vsp').val();
   let layer = null;
 
+  // Validate Parallax
   if (!$.isNumeric(par_x)) {
-    modal_error('Invalid input: parralax x (' + par_x + ') is invalid.');
+    modal_error('Invalid input: parallax x (' + par_x + ') is invalid.');
     return;
   }
   if (!$.isNumeric(par_y)) {
-    modal_error('Invalid input: parralax y (' + par_y + ') is invalid.');
+    modal_error('Invalid input: parallax y (' + par_y + ') is invalid.');
     return;
   }
+  
+  // Validate Dimensions
   if (!$.isNumeric(dims_x) && dims_x >= 0) {
     modal_error('Invalid input: dimension x (' + dims_x + ') is invalid.');
     return;
@@ -1195,8 +1211,21 @@ const update_layer = (dialog, layer_id, onComplete) => {
     return;
   }
   dims_y = parseInt(dims_y);
+
+  // Validate Offsets
+  if (!$.isNumeric(offset_x)) {
+    modal_error('Invalid input: offset x (' + offset_x + ') is invalid.');
+    return;
+  }
+  offset_x = parseInt(offset_x);
+  if (!$.isNumeric(offset_y)) {
+    modal_error('Invalid input: ofset y (' + offset_y + ') is invalid.');
+    return;
+  }
+  offset_y = parseInt(offset_y);
+
   if (!$.isNumeric(alpha) || alpha < 0 || alpha > 1) {
-    modal_error('Invalid input: alpha (' + alpha + ') is invalid.  Try values [0...1]');
+    modal_error('Invalid input: alpha (' + alpha + ') is invalid.  Try values [0..1]');
     return;
   }
 
@@ -1246,6 +1275,10 @@ const update_layer = (dialog, layer_id, onComplete) => {
     dimensions: {
       X: new_dim_x,
       Y: new_dim_y
+    },
+    offset: {
+      X: offset_x,
+      Y: offset_y,
     },
     parallax: {
       X: parseFloat(par_x),

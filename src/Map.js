@@ -1387,10 +1387,11 @@ Map.prototype = {
 
     this.tilemapShader.use();
 
+    const appliedOffset = (layer.offset) ? layer.offset : {X:0, Y:0}; // If layer has an offset, use other, otherwise use default value
     const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
     gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-      Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
-      Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
+      Math.floor(layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
       this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
       this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
     );
@@ -1437,15 +1438,17 @@ Map.prototype = {
       // TODO something smells about getSelectedLayer().layer
       const layer = getSelectedLayer() ? getSelectedLayer().layer : {
         parallax: { X: 1, Y: 1 },
+        offset: {X: 0, Y: 0},
         dimensions: {X: this.mapSizeInTiles[0], Y: this.mapSizeInTiles[0]}
       };
+      const appliedOffset = (selection.map.mapData.isTileSelectorMap) ? {X:0, Y:0} : layer.offset; // If tileset selector, ignore offset
 
       const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
       this.selectionShader.use();
       gl.uniform4f(
         this.selectionShader.uniform('u_camera'),
-        Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
-        Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
+        Math.floor(layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
+        Math.floor(layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
         this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
         this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
       );
