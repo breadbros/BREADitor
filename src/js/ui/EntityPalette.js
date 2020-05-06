@@ -203,11 +203,18 @@ $(function() {
         case 'edit':
           $(this).dblclick();
           return;
+        case 'delete':
+          var entity_to_delete = $(this).data('index');
+          if( confirm('Are you sure you want to delete entity #'+entity_to_delete+'?') ) {
+            delete_entity(entity_to_delete);
+          }
+          return;
       }
     },
     items: {
         "edit": {name: "Edit", icon: "edit"},
         "clone": {name: "Clone", icon: "copy"},
+        "delete": {name: "Delete", icon: "delete"},
     }
   });
 });
@@ -775,6 +782,16 @@ export const _update_entity_inner = (ent_id, valDict) => {
 
   return true;
 };
+
+const delete_entity = ( ent_id ) => {
+  if( ent_id < 0 || ent_id >= currentEntities.length ) {
+    console.warn('Attempted to delete out-of bounds entity: ' + ent_id + ' (out of '+currentEntities.length+'). ');
+    return;
+  }
+
+  currentEntities.splice(ent_id, 1);
+  do_the_no_things(null, redraw_palette); // these args seem dumb
+}
 
 const clone_entity = ( ent_index ) => {
   const e = currentEntities[ent_index];
