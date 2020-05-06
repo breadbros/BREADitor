@@ -221,7 +221,7 @@ template += "<div>Pays attention to obstructions?: <input type='checkbox' " +
             "id='entity_pays_attention_to_obstructions'></div>";
 template += "<div>Is an obstructions?: <input type='checkbox' id='entity_is_an_obstruction'></div>";
 template += "<div>Autofaces when activated?: <input type='checkbox' id='entity_autofaces'></div>";
-template += "<div>Speed: <input id='entity_speed'></div>";
+template += "<div>Speed: <input id='entity_speed' value='0'></div>";
 template += "<div class='tile_coordinates'>Location.tx: <input id='entity_location_tx'></div>";
 template += "<div class='tile_coordinates'>Location.ty: <input id='entity_location_ty'></div>";
 template += "<div class='pixel_coordinates'>Location.px: <input id='entity_location_px'></div>";
