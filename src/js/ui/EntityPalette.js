@@ -317,6 +317,19 @@ const setup_template = (ent, id) => {
   };
   $template.find('#entity_filename').click(entityFilenameClickFn);
 
+  const $entFace = $template.find('#entity_facing');
+  const faceKeyset = ['Up', 'Down', 'Left', 'Right'];
+
+  // repopulate facing select
+  $entFace.empty();
+  $.each(faceKeyset, (key, value) => {
+    $entFace.append(
+        $('<option></option>')
+        .attr('value', value)
+        .text(value)
+      );
+  });
+  
   if (ent) {
     console.log('Editing: ' + ent.name);
 
@@ -357,19 +370,6 @@ const setup_template = (ent, id) => {
     // = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];
     const animationKeyset = Object.keys(entData.animations);
     set_animation_dropdown($template, animationKeyset, ent);
-
-    const $entFace = $template.find('#entity_facing');
-    const faceKeyset = ['Up', 'Down', 'Left', 'Right'];
-
-    // repopulate animation select
-    $entFace.empty();
-    $.each(faceKeyset, (key, value) => {
-      $entFace.append(
-          $('<option></option>')
-          .attr('value', value)
-          .text(value)
-        );
-    });
 
     // set value.
     $entFace.val(ent.facing);
