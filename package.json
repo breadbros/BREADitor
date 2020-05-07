@@ -38,7 +38,8 @@
     "lodash": "^4.17.13",
     "natives": "^1.1.6",
     "sprintf-js": "^1.0.3",
-    "ui-contextmenu": "^1.18.1"
+    "ui-contextmenu": "^1.18.1",
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "babel-jest": "^17.0.2",

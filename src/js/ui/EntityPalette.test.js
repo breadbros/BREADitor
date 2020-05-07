@@ -1,5 +1,5 @@
 /*eslint no-undef: 1*/
-import { getCurrentEntities, _update_entity_inner, setCurrentEntities } from './EntityPalette';
+import { getCurrentEntities, _update_entity_inner, setCurrentEntities, generate_unique_entity_uuid_for_this_map, _does_uuid_already_exist, delete_entity } from './EntityPalette';
 
 jest.mock('./Util.js')
 
@@ -249,4 +249,39 @@ test('update_entity 0s on px/py are good' , () => {
   expect(getCurrentEntities()[0].location.ty).toBeUndefined();
   expect(getCurrentEntities()[0].location.px).toEqual(1);
   expect(getCurrentEntities()[0].location.py).toEqual(2);
+});
+
+test('generate_unique_entity_uuid_for_this_map makes uuids' , () => {
+  const uuid = generate_unique_entity_uuid_for_this_map();
+  expect(typeof uuid).toEqual("string");
+  expect(uuid.length).toEqual(36);
+});
+
+test('_does_uuid_already_exist works' , () => {
+
+  setCurrentEntities([
+    {'uuid': 'AAAA'},
+    {'uuid': 'CCCC'},
+  ]);
+
+  const uuid = generate_unique_entity_uuid_for_this_map();
+  expect(_does_uuid_already_exist('AAAA')).toEqual(true);
+  expect(_does_uuid_already_exist('BBBB')).toEqual(false);
+  expect(_does_uuid_already_exist('AAAA')).toEqual(true);
+});
+
+test('delete_entity works' , () => {
+
+  setCurrentEntities([
+    {'uuid': 'AAAA'},
+    {'uuid': 'BBBB'},
+    {'uuid': 'CCCC'},
+  ]);
+
+  delete_entity(1);
+
+  expect(getCurrentEntities()).toEqual([
+    {'uuid': 'AAAA'},
+    {'uuid': 'CCCC'},
+  ]);
 });

@@ -7,9 +7,11 @@ const jetpack = require('fs-jetpack').cwd(appPath);
 import { ShaderProgram } from './ShaderProgram.js';
 import { updateRstringInfo, getCurrentHoverTile, updateInfoDims } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
-import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js';
+import { getNormalEntityVisibility, shouldShowEntitiesForLayer, generate_unique_entity_uuid_for_this_map } from './js/ui/EntityPalette.js';
 const sprintf = require('sprintf-js').sprintf;
 const $ = require('jquery');
+
+
 
 import { getSelectedLayer } from './js/ui/LayersPalette.js';
 
@@ -28,6 +30,16 @@ export const checkerColorA = [0.75, 0.75, 0.75, 1.0];
 export const checkerColorB = [1.0, 1.0, 1.0, 1.0];
 
 let lastKnownPath = '';
+
+export const heal_uuids_for_this_map = (map) => {
+  const currentEntities = map.mapData.entities;
+  for (let i = currentEntities.length - 1; i >= 0; i--) {
+    if( !currentEntities[i].uuid ) {
+      currentEntities[i].uuid = generate_unique_entity_uuid_for_this_map(map);
+    }
+  }
+  map.mapData.entities = currentEntities;
+};
 
 export const cleanEntities = (mapData) => {
   for (let i = mapData.entities.length - 1; i >= 0; i--) {
@@ -377,8 +389,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     width: 0,
     height: 0
   };
-  // YOU BIG FAT PHONY
 
+  // YOU BIG FAT PHONY
   this.regenerateLayerLookup = () => {
     this.calculateSize();
 
@@ -673,7 +685,23 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.visibleHoverTile = this.selectionMaker();
   this.visibleHoverTile.map = this;
 
+  //heal uuids into uuid-less maps
+  if(has_unset_uuids(this)) {
+    heal_uuids_for_this_map(this);
+    alert("Your map lacked entity uuids.  We've added them in.  Please save before using these uuids.");
+  }
+
   this.doneLoading();
+};
+
+const has_unset_uuids = (map) => {
+  for (var i = map.mapData.entities.length - 1; i >= 0; i--) {
+    if( !map.mapData.entities[i].uuid ) {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 export const getFlatIdx = (x, y, width) => {

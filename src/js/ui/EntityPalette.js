@@ -1,6 +1,7 @@
 import { modal_error, do_the_no_things } from './Util.js';
 import { LayersWidget } from './LayersPalette.js';
 import { centerMapOnXY } from '../../Tools';
+import { v4 as uuidv4 } from 'uuid';
 
 const { dialog } = require('electron').remote;
 const jetpack = require('fs-jetpack');
@@ -22,7 +23,7 @@ const set_animation_dropdown = ($template, animationKeyset, animation) => {
       );
   });
 
-  // set value.
+  // set value
   $entAnim.val(animation);
 }
 
@@ -710,7 +711,6 @@ const _loc_helper = (valDict) => {
 };
 
 export const _update_entity_inner = (ent_id, valDict) => {
-
   const loc = _loc_helper(valDict);
 
   let ent = null;
@@ -778,12 +778,45 @@ export const _update_entity_inner = (ent_id, valDict) => {
     relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);
   }
 
+  if( !ent.uuid ) {
+    currentEntities[ent_id]['uuid'] = generate_unique_entity_uuid_for_this_map();
+  }
+
   do_the_no_things(currentEntities[ent_id], redraw_palette); // these args seem dumb
 
   return true;
 };
 
-const delete_entity = ( ent_id ) => {
+export const _does_uuid_already_exist = (uuid, map) => {
+  let curEnts = null;
+  if(!map) {
+    curEnts = currentEntities;
+  } else {
+    curEnts = map.mapData.entities;
+  }
+
+  for (var i = curEnts.length - 1; i >= 0; i--) {
+    if( curEnts[i].uuid && curEnts[i].uuid === uuid ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export const generate_unique_entity_uuid_for_this_map = (map) => {
+  while(true) {
+    const uuid = uuidv4();
+
+    if( _does_uuid_already_exist(uuid, map) ) {
+      continue;
+    }
+
+    return uuid;
+  }
+};
+
+export const delete_entity = ( ent_id ) => {
   if( ent_id < 0 || ent_id >= currentEntities.length ) {
     console.warn('Attempted to delete out-of bounds entity: ' + ent_id + ' (out of '+currentEntities.length+'). ');
     return;

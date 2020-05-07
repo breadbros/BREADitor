@@ -92,7 +92,7 @@ export const paste = (map, tX, tY, newLayerIdx) => {
     const targetX = pasteboard[i][0] + tX;
     const targetY = pasteboard[i][1] + tY;
 
-    console.log(`pasting to new layer's (${targetX},${targetY})`)
+    // console.log(`pasting to new layer's (${targetX},${targetY})`)
 
     // out of bounds detection
     // TODO do we need to detect negatives?  MAAAAYBE?

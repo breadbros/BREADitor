@@ -68,9 +68,6 @@ test('test a flood fill', () => {
 
   expect(getCurrentlySelectedTile()).toEqual(42);
 
-  console.log(map);
-  console.log(mouseEvt);
-
   doFloodFill(map, mouseEvt);
 
   expect(map.getTile(0, 0, 0)).toEqual(42);
