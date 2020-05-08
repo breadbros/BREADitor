@@ -6,7 +6,7 @@ import {
 } from '../Tools.js';
 
 import {
-  LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix, newLayerOnNewMap
+  LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix, newLayerOnNewMap, selectEntityLayer
 } from '../js/ui/LayersPalette.js';
 import { cut, copy, paste } from '../js/ui/CutCopyPaste.js';
 
@@ -100,8 +100,7 @@ export function setupIPCRenderer() {
         selectZoneLayer();
         break;
       case 'focus-layer-E':
-        // TODO implement the entities layer already.
-        console.log('TODO implement the entities layer already.');
+        selectEntityLayer();
         break;
       case 'focus-layer-1':
       case 'focus-layer-2':
