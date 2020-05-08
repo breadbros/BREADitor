@@ -1257,7 +1257,7 @@ const update_layer = (dialog, layer_id, onComplete) => {
 
   if (nameSet.indexOf(name) !== -1) {
     if (layers[layer_id] && layers[layer_id].name !== name) {
-      modal_error('Invalid input: name (' + name + ') is not unique on this map.  Try a new, unique name.');
+      modal_error('Invalid input: layer name (' + name + ') is not unique on this map.  Try a new, unique name.');
       return;
     }
   }
