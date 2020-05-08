@@ -221,7 +221,8 @@ $(function() {
 });
 
 let template = "<div>Name: <input id='entity_name'></div>";
-template += "<div>Filename: <input id='entity_filename'></div>";
+template += "<div>uuid: <input id='entity_uuid' readonly size=36></div>";
+template += "<div>Filename: <input id='entity_filename' size=50></div>";
 template += "<div>Animation: <select id='entity_animation'></select>";
 template += "<div>Facing: <select id='entity_facing'></select></div>";
 template += "<div>Activation Script: <input id='entity_activation_script'></div>";
@@ -229,11 +230,11 @@ template += "<div>Pays attention to obstructions?: <input type='checkbox' " +
             "id='entity_pays_attention_to_obstructions'></div>";
 template += "<div>Is an obstructions?: <input type='checkbox' id='entity_is_an_obstruction'></div>";
 template += "<div>Autofaces when activated?: <input type='checkbox' id='entity_autofaces'></div>";
-template += "<div>Speed: <input id='entity_speed' value='100'></div>";
-template += "<div class='tile_coordinates'>Location.tx: <input id='entity_location_tx'></div>";
-template += "<div class='tile_coordinates'>Location.ty: <input id='entity_location_ty'></div>";
-template += "<div class='pixel_coordinates'>Location.px: <input id='entity_location_px'></div>";
-template += "<div class='pixel_coordinates'>Location.py: <input id='entity_location_py'></div>";
+template += "<div>Speed: <input id='entity_speed' value='100' size=4></div>";
+template += "<div class='tile_coordinates'>Location.tx: <input id='entity_location_tx' size=4></div>";
+template += "<div class='tile_coordinates'>Location.ty: <input id='entity_location_ty' size=4></div>";
+template += "<div class='pixel_coordinates'>Location.px: <input id='entity_location_px' size=4></div>";
+template += "<div class='pixel_coordinates'>Location.py: <input id='entity_location_py' size=4></div>";
 
 template += "<div>Location.layer: <select id='entity_location_layer'></select></div>";
 template += "<div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly></textarea></div>";
@@ -342,6 +343,7 @@ const setup_template = (ent, id) => {
     console.log('Editing: ' + ent.name);
 
     $template.find('#entity_name').val(ent.name);
+    $template.find('#entity_uuid').val(ent.uuid);
     $template.find('#entity_filename').val(ent.filename);
 
     $template.find('#entity_activation_script').val(ent.activation_script);
@@ -538,8 +540,9 @@ function _entity_click(evt, id) {
 }
 
 export const update_entity = (dialog, ent_id) => {
-  const entity_name = $('#entity_name').val(); // TODO: validate uniqueness
+  const entity_name = $('#entity_name').val();
   const entity_filename = $('#entity_filename').val(); // TODO: validate existance
+  const entity_uuid = $('#entity_uuid').val();
   const entity_activation_script = $('#entity_activation_script').val();
   const entity_speed = parseInt($('#entity_speed').val());
 
@@ -595,6 +598,7 @@ export const update_entity = (dialog, ent_id) => {
     entity_facing: entity_facing,
     entity_wander: entity_wander,
     entity_name: entity_name,
+    entity_uuid: entity_uuid,
     entity_filename: entity_filename,
     entity_activation_script: entity_activation_script,
     entity_speed: entity_speed,
@@ -731,8 +735,8 @@ export const _update_entity_inner = (ent_id, valDict) => {
 
   ent = {
     'name': valDict.entity_name,
+    'uuid': valDict.entity_uuid,
     'filename': valDict.entity_filename,
-
     'facing': valDict.entity_facing,
     'pays_attention_to_obstructions': valDict.entity_pays_attention_to_obstructions,
     'is_an_obstruction': valDict.entity_is_an_obstruction,
@@ -774,12 +778,12 @@ export const _update_entity_inner = (ent_id, valDict) => {
     old_layer = new_layer;
   }
 
-  if (old_layer && new_layer && old_layer !== new_layer) {
-    relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);
-  }
-
   if( !ent.uuid ) {
     currentEntities[ent_id]['uuid'] = generate_unique_entity_uuid_for_this_map();
+  }
+
+  if (old_layer && new_layer && old_layer !== new_layer) {
+    relocate_entity_for_map_rendering(currentEntities[ent_id].uuid, old_layer, new_layer);
   }
 
   do_the_no_things(currentEntities[ent_id], redraw_palette); // these args seem dumb
@@ -861,12 +865,17 @@ const clone_entity = ( ent_index ) => {
 
 // TODO: ent_name should be a uuid
 // TODO: until then, make sure ent_name is verified unique
-const relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {
+const relocate_entity_for_map_rendering = (ent_uuid, old_layer, new_layer) => {
   let myboy = null;
   const ents = window.$$$currentMap.entities;
 
   for (let i = ents[old_layer].length - 1; i >= 0; i--) {
-    if (ents[old_layer][i].name === ent_name) {
+    if(!ents[old_layer][i].uuid) {
+      alert("You are trying to move an entity without a UUID.  Reload the map, save it, reload it, and try again.\n\nCancelling action.");
+      return;
+    }
+
+    if (ents[old_layer][i].uuid === ent_uuid) {
       if (!ents[new_layer]) {
         ents[new_layer] = [];
       }
