@@ -1,0 +1,3375 @@
+{
+  "notes": [
+    {
+      "x": "933",
+      "y": "1365",
+      "text": "Farmsville community college"
+    },
+    {
+      "x": "736",
+      "y": "1377",
+      "text": "Church of Vecna ???"
+    },
+    {
+      "x": "1056",
+      "y": "948",
+      "text": "Veggiesmith"
+    },
+    {
+      "x": "1348",
+      "y": "1315",
+      "text": "Item Store"
+    },
+    {
+      "x": "1762",
+      "y": "1397",
+      "text": "Inn"
+    },
+    {
+      "x": "1799",
+      "y": "1143",
+      "text": "Weapons"
+    },
+    {
+      "x": "1680",
+      "y": "989",
+      "text": "Dexter's Home"
+    },
+    {
+      "x": "1595",
+      "y": "758",
+      "text": "Fashion Studio"
+    },
+    {
+      "x": "1679",
+      "y": "382",
+      "text": "Lookout Point"
+    },
+    {
+      "x": "924",
+      "y": "433",
+      "text": "VECNA"
+    }
+  ],
+  "name": "Bumsville: City of Bums",
+  "tallentitylayer": "Fishing",
+  "vsp": {
+    "default": "farmsville.vsp.json",
+    "obstructions": "farmsville.obsvsp.json"
+  },
+  "music": "",
+  "renderstring": "2,1,3,E,6,4,5,R",
+  "initscript": "start",
+  "starting_coordinates": [
+    0,
+    0
+  ],
+  "layers": [
+    {
+      "name": "Background",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1,
+      "vsp": "default",
+      "MAPED_HIDDEN": false
+    },
+    {
+      "name": "Back Parallax",
+      "parallax": {
+        "X": 0.5,
+        "Y": 0.8
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1,
+      "vsp": "default",
+      "MAPED_HIDDEN": false,
+      "maped_HIDE_ENTS": false
+    },
+    {
+      "name": "Background Extra",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1,
+      "vsp": "default",
+      "MAPED_HIDDEN": false
+    },
+    {
+      "name": "Foreground",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1,
+      "vsp": "default",
+      "MAPED_HIDDEN": false
+    },
+    {
+      "name": "Fishing",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": 150,
+        "Y": 250
+      },
+      "alpha": 1,
+      "vsp": "default",
+      "MAPED_HIDDEN": true
+    },
+    {
+      "name": "Hilltop",
+      "alpha": 1,
+      "dimensions": {
+        "X": 1,
+        "Y": 1
+      },
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "vsp": "default",
+      "MAPED_HIDDEN": false
+    }
+  ],
+  "zones": [
+    {
+      "name": "NULL_ZONE",
+      "activation_script": "",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Bridge Switch -- Under Entities",
+      "activation_script": "bridgeswitch_under",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Bridge Switch -- Over Entities",
+      "activation_script": "bridgeswitch_over",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Pharmacy",
+      "activation_script": "ItemEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Pharmacy",
+      "activation_script": "ItemExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Weapon",
+      "activation_script": "WeaponEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Weapon",
+      "activation_script": "WeaponExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Smith",
+      "activation_script": "SmithEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Smith",
+      "activation_script": "SmithExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Dexter's House",
+      "activation_script": "HouseEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Dexter's House",
+      "activation_script": "HouseExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Inn",
+      "activation_script": "InnEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Inn",
+      "activation_script": "InnExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - To Inn Upstairs",
+      "activation_script": "InnUpstair",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - To Inn Downstairs",
+      "activation_script": "InnDownstair",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into University",
+      "activation_script": "SchoolEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of University",
+      "activation_script": "SchoolExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Church",
+      "activation_script": "ChurchEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Church",
+      "activation_script": "ChurchExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Into Studio",
+      "activation_script": "StudioEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Warp - Out of Studio",
+      "activation_script": "StudioExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Map Change - To Overworld",
+      "activation_script": "east_entrance",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Check - Vecna Statue",
+      "activation_script": "Idol",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Well",
+      "activation_script": "well",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Jukebox Left",
+      "activation_script": "Jukebox_Left",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Jukebox Right",
+      "activation_script": "Jukebox_Right",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Little Daddy Bruce",
+      "activation_script": "little_daddy_bruce",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Item Shop",
+      "activation_script": "item_shop",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Weapon Shop",
+      "activation_script": "weapon_shop",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Principal",
+      "activation_script": "principal",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Priest Talk",
+      "activation_script": "priest",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Church Stairs",
+      "activation_script": "ChurchStairs",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Uni Basement",
+      "activation_script": "UniBasementEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Uni Top Floor",
+      "activation_script": "UniUpstairsEnter",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Uni, from Basement",
+      "activation_script": "UniBasementExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Warp - Uni from Top Floor",
+      "activation_script": "UniUpstairsExit",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Teacher",
+      "activation_script": "teacher",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - White Magic Shop",
+      "activation_script": "white_magic_shop",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Black Magic Shop",
+      "activation_script": "black_magic_shop",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Innkeeper",
+      "activation_script": "innkeeper",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Check - Sleeping Dexter",
+      "activation_script": "sleeping_dexter",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "_not_used_",
+      "activation_script": "",
+      "activation_chance": "0",
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "Ascend Zealot Hill",
+      "activation_script": "ascend_zealot_hill",
+      "activation_chance": "1",
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Descend Zealot Hill",
+      "activation_script": "descend_zealot_hill",
+      "activation_chance": "1",
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Open Canal Underpass",
+      "activation_script": "open_canal_underpass",
+      "activation_chance": "1",
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Open Canal Overpass",
+      "activation_script": "open_canal_overpass",
+      "activation_chance": "1",
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "_not_used_",
+      "activation_script": "",
+      "activation_chance": "0",
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "_not_used_",
+      "activation_script": "",
+      "activation_chance": "0",
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "_not_used_",
+      "activation_script": "",
+      "activation_chance": "0",
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "_not_used_",
+      "activation_script": "",
+      "activation_chance": "0",
+      "can_by_adjacent_activated": false
+    },
+    {
+      "name": "canal_chest_a",
+      "activation_script": "canal_chest_a",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "canal_chest_b",
+      "activation_script": "canal_chest_b",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "canal_chest_green",
+      "activation_script": "canal_chest_green",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_chest_front",
+      "activation_script": "secret_chest_front",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "meet Dex",
+      "activation_script": "meetDex",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "stan-d",
+      "activation_script": "stan_d",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "lookout_point_sign",
+      "activation_script": "lookout_point_sign",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "east entrance sign",
+      "activation_script": "east_entrance_sign",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Thaco_Bell",
+      "activation_script": "thaco_bell",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "West Entrance Sign",
+      "activation_script": "west_entrance_sign",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "west_exit",
+      "activation_script": "west_entrance",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Thaco Bell",
+      "activation_script": "thaco_bell",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "farmsville_intro",
+      "activation_script": "farmsville_intro",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "Gelatin Ranch",
+      "activation_script": "gelatin_farm",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "chest_whatever",
+      "activation_script": "chest_whatever",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "chest_c",
+      "activation_script": "chest_c",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "lookout_point",
+      "activation_script": "lookout_point",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "lookout_point_reset",
+      "activation_script": "lookout_point_reset",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "no_freebies",
+      "activation_script": "no_freebies",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "red_chest_university_1",
+      "activation_script": "red_chest_university_1",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_1",
+      "activation_script": "Learn_1",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_2",
+      "activation_script": "Learn_2",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_3",
+      "activation_script": "Learn_3",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_4",
+      "activation_script": "Learn_4",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_5",
+      "activation_script": "Learn_5",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_6",
+      "activation_script": "Learn_6",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "learning_7",
+      "activation_script": "Learn_7",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "NO_WALK_HERE_WANDERERS",
+      "activation_script": "",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "blue_chest_behind_blacksmith",
+      "activation_script": "blue_chest_behind_blacksmith",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "red_chest_behind_thaco_bell",
+      "activation_script": "red_chest_behind_thaco_bell",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_tunnel_east",
+      "activation_script": "secret_tunnel_east",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_tunnel_west",
+      "activation_script": "secret_tunnel_west",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "secret_tunnel_chest",
+      "activation_script": "secret_tunnel_chest",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "dorkupine_intro",
+      "activation_script": "dorkupine_intro",
+      "activation_chance": 1,
+      "can_by_adjacent_activated": true
+    },
+    {
+      "name": "GenericBookshelf",
+      "activation_script": "GenericBookshelf",
+      "activation_chance": "0",
+      "can_by_adjacent_activated": true,
+      "can_by_same_tile_activated": false
+    }
+  ],
+  "entities": [
+    {
+      "name": "Villager A (Vorn)",
+      "filename": "chrs\\walker_05.chr.json",
+      "location": {
+        "tx": 104,
+        "ty": 36,
+        "layer": "Entity Layer (E)",
+        "px": 1664,
+        "py": 576
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "Ent0",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Villager B",
+      "filename": "chrs\\walker_02.chr.json",
+      "location": {
+        "tx": 80,
+        "ty": 87,
+        "layer": "Entity Layer (E)",
+        "px": 1280,
+        "py": 1392
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 75
+      },
+      "activation_script": "Ent1",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Zealot U",
+      "filename": "chrs\\walker_05.chr.json",
+      "location": {
+        "tx": 58,
+        "ty": 24,
+        "px": 928,
+        "py": 384,
+        "layer": "Hilltop"
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": true,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "L1R1D1U2D1R1L1B"
+      },
+      "activation_script": "Zealot1",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Villager D",
+      "filename": "chrs\\walker_05.chr.json",
+      "location": {
+        "tx": 47,
+        "ty": 92,
+        "px": 752,
+        "py": 1472,
+        "layer": "Entity Layer (E)"
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 50
+      },
+      "activation_script": "Ent3",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Villager E",
+      "filename": "chrs\\walker_03.chr.json",
+      "location": {
+        "tx": 87,
+        "ty": 64,
+        "layer": "Entity Layer (E)",
+        "px": 1392,
+        "py": 1024
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "Ent4",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Villager F a",
+      "filename": "chrs\\kadan.chr.json",
+      "location": {
+        "tx": null,
+        "ty": null,
+        "px": 1747,
+        "py": 1253,
+        "layer": "Entity Layer (E)"
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 80
+      },
+      "activation_script": "Ent5",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Villager G",
+      "filename": "chrs\\walker_06.chr.json",
+      "location": {
+        "tx": 63,
+        "ty": 44,
+        "layer": "Entity Layer (E)",
+        "px": 1008,
+        "py": 704
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 115
+      },
+      "activation_script": "Ent6",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Villager H",
+      "filename": "chrs\\walker_03.chr.json",
+      "location": {
+        "tx": 98,
+        "ty": 52,
+        "layer": "Entity Layer (E)",
+        "px": 1568,
+        "py": 832
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 175,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "L4U9R14D9L10B"
+      },
+      "activation_script": "Ent7",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Villager I",
+      "filename": "chrs\\walker_01.chr.json",
+      "location": {
+        "tx": 108,
+        "ty": 95,
+        "layer": "Entity Layer (E)",
+        "px": 1728,
+        "py": 1520
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": true,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 200
+      },
+      "activation_script": "Ent8",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Villager J",
+      "filename": "chrs\\walker_02.chr.json",
+      "location": {
+        "tx": 53,
+        "ty": 69,
+        "layer": "Entity Layer (E)",
+        "px": 848,
+        "py": 1104
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Zone",
+        "delay": 50
+      },
+      "activation_script": "Ent9",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Villager K",
+      "filename": "chrs\\walker_03.chr.json",
+      "location": {
+        "tx": 96,
+        "ty": 53,
+        "layer": "Entity Layer (E)",
+        "px": 1536,
+        "py": 848
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "Ent27",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Zealot R",
+      "filename": "chrs\\vorn.chr.json",
+      "location": {
+        "tx": 60,
+        "ty": 26,
+        "px": 960,
+        "py": 416,
+        "layer": "Hilltop"
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": true,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "U1D1L1R2L1D1U1B"
+      },
+      "activation_script": "Zealot2",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Zealot D",
+      "filename": "chrs\\walker_01.chr.json",
+      "location": {
+        "tx": 58,
+        "ty": 28,
+        "px": 928,
+        "py": 448,
+        "layer": "Hilltop"
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": true,
+      "is_an_obstruction": true,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "R1L1U1D2U1L1R1B"
+      },
+      "activation_script": "Zealot3",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Zealot L",
+      "filename": "chrs\\walker_03.chr.json",
+      "location": {
+        "tx": 56,
+        "ty": 26,
+        "px": 896,
+        "py": 416,
+        "layer": "Hilltop"
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": true,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "D1U1R1L2R1U1D1B"
+      },
+      "activation_script": "Zealot4",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Person A",
+      "filename": "chrs\\walker_01.chr.json",
+      "location": {
+        "tx": 59,
+        "ty": 196,
+        "layer": "Entity Layer (E)",
+        "px": 944,
+        "py": 3136
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "person_a",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Person B",
+      "filename": "chrs\\walker_03.chr.json",
+      "location": {
+        "tx": 60,
+        "ty": 196,
+        "layer": "Entity Layer (E)",
+        "px": 960,
+        "py": 3136
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "person_b",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Person C",
+      "filename": "chrs\\kadan.chr.json",
+      "location": {
+        "tx": 15,
+        "ty": 200,
+        "layer": "Entity Layer (E)",
+        "px": 240,
+        "py": 3200
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "person_c",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Person D",
+      "filename": "chrs\\walker_07.chr.json",
+      "location": {
+        "tx": 51,
+        "ty": 166,
+        "layer": "Entity Layer (E)",
+        "px": 816,
+        "py": 2656
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "Dexters_Dad",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Person E",
+      "filename": "chrs\\walker_02.chr.json",
+      "location": {
+        "tx": 49,
+        "ty": 165,
+        "layer": "Entity Layer (E)",
+        "px": 784,
+        "py": 2640
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "Dexters_Mom",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Student A",
+      "filename": "chrs\\kadan.chr.json",
+      "location": {
+        "tx": 125,
+        "ty": 171,
+        "layer": "Entity Layer (E)",
+        "px": 2000,
+        "py": 2736
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_a",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Student B",
+      "filename": "chrs\\walker_02.chr.json",
+      "location": {
+        "tx": 130,
+        "ty": 169,
+        "layer": "Entity Layer (E)",
+        "px": 2080,
+        "py": 2704
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_b",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Student C",
+      "filename": "chrs\\walker_01.chr.json",
+      "location": {
+        "tx": 122,
+        "ty": 171,
+        "layer": "Entity Layer (E)",
+        "px": 1952,
+        "py": 2736
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_c",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Student D",
+      "filename": "chrs\\kadan.chr.json",
+      "location": {
+        "tx": 117,
+        "ty": 169,
+        "layer": "Entity Layer (E)",
+        "px": 1872,
+        "py": 2704
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_d",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Student E",
+      "filename": "chrs\\walker_02.chr.json",
+      "location": {
+        "tx": 133,
+        "ty": 173,
+        "layer": "Entity Layer (E)",
+        "px": 2128,
+        "py": 2768
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_e",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Student F",
+      "filename": "chrs\\walker_03.chr.json",
+      "location": {
+        "tx": 137,
+        "ty": 173,
+        "layer": "Entity Layer (E)",
+        "px": 2192,
+        "py": 2768
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_f",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Little Daddy Bruce",
+      "filename": "chrs\\walker_01.chr.json",
+      "location": {
+        "tx": 97,
+        "ty": 160,
+        "layer": "Entity Layer (E)",
+        "px": 1552,
+        "py": 2560
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Fashion Babe",
+      "filename": "chrs\\walker_03.chr.json",
+      "location": {
+        "tx": 98,
+        "ty": 164,
+        "layer": "Entity Layer (E)",
+        "px": 1568,
+        "py": 2624
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "fashion_babe",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Hair Guy",
+      "filename": "chrs\\kadan.chr.json",
+      "location": {
+        "tx": 89,
+        "ty": 159,
+        "layer": "Entity Layer (E)",
+        "px": 1424,
+        "py": 2544
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "hair_stylist",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Hair Colorist",
+      "filename": "chrs\\walker_02.chr.json",
+      "location": {
+        "tx": 92,
+        "ty": 159,
+        "layer": "Entity Layer (E)",
+        "px": 1472,
+        "py": 2544
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "hair_colorist",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Clothes Guy",
+      "filename": "chrs\\vorn.chr.json",
+      "location": {
+        "tx": 85,
+        "ty": 159,
+        "layer": "Entity Layer (E)",
+        "px": 1360,
+        "py": 2544
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "clothes_guy",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Music Man",
+      "filename": "chrs\\walker_02.chr.json",
+      "location": {
+        "tx": 84,
+        "ty": 166,
+        "layer": "Entity Layer (E)",
+        "px": 1344,
+        "py": 2656
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "music_man",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Archivist",
+      "filename": "chrs\\vorn.chr.json",
+      "location": {
+        "tx": 127,
+        "ty": 223,
+        "layer": "Entity Layer (E)",
+        "px": 2032,
+        "py": 3568
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Rectangle",
+        "delay": 100,
+        "bounds": {
+          "upper_left": {
+            "X": 119,
+            "Y": 217
+          },
+          "lower_right": {
+            "X": 137,
+            "Y": 225
+          }
+        }
+      },
+      "activation_script": "Archivist",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Churchy A",
+      "filename": "chrs\\walker_01.chr.json",
+      "location": {
+        "tx": 12,
+        "ty": 227,
+        "layer": "Entity Layer (E)",
+        "px": 192,
+        "py": 3632
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "ChurchA",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Churchy B",
+      "filename": "chrs\\vorn.chr.json",
+      "location": {
+        "tx": 19,
+        "ty": 223,
+        "layer": "Entity Layer (E)",
+        "px": 304,
+        "py": 3568
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "ChurchB",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Churchy C",
+      "filename": "chrs\\walker_02.chr.json",
+      "location": {
+        "tx": 13,
+        "ty": 221,
+        "layer": "Entity Layer (E)",
+        "px": 208,
+        "py": 3536
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "ChurchC",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Churchy D",
+      "filename": "chrs\\walker_05.chr.json",
+      "location": {
+        "tx": 16,
+        "ty": 231,
+        "layer": "Entity Layer (E)",
+        "px": 256,
+        "py": 3696
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "ChurchD",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Churchy E",
+      "filename": "chrs\\kadan.chr.json",
+      "location": {
+        "tx": 19,
+        "ty": 233,
+        "layer": "Entity Layer (E)",
+        "px": 304,
+        "py": 3728
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "ChurchE",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Student G",
+      "filename": "chrs\\walker_03.chr.json",
+      "location": {
+        "tx": 86,
+        "ty": 217,
+        "layer": "Entity Layer (E)",
+        "px": 1376,
+        "py": 3472
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_g",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Student H",
+      "filename": "chrs\\walker_02.chr.json",
+      "location": {
+        "tx": 96,
+        "ty": 220,
+        "layer": "Entity Layer (E)",
+        "px": 1536,
+        "py": 3520
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_h",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Student I",
+      "filename": "chrs\\walker_06.chr.json",
+      "location": {
+        "tx": 125,
+        "ty": 211,
+        "layer": "Entity Layer (E)",
+        "px": 2000,
+        "py": 3376
+      },
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_i",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Student J",
+      "filename": "chrs\\walker_02.chr.json",
+      "location": {
+        "tx": 131,
+        "ty": 206,
+        "layer": "Entity Layer (E)",
+        "px": 2096,
+        "py": 3296
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "student_j",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Tank",
+      "filename": "chrs\\kadan.chr.json",
+      "location": {
+        "tx": 127,
+        "ty": 165,
+        "layer": "Entity Layer (E)",
+        "px": 2032,
+        "py": 2640
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "tank",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Geek",
+      "filename": "chrs\\walker_01.chr.json",
+      "location": {
+        "tx": 119,
+        "ty": 165,
+        "layer": "Entity Layer (E)",
+        "px": 1904,
+        "py": 2640
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "geek",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "wimp",
+      "filename": "chrs\\vorn.chr.json",
+      "location": {
+        "tx": 135,
+        "ty": 169,
+        "layer": "Entity Layer (E)",
+        "px": 2160,
+        "py": 2704
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "wimp",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Veggiesmith",
+      "filename": "chrs\\kadan.chr.json",
+      "location": {
+        "tx": 113,
+        "ty": 136,
+        "layer": "Entity Layer (E)",
+        "px": 1808,
+        "py": 2176
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 50,
+      "wander": {
+        "mode": "Zone",
+        "delay": 200
+      },
+      "activation_script": "veggiesmith",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "d1",
+      "filename": "chrs\\single_door_wood.chr.json",
+      "location": {
+        "tx": 108,
+        "ty": 89,
+        "layer": "Entity Layer (E)",
+        "px": 1728,
+        "py": 1424
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "d2",
+      "filename": "chrs\\single_door_wood.chr.json",
+      "location": {
+        "tx": 112,
+        "ty": 74,
+        "layer": "Entity Layer (E)",
+        "px": 1792,
+        "py": 1184
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "d3",
+      "filename": "chrs\\single_door_wood.chr.json",
+      "location": {
+        "tx": 106,
+        "ty": 64,
+        "layer": "Entity Layer (E)",
+        "px": 1696,
+        "py": 1024
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "d4",
+      "filename": "chrs\\single_door_wood.chr.json",
+      "location": {
+        "tx": 85,
+        "ty": 84,
+        "layer": "Entity Layer (E)",
+        "px": 1360,
+        "py": 1344
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "d5",
+      "filename": "chrs\\single_door_wood.chr.json",
+      "location": {
+        "tx": 101,
+        "ty": 49,
+        "layer": "Entity Layer (E)",
+        "px": 1616,
+        "py": 784
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "d6",
+      "filename": "chrs\\single_door_wood.chr.json",
+      "location": {
+        "tx": 67,
+        "ty": 61,
+        "layer": "Entity Layer (E)",
+        "px": 1072,
+        "py": 976
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "d7",
+      "filename": "chrs\\single_door_wood.chr.json",
+      "location": {
+        "tx": 61,
+        "ty": 87,
+        "layer": "Entity Layer (E)",
+        "px": 976,
+        "py": 1392
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "d8",
+      "filename": "chrs\\single_door_church.chr.json",
+      "location": {
+        "tx": 48,
+        "ty": 88,
+        "layer": "Entity Layer (E)",
+        "px": 768,
+        "py": 1408
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "d9",
+      "filename": "chrs\\single_door_wood.chr.json",
+      "location": {
+        "tx": 109,
+        "ty": 89,
+        "layer": "Entity Layer (E)",
+        "px": 1744,
+        "py": 1424
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "d10",
+      "filename": "chrs\\single_door_wood.chr.json",
+      "location": {
+        "tx": 62,
+        "ty": 87,
+        "layer": "Entity Layer (E)",
+        "px": 992,
+        "py": 1392
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false,
+      "INDEX": 54
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 120,
+        "ty": 75,
+        "layer": "Entity Layer (E)",
+        "px": 1920,
+        "py": 1200
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 111,
+        "ty": 48,
+        "layer": "Entity Layer (E)",
+        "px": 1776,
+        "py": 768
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 120,
+        "ty": 90,
+        "layer": "Entity Layer (E)",
+        "px": 1920,
+        "py": 1440
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 87,
+        "ty": 44,
+        "layer": "Entity Layer (E)",
+        "px": 1392,
+        "py": 704
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 66,
+        "ty": 39,
+        "layer": "Entity Layer (E)",
+        "px": 1056,
+        "py": 624
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 49,
+        "ty": 31,
+        "layer": "Entity Layer (E)",
+        "px": 784,
+        "py": 496
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 92,
+        "ty": 94,
+        "layer": "Entity Layer (E)",
+        "px": 1472,
+        "py": 1504
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 47,
+        "ty": 59,
+        "layer": "Entity Layer (E)",
+        "px": 752,
+        "py": 944
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 111,
+        "ty": 60,
+        "layer": "Entity Layer (E)",
+        "px": 1776,
+        "py": 960
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 94,
+        "ty": 34,
+        "layer": "Entity Layer (E)",
+        "px": 1504,
+        "py": 544
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 70,
+        "ty": 43,
+        "layer": "Entity Layer (E)",
+        "px": 1120,
+        "py": 688
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 56,
+        "ty": 61,
+        "layer": "Entity Layer (E)",
+        "px": 896,
+        "py": 976
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 43,
+        "ty": 51,
+        "layer": "Entity Layer (E)",
+        "px": 688,
+        "py": 816
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 32,
+        "ty": 75,
+        "layer": "Entity Layer (E)",
+        "px": 512,
+        "py": 1200
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "location": {
+        "tx": 122,
+        "ty": 64,
+        "px": 1952,
+        "py": 1024,
+        "layer": "Entity Layer (E)"
+      }
+    },
+    {
+      "name": "stan-d",
+      "filename": "chrs_json/object_stand.json",
+      "location": {
+        "tx": 92,
+        "ty": 73,
+        "layer": "Entity Layer (E)",
+        "px": 1472,
+        "py": 1168
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "dexter",
+      "filename": "chrs/pc_dexter.chr.json",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)",
+        "px": 0,
+        "py": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 65,
+        "ty": 29,
+        "layer": "Entity Layer (E)",
+        "px": 1040,
+        "py": 464
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Thaco Bell",
+      "filename": "chrs_json/object_thacobell.json",
+      "location": {
+        "tx": 32,
+        "ty": 85,
+        "layer": "Entity Layer (E)",
+        "px": 512,
+        "py": 1360
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "MAPED_USEDEFAULT": false,
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 26,
+        "ty": 85,
+        "layer": "Entity Layer (E)",
+        "px": 416,
+        "py": 1360
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "location": {
+        "tx": 72,
+        "ty": 60,
+        "px": 1152,
+        "py": 960,
+        "layer": "Entity Layer (E)"
+      }
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 31,
+        "ty": 81,
+        "layer": "Entity Layer (E)",
+        "px": 496,
+        "py": 1296
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 22,
+        "ty": 86,
+        "layer": "Entity Layer (E)",
+        "px": 352,
+        "py": 1376
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 24,
+        "ty": 81,
+        "layer": "Entity Layer (E)",
+        "px": 384,
+        "py": 1296
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 18,
+        "ty": 85,
+        "layer": "Entity Layer (E)",
+        "px": 288,
+        "py": 1360
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "West Greeter",
+      "filename": "chrs\\walker_01.chr.json",
+      "location": {
+        "tx": 35,
+        "ty": 89,
+        "layer": "Entity Layer (E)",
+        "px": 560,
+        "py": 1424
+      },
+      "facing": "Left",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "west_greeter",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Jelly (Ranched)",
+      "filename": "chrs/monster_jelly.chr.json",
+      "location": {
+        "tx": 110,
+        "ty": 62,
+        "layer": "Entity Layer (E)",
+        "px": 1760,
+        "py": 992
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "Z0W100Z1W100B"
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Jelly (Ranched)",
+      "filename": "chrs/monster_jelly.chr.json",
+      "location": {
+        "tx": 112,
+        "ty": 62,
+        "layer": "Entity Layer (E)",
+        "px": 1792,
+        "py": 992
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "Z1W100Z0W100B"
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Jelly (Ranched)",
+      "filename": "chrs/monster_jelly.chr.json",
+      "location": {
+        "tx": 111,
+        "ty": 63,
+        "layer": "Entity Layer (E)",
+        "px": 1776,
+        "py": 1008
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": "Z0W100Z1W100B"
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "",
+      "filename": "chrs/seafood_sully.chr.json",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)",
+        "px": 0,
+        "py": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "",
+      "filename": "chrs/seafood_crab.chr.json",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)",
+        "px": 0,
+        "py": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "",
+      "filename": "chrs/seafood_crab.chr.json",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)",
+        "px": 0,
+        "py": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "",
+      "filename": "chrs/seafood_crab.chr.json",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)",
+        "px": 0,
+        "py": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 126,
+        "ty": 90,
+        "layer": "Entity Layer (E)",
+        "px": 2016,
+        "py": 1440
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "tree",
+      "filename": "chrs_json/object_tree2.json",
+      "location": {
+        "tx": 132,
+        "ty": 91,
+        "layer": "Entity Layer (E)",
+        "px": 2112,
+        "py": 1456
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "Sugar Ray",
+      "filename": "chrs\\sugar_ray",
+      "location": {
+        "tx": 88,
+        "ty": 160,
+        "layer": "Entity Layer (E)",
+        "px": 1408,
+        "py": 2560
+      },
+      "facing": "Right",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": true,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "sugar_ray",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "chrs\\walker_07",
+      "location": {
+        "tx": 121,
+        "ty": 219,
+        "layer": "Entity Layer (E)",
+        "px": 1936,
+        "py": 3504
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Zone",
+        "delay": 100
+      },
+      "activation_script": "Learn_8",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "chrs\\walker_03",
+      "location": {
+        "tx": 137,
+        "ty": 219,
+        "layer": "Entity Layer (E)",
+        "px": 2192,
+        "py": 3504
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Zone",
+        "delay": 100
+      },
+      "activation_script": "Learn_9",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "chrs\\sailor",
+      "location": {
+        "tx": 132,
+        "ty": 219,
+        "layer": "Entity Layer (E)",
+        "px": 2112,
+        "py": 3504
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Zone",
+        "delay": 100
+      },
+      "activation_script": "Learn_10",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "chrs\\npc_redwizard",
+      "location": {
+        "tx": 131,
+        "ty": 224,
+        "layer": "Entity Layer (E)",
+        "px": 2096,
+        "py": 3584
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 40,
+      "wander": {
+        "mode": "Zone",
+        "delay": 100
+      },
+      "activation_script": "Learn_11",
+      "animation": "Idle Down"
+    },
+    {
+      "name": "",
+      "filename": "chrs/monster_labdorkupine.chr.json",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)",
+        "px": 0,
+        "py": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "labrat_1",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "",
+      "filename": "chrs/monster_labdorkupine.chr.json",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)",
+        "px": 0,
+        "py": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "labrat_2",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "",
+      "filename": "chrs/monster_labdorkupine.chr.json",
+      "location": {
+        "tx": 0,
+        "ty": 0,
+        "layer": "Entity Layer (E)",
+        "px": 0,
+        "py": 0
+      },
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "labrat_3",
+      "animation": "Idle Down",
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Mt. Jujube",
+      "filename": "chrs_json/chrs_map/farmsville/mt-jujube.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 0,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "STATIC",
+      "location": {
+        "tx": 72,
+        "ty": 14,
+        "px": 1152,
+        "py": 226,
+        "layer": "Back Parallax"
+      },
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Well",
+      "filename": "chrs_json/chrs_map/farmsville/well.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 0,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "STATIC",
+      "location": {
+        "tx": 88,
+        "ty": 60,
+        "px": 1408,
+        "py": 960,
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Exterior BG",
+      "filename": "chrs_json/chrs_map/farmsville/farmsville-bottom.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 0,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "STATIC",
+      "location": {
+        "tx": 13,
+        "ty": 22,
+        "px": 208,
+        "py": 352,
+        "layer": "Background"
+      },
+      "MAPED_USEDEFAULT": false,
+      "INDEX": 100
+    },
+    {
+      "name": "Exterior FG",
+      "filename": "chrs_json/chrs_map/farmsville/farmsville-top.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 0,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "STATIC",
+      "location": {
+        "tx": 13,
+        "ty": 22,
+        "px": 208,
+        "py": 352,
+        "layer": "Foreground"
+      },
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Long Bridge BG",
+      "filename": "chrs_json/chrs_map/farmsville/long-bridge-back.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 0,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "STATIC",
+      "location": {
+        "tx": 62,
+        "ty": 63,
+        "px": 992,
+        "py": 1008,
+        "layer": "Background"
+      },
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Long Bridge FG",
+      "filename": "chrs_json/chrs_map/farmsville/long-bridge-front.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 0,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "STATIC",
+      "location": {
+        "tx": 61,
+        "ty": 66,
+        "px": 976,
+        "py": 1058,
+        "layer": "Foreground"
+      },
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Statue Bridge",
+      "filename": "chrs_json/chrs_map/farmsville/statue-bridge.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 0,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "STATIC",
+      "location": {
+        "tx": 58,
+        "ty": 33,
+        "px": 924,
+        "py": 576,
+        "layer": "Background"
+      },
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Waterfall NW",
+      "filename": "chrs_json/chrs_map/farmsville/waterfall-shimmer.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Forward",
+      "location": {
+        "tx": 53,
+        "ty": 50,
+        "px": 850,
+        "py": 797,
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Waterfall NE",
+      "filename": "chrs_json/chrs_map/farmsville/waterfall-shimmer.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Forward",
+      "location": {
+        "tx": 75,
+        "ty": 50,
+        "px": 1203,
+        "py": 799,
+        "layer": "Entity Layer (E)"
+      }
+    },
+    {
+      "name": "Waterfall SE",
+      "filename": "chrs_json/chrs_map/farmsville/waterfall-shimmer.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Forward",
+      "location": {
+        "tx": 75,
+        "ty": 97,
+        "px": 1203,
+        "py": 1550,
+        "layer": "Entity Layer (E)"
+      }
+    },
+    {
+      "name": "Waterfall SW",
+      "filename": "chrs_json/chrs_map/farmsville/waterfall-shimmer.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Forward",
+      "location": {
+        "tx": 41,
+        "ty": 95,
+        "px": 658,
+        "py": 1518,
+        "layer": "Entity Layer (E)"
+      }
+    },
+    {
+      "name": "Waterfall Splash NW",
+      "filename": "chrs_json/chrs_map/farmsville/waterfall-splash-narrow.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Forward",
+      "location": {
+        "tx": 53,
+        "ty": 50,
+        "px": 850,
+        "py": 845,
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Waterfall Splash NE",
+      "filename": "chrs_json/chrs_map/farmsville/waterfall-splash-narrow.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Forward",
+      "location": {
+        "tx": 75,
+        "ty": 50,
+        "px": 1203,
+        "py": 875,
+        "layer": "Entity Layer (E)"
+      }
+    },
+    {
+      "name": "Waterfall Splash SE",
+      "filename": "chrs_json/chrs_map/farmsville/waterfall-splash.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Forward",
+      "location": {
+        "tx": 75,
+        "ty": 97,
+        "px": 1203,
+        "py": 1593,
+        "layer": "Entity Layer (E)"
+      },
+      "MAPED_USEDEFAULT": false
+    },
+    {
+      "name": "Waterfall Splash SW",
+      "filename": "chrs_json/chrs_map/farmsville/waterfall-splash.json",
+      "facing": "Up",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 100,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "Forward",
+      "location": {
+        "tx": 41,
+        "ty": 95,
+        "px": 658,
+        "py": 1593,
+        "layer": "Entity Layer (E)"
+      }
+    },
+    {
+      "name": "Secret Path Cover",
+      "filename": "chrs_json/chrs_map/farmsville/farmsville-secret-path.json",
+      "facing": "Down",
+      "pays_attention_to_obstructions": false,
+      "is_an_obstruction": false,
+      "autofaces": false,
+      "speed": 0,
+      "wander": {
+        "mode": "Scripted",
+        "delay": 0,
+        "initial_movestring": ""
+      },
+      "activation_script": "",
+      "animation": "STATIC",
+      "location": {
+        "tx": null,
+        "ty": null,
+        "px": 842,
+        "py": 416,
+        "layer": "Hilltop"
+      },
+      "MAPED_USEDEFAULT": false
+    }
+  ],
+  "MAPED_ENTLAYER_VISIBLE": true,
+  "MAPED_ZONELAYER_VISIBLE": true,
+  "MAPED_OBSLAYER_VISIBLE": false
+}

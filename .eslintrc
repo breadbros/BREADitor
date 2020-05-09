@@ -1,12 +1,5 @@
 {
   // babel parser to support ES6/7 features
-  "parser": "babel-eslint",
-  "ecmaFeatures": {
-    "jsx": true
-  },
-  "extends": [
-    "standard"
-  ],
   "plugins": [
     "react"
   ],

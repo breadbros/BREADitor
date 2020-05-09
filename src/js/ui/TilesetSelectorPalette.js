@@ -59,10 +59,10 @@ const create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer)
         parseInt(m.vspImages[newLayer.vsp].width / m.vspData[newLayer.vsp].tilesize.width);
     m.mapData.layers[0].dimensions.Y =
         parseInt(m.vspImages[newLayer.vsp].height / m.vspData[newLayer.vsp].tilesize.height);
-    m.mapSizeInTiles = [
-      m.mapData.layers[0].dimensions.X,
-      m.mapData.layers[0].dimensions.Y
-    ];
+    m.mapSizeInTiles = {
+      width: m.mapData.layers[0].dimensions.X,
+      height: m.mapData.layers[0].dimensions.Y
+    };
 
     const tileSetSize = m.mapData.layers[0].dimensions.X * m.mapData.layers[0].dimensions.Y;
 
@@ -130,7 +130,7 @@ const set_height_for_scrollbars = (vsp_map) => {
 
 let obsLayerData = null;
 
-const initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
+const initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata, callback) => {
   if (optionalTiledata) {
     obsLayerData = optionalTiledata;
 
@@ -163,6 +163,10 @@ const initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata) => {
     vsp_tiledata = create_dynamic_tiledata(vsp_mapdata, newLayer);
 
     create_map(vsp_mapdata, vsp_tiledata, updateLocationFunction, newMap, newLayer);
+  }
+
+  if(callback) {
+    callback();
   }
 };
 

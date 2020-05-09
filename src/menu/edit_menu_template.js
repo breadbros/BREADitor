@@ -15,7 +15,7 @@ export const editMenuTemplate = {
     { label: '', accelerator: 'D', click: function () { send('move-selected-tile', 'D'); } },
 
     { label: 'Tool: Eyedropper', accelerator: 'I', click: function () { send('tool-eyedropper', 'I'); } },
-    { label: 'Tool: Eyedropper', accelerator: 'Shift+I', click: function () { send('tool-smartdropper', 'I'); } },
+    { label: 'Tool: Smart Eyedropper', accelerator: 'Shift+I', click: function () { send('tool-smartdropper', 'I'); } },
     { label: 'Tool: Move Viewport', accelerator: 'space', click: function () { send('tool-move-viewport', 'space'); } },
     { label: 'Tool: Drag Item', accelerator: 'V', click: function () { send('tool-drag-item', 'V'); } },
     { label: 'Tool: Marquee Select', accelerator: 'M', click: function () { send('tool-select', 'M'); } },
@@ -26,7 +26,10 @@ export const editMenuTemplate = {
     { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:', click: function () { send('edit-paste'); } },
     { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:',
       click: function () { send('edit-select-all'); } },
-    
+
+    { type: 'separator' },
+    { label: 'Cancel selections', accelerator: 'ESC', selector: 'cancel-selections:', click: function () { send('cancel-selections'); } },
+
     { type: 'separator' },
     { label: 'Reset Camera', accelerator: 'CmdOrCtrl+0', click: function () { send('reset-camera'); } },
   ]

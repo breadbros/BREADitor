@@ -1,7 +1,7 @@
 const $ = require('jquery');
 const sprintf = require('sprintf-js').sprintf;
-import { getSelectedLayer } from './js/ui/LayersPalette';
-
+import { getSelectedLayer, MAGICAL_ENT_LAYER_ID } from './js/ui/LayersPalette';
+import { LOG } from './Logging'
 import eyedropperGenerator from './tools/Eyedropper';
 import smartEyedropperGenerator from './tools/SmartEyedropper';
 import drawGenerator from './tools/Draw';
@@ -10,20 +10,46 @@ import floodFillGenerator from './tools/FloodFill';
 import moveViewportGenerator from './tools/MoveViewport';
 import dragItemGenerator from './tools/DragItem'
 
+import { clearAllEntitysFromHighlight } from './js/ui/EntityPalette';
+
 import jetpack from 'fs-jetpack';
 
 const canvasBuffer = require('electron-canvas-to-buffer');
 const fs = require('fs');
 
+export const handle_esc = () => {
+  clearAllEntitysFromHighlight();
+}
+
 export const updateLocationFunction = (map) => {
   const x = map.camera[0];
   const y = map.camera[1];
+  const z = map.camera[2];
   const key = 'map-' + map.mapData.name;
 
-  $('#info-location').text(x + ',' + y);
+  updateLocationText(map);
 
   window.localStorage[key + '-mapx'] = x;
   window.localStorage[key + '-mapy'] = y;
+  window.localStorage[key + '-mapzoom'] = z;
+};
+
+export const updateInfoDims = (map) => {
+  $('#info-dims').text(map.mapSizeInTiles.width + 'x' + map.mapSizeInTiles.height);
+};
+
+export const updateLocationText = (map) => {
+  $('#info-location').text(map.camera[0] + ',' + map.camera[1]);
+}
+
+export const updateZoomText = (map) => {
+  if(!map) {
+    map = window.$$$currentMap;
+  }
+
+  const txt = (100 / map.camera[2]) + '%';
+
+  $('#info-zoom').text(txt);
 };
 
 let _currentHoverTile = null;
@@ -34,7 +60,7 @@ export const getCurrentHoverTile = () => {
 
 const setCurrentHoverTile = (map, mouseEvt) => {
   if (mouseEvt) {
-    _currentHoverTile = getTXTyFromMouse(map, mouseEvt);
+    _currentHoverTile = getXYFromMouse(map, mouseEvt);
   } else {
     _currentHoverTile = null;
   }
@@ -72,8 +98,8 @@ export const zero_zoom = (map) => {
   map.zoom_level = baseZoomIndex;
   map.camera[2] = zoomLevels[map.zoom_level];
 
-  console.log('map.zoom_level', map.zoom_level);
-  console.log('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
+  LOG('map.zoom_level', map.zoom_level);
+  LOG('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
 };
 
 export const two_zoom_seriously_all_zoom_functions_suck_kill_them_all = (map) => {
@@ -108,14 +134,14 @@ const zoomFn = function (map, e, zoomout) {
     if (map.zoom_level === zoomLevels.length) { map.zoom_level = zoomLevels.length - 1; }
   }
 
-  console.log('map.zoom_level', map.zoom_level);
+  LOG('map.zoom_level', map.zoom_level);
 
   map.camera[2] = zoomLevels[map.zoom_level];
 
   map.camera[0] = mouseX - ((e.offsetX ? e.offsetX : e.clientX) / map.camera[2]);
   map.camera[1] = mouseY - ((e.offsetY ? e.offsetY : e.clientY) / map.camera[2]);
 
-  console.log('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
+  LOG('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
 };
 
 // TODO function to be renamed (and probably changed) later.  This is dumb.
@@ -149,44 +175,46 @@ export const centerMapOnXY = (map, x, y, w, h) => {
   map.camera[1] = y - windowHeight / 2;
 };
 
-export const getTXTyFromMouse = (map, evt) => {
+export const getXYFromMouse = (map, evt) => {
   const mapZoom = map.camera[2];
   const mapOffsetX = map.camera[0];
   const mapOffsetY = map.camera[1];
   const mouseOffsetX = evt.offsetX;
   const mouseOffsetY = evt.offsetY;
   const selectedLayer = getSelectedLayer();
-  const parallax = (selectedLayer != null) ? selectedLayer.layer.parallax : {X:1.0, Y:1.0}; // If no layer is selected assume parallax (1.0, 1.0)
-  
+  const parallax = (selectedLayer != null) ? selectedLayer.layer.parallax : {X:1.0, Y:1.0}; // If no layer is selected, assume parallax (1.0, 1.0)
+
+  const appliedOffset = (!map.mapData.isTileSelectorMap && (selectedLayer != null && selectedLayer.layer.offset != null)) ? // If a real layer (not tileset's "map") and has an offset defined
+    selectedLayer.layer.offset :
+    {X:0, Y:0};
+
   const vpX = (map.windowOverlay.on) ? map.windowOverlay.viewport.x : 0;
   const vpY = (map.windowOverlay.on) ? map.windowOverlay.viewport.y : 0;
 
-  const layerCamX = (mapOffsetX + vpX) * parallax.X;
-  const layerCamY = (mapOffsetY + vpY) * parallax.Y;
+  const layerCamX = (mapOffsetX - appliedOffset.X + vpX) * parallax.X;
+  const layerCamY = (mapOffsetY - appliedOffset.Y + vpY) * parallax.Y;
   const adjustedMouseX = (mouseOffsetX / mapZoom) - vpX; // Because the mouse position uses the rendered/scaled value, we need to divide by zoom to bring its scale in line with "internal" values
   const adjustedMouseY = (mouseOffsetY / mapZoom) - vpY;
-  const oX = layerCamX + adjustedMouseX;
-  const oY = layerCamY + adjustedMouseY;
+  const pX = layerCamX + adjustedMouseX;
+  const pY = layerCamY + adjustedMouseY;
 
-  const tX = parseInt(oX / 16);
-  const tY = parseInt(oY / 16);
+  const tX = parseInt(pX / 16);
+  const tY = parseInt(pY / 16);
 
   // tile coords then pixel coords
-  return [tX, tY, oX, oY];
+  return [tX, tY, pX, pY];
 };
 
 export const selectAll = (map) => {
   _toolLogic.SELECT.isSelecting = true;
   _toolLogic.SELECT.isButtonDown = false;
 
-  // TODO "map.layers[0]" is almost certainly wrong.
-  // TODO make this select all of the CURRENT layer.
-  _toolLogic.SELECT.lastTX = map.layers[0].dimensions.X;
-  _toolLogic.SELECT.lastTY = map.layers[0].dimensions.Y;
+  _toolLogic.SELECT.lastTX = map.width;
+  _toolLogic.SELECT.lastTY = map.height;
   _toolLogic.SELECT.startTX = 0;
   _toolLogic.SELECT.startTY = 0;
 
-  map.selection.add(0, 0, map.layers[0].dimensions.X, map.layers[0].dimensions.Y);
+  map.selection.add(0, 0, map.width, map.height);
 };
 
 // TODO once we know the common verbs and nouns for palette tools, we really should extract each one into its own file
@@ -207,7 +235,7 @@ export const _toolLogic = {
 
 export const updateRstringInfo = () => {
   if (!window.$$$currentMap) {
-    console.log('lol, no window.$$$currentMap yet.');
+    LOG('lol, no window.$$$currentMap yet.');
     return;
   }
 
@@ -246,7 +274,7 @@ const setupToolClick = (toolObj, toolName) => {
   const $node = $(toolObj.button_element);
   $node.off('click'); // kill old ones...
   
-  console.log("setting up toolClick for", toolName, $node);
+  // LOG("setting up toolClick for", toolName, $node);
 
   $node.click(function (e) {
     $('#tool-title').text(toolObj.human_name);
@@ -282,7 +310,7 @@ const tools = (action, map, evt) => {
     }
     _toolLogic[mode][action](map, evt);
   } else {
-    console.log(sprintf("No action '%s' for mode '%s'", action, mode));
+    LOG(sprintf("No action '%s' for mode '%s'", action, mode));
   }
 };
 
@@ -307,14 +335,8 @@ export const initTools = (renderContainer, map) => {
   });
 };
 
-const updateZoomText = () => {
-  const txt = (100 / window.$$$currentMap.camera[2]) + '%';
-
-  $('#info-zoom').text(txt);
-};
-
 const currentLayerCanHaveEntityOnIt = () => {
-  return getSelectedLayer().map_tileData_idx < 900 || getSelectedLayer().map_tileData_idx === 997;
+  return getSelectedLayer().map_tileData_idx < 900 || getSelectedLayer().map_tileData_idx === MAGICAL_ENT_LAYER_ID;
 };
 
 const hackToolsInit = () => {
@@ -373,7 +395,7 @@ const hackToolsInit = () => {
         window.TOOLMODE = 'MOVE-VIEWPORT';
       },
       mousedown: () => {},
-      moousewheel: () => {}
+      mousewheel: () => {}
     };
   });
 
@@ -388,8 +410,8 @@ const hackToolsInit = () => {
     map.camera[1] = 0;
     map.camera[2] = 1;
 
-    const w = map.layers[0].dimensions.X * map.vspData[map.layers[0].vsp].tilesize.width;
-    const h = map.layers[0].dimensions.Y * map.vspData[map.layers[0].vsp].tilesize.height;
+    const w = map.width * map.vspData[map.layers[0].vsp].tilesize.width;
+    const h = map.height * map.vspData[map.layers[0].vsp].tilesize.height;
 
     const savedW = $canvas.width();
     const savedH = $canvas.height();
@@ -438,7 +460,7 @@ export const auditSullyMaps = () => {
 
   function fromDir(startPath,filter){
       if (!fs.existsSync(startPath)){
-          console.log("no dir ",startPath);
+          LOG("no dir ",startPath);
           return;
       }
 
@@ -450,7 +472,7 @@ export const auditSullyMaps = () => {
               fromDir(filename,filter); //recurse
           }
           else if (filename.indexOf(filter)>=0) {
-              // console.log('-- found: ',filename);
+              // LOG('-- found: ',filename);
               mapFiles.push(filename);
           };
       };
@@ -492,7 +514,7 @@ export const auditSullyMaps = () => {
         }
       }
 
-      console.log( 'changing', m.entities[j].filename, 'to', name );
+      LOG( 'changing', m.entities[j].filename, 'to', name );
       m.entities[j].filename = name;
     }
 
@@ -502,6 +524,33 @@ export const auditSullyMaps = () => {
 };
 
 // auditSullyMaps();
+
+// TODO: this is probably not the most efficient way to calculate the topleftmost of 
+//       two points and the offset between...
+export const getTopLeftmostCoordinatesAndOffsets = (x1, y1, x2, y2) => {
+  let ret = null;
+  if (x1 <= x2 && y1 <= y2) {
+    ret = [x1, y1, x2 - x1, y2 - y1];
+  } else {
+    ret = [x2, y2, x1 - x2, y1 - y2];
+  }
+
+  if (ret[2] === 0) {
+    ret[2] = 1;
+  } else if (ret[2] < 0) {
+    ret[2] = Math.abs(ret[2]);
+    ret[0] -= ret[2];
+  }
+
+  if (ret[3] === 0) {
+    ret[3] = 1;
+  } else if (ret[3] < 0) {
+    ret[3] = Math.abs(ret[3]);
+    ret[1] -= ret[3];
+  }
+
+  return ret;
+};
 
 export const Tools = {
   grue_zoom: grue_zoom

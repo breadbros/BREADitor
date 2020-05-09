@@ -1,12 +1,13 @@
 import { baseHTMLTemplate } from './BaseTemplate';
-
+import { LOG, INFO } from '../Logging'
 import { TilesetSelectorWidget } from '../js/ui/TilesetSelectorPalette.js';
 import { Map, verifyTileData, verifyMap, cleanEntities } from '../Map.js';
 import { Palettes } from '../Palettes.js';
 import { LayersWidget } from '../js/ui/LayersPalette.js'; //, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix, newLayerOnNewMap
 import { ZonesWidget } from '../js/ui/ZonesPalette.js';
 import { EntitiesWidget } from '../js/ui/EntityPalette.js';
-import { initTools, updateRstringInfo, updateLocationFunction, selectAll } from '../Tools.js';
+import { updateMapAndVSPFileInfo } from '../js/ui/InfoPalette.js';
+import { initTools, updateRstringInfo, updateLocationFunction, selectAll, updateInfoDims } from '../Tools.js';
 import { cut, copy, paste } from '../js/ui/CutCopyPaste';
 import { handleUndo, handleRedo } from '../UndoRedo';
 
@@ -51,18 +52,13 @@ const initScreen = (map) => {
 }
 
 const initInfoWidget = (map) => {
-  $('#info-mapname').attr('src', map.mapPath);
-
-  const pathParts = map.mapPath.split(path.sep);
-  $('#info-mapname').text(pathParts[pathParts.length - 1]);
-
-  $('#info-dims').text(map.mapSizeInTiles[0] + 'x' + map.mapSizeInTiles[1]);
+  updateMapAndVSPFileInfo(map);
 };
 
 function killAllElementListeners($elem) {
   // first argument of function: "$._data ()" is: "Element" - not jQuery object
   $.each( $._data( $elem, "events" ), function(name) {
-    console.log("body had listener: " + name);
+    LOG("body had listener: " + name);
     $elem.off( name ); // function off() removes an event handler
   } );
 }
@@ -71,7 +67,7 @@ function killAllDocumentListeners(doc) {
   debugger;
   // first argument of function: "$._data ()" is: "Element" - not jQuery object
   $.each( $._data( $elem, "events" ), function(name) {
-    console.log("body had listener: " + name);
+    LOG("body had listener: " + name);
     $elem.off( name ); // function off() removes an event handler
   } );
 }
@@ -102,15 +98,19 @@ function setupChording() {
     }
 
     if (document.activeElement.type && document.activeElement.type === 'text') {
-      // console.info('in a textfield, ignoring the accelerator');
+      INFO('in a textfield, ignoring the accelerator');
       return;
     }
 
+    // if(e.key === 'c' && ) {
+    //   INFO('on the tools palette, ignoring the spacebar');
+    //   return;
+    // }
+
     // TODO all of these commands should probably be passed in the map on the currently active map palette
     // (if there is one) so as to include the tileset map or any future ones
-
     if (e.key === 'c' || e.key === 'C') {
-      console.log('edit-copy, but the one on the document.  SIGH WINDOWS.');
+      LOG('edit-copy, but the one on the document.  SIGH WINDOWS.');
 
       if (window.$$$currentMap.selection.tiles && window.$$$currentMap.selection.tiles.length) {
         copy(window.$$$currentMap);
@@ -120,25 +120,27 @@ function setupChording() {
         window.$$$currentTilsesetSelectorMap.selection.tiles.length
       ) {
         copy(window.$$$currentTilsesetSelectorMap);
+      } else {
+        LOG('FALL THROUGH');
       }
 
       return;
     }
 
     if (e.key === 'v' || e.key === 'V') {
-      console.log('edit-paste, but the one on the document.  SIGH WINDOWS.');
+      LOG('edit-paste, but the one on the document.  SIGH WINDOWS.');
       paste(window.$$$currentMap);
       return;
     }
 
     if (e.key === 'x' || e.key === 'X') {
-      console.log('edit-cut, but the one on the document.  SIGH WINDOWS.');
+      LOG('edit-cut, but the one on the document.  SIGH WINDOWS.');
       cut(window.$$$currentMap);
       return;
     }
 
     if (e.key === 'a' || e.key === 'A') {
-      console.log('edit-select-all but the one on the document.  SIGH WINDOWS.');
+      LOG('edit-select-all but the one on the document.  SIGH WINDOWS.');
       selectAll(window.$$$currentMap);
       return;
     }
@@ -192,18 +194,18 @@ export function autoloadMostRecentMapIfAvailable() {
 
   const opts = loadMostRecentFileOption(); 
 
-  if(opts.abs_path_to_maps && opts.most_recent_map) {
+  if(opts && opts.abs_path_to_maps && opts.most_recent_map) {
     const filepath = path.join(opts.abs_path_to_maps, opts.most_recent_map);
 
     if( fs.existsSync(filepath) ) {
-      console.info(`${filepath} specified to autoload...`);
+      INFO(`${filepath} specified to autoload...`);
       loadByFilename(filepath);
     } else {
-      console.info(`${filepath} specified to autoload... but it wasn't there.`);
+      INFO(`${filepath} specified to autoload... but it wasn't there.`);
     }
     
   } else {
-    console.info('No map specified to autoload.');
+    INFO('No map specified to autoload.');
   }
 }
 
@@ -378,8 +380,8 @@ export function setupWindowFunctions() {
 
     cleanEntities(mapData); // TODO this should probably happen not-here?
 
-    console.info('saving', mapfile);
-    console.info('saving', datafile);
+    INFO('saving', mapfile);
+    INFO('saving', datafile);
 
     jetpack.write(mapfile, mapData);
     jetpack.write(datafile, tileData);
@@ -387,7 +389,7 @@ export function setupWindowFunctions() {
     saveMostRecentMapLocation(mapfile);
 
     if(reloadAfterSave) {
-      console.info("Reloading map after saveas...");
+      INFO("Reloading map after saveas...");
       loadByFilename(mapfile);
     }
   };
@@ -395,7 +397,8 @@ export function setupWindowFunctions() {
   window.$$$about_breaditor = function () {
     window.alert(
       'Breaditor is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.' +
-      'TODO: make this better.'
+      'TODO: make this better.' + 
+      'TODO: add the licenses jeez.'
     );
   };
 
@@ -451,7 +454,7 @@ export function setupWindowFunctions() {
       filters: [{ name: 'text', extensions: ['map.json'] }]
     };
 
-    if( window.$$$_most_recent_options.abs_path_to_maps ) {
+    if( window.$$$_most_recent_options && window.$$$_most_recent_options.abs_path_to_maps ) {
       options.defaultPath = window.$$$_most_recent_options.abs_path_to_maps;
     }
 
@@ -487,7 +490,7 @@ export function setupWindowFunctions() {
 
     $('#modal-dialog').show();
 
-    dialog = $('#modal-dialog').dialog({
+    const dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
       title: title,
@@ -629,10 +632,10 @@ export function bootstrapMap(mapFile, tiledataFile) {
   
   verifyTileData(tiledataFile)
     .then(() => {
-      console.log('verify map?');
+      LOG('verify map?');
       verifyMap(mapFile)
         .then(() => {
-          console.log('create map?');
+          LOG('create map?');
           new Map(
               mapFile, tiledataFile, (map) => {  updateLocationFunction(map); updateScreenview(map); }
           ).ready()

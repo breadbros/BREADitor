@@ -84,20 +84,39 @@ const fixContainerSize = () => {
 
 const template = "<div>Name: <input id='zone_name'></div>" +
   "<div>Activation Script: <input id='zone_activation_script'></div>" +
-  "<div>Activation Chance: <select id='zone_activation_chance'></select></div>" +
-  "<div>Adjacent Activation?: <input type='checkbox' id='zone_can_by_adjacent_activated'></div>";
+  "<div>Step Activation Chance: <select id='zone_activation_chance'></select></div>" +
+  "<div>Activate on Interact (Adjacent)?: <input type='checkbox' id='zone_can_by_adjacent_activated'></div>" +
+  "<div>Activate on Interact (Same Tile)?: <input type='checkbox' id='zone_can_by_same_tile_activated'></div>";
 
 // {name: "NULL_ZONE", activation_script: "", activation_chance: 0, can_by_adjacent_activated: false}"
 
 function setup_template() {
   const $template = $(template);
 
-  const vals = new Array(256);// create an empty array with length 256
   const select = $template.find('#zone_activation_chance');
 
-  $.each(vals, function (idx) {
-    select.append($('<option />').val(idx).text(idx));
-  });
+  const max = 1;
+  const interval = 0.005; // 0.5%
+  const steps = max / interval;
+
+  // Front load list with common values
+  const vals = [ 0.00, 0.125, 0.25, 0.333, 0.50, 0.667, 0.75, 0.95, 1.00 ]; // 0, 1/8, 1/4, 1/3, 1/2, 2/3, 3/4, 1
+  var frontloadCount = vals.length;
+
+  // Full Range of "Detailed" Values (Every 0.5%)
+  for (var i = 0; i <= steps; i++) { // <= so that max gets included
+    var v = (i / steps) * max;
+    vals.push(v);
+  }
+
+  // Add Values To UI Element
+  for (var i = 0; i < vals.length; i++) {
+    var v = vals[i];
+    var p = (v*100).toFixed(1) + "%";
+    var $option = $('<option />').val(v).text(p);
+    if (i < frontloadCount) { $option.css('font-weight', 'bold'); }
+    select.append($option);
+  }
 
   return $template;
 }
@@ -125,12 +144,14 @@ function _zone_click(evt, id) {
   $(() => {
     const $template = setup_template();
 
-    if (zone) {
-      $('#modal-dialog').attr('title', 'Edit Zone ' + id + ')');
-    } else {
-      $('#modal-dialog').attr('title', 'Add New Zone (id: ' + (currentZones.length - 1) + ')');
-    }
     $('#modal-dialog').html('');
+
+    if (zone) {
+      $('#modal-dialog').attr('title', 'Edit Zone (' + id + ')');
+    } else {
+      $('#modal-dialog').attr('title', 'Add New Zone (id: ' + (currentZones.length) + ')');
+    }
+
     $('#modal-dialog').append($template);
 
     if (zone) {
@@ -140,12 +161,14 @@ function _zone_click(evt, id) {
       $template.find('#zone_activation_script').val(zone.activation_script);
       $template.find('#zone_activation_chance').val(zone.activation_chance);
       $template.find('#zone_can_by_adjacent_activated').prop('checked', zone.can_by_adjacent_activated);
+      $template.find('#zone_can_by_same_tile_activated').prop('checked', zone.can_by_same_tile_activated);
     }
 
     $('#modal-dialog').show();
     dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
+      title: $('#modal-dialog').attr('title'),
       buttons: {
         Save: () => {
           const _id = ($.isNumeric(id) && zone) ? id : currentZones.length;
@@ -168,6 +191,7 @@ const update_zone = (dialog, zone_id) => {
   const script = dialog.find('#zone_activation_script').val();
   const chance = dialog.find('#zone_activation_chance').val();
   const adjAct = dialog.find('#zone_can_by_adjacent_activated').is(':checked');
+  const sameAct = dialog.find('#zone_can_by_same_tile_activated').is(':checked');
 
   if (!$.isNumeric(zone_id) || zone_id < 0) {
     modal_error('Invalid input: zone_id (' + zone_id + ') is invalid.');
@@ -191,7 +215,8 @@ const update_zone = (dialog, zone_id) => {
     name: name,
     activation_script: script,
     activation_chance: chance,
-    can_by_adjacent_activated: adjAct
+    can_by_adjacent_activated: adjAct,
+    can_by_same_tile_activated: sameAct
   };
 
   currentZones[zone_id] = zone;

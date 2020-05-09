@@ -1,13 +1,14 @@
 import { MakeUndoRedoStack } from './UndoRedo';
-import { getObsVisibility } from './js/ui/LayersPalette';
+import { LOG, INFO } from './Logging';
+import { getObsVisibility, MAGICAL_OBS_LAYER_ID } from './js/ui/LayersPalette';
 const app = require('electron').remote.app;
 const path = require('path');
 const appPath = app.getAppPath();
 const jetpack = require('fs-jetpack').cwd(appPath);
 import { ShaderProgram } from './ShaderProgram.js';
-import { updateRstringInfo, getCurrentHoverTile } from './Tools.js';
+import { updateRstringInfo, getCurrentHoverTile, updateInfoDims, updateLocationText, updateZoomText } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
-import { getNormalEntityVisibility, shouldShowEntitiesForLayer } from './js/ui/EntityPalette.js';
+import { getNormalEntityVisibility, shouldShowEntitiesForLayer, generate_unique_entity_uuid_for_this_map } from './js/ui/EntityPalette.js';
 const sprintf = require('sprintf-js').sprintf;
 const $ = require('jquery');
 
@@ -24,10 +25,20 @@ const TALLENT_G = 1;
 const TALLENT_B = 1;
 const TALLENT_A = 1;
 
-export let checkerColorA = [0.75, 0.75, 0.75, 1.0];
-export let checkerColorB = [1.0, 1.0, 1.0, 1.0];
+export const checkerColorA = [0.75, 0.75, 0.75, 1.0];
+export const checkerColorB = [1.0, 1.0, 1.0, 1.0];
 
 let lastKnownPath = '';
+
+export const heal_uuids_for_this_map = (map) => {
+  const currentEntities = map.mapData.entities;
+  for (let i = currentEntities.length - 1; i >= 0; i--) {
+    if( !currentEntities[i].uuid ) {
+      currentEntities[i].uuid = generate_unique_entity_uuid_for_this_map(map);
+    }
+  }
+  map.mapData.entities = currentEntities;
+};
 
 export const cleanEntities = (mapData) => {
   for (let i = mapData.entities.length - 1; i >= 0; i--) {
@@ -74,7 +85,7 @@ export const verifyTileData = (mapdatafile) => {
     // TODO add promise rejection here
   });
 
-  console.log('No verification done on tile data yet...');
+  LOG('No verification done on tile data yet...');
 
   promiseResolver();
 
@@ -159,7 +170,7 @@ export const verifyMap = (mapfile) => {
     }
   }
 
-  console.info('mapData.tallentitylayer verified as ' + mapData.tallentitylayer);
+  INFO('mapData.tallentitylayer verified as ' + mapData.tallentitylayer);
 
   if (typeof mapData.vsp !== 'object') {
     mapData.vsp = {};
@@ -197,7 +208,7 @@ export const verifyMap = (mapfile) => {
 
   for (let i = mapData.layers.length - 1; i >= 0; i--) {
     if (!mapData.layers[i].vsp) {
-      console.log('setting layer[' + i + ']s vsp to default...');
+      LOG('setting layer[' + i + ']s vsp to default...');
       mapData.layers[i].vsp = 'default';
     }
   }
@@ -212,7 +223,7 @@ export const verifyMap = (mapfile) => {
 // todo all of this.mapData should be obfuscated
 export function Map(mapfile, mapdatafile, updateLocationFunction) {
   let i;
-  console.info('Loading map', mapfile);
+  INFO('Loading map', mapfile);
 
   if (typeof mapfile !== typeof mapdatafile) {
     throw new Error(
@@ -225,13 +236,13 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.selfDestruct = () => {
     for (let i = this.vspImages.length - 1; i >= 0; i--) {
-      console.log("deleting vspImages",i,this.vspImages[i]);
+      LOG("deleting vspImages",i,this.vspImages[i]);
       delete this.vspImages[i];
     }
 
     for ( let key in this.entityTextures ) {
       if (this.entityTextures.hasOwnProperty(key)) {
-        console.log("deleting entityTextures",key,this.entityTextures[key].img);
+        LOG("deleting entityTextures",key,this.entityTextures[key].img);
         delete this.entityTextures[key].img;
       }
     }
@@ -325,13 +336,16 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
 
+  this.checkerColorA = checkerColorA;
+  this.checkerColorB = checkerColorB;
+
   if(this.mapedConfigData) {
-    if( this.mapedConfigData.checkerColorA ) {
-      checkerColorA = this.mapedConfigData.checkerColorA;
+    if( this.mapedConfigData.checkerColorA && !this.mapData.isTileSelectorMap ) {
+      this.checkerColorA = this.mapedConfigData.checkerColorA;
     }
 
-    if(this.mapedConfigData.checkerColorB) {
-      checkerColorB = this.mapedConfigData.checkerColorB;
+    if( this.mapedConfigData.checkerColorB && !this.mapData.isTileSelectorMap  ) {
+      this.checkerColorB = this.mapedConfigData.checkerColorB;
     }    
   } else {
     alert(`Failed to read config file expected at ${this.mapedConfigFile}`);
@@ -354,12 +368,12 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.updateRstring = (rstring) => {
     if (typeof rstring === 'string') {
-      console.log("Setting new rstring: '" + rstring + "'");
+      LOG("Setting new rstring: '" + rstring + "'");
       this.layerRenderOrder = rstring.split(',');
     } else if (typeof rstring.length === 'number') {
-      console.log("Setting new rstring: '");
+      LOG("Setting new rstring: '");
       this.layerRenderOrder = rstring.map( (r) => ""+r );
-      console.log(this.layerRenderOrder);
+      LOG(this.layerRenderOrder);
     } else {
       throw new Error('What fresh hell is this.  What are you throwing at updateRstring?!');
     }
@@ -370,10 +384,12 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   };
 
   this.updateRstring(this.mapData.renderstring);
-  this.mapSizeInTiles = [0, 0];
+  this.mapSizeInTiles = {
+    width: 0,
+    height: 0
+  };
 
   // YOU BIG FAT PHONY
-
   this.regenerateLayerLookup = () => {
     this.calculateSize();
 
@@ -382,8 +398,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
     // populate this.layerLookup
     for (let i = 0; i < this.mapData.layers.length; i++) {
-      console.log(i);
-      console.log(this.mapData.layers[i].name);
+      LOG(i);
+      LOG(this.mapData.layers[i].name);
 
       const layerName = this.uniqueLayerName(this.mapData.layers[i].name);
       this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
@@ -410,15 +426,11 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.regenerateZoneData = () => {
     const tmpZones = this.mapRawTileData.zone_data;
-    this.zoneData = new Array(this.mapRawTileData.tile_data[0].length);
+    this.zoneData = new Array(this.mapSizeInTiles.width * this.mapSizeInTiles.height);
 
-    // console.info('unpacking zones...');
     $.each(tmpZones, (idx) => {
-      // todo verify this is right
-      // console.info('unpacking zone', tmpZones[idx].z, 'to coordinates', tmpZones[idx].x, tmpZones[idx].y);
-      this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles[0])] = tmpZones[idx].z;
+      this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles.width)] = tmpZones[idx].z;
     });
-    // console.info('zones ->', this.zoneData);
   };
 
   this.regenerateZoneData();
@@ -428,9 +440,9 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     // if( FILELOAD_MODE ) {
   for (const k in this.filenames.vspfiles) {
     const tmppath = path.join(this.dataPath, this.filenames.vspfiles[k]);
-    console.info("Loading '" + tmppath + "'...");
+    INFO("Loading '" + tmppath + "'...");
     this.vspData[k] = jetpack.read(tmppath, 'json');
-    console.info(k, '->', this.vspData[k]);
+    INFO(k, '->', this.vspData[k]);
   }
 
     // / "if this.dataPath" as a sentinel for only doing this to "real" maps.  This file is garbage.
@@ -443,7 +455,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     if (!this.obsLayerData.vsp) {
       this.obsLayerData.vsp = 'obstructions';
     }
-    console.info('loaded obsLayerData from ' + tmppath);
+    INFO('loaded obsLayerData from ' + tmppath);
   }
 
     // todo: stop being evil
@@ -455,7 +467,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.compactifyZones = () => {
     // zone_data: [{x,y,z}, ...]
     const tmpZones = [];
-    const mapWidth = this.mapData.layers[0].dimensions.X; // todo - make canonical width NOT layer 0's.
+    const mapWidth = this.mapSizeInTiles.width; 
 
     // walk the in-memory zoneData layer, anything with zone >0, add.
     $.each(this.zoneData, (idx) => {
@@ -465,7 +477,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
         const zone = {x: x, y: y, z: this.zoneData[idx]};
 
-        console.log('saving out flatzone', zone);
+        LOG('saving out flatzone', zone);
 
         tmpZones.push(zone);
       }
@@ -543,7 +555,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     const tilewidth = this.vspData['default'].tilesize.width;
     const tileheight = this.vspData['default'].tilesize.height;
 
-    console.info('createEntityRenderData...');
+    INFO('createEntityRenderData...');
     this.entities = {};
     for (i = 0; i < this.mapData.entities.length; i++) {
       const entity = this.mapData.entities[i];
@@ -558,7 +570,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
     for (const i in this.entities) {
       if (this.entities[i]) {
-        console.info('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
+          INFO('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
         this.entities[i].sort(function (a, b) {
           if(a.location.py != b.location.py) {
             return a.location.py - b.location.py;
@@ -586,7 +598,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         let i = null;
         for (iy = 0; iy < h; iy++) {
           for (ix = 0; ix < w; ix++) {
-            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles.width);
             this.tiles[i] = true;
           }
         }
@@ -594,14 +606,13 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         this.recalculateLines();
       },
       remove: function (x, y, w, h) {
-              // TODO update hull -- it's much harder to recalc the hull on subtraction
-
+        // TODO update hull -- it's much harder to recalc the hull on subtraction
         let ix = null;
         let iy = null;
         let i = null;
         for (iy = 0; iy < h; iy++) {
           for (ix = 0; ix < w; ix++) {
-            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles[0]);
+            i = getFlatIdx(x + ix, y + iy, this.map.mapSizeInTiles.width);
             this.tiles[i] = false;
           }
         }
@@ -622,7 +633,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       recalculateLines: function () {
         this.lines = [];
 
-        const mapWidth = this.map.mapSizeInTiles[0];
+        const mapWidth = this.map.mapSizeInTiles.width;
         let x = null;
         let y = null;
         let i = null;
@@ -634,10 +645,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
           }
         }
 
-        // console.info('Recalculated lines:');
-        // console.info(this.hull);
-        // console.info(this.tiles);
-        // console.info(this.lines);
+        // INFO('Recalculated lines:');
+        // INFO(this.hull);
+        // INFO(this.tiles);
+        // INFO(this.lines);
       },
 
       hull: { x: null, y: null, w: 0, h: 0 },
@@ -673,7 +684,23 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.visibleHoverTile = this.selectionMaker();
   this.visibleHoverTile.map = this;
 
+  //heal uuids into uuid-less maps
+  if(has_unset_uuids(this)) {
+    heal_uuids_for_this_map(this);
+    alert("Your map lacked entity uuids.  We've added them in.  Please save before using these uuids.");
+  }
+
   this.doneLoading();
+};
+
+const has_unset_uuids = (map) => {
+  for (var i = map.mapData.entities.length - 1; i >= 0; i--) {
+    if( !map.mapData.entities[i].uuid ) {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 export const getFlatIdx = (x, y, width) => {
@@ -782,11 +809,24 @@ Map.prototype = {
     }
   },
 
+  maybeAddEntityTextureFromFilename(data, filename) {
+    this._maybeAddEntityTexture(data, false, filename);
+  },
+
   maybeAddEntityTexture(data, entity) {
-    this.entityData[entity.filename] = data;
+    this._maybeAddEntityTexture(data, entity);
+  },
+
+  _maybeAddEntityTexture(data, entity, filename) {
+
+    if(entity) {
+      filename = entity.filename;
+    }
+
+    this.entityData[filename] = data;
 
     for (const name in data.animations) {
-                // convert short-hand to useful-hand
+      // convert short-hand to useful-hand
       if (typeof data.animations[name][0] === 'string') {
         const chunks = data.animations[name][0].split(' ');
         const t = parseInt(chunks.shift().substring(1), 10);
@@ -798,7 +838,7 @@ Map.prototype = {
       }
     }
 
-    console.log("this.entityTextures["+data.image+"] " + this.entityTextures[data.image])
+    LOG("this.entityTextures["+data.image+"] " + this.entityTextures[data.image])
     if (!this.entityTextures[data.image]) {
       // TODO maybe make this definable in this.mapedConfigData too?
       let imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image);
@@ -806,23 +846,28 @@ Map.prototype = {
         imagePath += '.png'; // TODO this is stupid and bad and wrong.
       }
       if (!jetpack.inspect(imagePath)) {
-        console.warn("Couldn't load image", data.image, 'for entity', entity.filename, '; falling back.');
-                    // this.entityData[entity.filename].image = '__default__';
-        entity.MAPED_USEDEFAULT = true;
+        console.warn("Couldn't load image", data.image, 'for entity', filename, '; falling back.');
+                    // this.entityData[filename].image = '__default__';
+        if(entity) {
+          entity.MAPED_USEDEFAULT = false;
+        }
+        
         return;
       }
 
-      console.info("Adding '" + imagePath + "' to entityTextures cache...");
+      INFO("Adding '" + imagePath + "' to entityTextures cache...");
       this.toLoad++;
       this.entityTextures[data.image] = {};
       this.entityTextures[data.image].img = new window.Image();
       const fn = this.doneLoading;
-      this.entityTextures[data.image].img.onload = function() { console.log('done loading ' + data.image); fn(); }
+      this.entityTextures[data.image].img.onload = function() { LOG('done loading ' + data.image); fn(); }
       this.entityTextures[data.image].img.src = imagePath;  
     }
 
-    entity.MAPED_USEDEFAULT = false;
-    console.log('NOT USING DEFAULT ENTITY FOR ', data.image);
+    if(entity) {
+      entity.MAPED_USEDEFAULT = false;
+    }
+    LOG('NOT USING DEFAULT ENTITY FOR ', data.image);
   },
 
   addEntityWithoutSort(entity, location) {
@@ -893,13 +938,13 @@ Map.prototype = {
   },
 
   getZone: function (tileX, tileY) {
-    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
 
     return this.zoneData[idx];
   },
 
   setZone: function (tileX, tileY, zoneIdx) {
-    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
 
     this.zoneData[idx] = zoneIdx;
   },
@@ -907,8 +952,8 @@ Map.prototype = {
   getTile: function (tileX, tileY, layerIdx) {
     let idx;
 
-    if (layerIdx === 998) { // TODO the obs sentinel is the WORST
-      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles[0]);
+    if (layerIdx === MAGICAL_OBS_LAYER_ID) { // TODO the obs sentinel is the WORST
+      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
       if (this.legacyObsData) { // we are in the main map.
         return this.legacyObsData[idx];
       } else if (this.tileData && this.tileData.length === 1) { // we are in the obs map
@@ -926,20 +971,26 @@ Map.prototype = {
   },
 
   setTile: function (tileX, tileY, layerIdx, tileIdx) {
-    
+    let idx;
+
     /// jesus, right?  One day this won't be a thing, he lied to himself.
-    if( layerIdx !== 998 ) {
+    if( layerIdx !== MAGICAL_OBS_LAYER_ID ) {
       if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
         console.warn('attempted to set a tile out of layer bounds. ('+tileX+','+tileY+')');
-        console.info('layerIdx: ' + layerIdx);
-        console.info(this.layers[layerIdx].dimensions)
+        INFO('layerIdx: ' + layerIdx);
+        INFO(this.layers[layerIdx].dimensions)
         return;
       }
+
+      idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
+
+    } else {
+      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
     }
 
-    const idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
+     
 
-    if (layerIdx === 998) { // TODO the obs sentinel is the WORST
+    if (layerIdx === MAGICAL_OBS_LAYER_ID) { // TODO the obs sentinel is the WORST
       this.legacyObsData[idx] = tileIdx;
     } else {
       this.tileData[layerIdx][idx] = tileIdx;
@@ -955,13 +1006,13 @@ Map.prototype = {
       let obj = null;
 
       for (const k in paletteDict) {
-        // console.info('paletteDict.' + k);
+        // INFO('paletteDict.' + k);
         configVar = k + ' settings'; // this should be CONST'd somewhere and referenced in both places
         const $pal = $('.' + k);
 
-        // console.info('configVar: ' + configVar);
-        // console.info('$pal: ' + $pal);
-        // console.info('localStorage[configVar]: ' + localStorage[configVar]);
+        // INFO('configVar: ' + configVar);
+        // INFO('$pal: ' + $pal);
+        // INFO('localStorage[configVar]: ' + localStorage[configVar]);
 
         if (localStorage[configVar] && $pal) {
           obj = JSON.parse(localStorage[configVar]);
@@ -972,7 +1023,7 @@ Map.prototype = {
           if (obj.y) { $pal.css('top', obj.y); }
           obj.hide ? $pal.hide() : $pal.show();
         } else {
-          console.info('lol, no');
+          INFO('lol, no');
         }
       }
     };
@@ -980,22 +1031,26 @@ Map.prototype = {
     const localStorage = window.localStorage;
 
     if (localStorage[key] + '-mapx') {
-      // TODO This is weird.  Why is the map palette being set here and then again in setPaletteLocations?
       if (localStorage[key + '-width']) { $cont.width(localStorage[key + '-width']); }
       if (localStorage[key + '-height']) { $cont.height(localStorage[key + '-height']); }
       if (localStorage[key + '-top']) { $cont.css('top', localStorage[key + '-top']); }
       if (localStorage[key + '-left']) { $cont.css('left', localStorage[key + '-left']); }
       if (localStorage[key + '-mapx']) { this.camera[0] = parseInt(localStorage[key + '-mapx']); }
       if (localStorage[key + '-mapy']) { this.camera[1] = parseInt(localStorage[key + '-mapy']); }
+      if (localStorage[key + '-mapzoom']) { this.camera[2] = parseInt(localStorage[key + '-mapzoom']); }
 
-      if (localStorage[key + '-layerspallete']) { this.camera[1] = parseInt(localStorage[key + '-mapy']); }
+      if (localStorage[key + '-layerspallete']) { this.camera[1] = parseInt(localStorage[key + '-layerspallete']); }
 
       if (localStorage['palettes']) {
-        console.info('palletes found...');
+        INFO('palletes found...');
         setPaletteLocations(JSON.parse(localStorage['palettes']));
       } else {
         console.warn('no palettes registered.');
       }
+
+      updateInfoDims(this);
+      updateLocationText(this);
+      updateZoomText(this);
     }
 
     return this.readyPromise;
@@ -1021,7 +1076,7 @@ Map.prototype = {
   },
 
   setCanvas: function ($canvas) {
-    console.info('Setting canvas on map');
+    INFO('Setting canvas on map');
     if (this.renderContainer) { this.cleanUpCallbacks(); }
 
     // set up callbacks
@@ -1116,15 +1171,20 @@ Map.prototype = {
   },
 
   calculateSize: function() {
-    this.mapSizeInTiles = [0, 0];
+    this.mapSizeInTiles = {
+      width: 0,
+      height: 0
+    };
     for (let i = 0; i < this.mapData.layers.length; i++) {
-      if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles[0]) {
-        this.mapSizeInTiles[0] = this.mapData.layers[i].dimensions.X;
+      if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles.width) {
+        this.mapSizeInTiles.width = this.mapData.layers[i].dimensions.X;
       }
-      if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles[1]) {
-        this.mapSizeInTiles[1] = this.mapData.layers[i].dimensions.Y;
+      if (this.mapData.layers[i].dimensions.Y > this.mapSizeInTiles.height) {
+        this.mapSizeInTiles.height = this.mapData.layers[i].dimensions.Y;
       }
     }
+
+    updateInfoDims(this);
 
     // this could get called before this.gl is created, potentially, so don't blow up
     // if that's the case
@@ -1132,11 +1192,11 @@ Map.prototype = {
       this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
       this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
         0.0, 0.0,
-        this.mapSizeInTiles[0], 0.0,
-        0.0, -this.mapSizeInTiles[1],
-        0.0, -this.mapSizeInTiles[1],
-        this.mapSizeInTiles[0], 0.0,
-        this.mapSizeInTiles[0], -this.mapSizeInTiles[1]
+        this.mapSizeInTiles.width, 0.0,
+        0.0, -this.mapSizeInTiles.height,
+        0.0, -this.mapSizeInTiles.height,
+        this.mapSizeInTiles.width, 0.0,
+        this.mapSizeInTiles.width, -this.mapSizeInTiles.height
       ]), this.gl.STATIC_DRAW);
     }
   },
@@ -1213,7 +1273,7 @@ Map.prototype = {
       const layer = {
         parallax: { X: 1, Y: 1 },
         alpha: getZoneAlpha(),
-        dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
+        dimensions: {X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.height}
       };
 
       this.tilemapShader.use();
@@ -1264,8 +1324,14 @@ Map.prototype = {
       const vsp = 'obstructions'; // TODO obstruction layer shouldn't just default like this
       const layer = {
         parallax: { X: 1, Y: 1 },
-        dimensions: this.mapData.layers[0].dimensions // TODO this shouldnt be where layer dims are defined.
+        dimensions: {X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.height}
       };
+
+      if( this.mapData.obstructions_layer ) {
+        layer.dimensions = this.mapData.obstructions_layer.dimensions;
+      }
+
+      //TODO this.mapData.obstructions_layer.offset
 
       this.obstructionmapShader.use();
 
@@ -1298,6 +1364,7 @@ Map.prototype = {
       gl.uniform1i(u_tileLayout, 1);
       gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
+
       gl.texImage2D(
         gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
         gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData)
@@ -1374,10 +1441,11 @@ Map.prototype = {
 
     this.tilemapShader.use();
 
+    const appliedOffset = (layer.offset) ? layer.offset : {X:0, Y:0}; // If layer has an offset, use other, otherwise use default value
     const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
     gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-      Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
-      Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
+      Math.floor(layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
       this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
       this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
     );
@@ -1424,15 +1492,17 @@ Map.prototype = {
       // TODO something smells about getSelectedLayer().layer
       const layer = getSelectedLayer() ? getSelectedLayer().layer : {
         parallax: { X: 1, Y: 1 },
-        dimensions: this.mapData.layers[0].dimensions
+        offset: {X: 0, Y: 0},
+        dimensions: {X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.width}
       };
+      const appliedOffset = (selection.map.mapData.isTileSelectorMap) ? {X:0, Y:0} : layer.offset; // If tileset selector, ignore offset
 
       const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
       this.selectionShader.use();
       gl.uniform4f(
         this.selectionShader.uniform('u_camera'),
-        Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
-        Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
+        Math.floor(layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
+        Math.floor(layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
         this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
         this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
       );
@@ -1530,7 +1600,7 @@ Map.prototype = {
 
     // uncomment these to get frame render times
     // const tock = new Date().getTime();
-    // console.log((tock-tick) + 'ms to render');
+    // LOG((tock-tick) + 'ms to render');
   },
 
   renderBackground: function (gl) {
@@ -1563,8 +1633,8 @@ Map.prototype = {
       this.vspImages[layer.vsp].height / this.vspData[layer.vsp].tilesize.height
     );
 
-    gl.uniform4f(this.checkerShader.uniform('u_colorA'), checkerColorA[0], checkerColorA[1], checkerColorA[2], checkerColorA[3] );
-    gl.uniform4f(this.checkerShader.uniform('u_colorB'), checkerColorB[0], checkerColorB[1], checkerColorB[2], checkerColorB[3]);
+    gl.uniform4f(this.checkerShader.uniform('u_colorA'), this.checkerColorA[0], this.checkerColorA[1], this.checkerColorA[2], this.checkerColorA[3] );
+    gl.uniform4f(this.checkerShader.uniform('u_colorB'), this.checkerColorB[0], this.checkerColorB[1], this.checkerColorB[2], this.checkerColorB[3]);
 
     const a_position = this.checkerShader.attribute('a_position');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
