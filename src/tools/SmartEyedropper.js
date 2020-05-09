@@ -1,5 +1,5 @@
 import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
-import { selectLayer, getObsVisibility } from '../js/ui/LayersPalette';
+import { selectLayer, getObsVisibility, MAGICAL_OBS_LAYER_ID } from '../js/ui/LayersPalette';
 import { setTileSelectorUI } from '../TileSelector';
 import { setActiveZone, scrollZonePalletteToZone, getZoneVisibility, show_edit_zone_dialog } from '../js/ui/ZonesPalette';
 import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToEntity, addEntityToHighlight,
@@ -229,7 +229,7 @@ export default () => {
       }
 
       if (getObsVisibility()) {
-        const oIdx = map.getTile(clickSet[0], clickSet[1], 998);
+        const oIdx = map.getTile(clickSet[0], clickSet[1], MAGICAL_OBS_LAYER_ID);
         if (oIdx) {
           selectLayer('O');
           window.$$$toggle_pallete('tileset-selector', true);

@@ -74,20 +74,24 @@ export const selectNumberedLayer = (rstringNum) => {
   }
 };
 
+export const MAGICAL_ENT_LAYER_ID = 997;
+export const MAGICAL_OBS_LAYER_ID = 998;
+export const MAGICAL_ZONE_LAYER_ID = 999;
+
 export const isSpecialLayer = (layer) => {
   return layer.map_tileData_idx > 990;
 }
 
 export const isSpecialLayerEntity = (layer) => {
-  return layer.map_tileData_idx === 997;
+  return layer.map_tileData_idx === MAGICAL_ENT_LAYER_ID;
 }
 
 export const isSpecialLayerObs = (layer) => {
-  return layer.map_tileData_idx === 998;
+  return layer.map_tileData_idx === MAGICAL_OBS_LAYER_ID;
 }
 
 export const isSpecialLayerZone = (layer) => {
-  return layer.map_tileData_idx === 999;
+  return layer.map_tileData_idx === MAGICAL_ZONE_LAYER_ID;
 }
 
 let $zone_container = null;
@@ -103,7 +107,7 @@ export const selectZoneLayer = () => {
 
   // TODO: this is disgusting, right?  right.
   changeSelectedLayer({
-    map_tileData_idx: 999,
+    map_tileData_idx: MAGICAL_ZONE_LAYER_ID,
     layer: window.$$$currentMap.zoneData,
     $container: $zone_container
   });
@@ -130,7 +134,7 @@ export const selectEntityLayer = () => {
 
   // TODO: this is disgusting, right?  right.
   changeSelectedLayer({
-    map_tileData_idx: 997,
+    map_tileData_idx: MAGICAL_ENT_LAYER_ID,
     layer: {
       name: 'Entity Layer (E)'
     },
@@ -214,11 +218,11 @@ export const selectObstructionLayer = () => {
     Y: window.$$$currentMap.mapSizeInTiles.height
   }
 
-  const newObs = !_selected_layer || _selected_layer.map_tileData_idx !== 998;
+  const newObs = !_selected_layer || _selected_layer.map_tileData_idx !== MAGICAL_OBS_LAYER_ID;
   
     // TODO: this is disgusting, right?  right.
   changeSelectedLayer({
-    map_tileData_idx: 998,
+    map_tileData_idx: MAGICAL_OBS_LAYER_ID,
     layer: window.$$$currentMap.obsLayerData, // TODO why isnt this an array? :o
     $container: $obs_container
   });
@@ -406,7 +410,7 @@ const redraw_palette = (map) => {
     };
 
     const newLayerContainer = generateLayerContainer(l, 0);
-    const $eyeball = generateContent(999, tmpLayer, newLayerContainer);
+    const $eyeball = generateContent(MAGICAL_ZONE_LAYER_ID, tmpLayer, newLayerContainer);
 
     newLayerContainer.find('.layer_name').text('Zones');
     newLayerContainer.find('.entity_layer').remove();
@@ -536,7 +540,7 @@ const redraw_palette = (map) => {
     };
 
     const newLayerContainer = generateLayerContainer(l, 0);
-    const $eyeball = generateContent(998, tmpLayer, newLayerContainer);
+    const $eyeball = generateContent(MAGICAL_OBS_LAYER_ID, tmpLayer, newLayerContainer);
 
     newLayerContainer.find('.layer_name').text('Obstructions');
     newLayerContainer.find('.entity_layer').remove();

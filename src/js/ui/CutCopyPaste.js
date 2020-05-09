@@ -1,4 +1,4 @@
-import { getSelectedLayer } from './LayersPalette';
+import { getSelectedLayer, MAGICAL_OBS_LAYER_ID } from './LayersPalette';
 import { getXfromFlat, getYfromFlat } from '../../Map';
 import { getCurrentHoverTile } from '../../Tools';
 
@@ -72,7 +72,7 @@ export const paste = (map, tX, tY, newLayerIdx) => {
 
   if(newLayerIdx >= map.layers.length) {
     switch(newLayerIdx) {
-      case 998: // obstuctions
+      case MAGICAL_OBS_LAYER_ID: // obstuctions
         layerX = map.obsLayerData.dimensions.X; 
         layerY = map.obsLayerData.dimensions.Y;
         break;

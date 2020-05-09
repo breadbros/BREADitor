@@ -1,5 +1,5 @@
 import { MakeUndoRedoStack } from './UndoRedo';
-import { getObsVisibility } from './js/ui/LayersPalette';
+import { getObsVisibility, MAGICAL_OBS_LAYER_ID } from './js/ui/LayersPalette';
 const app = require('electron').remote.app;
 const path = require('path');
 const appPath = app.getAppPath();
@@ -951,7 +951,7 @@ Map.prototype = {
   getTile: function (tileX, tileY, layerIdx) {
     let idx;
 
-    if (layerIdx === 998) { // TODO the obs sentinel is the WORST
+    if (layerIdx === MAGICAL_OBS_LAYER_ID) { // TODO the obs sentinel is the WORST
       idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
       if (this.legacyObsData) { // we are in the main map.
         return this.legacyObsData[idx];
@@ -973,7 +973,7 @@ Map.prototype = {
     let idx;
 
     /// jesus, right?  One day this won't be a thing, he lied to himself.
-    if( layerIdx !== 998 ) {
+    if( layerIdx !== MAGICAL_OBS_LAYER_ID ) {
       if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
         console.warn('attempted to set a tile out of layer bounds. ('+tileX+','+tileY+')');
         console.info('layerIdx: ' + layerIdx);
@@ -989,7 +989,7 @@ Map.prototype = {
 
      
 
-    if (layerIdx === 998) { // TODO the obs sentinel is the WORST
+    if (layerIdx === MAGICAL_OBS_LAYER_ID) { // TODO the obs sentinel is the WORST
       this.legacyObsData[idx] = tileIdx;
     } else {
       this.tileData[layerIdx][idx] = tileIdx;

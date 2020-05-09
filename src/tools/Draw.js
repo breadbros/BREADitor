@@ -50,7 +50,7 @@ export default () => {
         map.setZone(tX, tY, getActiveZone());
         return;
 
-      // TODO obs do this too right now. 998
+      // TODO obs do this too right now. MAGICAL_OBS_LAYER_ID
       } else {
         map.UndoRedo.change_one_tile(
             tX, tY,

@@ -1,6 +1,6 @@
 const $ = require('jquery');
 const sprintf = require('sprintf-js').sprintf;
-import { getSelectedLayer } from './js/ui/LayersPalette';
+import { getSelectedLayer, MAGICAL_ENT_LAYER_ID } from './js/ui/LayersPalette';
 
 import eyedropperGenerator from './tools/Eyedropper';
 import smartEyedropperGenerator from './tools/SmartEyedropper';
@@ -330,7 +330,7 @@ export const initTools = (renderContainer, map) => {
 };
 
 const currentLayerCanHaveEntityOnIt = () => {
-  return getSelectedLayer().map_tileData_idx < 900 || getSelectedLayer().map_tileData_idx === 997;
+  return getSelectedLayer().map_tileData_idx < 900 || getSelectedLayer().map_tileData_idx === MAGICAL_ENT_LAYER_ID;
 };
 
 const hackToolsInit = () => {
