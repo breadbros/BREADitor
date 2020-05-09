@@ -140,8 +140,6 @@ export const moveSelectedEntityToTile  = (x, y, l) => {
     py: null
   });
 
-  debugger;
-
   do_the_no_things(null, redraw_palette);
 }
 
