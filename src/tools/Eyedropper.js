@@ -1,6 +1,6 @@
 import { setTileSelectorUI } from '../TileSelector';
 import { checkEntities, doEntitySelection } from './SmartEyedropper';
-import { getTXTyFromMouse } from '../Tools';
+import { getXYFromMouse } from '../Tools';
 import { setActiveZone, scrollZonePalletteToZone } from '../js/ui/ZonesPalette';
 
 import { 
@@ -32,7 +32,7 @@ export default () => {
       let tIdx = null;
       let zIdx = -1;
 
-      const clickSet = getTXTyFromMouse(map, e);
+      const clickSet = getXYFromMouse(map, e);
       const tX = clickSet[0];
       const tY = clickSet[1];
 
@@ -77,7 +77,7 @@ export default () => {
     },
     'dblclick': (map, e) => {
 
-      const clickSet = getTXTyFromMouse(map, e);
+      const clickSet = getXYFromMouse(map, e);
       const tX = clickSet[0];
       const tY = clickSet[1];
 

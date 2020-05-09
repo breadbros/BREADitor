@@ -1,4 +1,5 @@
 import { _toolLogic, isTileSelectorMap } from '../Tools';
+import { LOG } from '../Logging';
 
 export default () => {
   return {
@@ -27,11 +28,11 @@ export default () => {
         _toolLogic['MOVE-VIEWPORT'].last_mouse = [ e.clientX, e.clientY ];
       
         if( map.windowOverlay.on && e.ctrlKey ) {
-          console.log('windowOVERLAY DRAG');
+          LOG('windowOVERLAY DRAG');
           map.windowOverlay.viewport.x -= xdiff;
           map.windowOverlay.viewport.y -= ydiff;
         } else {
-          console.log('normal DRAG');
+          LOG('normal DRAG');
           map.camera[0] += xdiff;
           map.camera[1] += ydiff;
         }

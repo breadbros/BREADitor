@@ -1,4 +1,5 @@
 import { MakeUndoRedoStack } from './UndoRedo';
+import { LOG, INFO } from './Logging';
 import { getObsVisibility, MAGICAL_OBS_LAYER_ID } from './js/ui/LayersPalette';
 const app = require('electron').remote.app;
 const path = require('path');
@@ -84,7 +85,7 @@ export const verifyTileData = (mapdatafile) => {
     // TODO add promise rejection here
   });
 
-  console.log('No verification done on tile data yet...');
+  LOG('No verification done on tile data yet...');
 
   promiseResolver();
 
@@ -169,7 +170,7 @@ export const verifyMap = (mapfile) => {
     }
   }
 
-  console.info('mapData.tallentitylayer verified as ' + mapData.tallentitylayer);
+  INFO('mapData.tallentitylayer verified as ' + mapData.tallentitylayer);
 
   if (typeof mapData.vsp !== 'object') {
     mapData.vsp = {};
@@ -207,7 +208,7 @@ export const verifyMap = (mapfile) => {
 
   for (let i = mapData.layers.length - 1; i >= 0; i--) {
     if (!mapData.layers[i].vsp) {
-      console.log('setting layer[' + i + ']s vsp to default...');
+      LOG('setting layer[' + i + ']s vsp to default...');
       mapData.layers[i].vsp = 'default';
     }
   }
@@ -222,7 +223,7 @@ export const verifyMap = (mapfile) => {
 // todo all of this.mapData should be obfuscated
 export function Map(mapfile, mapdatafile, updateLocationFunction) {
   let i;
-  console.info('Loading map', mapfile);
+  INFO('Loading map', mapfile);
 
   if (typeof mapfile !== typeof mapdatafile) {
     throw new Error(
@@ -235,13 +236,13 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.selfDestruct = () => {
     for (let i = this.vspImages.length - 1; i >= 0; i--) {
-      console.log("deleting vspImages",i,this.vspImages[i]);
+      LOG("deleting vspImages",i,this.vspImages[i]);
       delete this.vspImages[i];
     }
 
     for ( let key in this.entityTextures ) {
       if (this.entityTextures.hasOwnProperty(key)) {
-        console.log("deleting entityTextures",key,this.entityTextures[key].img);
+        LOG("deleting entityTextures",key,this.entityTextures[key].img);
         delete this.entityTextures[key].img;
       }
     }
@@ -367,12 +368,12 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.updateRstring = (rstring) => {
     if (typeof rstring === 'string') {
-      console.log("Setting new rstring: '" + rstring + "'");
+      LOG("Setting new rstring: '" + rstring + "'");
       this.layerRenderOrder = rstring.split(',');
     } else if (typeof rstring.length === 'number') {
-      console.log("Setting new rstring: '");
+      LOG("Setting new rstring: '");
       this.layerRenderOrder = rstring.map( (r) => ""+r );
-      console.log(this.layerRenderOrder);
+      LOG(this.layerRenderOrder);
     } else {
       throw new Error('What fresh hell is this.  What are you throwing at updateRstring?!');
     }
@@ -397,8 +398,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
     // populate this.layerLookup
     for (let i = 0; i < this.mapData.layers.length; i++) {
-      console.log(i);
-      console.log(this.mapData.layers[i].name);
+      LOG(i);
+      LOG(this.mapData.layers[i].name);
 
       const layerName = this.uniqueLayerName(this.mapData.layers[i].name);
       this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
@@ -439,9 +440,9 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     // if( FILELOAD_MODE ) {
   for (const k in this.filenames.vspfiles) {
     const tmppath = path.join(this.dataPath, this.filenames.vspfiles[k]);
-    console.info("Loading '" + tmppath + "'...");
+    INFO("Loading '" + tmppath + "'...");
     this.vspData[k] = jetpack.read(tmppath, 'json');
-    console.info(k, '->', this.vspData[k]);
+    INFO(k, '->', this.vspData[k]);
   }
 
     // / "if this.dataPath" as a sentinel for only doing this to "real" maps.  This file is garbage.
@@ -454,7 +455,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     if (!this.obsLayerData.vsp) {
       this.obsLayerData.vsp = 'obstructions';
     }
-    console.info('loaded obsLayerData from ' + tmppath);
+    INFO('loaded obsLayerData from ' + tmppath);
   }
 
     // todo: stop being evil
@@ -476,7 +477,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
         const zone = {x: x, y: y, z: this.zoneData[idx]};
 
-        console.log('saving out flatzone', zone);
+        LOG('saving out flatzone', zone);
 
         tmpZones.push(zone);
       }
@@ -554,7 +555,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     const tilewidth = this.vspData['default'].tilesize.width;
     const tileheight = this.vspData['default'].tilesize.height;
 
-    console.info('createEntityRenderData...');
+    INFO('createEntityRenderData...');
     this.entities = {};
     for (i = 0; i < this.mapData.entities.length; i++) {
       const entity = this.mapData.entities[i];
@@ -569,7 +570,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
     for (const i in this.entities) {
       if (this.entities[i]) {
-        console.info('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
+          INFO('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
         this.entities[i].sort(function (a, b) {
           if(a.location.py != b.location.py) {
             return a.location.py - b.location.py;
@@ -644,10 +645,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
           }
         }
 
-        // console.info('Recalculated lines:');
-        // console.info(this.hull);
-        // console.info(this.tiles);
-        // console.info(this.lines);
+        // INFO('Recalculated lines:');
+        // INFO(this.hull);
+        // INFO(this.tiles);
+        // INFO(this.lines);
       },
 
       hull: { x: null, y: null, w: 0, h: 0 },
@@ -837,7 +838,7 @@ Map.prototype = {
       }
     }
 
-    console.log("this.entityTextures["+data.image+"] " + this.entityTextures[data.image])
+    LOG("this.entityTextures["+data.image+"] " + this.entityTextures[data.image])
     if (!this.entityTextures[data.image]) {
       // TODO maybe make this definable in this.mapedConfigData too?
       let imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image);
@@ -854,19 +855,19 @@ Map.prototype = {
         return;
       }
 
-      console.info("Adding '" + imagePath + "' to entityTextures cache...");
+      INFO("Adding '" + imagePath + "' to entityTextures cache...");
       this.toLoad++;
       this.entityTextures[data.image] = {};
       this.entityTextures[data.image].img = new window.Image();
       const fn = this.doneLoading;
-      this.entityTextures[data.image].img.onload = function() { console.log('done loading ' + data.image); fn(); }
+      this.entityTextures[data.image].img.onload = function() { LOG('done loading ' + data.image); fn(); }
       this.entityTextures[data.image].img.src = imagePath;  
     }
 
     if(entity) {
       entity.MAPED_USEDEFAULT = false;
     }
-    console.log('NOT USING DEFAULT ENTITY FOR ', data.image);
+    LOG('NOT USING DEFAULT ENTITY FOR ', data.image);
   },
 
   addEntityWithoutSort(entity, location) {
@@ -976,8 +977,8 @@ Map.prototype = {
     if( layerIdx !== MAGICAL_OBS_LAYER_ID ) {
       if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
         console.warn('attempted to set a tile out of layer bounds. ('+tileX+','+tileY+')');
-        console.info('layerIdx: ' + layerIdx);
-        console.info(this.layers[layerIdx].dimensions)
+        INFO('layerIdx: ' + layerIdx);
+        INFO(this.layers[layerIdx].dimensions)
         return;
       }
 
@@ -1005,13 +1006,13 @@ Map.prototype = {
       let obj = null;
 
       for (const k in paletteDict) {
-        // console.info('paletteDict.' + k);
+        // INFO('paletteDict.' + k);
         configVar = k + ' settings'; // this should be CONST'd somewhere and referenced in both places
         const $pal = $('.' + k);
 
-        // console.info('configVar: ' + configVar);
-        // console.info('$pal: ' + $pal);
-        // console.info('localStorage[configVar]: ' + localStorage[configVar]);
+        // INFO('configVar: ' + configVar);
+        // INFO('$pal: ' + $pal);
+        // INFO('localStorage[configVar]: ' + localStorage[configVar]);
 
         if (localStorage[configVar] && $pal) {
           obj = JSON.parse(localStorage[configVar]);
@@ -1022,7 +1023,7 @@ Map.prototype = {
           if (obj.y) { $pal.css('top', obj.y); }
           obj.hide ? $pal.hide() : $pal.show();
         } else {
-          console.info('lol, no');
+          INFO('lol, no');
         }
       }
     };
@@ -1041,7 +1042,7 @@ Map.prototype = {
       if (localStorage[key + '-layerspallete']) { this.camera[1] = parseInt(localStorage[key + '-layerspallete']); }
 
       if (localStorage['palettes']) {
-        console.info('palletes found...');
+        INFO('palletes found...');
         setPaletteLocations(JSON.parse(localStorage['palettes']));
       } else {
         console.warn('no palettes registered.');
@@ -1075,7 +1076,7 @@ Map.prototype = {
   },
 
   setCanvas: function ($canvas) {
-    console.info('Setting canvas on map');
+    INFO('Setting canvas on map');
     if (this.renderContainer) { this.cleanUpCallbacks(); }
 
     // set up callbacks
@@ -1599,7 +1600,7 @@ Map.prototype = {
 
     // uncomment these to get frame render times
     // const tock = new Date().getTime();
-    // console.log((tock-tick) + 'ms to render');
+    // LOG((tock-tick) + 'ms to render');
   },
 
   renderBackground: function (gl) {

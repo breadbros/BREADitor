@@ -1,9 +1,10 @@
-import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
+import { getXYFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
 import { selectLayer, getObsVisibility, MAGICAL_OBS_LAYER_ID } from '../js/ui/LayersPalette';
 import { setTileSelectorUI } from '../TileSelector';
 import { setActiveZone, scrollZonePalletteToZone, getZoneVisibility, show_edit_zone_dialog } from '../js/ui/ZonesPalette';
 import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToEntity, addEntityToHighlight,
          clearAllEntitysFromHighlight, show_edit_entity_dialog } from '../js/ui/EntityPalette';
+import { LOG } from '../Logging';
 
 const $ = require('jquery');
 
@@ -190,7 +191,7 @@ export default () => {
           return;
 
         default:
-          console.log( 'dblckick smartdropper, unknown item type: ' + curThing.type );
+          LOG( 'dblckick smartdropper, unknown item type: ' + curThing.type );
       }
     },
     'mousedown': function (map, e) {
@@ -201,16 +202,16 @@ export default () => {
 
       curThing = {};
 
-      console.log('EYEDROPPER->mousedown...');
+      LOG('EYEDROPPER->mousedown...');
 
       if (!(e.button === 0)) {
-        console.log("Unknown eyedropper button: we know left/right (0/2), got: '" + e.button + "'.");
+        LOG("Unknown eyedropper button: we know left/right (0/2), got: '" + e.button + "'.");
         return;
       }
 
       clearAllEntitysFromHighlight();
 
-      const clickSet = getTXTyFromMouse(map, e);
+      const clickSet = getXYFromMouse(map, e);
 
       // TODO if Zones are visible, check zone first.
       // TODO if Obs are visible, check obs next.

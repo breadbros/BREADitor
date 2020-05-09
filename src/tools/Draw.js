@@ -1,4 +1,4 @@
-import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
+import { getXYFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
 import { getActiveZone } from '../js/ui/ZonesPalette';
 import { getCurrentlySelectedTile } from '../TileSelector';
 import { 
@@ -29,7 +29,7 @@ export default () => {
         return;
       }
 
-      const result = getTXTyFromMouse(map, e);
+      const result = getXYFromMouse(map, e);
 
       const tX = result[0];
       const tY = result[1];

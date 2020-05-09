@@ -1,7 +1,7 @@
 const $ = require('jquery');
 const sprintf = require('sprintf-js').sprintf;
 import { getSelectedLayer, MAGICAL_ENT_LAYER_ID } from './js/ui/LayersPalette';
-
+import { LOG } from './Logging'
 import eyedropperGenerator from './tools/Eyedropper';
 import smartEyedropperGenerator from './tools/SmartEyedropper';
 import drawGenerator from './tools/Draw';
@@ -60,7 +60,7 @@ export const getCurrentHoverTile = () => {
 
 const setCurrentHoverTile = (map, mouseEvt) => {
   if (mouseEvt) {
-    _currentHoverTile = getTXTyFromMouse(map, mouseEvt);
+    _currentHoverTile = getXYFromMouse(map, mouseEvt);
   } else {
     _currentHoverTile = null;
   }
@@ -98,8 +98,8 @@ export const zero_zoom = (map) => {
   map.zoom_level = baseZoomIndex;
   map.camera[2] = zoomLevels[map.zoom_level];
 
-  console.log('map.zoom_level', map.zoom_level);
-  console.log('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
+  LOG('map.zoom_level', map.zoom_level);
+  LOG('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
 };
 
 export const two_zoom_seriously_all_zoom_functions_suck_kill_them_all = (map) => {
@@ -134,14 +134,14 @@ const zoomFn = function (map, e, zoomout) {
     if (map.zoom_level === zoomLevels.length) { map.zoom_level = zoomLevels.length - 1; }
   }
 
-  console.log('map.zoom_level', map.zoom_level);
+  LOG('map.zoom_level', map.zoom_level);
 
   map.camera[2] = zoomLevels[map.zoom_level];
 
   map.camera[0] = mouseX - ((e.offsetX ? e.offsetX : e.clientX) / map.camera[2]);
   map.camera[1] = mouseY - ((e.offsetY ? e.offsetY : e.clientY) / map.camera[2]);
 
-  console.log('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
+  LOG('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
 };
 
 // TODO function to be renamed (and probably changed) later.  This is dumb.
@@ -175,7 +175,7 @@ export const centerMapOnXY = (map, x, y, w, h) => {
   map.camera[1] = y - windowHeight / 2;
 };
 
-export const getTXTyFromMouse = (map, evt) => {
+export const getXYFromMouse = (map, evt) => {
   const mapZoom = map.camera[2];
   const mapOffsetX = map.camera[0];
   const mapOffsetY = map.camera[1];
@@ -195,14 +195,14 @@ export const getTXTyFromMouse = (map, evt) => {
   const layerCamY = (mapOffsetY - appliedOffset.Y + vpY) * parallax.Y;
   const adjustedMouseX = (mouseOffsetX / mapZoom) - vpX; // Because the mouse position uses the rendered/scaled value, we need to divide by zoom to bring its scale in line with "internal" values
   const adjustedMouseY = (mouseOffsetY / mapZoom) - vpY;
-  const oX = layerCamX + adjustedMouseX;
-  const oY = layerCamY + adjustedMouseY;
+  const pX = layerCamX + adjustedMouseX;
+  const pY = layerCamY + adjustedMouseY;
 
-  const tX = parseInt(oX / 16);
-  const tY = parseInt(oY / 16);
+  const tX = parseInt(pX / 16);
+  const tY = parseInt(pY / 16);
 
   // tile coords then pixel coords
-  return [tX, tY, oX, oY];
+  return [tX, tY, pX, pY];
 };
 
 export const selectAll = (map) => {
@@ -235,7 +235,7 @@ export const _toolLogic = {
 
 export const updateRstringInfo = () => {
   if (!window.$$$currentMap) {
-    console.log('lol, no window.$$$currentMap yet.');
+    LOG('lol, no window.$$$currentMap yet.');
     return;
   }
 
@@ -274,7 +274,7 @@ const setupToolClick = (toolObj, toolName) => {
   const $node = $(toolObj.button_element);
   $node.off('click'); // kill old ones...
   
-  // console.log("setting up toolClick for", toolName, $node);
+  // LOG("setting up toolClick for", toolName, $node);
 
   $node.click(function (e) {
     $('#tool-title').text(toolObj.human_name);
@@ -310,7 +310,7 @@ const tools = (action, map, evt) => {
     }
     _toolLogic[mode][action](map, evt);
   } else {
-    console.log(sprintf("No action '%s' for mode '%s'", action, mode));
+    LOG(sprintf("No action '%s' for mode '%s'", action, mode));
   }
 };
 
@@ -460,7 +460,7 @@ export const auditSullyMaps = () => {
 
   function fromDir(startPath,filter){
       if (!fs.existsSync(startPath)){
-          console.log("no dir ",startPath);
+          LOG("no dir ",startPath);
           return;
       }
 
@@ -472,7 +472,7 @@ export const auditSullyMaps = () => {
               fromDir(filename,filter); //recurse
           }
           else if (filename.indexOf(filter)>=0) {
-              // console.log('-- found: ',filename);
+              // LOG('-- found: ',filename);
               mapFiles.push(filename);
           };
       };
@@ -514,7 +514,7 @@ export const auditSullyMaps = () => {
         }
       }
 
-      console.log( 'changing', m.entities[j].filename, 'to', name );
+      LOG( 'changing', m.entities[j].filename, 'to', name );
       m.entities[j].filename = name;
     }
 
@@ -524,6 +524,33 @@ export const auditSullyMaps = () => {
 };
 
 // auditSullyMaps();
+
+// TODO: this is probably not the most efficient way to calculate the topleftmost of 
+//       two points and the offset between...
+export const getTopLeftmostCoordinatesAndOffsets = (x1, y1, x2, y2) => {
+  let ret = null;
+  if (x1 <= x2 && y1 <= y2) {
+    ret = [x1, y1, x2 - x1, y2 - y1];
+  } else {
+    ret = [x2, y2, x1 - x2, y1 - y2];
+  }
+
+  if (ret[2] === 0) {
+    ret[2] = 1;
+  } else if (ret[2] < 0) {
+    ret[2] = Math.abs(ret[2]);
+    ret[0] -= ret[2];
+  }
+
+  if (ret[3] === 0) {
+    ret[3] = 1;
+  } else if (ret[3] < 0) {
+    ret[3] = Math.abs(ret[3]);
+    ret[1] -= ret[3];
+  }
+
+  return ret;
+};
 
 export const Tools = {
   grue_zoom: grue_zoom

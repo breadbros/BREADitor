@@ -123,7 +123,7 @@ export const getSelectedEntities = () => {
   return Array.from(highlightedEnts);
 }
 
-export const moveSelectedEntityToTile  = (x, y, l) => {
+export const moveSelectedEntityToTile  = (x, y) => {
   const entList = getSelectedEntities();
 
   if( entList.length != 1 ) {
@@ -138,6 +138,26 @@ export const moveSelectedEntityToTile  = (x, y, l) => {
     ty: y,
     px: null,
     py: null
+  });
+
+  do_the_no_things(null, redraw_palette);
+}
+
+export const moveSelectedEntityToPixel  = (px, py) => {
+  const entList = getSelectedEntities();
+
+  if( entList.length != 1 ) {
+    alert("Invald number of entities selected.  Need 1, got " + entList.length );
+    return;
+  }
+
+  const ent = entList[0];
+
+  update_entity_location(ent.INDEX, {
+    tx: null,
+    ty: null,
+    px: px, 
+    py: py,
   });
 
   do_the_no_things(null, redraw_palette);

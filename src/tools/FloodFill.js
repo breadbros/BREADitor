@@ -1,6 +1,6 @@
 import { getCurrentlySelectedTile } from '../TileSelector';
 import { getSelectedLayer } from '../js/ui/LayersPalette';
-import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
+import { getXYFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
 
 // TODO can I test this without exporting it?  ES6 'friend' maybe?
 const doFloodFill = (map, e) => {
@@ -10,7 +10,7 @@ const doFloodFill = (map, e) => {
     return;
   }
 
-  const result = getTXTyFromMouse(map, e);
+  const result = getXYFromMouse(map, e);
   const tX = result[0];
   const tY = result[1];
   const layer = getSelectedLayer().map_tileData_idx;
