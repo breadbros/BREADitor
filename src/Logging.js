@@ -1,4 +1,4 @@
-let verboseLogging = false;
+let verboseLogging = true;
 
 export const setVerboseLogging = (onOrOff) => {
   verboseLogging = !!onOrOff;
@@ -11,23 +11,23 @@ export const getVerboseLogging = () => {
 
 export const INFO = () => {
   if(verboseLogging) {
-    console.info( arguments );
+    console.info.apply( console, Array.prototype.slice.call(arguments, 0) );
   }
 }
 
 export const LOG = () => {
   if(verboseLogging) {
-    console.log( arguments );
+    console.log.apply( console, Array.prototype.slice.call(arguments, 0) );
   }
 }
 
 export const WARN = () => {
   if(verboseLogging) {
-    console.warn( arguments );
+    console.warn.apply( console, Array.prototype.slice.call(arguments, 0) );
   }
 }
 
 // no suppressions on errors!
 export const ERROR = () => {
-  console.error( arguments );
+  console.error.apply( console, Array.prototype.slice.call(arguments, 0) );
 }
