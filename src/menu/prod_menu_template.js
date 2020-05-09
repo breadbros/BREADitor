@@ -7,5 +7,5 @@ export const prodMenuTemplate = [
   fileMenuTemplate,
   editMenuTemplate,
   layersMenuTemplate,
-  windowMenuTemplate,
+  windowMenuTemplate
 ];

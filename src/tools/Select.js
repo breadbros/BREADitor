@@ -1,5 +1,31 @@
-import { getXYFromMouse, _toolLogic, getTopLeftmostCoordinatesAndOffsets } from '../Tools';
+import { getTXTyFromMouse, _toolLogic } from '../Tools';
 import { getSelectedLayer } from '../js/ui/LayersPalette';
+
+// TODO this is probably not the most efficient way to calculate the topleftmost of two points and the offset between...
+const getTopLeftmostCoordinatesAndOffsets = (x1, y1, x2, y2) => {
+  let ret = null;
+  if (x1 <= x2 && y1 <= y2) {
+    ret = [x1, y1, x2 - x1, y2 - y1];
+  } else {
+    ret = [x2, y2, x1 - x2, y1 - y2];
+  }
+
+  if (ret[2] === 0) {
+    ret[2] = 1;
+  } else if (ret[2] < 0) {
+    ret[2] = Math.abs(ret[2]);
+    ret[0] -= ret[2];
+  }
+
+  if (ret[3] === 0) {
+    ret[3] = 1;
+  } else if (ret[3] < 0) {
+    ret[3] = Math.abs(ret[3]);
+    ret[1] -= ret[3];
+  }
+
+  return ret;
+};
 
 export default () => {
   return {
@@ -10,42 +36,28 @@ export default () => {
         return;
       }
 
-      const result = getXYFromMouse(map, e);
+      const result = getTXTyFromMouse(map, e);
       const tX = result[0];
       const tY = result[1];
-      const pX = result[2];
-      const pY = result[3];
 
       map.selection.deselect();
 
       if (!_toolLogic.SELECT.isSelecting) {
         _toolLogic.SELECT.isSelecting = true;
-        
         _toolLogic.SELECT.lastTX = tX;
         _toolLogic.SELECT.lastTY = tY;
         _toolLogic.SELECT.startTX = tX;
         _toolLogic.SELECT.startTY = tY;
-
-        _toolLogic.SELECT.lastPX = pX;
-        _toolLogic.SELECT.lastPY = pY;
-        _toolLogic.SELECT.startPX = pX;
-        _toolLogic.SELECT.startPY = pY;
 
         map.selection.add(tX, tY, 1, 1);
         _toolLogic.SELECT.isButtonDown = true;
       } else {
         _toolLogic.SELECT.isSelecting = false;
         _toolLogic.SELECT.isButtonDown = false;
-        
         _toolLogic.SELECT.lastTX = -1;
         _toolLogic.SELECT.lastTY = -1;
         _toolLogic.SELECT.startTX = -1;
         _toolLogic.SELECT.startTY = -1;
-
-        _toolLogic.SELECT.lastPX = -1;
-        _toolLogic.SELECT.lastPY = -1;
-        _toolLogic.SELECT.startPX = -1;
-        _toolLogic.SELECT.startPY = -1;
       }
     },
     'mousemove': function (map, e) {
@@ -53,17 +65,9 @@ export default () => {
         return;
       }
 
-      const result = getXYFromMouse(map, e);
+      const result = getTXTyFromMouse(map, e);
       const tX = result[0];
       const tY = result[1];
-      const pX = result[2];
-      const pY = result[3];
-
-      if (_toolLogic.SELECT.lastPX === pX && _toolLogic.SELECT.lastPY === pY) {
-        return;
-      }
-      _toolLogic.SELECT.lastPX = pX;
-      _toolLogic.SELECT.lastPY = pY;
 
       if (_toolLogic.SELECT.lastTX === tX && _toolLogic.SELECT.lastTY === tY) {
         return;
@@ -87,10 +91,6 @@ export default () => {
     'startTX': -1,
     'startTY': -1,
     'lastTX': -1,
-    'lastTY': -1,
-    'startPX': -1,
-    'startPY': -1,
-    'lastPX': -1,
-    'lastPY': -1,
+    'lastTY': -1
   };
 };

@@ -1,7 +1,6 @@
 import { modal_error, do_the_no_things } from './Util.js';
 import { LayersWidget } from './LayersPalette.js';
 import { centerMapOnXY } from '../../Tools';
-import { v4 as uuidv4 } from 'uuid';
 
 const { dialog } = require('electron').remote;
 const jetpack = require('fs-jetpack');
@@ -10,10 +9,10 @@ const $ = require('jquery');
 
 let _entityLayersExpanded = false;
 
-const set_animation_dropdown = ($template, animationKeyset, animation) => {
+const set_animation_dropdown = ($template, animationKeyset, ent) => {
   const $entAnim = $template.find('#entity_animation');
 
-  // repopulate animation select
+  // / repopulate animation select
   $entAnim.empty();
   $.each(animationKeyset, (key, value) => {
     $entAnim.append(
@@ -23,8 +22,8 @@ const set_animation_dropdown = ($template, animationKeyset, animation) => {
       );
   });
 
-  // set value
-  $entAnim.val(animation);
+  // / set value.
+  $entAnim.val(ent.animation);
 }
 
 export const setNormalEntityVisibility = (val) => {
@@ -111,7 +110,7 @@ export const addEntityToHighlight = (ent) => {
   highlightedEnts.add(ent);
 };
 
-export const clearAllEntitysFromHighlight = () => {
+export const clearAllEntitysFromHighlight = (ent) => {
   highlightedEnts.forEach((e) => {
     delete e.MAPED_HIGHLIGHTED;
   });
@@ -121,46 +120,6 @@ export const clearAllEntitysFromHighlight = () => {
 
 export const getSelectedEntities = () => {
   return Array.from(highlightedEnts);
-}
-
-export const moveSelectedEntityToTile  = (x, y) => {
-  const entList = getSelectedEntities();
-
-  if( entList.length != 1 ) {
-    alert("Invald number of entities selected.  Need 1, got " + entList.length );
-    return;
-  }
-
-  const ent = entList[0];
-
-  update_entity_location(ent.INDEX, {
-    tx: x,
-    ty: y,
-    px: null,
-    py: null
-  });
-
-  do_the_no_things(null, redraw_palette);
-}
-
-export const moveSelectedEntityToPixel  = (px, py) => {
-  const entList = getSelectedEntities();
-
-  if( entList.length != 1 ) {
-    alert("Invald number of entities selected.  Need 1, got " + entList.length );
-    return;
-  }
-
-  const ent = entList[0];
-
-  update_entity_location(ent.INDEX, {
-    tx: null,
-    ty: null,
-    px: px, 
-    py: py,
-  });
-
-  do_the_no_things(null, redraw_palette);
 }
 
 export const selectEntityByIndex = (idx) => {
@@ -211,8 +170,11 @@ const redraw_palette = () => {
       $tmp.find('.entity-index').text(i);
     }
 
+    
+
     $tmp.click(singleclick_handler);
     $tmp.dblclick(doubleclick_handler);
+    $tmp.contextmenu(doubleclick_handler);
 
     $list.append($tmp);
   }
@@ -227,42 +189,9 @@ const fixContainerSize = () => {
   container.height(palette.height() - 95);
 };
 
-$(function() {
-  $.contextMenu({
-    selector: 'li.entity-row', 
-    callback: function(key, options) {
-
-      switch(key) {
-        default:
-          console.log('unknown key: ' + key);
-          return;
-        case 'clone':
-          options.$menu.trigger("contextmenu:hide");
-          var entity_to_copy = $(this).data('index');
-          clone_entity(entity_to_copy);
-          return;
-        case 'edit':
-          $(this).dblclick();
-          return;
-        case 'delete':
-          var entity_to_delete = $(this).data('index');
-          if( confirm('Are you sure you want to delete entity #'+entity_to_delete+'?') ) {
-            delete_entity(entity_to_delete);
-          }
-          return;
-      }
-    },
-    items: {
-        "edit": {name: "Edit", icon: "edit"},
-        "clone": {name: "Clone", icon: "copy"},
-        "delete": {name: "Delete", icon: "delete"},
-    }
-  });
-});
 
 let template = "<div>Name: <input id='entity_name'></div>";
-template += "<div>uuid: <input id='entity_uuid' readonly size=36></div>";
-template += "<div>Filename: <input id='entity_filename' size=50></div>";
+template += "<div>Filename: <input id='entity_filename'></div>";
 template += "<div>Animation: <select id='entity_animation'></select>";
 template += "<div>Facing: <select id='entity_facing'></select></div>";
 template += "<div>Activation Script: <input id='entity_activation_script'></div>";
@@ -270,120 +199,28 @@ template += "<div>Pays attention to obstructions?: <input type='checkbox' " +
             "id='entity_pays_attention_to_obstructions'></div>";
 template += "<div>Is an obstructions?: <input type='checkbox' id='entity_is_an_obstruction'></div>";
 template += "<div>Autofaces when activated?: <input type='checkbox' id='entity_autofaces'></div>";
-template += "<div>Speed: <input id='entity_speed' value='100' size=4></div>";
-template += "<div class='tile_coordinates'>Location.tx: <input id='entity_location_tx' size=4></div>";
-template += "<div class='tile_coordinates'>Location.ty: <input id='entity_location_ty' size=4></div>";
-template += "<div class='pixel_coordinates'>Location.px: <input id='entity_location_px' size=4></div>";
-template += "<div class='pixel_coordinates'>Location.py: <input id='entity_location_py' size=4></div>";
+template += "<div>Speed: <input id='entity_speed'></div>";
+template += "<div class='tile_coordinates'>Location.tx: <input id='entity_location_tx'></div>";
+template += "<div class='tile_coordinates'>Location.ty: <input id='entity_location_ty'></div>";
+template += "<div class='pixel_coordinates'>Location.px: <input id='entity_location_px'></div>";
+template += "<div class='pixel_coordinates'>Location.py: <input id='entity_location_py'></div>";
 
 template += "<div>Location.layer: <select id='entity_location_layer'></select></div>";
 template += "<div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly></textarea></div>";
 
-let previousEntityRelPath = '';
-let hasDirtyArt = false;
-let oldData = null;
-let oldEnt = null;
 const setup_template = (ent, id) => {
   const $template = $(template);
 
   if (ent) {
     $('#modal-dialog').attr('title', 'Edit Entity (id: ' + id + ')');
   } else {
-    $('#modal-dialog').attr('title', 'Add New Entity (id: ' + (currentEntities.length) + ')');
+    $('#modal-dialog').attr('title', 'Add New Entity (id: ' + (currentEntities.length - 1) + ')');
   }
 
-  const entityFilenameClickFn = () => {
-    const absPathToChrs = jetpack.path(window.$$$currentMap.dataPath, window.$$$currentMap.mapedConfigData.path_to_chrs);
-    const curRelPath = $('#entity_filename').val();
-
-    const whatDirToOpenFn = (curPath, absPath, prevRelPath) => { 
-      if( curPath ) { // "edit" mode
-        return curPath;
-      } else { // "new" mode
-        if(prevRelPath) {
-          return jetpack.path(absPath, prevRelPath);
-        } else {
-          return jetpack.path(absPath, curPath);
-        }
-      };
-    }
-
-    // This "could" have been nested trinaries... but NO.
-    const whatDirToOpen = whatDirToOpenFn(curRelPath, absPathToChrs, previousEntityRelPath); 
-    previousEntityRelPath = whatDirToOpen;
-
-    dialog.showOpenDialog({
-        title: 'Choose a new entity file',
-        defaultPath: whatDirToOpen,
-        filters: [{ name: 'text', extensions: ['json'] }],
-        openFile: true,
-        openDirectory: false,
-        multiSelections: false
-      }, function(filepath) {
-
-        let path = '';
-
-        if(!filepath) {
-          console.log("No filepath to new entity!");
-          return;
-        }
-
-        path = filepath[0];
-
-        // if we're an absolute path, reletivize it!
-        if( filepath[0].indexOf(absPathToChrs) === 0 ) {
-          path = filepath[0].substring(absPathToChrs.length).replace(/\\/g, '/'); 
-          if( path.indexOf('/') === 0 ) {
-            path = path.substring(1);
-          }
-        }
-
-        if( $('#entity_filename').val() !== path ) {
-          hasDirtyArt = true;
-        }
-
-        $('#entity_filename').val(path);
-
-        const anims = get_animations_by_filepath(path);
-        const animationKeyset = Object.keys(anims);
-
-        if(ent) {
-          set_animation_dropdown($template, animationKeyset, ent.animation);
-        } else {
-          set_animation_dropdown($template, animationKeyset, animationKeyset.length ? animationKeyset[0] : '');
-        }
-
-        const data = get_entity_data(path);
-        if(ent) {         
-          oldData = get_entity_data(ent.filename);
-          oldEnt = ent;
-          window.$$$currentMap.maybeAddEntityTexture(data, ent);
-        } else {
-          window.$$$currentMap.maybeAddEntityTextureFromFilename(data, path);
-        }
-      }
-    );
-  };
-  $template.find('#entity_filename').click(entityFilenameClickFn);
-
-  const $entFace = $template.find('#entity_facing');
-  const faceKeyset = ['Up', 'Down', 'Left', 'Right'];
-
-  // repopulate facing select
-  $entFace.empty();
-  $.each(faceKeyset, (key, value) => {
-    $entFace.append(
-        $('<option></option>')
-        .attr('value', value)
-        .text(value)
-      );
-  });
-  
   if (ent) {
     console.log('Editing: ' + ent.name);
 
     $template.find('#entity_name').val(ent.name);
-    $template.find('#entity_uuid').val(ent.uuid);
     $template.find('#entity_filename').val(ent.filename);
 
     $template.find('#entity_activation_script').val(ent.activation_script);
@@ -408,11 +245,51 @@ const setup_template = (ent, id) => {
     $template.find('#entity_is_an_obstruction').prop('checked', ent.is_an_obstruction);
     $template.find('#entity_autofaces').prop('checked', ent.autofaces);
 
+    $template.find('#entity_filename').click(() => {
+
+      const absPathToChrs = jetpack.path(window.$$$currentMap.dataPath, window.$$$currentMap.mapedConfigData.path_to_chrs);
+
+      dialog.showOpenDialog({
+          title: 'Choose a new entity file',
+          defaultPath: absPathToChrs,
+          filters: [{ name: 'text', extensions: ['json'] }],
+          openFile: true,
+          openDirectory: false,
+          multiSelections: false
+        }, function(filepath) {
+
+          let path = '';
+
+          if(!filepath) {
+            console.log("No filepath to new entity!");
+            return;
+          }
+
+          path = filepath[0];
+
+          if( filepath[0].indexOf(absPathToChrs) === 0 ) {
+            path = filepath[0].substring(absPathToChrs.length).replace(/\\/g, '/'); 
+            if( path.indexOf('/') === 0 ) {
+              path = path.substring(1);
+            }
+          }
+
+          $('#entity_filename').val(path);
+
+          const anims = get_animations_by_filepath(path);
+          const animationKeyset = Object.keys(anims);
+          set_animation_dropdown($template, animationKeyset, ent);
+
+          const data = get_entity_data(path);
+          window.$$$currentMap.maybeAddEntityTexture(data, ent);
+        }
+      );
+    });
+
     let entData;
     if (window.$$$currentMap.entityData[ent.filename]) {
       entData = window.$$$currentMap.entityData[ent.filename];
     } else {
-      // TODO: load the new entitydata in!
       console.warn('I DO NOT KNOW HOW TO RENDER [' + ent.filename + ']');
       entData = window.$$$currentMap.entityData['__default__'];
     }
@@ -421,7 +298,20 @@ const setup_template = (ent, id) => {
     const animationKeyset = Object.keys(entData.animations);
     set_animation_dropdown($template, animationKeyset, ent);
 
-    // set value.
+    const $entFace = $template.find('#entity_facing');
+    const faceKeyset = ['Up', 'Down', 'Left', 'Right'];
+
+    // / repopulate animation select
+    $entFace.empty();
+    $.each(faceKeyset, (key, value) => {
+      $entFace.append(
+          $('<option></option>')
+          .attr('value', value)
+          .text(value)
+        );
+    });
+
+    // / set value.
     $entFace.val(ent.facing);
 
     const $entLocLay = $template.find('#entity_location_layer');
@@ -547,19 +437,8 @@ function _entity_click(evt, id) {
           const _id = ($.isNumeric(id) && ent) ? id : currentEntities.length;
 
           update_entity(dialog, _id);
-
-          hasDirtyArt = false;
         },
         'Cancel': function () {
-
-          if( hasDirtyArt ) {
-            /// put it back!
-            window.$$$currentMap.maybeAddEntityTexture(oldData, oldEnt);
-            oldData = null;
-            oldEnt = null;
-            hasDirtyArt = false;
-          }
-
           dialog.dialog('close');
         }
       },
@@ -580,9 +459,8 @@ function _entity_click(evt, id) {
 }
 
 export const update_entity = (dialog, ent_id) => {
-  const entity_name = $('#entity_name').val();
+  const entity_name = $('#entity_name').val(); // TODO: validate uniqueness
   const entity_filename = $('#entity_filename').val(); // TODO: validate existance
-  const entity_uuid = $('#entity_uuid').val();
   const entity_activation_script = $('#entity_activation_script').val();
   const entity_speed = parseInt($('#entity_speed').val());
 
@@ -592,10 +470,12 @@ export const update_entity = (dialog, ent_id) => {
 
   let entity_wander;
 
-  if (ent_id < currentEntities.length) { 
-    entity_wander = currentEntities[ent_id].wander; 
+  if (ent_id < currentEntities.length) { // edit
+    entity_wander = currentEntities[ent_id].wander; // TODO: allow actual editing of wander.
+    console.log('YOU REALLY NEED TO IMPLEMENT WANDER-EDITING');
   } else { // add
     entity_wander = {mode: 'Scripted', delay: 0, initial_movestring: ''};
+    window.alert("Creating new entity with bullshit wander because you haven't actually added it. Dick.");
   }
 
   const entity_animation = $('#entity_animation').val();
@@ -638,7 +518,6 @@ export const update_entity = (dialog, ent_id) => {
     entity_facing: entity_facing,
     entity_wander: entity_wander,
     entity_name: entity_name,
-    entity_uuid: entity_uuid,
     entity_filename: entity_filename,
     entity_activation_script: entity_activation_script,
     entity_speed: entity_speed,
@@ -649,8 +528,6 @@ export const update_entity = (dialog, ent_id) => {
 
   if (_update_entity_inner(ent_id, vals)) {
     dialog.dialog('close');
-    selectEntityByIndex(ent_id);
-    scrollEntityPalletteToEntity(ent_id);
   }
 };
 
@@ -690,7 +567,7 @@ const get_entity_data = (chr_filepath) => {
 
   const data = jetpack.read(fullpath, 'json');
 
-  return data;
+  return data;  
 }
 
 const get_animations_by_filepath = (chr_filepath) => {
@@ -755,6 +632,7 @@ const _loc_helper = (valDict) => {
 };
 
 export const _update_entity_inner = (ent_id, valDict) => {
+
   const loc = _loc_helper(valDict);
 
   let ent = null;
@@ -775,8 +653,8 @@ export const _update_entity_inner = (ent_id, valDict) => {
 
   ent = {
     'name': valDict.entity_name,
-    'uuid': valDict.entity_uuid,
     'filename': valDict.entity_filename,
+
     'facing': valDict.entity_facing,
     'pays_attention_to_obstructions': valDict.entity_pays_attention_to_obstructions,
     'is_an_obstruction': valDict.entity_is_an_obstruction,
@@ -818,12 +696,8 @@ export const _update_entity_inner = (ent_id, valDict) => {
     old_layer = new_layer;
   }
 
-  if( !ent.uuid ) {
-    currentEntities[ent_id]['uuid'] = generate_unique_entity_uuid_for_this_map();
-  }
-
   if (old_layer && new_layer && old_layer !== new_layer) {
-    relocate_entity_for_map_rendering(currentEntities[ent_id].uuid, old_layer, new_layer);
+    relocate_entity_for_map_rendering(currentEntities[ent_id].name, old_layer, new_layer);
   }
 
   do_the_no_things(currentEntities[ent_id], redraw_palette); // these args seem dumb
@@ -831,91 +705,15 @@ export const _update_entity_inner = (ent_id, valDict) => {
   return true;
 };
 
-export const _does_uuid_already_exist = (uuid, map) => {
-  let curEnts = null;
-  if(!map) {
-    curEnts = currentEntities;
-  } else {
-    curEnts = map.mapData.entities;
-  }
-
-  for (var i = curEnts.length - 1; i >= 0; i--) {
-    if( curEnts[i].uuid && curEnts[i].uuid === uuid ) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-export const generate_unique_entity_uuid_for_this_map = (map) => {
-  while(true) {
-    const uuid = uuidv4();
-
-    if( _does_uuid_already_exist(uuid, map) ) {
-      continue;
-    }
-
-    return uuid;
-  }
-};
-
-export const delete_entity = ( ent_id ) => {
-  if( ent_id < 0 || ent_id >= currentEntities.length ) {
-    console.warn('Attempted to delete out-of bounds entity: ' + ent_id + ' (out of '+currentEntities.length+'). ');
-    return;
-  }
-
-  currentEntities.splice(ent_id, 1);
-  do_the_no_things(null, redraw_palette); // these args seem dumb
-}
-
-const clone_entity = ( ent_index ) => {
-  const e = currentEntities[ent_index];
-
-  const vals = {
-    entity_name: `Copy of ${e.name}`,
-    
-    loc_tx: e.location.tx,
-    loc_ty: e.location.ty,
-    loc_px: e.location.px,
-    loc_py: e.location.py,
-    loc_l: e.location.layer,
-    entity_animation: e.animation,
-    entity_facing: e.facing,
-    entity_wander: e.wander,
-    entity_filename: e.filename,
-    entity_activation_script: e.activation_script,
-    entity_speed: e.speed,
-    entity_pays_attention_to_obstructions: e.pays_attention_to_obstructions,
-    entity_is_an_obstruction: e.is_an_obstruction,
-    entity_autofaces: e.autofaces
-  };
-
-  const new_id = currentEntities.length;
-
-  _update_entity_inner(new_id, vals)
-
-  redraw_palette();
-  
-  selectEntityByIndex(new_id);
-  scrollEntityPalletteToEntity(new_id);
-};
-
 
 // TODO: ent_name should be a uuid
 // TODO: until then, make sure ent_name is verified unique
-const relocate_entity_for_map_rendering = (ent_uuid, old_layer, new_layer) => {
+const relocate_entity_for_map_rendering = (ent_name, old_layer, new_layer) => {
   let myboy = null;
   const ents = window.$$$currentMap.entities;
 
   for (let i = ents[old_layer].length - 1; i >= 0; i--) {
-    if(!ents[old_layer][i].uuid) {
-      alert("You are trying to move an entity without a UUID.  Reload the map, save it, reload it, and try again.\n\nCancelling action.");
-      return;
-    }
-
-    if (ents[old_layer][i].uuid === ent_uuid) {
+    if (ents[old_layer][i].name === ent_name) {
       if (!ents[new_layer]) {
         ents[new_layer] = [];
       }

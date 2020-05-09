@@ -1,4 +1,4 @@
-import { getSelectedLayer, MAGICAL_OBS_LAYER_ID } from './LayersPalette';
+import { getSelectedLayer } from './LayersPalette';
 import { getXfromFlat, getYfromFlat } from '../../Map';
 import { getCurrentHoverTile } from '../../Tools';
 
@@ -26,7 +26,7 @@ const _cut_or_copy = (map, isCut) => {
     const curLayer = getSelectedLayer().map_tileData_idx;
     const hull_x = map.selection.hull.x;
     const hull_y = map.selection.hull.y;
-    const mapWidth = map.mapSizeInTiles.width;
+    const mapWidth = map.mapData.layers[0].dimensions.X;
 
     const cutSet = [];
 
@@ -68,31 +68,16 @@ export const paste = (map, tX, tY, newLayerIdx) => {
     newLayerIdx = getSelectedLayer().map_tileData_idx;
   }
 
-  let layerX, layerY;
-
-  if(newLayerIdx >= map.layers.length) {
-    switch(newLayerIdx) {
-      case MAGICAL_OBS_LAYER_ID: // obstuctions
-        layerX = map.obsLayerData.dimensions.X; 
-        layerY = map.obsLayerData.dimensions.Y;
-        break;
-      
-      default:
-        alert("unknown layer id: " + newLayerIdx);
-        return;
-    }
-  } else {
-    layerX = map.layers[newLayerIdx].dimensions.X;
-    layerY = map.layers[newLayerIdx].dimensions.Y;
-  }
-
   const pasteSet = [];
+
+  const layerX = map.layers[newLayerIdx].dimensions.X;
+  const layerY = map.layers[newLayerIdx].dimensions.Y;
 
   for (let i = pasteboard.length - 1; i >= 0; i--) {
     const targetX = pasteboard[i][0] + tX;
     const targetY = pasteboard[i][1] + tY;
 
-    // console.log(`pasting to new layer's (${targetX},${targetY})`)
+    console.log(`pasting to new layer's (${targetX},${targetY})`)
 
     // out of bounds detection
     // TODO do we need to detect negatives?  MAAAAYBE?

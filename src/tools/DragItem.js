@@ -1,96 +1,82 @@
-import { getXYFromMouse, _toolLogic, getTopLeftmostCoordinatesAndOffsets } from '../Tools';
-import { update_entity_location, moveSelectedEntityToPixel } from '../js/ui/EntityPalette';
-import { getSelectedLayer, isSpecialLayerEntity } from '../js/ui/LayersPalette';
+import { getTXTyFromMouse, _toolLogic } from '../Tools';
+import { getSelectedEntities, update_entity_location } from '../js/ui/EntityPalette';
 
 // window.isShiftKeyPressed
+// getSelectedEntities
 
 export default () => {
   return {
     'mousedown': function (map, e) {
-      if (!getSelectedLayer()) {
-        console.log('You havent selected a layer yet.');
-        window.alert('You havent selected a layer yet.');
+
+      const entList = getSelectedEntities();
+
+      if( entList.length != 1 ) {
+        alert("Invald number of entities selected.  Need 1, got " + entList.length );
         return;
       }
 
-      const result = getXYFromMouse(map, e);
-      const tX = result[0];
-      const tY = result[1];
-      const pX = result[2];
-      const pY = result[3];
+      const ent = entList[0];
 
-      if (!_toolLogic['DRAG-ITEM'].isDragging) {
-        _toolLogic['DRAG-ITEM'].isDragging = true;
-        
-        _toolLogic['DRAG-ITEM'].lastTX = tX;
-        _toolLogic['DRAG-ITEM'].lastTY = tY;
-        _toolLogic['DRAG-ITEM'].startTX = tX;
-        _toolLogic['DRAG-ITEM'].startTY = tY;
+      const result = getTXTyFromMouse(map, e);
 
-        _toolLogic['DRAG-ITEM'].lastPX = pX;
-        _toolLogic['DRAG-ITEM'].lastPY = pY;
-        _toolLogic['DRAG-ITEM'].startPX = pX;
-        _toolLogic['DRAG-ITEM'].startPY = pY;
+      update_entity_location(ent.INDEX, {
+        tx: result[0],
+        ty: result[1],
+        px: null,
+        py: null
+      });
 
-        map.selection.add(tX, tY, 1, 1);
-        _toolLogic['DRAG-ITEM'].isButtonDown = true;
-      } else {
-        _toolLogic['DRAG-ITEM'].isDragging = false;
-        _toolLogic['DRAG-ITEM'].isButtonDown = false;
-        
-        _toolLogic['DRAG-ITEM'].lastTX = -1;
-        _toolLogic['DRAG-ITEM'].lastTY = -1;
-        _toolLogic['DRAG-ITEM'].startTX = -1;
-        _toolLogic['DRAG-ITEM'].startTY = -1;
+      // map.selection.deselect();
 
-        _toolLogic['DRAG-ITEM'].lastPX = -1;
-        _toolLogic['DRAG-ITEM'].lastPY = -1;
-        _toolLogic['DRAG-ITEM'].startPX = -1;
-        _toolLogic['DRAG-ITEM'].startPY = -1;
-      }
+      // if (!_toolLogic.SELECT.isSelecting) {
+      //   _toolLogic.SELECT.isSelecting = true;
+      //   _toolLogic.SELECT.lastTX = tX;
+      //   _toolLogic.SELECT.lastTY = tY;
+      //   _toolLogic.SELECT.startTX = tX;
+      //   _toolLogic.SELECT.startTY = tY;
+
+      //   map.selection.add(tX, tY, 1, 1);
+      //   _toolLogic.SELECT.isButtonDown = true;
+      // } else {
+      //   _toolLogic.SELECT.isSelecting = false;
+      //   _toolLogic.SELECT.isButtonDown = false;
+      //   _toolLogic.SELECT.lastTX = -1;
+      //   _toolLogic.SELECT.lastTY = -1;
+      //   _toolLogic.SELECT.startTX = -1;
+      //   _toolLogic.SELECT.startTY = -1;
+      // }
     },
     'mousemove': function (map, e) {
-      if (!_toolLogic['DRAG-ITEM'].isDragging || !_toolLogic['DRAG-ITEM'].isButtonDown) {
-        return;
-      }
+      // if (!_toolLogic.SELECT.isSelecting || !_toolLogic.SELECT.isButtonDown) {
+      //   return;
+      // }
 
-      const res = getXYFromMouse(map, e);
-      const tX = res[0];
-      const tY = res[1];
-      const pX = res[2];
-      const pY = res[3];
+      // const result = getTXTyFromMouse(map, e);
+      // const tX = result[0];
+      // const tY = result[1];
 
-      if (_toolLogic['DRAG-ITEM'].lastPX === pX && _toolLogic['DRAG-ITEM'].lastPY === pY) {
-        return;
-      }
-      _toolLogic['DRAG-ITEM'].lastPX = pX;
-      _toolLogic['DRAG-ITEM'].lastPY = pY;
+      // if (_toolLogic.SELECT.lastTX === tX && _toolLogic.SELECT.lastTY === tY) {
+      //   return;
+      // }
 
-      if (_toolLogic['DRAG-ITEM'].lastTX === tX && _toolLogic['DRAG-ITEM'].lastTY === tY) {
-        return;
-      }
+      // _toolLogic.SELECT.lastTX = tX;
+      // _toolLogic.SELECT.lastTY = tY;
 
-      _toolLogic['DRAG-ITEM'].lastTX = tX;
-      _toolLogic['DRAG-ITEM'].lastTY = tY;
+      // const res = getTopLeftmostCoordinatesAndOffsets(tX, tY, _toolLogic.SELECT.startTX, _toolLogic.SELECT.startTY);
 
-      if(isSpecialLayerEntity(getSelectedLayer())) {
-        moveSelectedEntityToPixel(pX, pY);
-      }
+      // map.selection.deselect();
+      // map.selection.add(res[0], res[1], res[2], res[3]);
     },
     'mouseup': function (map, e) {
-      _toolLogic['DRAG-ITEM'].isButtonDown = false;
+      // _toolLogic.SELECT.isButtonDown = false;
     },
     'button_element': '#btn-tool-drag-item',
     'human_name': 'Drag Item',
-    'isDragging': false,
+    'isSelecting': false,
     'isButtonDown': false,
     'startTX': -1,
     'startTY': -1,
     'lastTX': -1,
-    'lastTY': -1,
-    'startPX': -1,
-    'startPY': -1,
-    'lastPX': -1,
-    'lastPY': -1,
+    'lastTY': -1
   };
 };

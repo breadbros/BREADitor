@@ -3,7 +3,8 @@ BREADitor
 
 
 How to install:
-1. install node version 11.8.0
+1. install node.
+2. install npm.
 3. npm install
 4. npm start
 

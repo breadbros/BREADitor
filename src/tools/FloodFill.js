@@ -1,6 +1,6 @@
 import { getCurrentlySelectedTile } from '../TileSelector';
 import { getSelectedLayer } from '../js/ui/LayersPalette';
-import { getXYFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
+import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
 
 // TODO can I test this without exporting it?  ES6 'friend' maybe?
 const doFloodFill = (map, e) => {
@@ -10,7 +10,7 @@ const doFloodFill = (map, e) => {
     return;
   }
 
-  const result = getXYFromMouse(map, e);
+  const result = getTXTyFromMouse(map, e);
   const tX = result[0];
   const tY = result[1];
   const layer = getSelectedLayer().map_tileData_idx;
@@ -33,9 +33,8 @@ const doFloodFill = (map, e) => {
   workQueue.push(keyify(tX, tY));
 
   const check_validity = (x, y) => {
-    const map = window.$$$currentMap;
-
-    if (x < 0 || y < 0 || x >= map.mapSizeInTiles.width || y >= map.mapSizeInTiles.height) {
+    // TODO again, "map.layers[0]" is almost certainly wrong.
+    if (x < 0 || y < 0 || x >= map.layers[0].dimensions.X || y >= map.layers[0].dimensions.Y) {
       return false;
     }
 

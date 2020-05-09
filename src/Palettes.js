@@ -1,7 +1,5 @@
 const $ = require('jquery');
 
-import { LOG } from './Logging';
-
 const capturePaletteMovementForRestore = ($node) => {
   const $pal = $($node);
   const classes = $pal.attr('class').split(' ');
@@ -58,24 +56,12 @@ export const savePalettePositions = () => {
   });
 };
 
-let garbage_zsort = 0;
-
-let active_palette_selector = '.tool-palette'; 
+let garbage_zsort = 1;
 
 export const setupPaletteListeners = () => {
   window.$$$palette_registry.map((pal) => {
     const node_selector = '.' + pal;
     const $node = $(node_selector);
-
-    if(node_selector === '.tool-palette') {
-      $('.tool-palette .close-palette').remove();
-    }
-
-    $node.mousedown( (evt)=> { 
-      active_palette_selector = node_selector;
-      pop_me_to_the_top(evt);
-    } );
-
     // palette motion save listener
     $node.mouseup(() => { capturePaletteMovementForRestore($node); });
 
@@ -83,6 +69,7 @@ export const setupPaletteListeners = () => {
     const $node2 = $(node_selector + ' button.close-palette');
     $node2.click(() => { paletteCloseListener($node2); });
   });
+
 
   $('.draggable-window').draggable({
     handle: 'h3',
@@ -96,24 +83,12 @@ export const setupPaletteListeners = () => {
         return;
       }
 
-      pop_me_to_the_top(event);
+      $(event.target).css('z-index', garbage_zsort);
+      correctResizeWidget(event.target);
+
+      garbage_zsort += 2;
     }
   });
-
-  const pop_me_to_the_top = (event) => {
-
-    let zsort = 0;
-    if(active_palette_selector === '.map-palette') {
-      zsort = 1;
-    } else {
-      zsort = garbage_zsort;
-    }
-
-    $(event.target).css('z-index', zsort);
-    correctResizeWidget(event.target, zsort);
-
-    garbage_zsort += 2;
-  };
 
   var draggables = $('.resizable-window');
 
@@ -133,11 +108,9 @@ export const setupPaletteListeners = () => {
     checkAndAdd("minheight", "minHeight");
     checkAndAdd("minwidth", "minWidth");
 
-    LOG(me.attr("class"), options)
+    console.log(me.attr("class"), options)
 
     me.resizable(options);
-
-    me.mousedown();
   } );
 
   window.$MAP_WINDOW = $('.map-palette.resizable-window');
@@ -163,14 +136,13 @@ const correctResizeWidget = (node, newZ) => {
 function setupPaletteRegistry() {
   window.$$$palette_registry = [
     'map-palette',
-    'screenview-indicator-palette',
     'tool-palette',
     'layers-palette',
     'zones-palette',
     'entity-palette',
     'info-palette',
     'tileset-selector-palette',
-    
+    'screenview-indicator-palette'
   ];
 }
 
@@ -178,6 +150,5 @@ export const Palettes = {
   correctResizeWidget: correctResizeWidget,
   setupPaletteRegistry: setupPaletteRegistry,
   setupPaletteListeners: setupPaletteListeners,
-  savePalettePositions: savePalettePositions,
-  getActivePaletteSelector: () => { return active_palette_selector; }
+  savePalettePositions: savePalettePositions
 };

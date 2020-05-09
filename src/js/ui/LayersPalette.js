@@ -5,7 +5,7 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
          setNormalEntityVisibility, getNormalEntityVisibility,
          setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js';
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
-import { setTileSelectorUI, setDefaultObsTiles } from '../../TileSelector';
+
 import { resize_layer } from './Util.js';
 
 
@@ -74,67 +74,33 @@ export const selectNumberedLayer = (rstringNum) => {
   }
 };
 
-export const MAGICAL_ENT_LAYER_ID = 997;
-export const MAGICAL_OBS_LAYER_ID = 998;
-export const MAGICAL_ZONE_LAYER_ID = 999;
-
-export const isSpecialLayer = (layer) => {
-  return layer.map_tileData_idx > 990;
-}
-
-export const isSpecialLayerEntity = (layer) => {
-  return layer.map_tileData_idx === MAGICAL_ENT_LAYER_ID;
-}
-
-export const isSpecialLayerObs = (layer) => {
-  return layer.map_tileData_idx === MAGICAL_OBS_LAYER_ID;
-}
-
-export const isSpecialLayerZone = (layer) => {
-  return layer.map_tileData_idx === MAGICAL_ZONE_LAYER_ID;
-}
-
 let $zone_container = null;
-export const selectZoneLayer = (wasHotkey) => {
+export const selectZoneLayer = () => {
   const selClass = 'selected';
-  let wasZone = false;
-  const prevLayer = getSelectedLayer();
-  if( prevLayer && isSpecialLayerZone(prevLayer) ) {
-    wasZone = true;
-  }
 
   removeAllSelectedLayers(selClass);
 
   // TODO: this is disgusting, right?  right.
   changeSelectedLayer({
-    map_tileData_idx: MAGICAL_ZONE_LAYER_ID,
+    map_tileData_idx: 999,
     layer: window.$$$currentMap.zoneData,
     $container: $zone_container
   });
 
   $zone_container.addClass(selClass);
 
-  if (!wasZone && !getZoneVisibility() || (wasZone && wasHotkey)) {
-    $('li.layer.selected button.eyeball_button').click();
-  }
-
   closeEditLayerDialog();
 };
 
 let $ent_container = null;
-export const selectEntityLayer = (wasHotkey) => {
+export const selectEntityLayer = () => {
   const selClass = 'selected';
-  let wasEnt = false;
-  const prevLayer = getSelectedLayer();
-  if( prevLayer && isSpecialLayerEntity(prevLayer) ) {
-    wasEnt = true;
-  }
 
   removeAllSelectedLayers(selClass);
 
   // TODO: this is disgusting, right?  right.
   changeSelectedLayer({
-    map_tileData_idx: MAGICAL_ENT_LAYER_ID,
+    map_tileData_idx: 997,
     layer: {
       name: 'Entity Layer (E)'
     },
@@ -142,10 +108,6 @@ export const selectEntityLayer = (wasHotkey) => {
   });
 
   $ent_container.addClass(selClass);
-
-  if (!wasEnt && !getNormalEntityVisibility() || (wasEnt && wasHotkey)) {
-    $('li.layer.selected button.eyeball_button').click();
-  }
 
   closeEditLayerDialog();
 };
@@ -195,14 +157,8 @@ function getLayerSelectCallback() {
 }
 
 let $obs_container = null;
-export const selectObstructionLayer = (wasHotkey) => {
+export const selectObstructionLayer = () => {
   const selClass = 'selected';
-
-  let wasObs = false;
-  const prevLayer = getSelectedLayer();
-  if( prevLayer && isSpecialLayerObs(prevLayer) ) {
-    wasObs = true;
-  }
 
   removeAllSelectedLayers(selClass);
 
@@ -213,16 +169,11 @@ export const selectObstructionLayer = (wasHotkey) => {
   };
 
   // TODO definitely wrong, especially when we start supporting multiple sized layers
-  window.$$$currentMap.obsLayerData.dimensions = {
-    X: window.$$$currentMap.mapSizeInTiles.width,
-    Y: window.$$$currentMap.mapSizeInTiles.height
-  }
+  window.$$$currentMap.obsLayerData.dimensions = window.$$$currentMap.mapData.layers[0].dimensions;
 
-  const newObs = !_selected_layer || _selected_layer.map_tileData_idx !== MAGICAL_OBS_LAYER_ID;
-  
     // TODO: this is disgusting, right?  right.
   changeSelectedLayer({
-    map_tileData_idx: MAGICAL_OBS_LAYER_ID,
+    map_tileData_idx: 998,
     layer: window.$$$currentMap.obsLayerData, // TODO why isnt this an array? :o
     $container: $obs_container
   });
@@ -230,15 +181,7 @@ export const selectObstructionLayer = (wasHotkey) => {
   TilesetSelectorWidget.initTilesetSelectorWidget(map, map.obsLayerData, window.$$$currentMap.legacyObsData, () => {
     $obs_container.addClass(selClass);
     closeEditLayerDialog();
-
-    if( newObs ) {
-      setDefaultObsTiles();
-    }
   });
-
-  if (!wasObs && !getObsVisibility() || (wasObs && wasHotkey)) {
-    $('li.layer.selected button.eyeball_button').click();
-  }
 };
 
 let layers = null;
@@ -260,16 +203,10 @@ export const changeSelectedLayer = (newLayer) => {
       Y: 1
     };
   }
-  if (!_selected_layer.layer.offset) {
-   _selected_layer.layer.offset = {
-      X: 0,
-      Y: 0
-    }; 
-  }
   if (!_selected_layer.layer.dimensions) {
     _selected_layer.layer.dimensions = {
-      X: window.$$$currentMap.mapSizeInTiles.width,
-      Y: window.$$$currentMap.mapSizeInTiles.height
+      X: map.layers[0].dimensions.X,
+      Y: map.layers[0].dimensions.Y
     };
   }
 };
@@ -279,7 +216,9 @@ export const getSelectedLayer = () => {
 };
 
 const removeAllSelectedLayers = (selClass) => {
-  $("li.layer.selected").removeClass(selClass);
+  if (window && getSelectedLayer()) {
+    getSelectedLayer().$container.removeClass(selClass);
+  }
 };
 
 const redraw_palette = (map) => {
@@ -368,6 +307,11 @@ const redraw_palette = (map) => {
     $zone_container = _$zone_container;
     $zone_container.on('click', (evt) => {
       selectZoneLayer();
+      evt.stopPropagation();
+    });
+
+    $zone_container.on('dblclick', (evt) => {
+      window.$$$toggle_pallete('zones', true);
 
       if (!getZoneVisibility()) {
         $('li.layer.selected button.eyeball_button').click();
@@ -375,20 +319,11 @@ const redraw_palette = (map) => {
 
       evt.stopPropagation();
     });
-
-    $zone_container.on('dblclick', (evt) => {
-      window.$$$toggle_pallete('zones', true);
-
-      alert("Summon zone-editing modal?");
-
-      evt.stopPropagation();
-    });
   };
 
   const addLayerSelectHandler = ($layer_container, i) => {
     $layer_container.on('click', (evt) => {
-      // TODO: third parameter was 'dialog': where's that coming from
-      doLayerSelect($layer_container, i, false, map, evt);
+      doLayerSelect($layer_container, i, dialog, map, evt);
 
       evt.stopPropagation();
     });
@@ -410,7 +345,7 @@ const redraw_palette = (map) => {
     };
 
     const newLayerContainer = generateLayerContainer(l, 0);
-    const $eyeball = generateContent(MAGICAL_ZONE_LAYER_ID, tmpLayer, newLayerContainer);
+    const $eyeball = generateContent(999, tmpLayer, newLayerContainer);
 
     newLayerContainer.find('.layer_name').text('Zones');
     newLayerContainer.find('.entity_layer').remove();
@@ -438,93 +373,14 @@ const redraw_palette = (map) => {
     $obs_container = _$obs_container;
     $obs_container.on('click', function (evt) {
       selectObstructionLayer();
-      if (!getObsVisibility()) {
-        $('li.layer.selected button.eyeball_button').click();
-      }
       evt.stopPropagation();
     });
 
     $obs_container.on('dblclick', function (evt) {
-
-      $(() => {
-
-        const map = window.$$$currentMap;
-
-        let dim_x, dim_y, offs_x, offs_y;
-        let warning = '';
-
-        if( map.mapData.obstructions_layer ) {
-          dim_x = map.mapData.obstructions_layer.dimensions.X;
-          dim_y = map.mapData.obstructions_layer.dimensions.Y;
-          offs_x = map.mapData.obstructions_layer.offset.X;
-          offs_y = map.mapData.obstructions_layer.offset.Y;
-        } else {
-          [dim_x, dim_y] = map.mapSizeInTiles;
-          offs_x = 0;
-          offs_y = 0;
-
-          warning = `Warning: using default obs layer dimensions.`;
-
-          if(dim_x*dim_y != map.legacyObsData.length) {
-            const datalen = dim_x*dim_y;
-            warning += `
-              AND the data (length: ${map.legacyObsData.length}) does not match the expected size (${datalen}).  
-              Things are likely not rendering correctly.  
-              Please specify an explicit layer size.
-            `;
-          }
-        }
-
-        let template = `
-          <div class="warning">${warning}</div>
-          <div>
-            Dimensions: x <input id="obs_dim_x" value="${dim_x}" type="number" style="width: 50px;">
-                        y <input id="obs_dim_y" value="${dim_y}" type="number" style="width: 50px;">
-          </div>
-          <div>
-            Offset: x <input id="offs_dim_x" value="${offs_x}" type="number" style="width: 50px;">
-                    y <input id="offs_dim_y" value="${offs_y}" type="number" style="width: 50px;">
-          </div>
-        `;
-
-        $('#modal-dialog').attr('title', 'Change Obstruction Layer attributes');
-        $('#modal-dialog').html(template);
-
-        const do_obs_layer_save = () => {
-          const new_obs_dim_x = parseInt($('#obs_dim_x').val());
-          const new_obs_dim_y = parseInt($('#obs_dim_y').val());
-          const new_obs_offs_x = parseInt($('#offs_dim_x').val());
-          const new_obs_offs_y = parseInt($('#offs_dim_y').val());
-
-          if( dim_x != new_obs_dim_x || dim_y != new_obs_dim_y ) {
-            console.info( "resizing obs layer data..." );
-            map.legacyObsData = resize_layer( map.legacyObsData, dim_x, dim_y, new_obs_dim_x, new_obs_dim_y );
-          }
-
-          map.mapData.obstructions_layer = {};
-          map.mapData.obstructions_layer.dimensions = { X: new_obs_dim_x, Y: new_obs_dim_y };
-          map.mapData.obstructions_layer.offset = { X: new_obs_offs_x, Y: new_obs_offs_y };
-
-          dialog.dialog('close');
-        };
-
-        $('#modal-dialog').show();
-        dialog = $('#modal-dialog').dialog({
-          modal: true,
-          buttons: {
-            'Save': () => { 
-              do_obs_layer_save();
-            },
-            'Cancel': function () {
-              dialog.dialog('close');
-            }
-          },
-          close: function () {
-            $('#modal-dialog').html('');
-          }
-        });
-      });
-
+      window.$$$toggle_pallete('tileset-selector', true);
+      if (!getObsVisibility()) {
+        $('li.layer.selected button.eyeball_button').click();
+      }
       evt.stopPropagation();
     });
   };
@@ -540,7 +396,7 @@ const redraw_palette = (map) => {
     };
 
     const newLayerContainer = generateLayerContainer(l, 0);
-    const $eyeball = generateContent(MAGICAL_OBS_LAYER_ID, tmpLayer, newLayerContainer);
+    const $eyeball = generateContent(998, tmpLayer, newLayerContainer);
 
     newLayerContainer.find('.layer_name').text('Obstructions');
     newLayerContainer.find('.entity_layer').remove();
@@ -651,7 +507,10 @@ const redraw_palette = (map) => {
     setup_shitty_layer_seperator($list);
 
     // ZONES
+    console.log("map.layerRenderOrder: " + map.layerRenderOrder);
+
     for (let i = map.layerRenderOrder.length - 1; i >= 0; i--) {
+      console.log(i);
       rstring_cur_target = map.layerRenderOrder[i];
       rstring_ref = parseInt(rstring_cur_target, 10);
       if (isNaN(rstring_ref)) {
@@ -842,30 +701,28 @@ const redraw_palette = (map) => {
   function update_parallax(layer, dialog) {
     let x = $('#new_layer_parallax_x').val().trim();
     let y = $('#new_layer_parallax_y').val().trim();
-    const newParallax = _get_validated_xy_float_input(x, y);
-    if (!newParallax) { return; }
+    const newParallax = {};
+
+    if (!$.isNumeric(x)) {
+      modal_error('Invalid input: x not numeric.');
+      return;
+    }
+    if (!$.isNumeric(y)) {
+      modal_error('Invalid input: y not numeric.');
+      return;
+    }
+
+    x = parseFloat(x);
+    y = parseFloat(y);
+
+    newParallax.X = x;
+    newParallax.Y = y;
 
     layer.parallax = newParallax;
 
     redrawAllLucentAndParallax();
 
     dialog.dialog('close');
-  }
-
-  function _get_validated_xy_float_input(x, y) {
-    if (!$.isNumeric(x)) {
-      modal_error('Invalid input: x not numeric.');
-      return null;
-    }
-    if (!$.isNumeric(y)) {
-      modal_error('Invalid input: y not numeric.');
-      return null;
-    }
-
-    x = parseFloat(x);
-    y = parseFloat(y);
-
-    return {X: x, Y: y};
   }
 
   function formatAlphaAsPercentage(alpha) {
@@ -1078,7 +935,6 @@ let template = "<div>Name: <input id='layer_name'></div>";
 template += "<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> ";
 template += "   y: <input id='layer_parallax_y' value='1' size=3></div>";
 template += "<div>Dimensions (tiles): w: <input id='layer_dims_x' size=3> h: <input id='layer_dims_y' size=3></div>";
-template += "<div>Offset (pixels): x: <input id='layer_offset_x' value='0' size=3> y: <input id='layer_offset_y' value='0' size=3></div>";
 template += "<div>Alpha: <input id='layer_opacity' value='1' size=3></div>";
 template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
 template += "<div>isTallEntity Redraw Layer? <input type='checkbox' id='layer_is_tall_redraw_layer'></div>";
@@ -1091,8 +947,8 @@ function setup_template() {
   const $dims_y = $template.find('#layer_dims_y');
 
   if (window.$$$currentMap) {
-    $dims_x.val(window.$$$currentMap.mapSizeInTiles.width);
-    $dims_y.val(window.$$$currentMap.mapSizeInTiles.height);
+    $dims_x.val(window.$$$currentMap.mapSizeInTiles[0]);
+    $dims_y.val(window.$$$currentMap.mapSizeInTiles[1]);
   }
 
   return $template;
@@ -1106,7 +962,6 @@ const closeEditLayerDialog = () => {
   }
 };
 
-/// TODO this function is overused and a wreck and has side-effects.
 function _layer_click(evt, layerIdx, onComplete) {
   evt.stopPropagation();
 
@@ -1147,8 +1002,6 @@ function _layer_click(evt, layerIdx, onComplete) {
       $template.find('#layer_parallax_y').val(layer.parallax.Y);
       $template.find('#layer_dims_x').val(layer.dimensions.X);
       $template.find('#layer_dims_y').val(layer.dimensions.Y);
-      $template.find('#layer_offset_x').val(layer.offset.X);
-      $template.find('#layer_offset_y').val(layer.offset.Y);
       $template.find('#layer_opacity').val(layer.alpha);
       $template.find('#layer_vsp').val(layer.vsp);
       $template.find('#layer_idx').text(layerIdx);
@@ -1176,7 +1029,6 @@ function _layer_click(evt, layerIdx, onComplete) {
           }
 
           window.$$$currentMap.layers.splice(myIdx, 1);
-          window.$$$currentMap.mapRawTileData.tile_data.splice(myIdx, 1);
 
           const newOrder = [];
           const oldOrder = window.$$$currentMap.layerRenderOrder;
@@ -1232,23 +1084,18 @@ const update_layer = (dialog, layer_id, onComplete) => {
   const par_y = dialog.find('#layer_parallax_y').val();
   let dims_x = dialog.find('#layer_dims_x').val();
   let dims_y = dialog.find('#layer_dims_y').val();
-  let offset_x = dialog.find('#layer_offset_x').val();
-  let offset_y = dialog.find('#layer_offset_y').val();
   let alpha = dialog.find('#layer_opacity').val();
   const vsp = dialog.find('#layer_vsp').val();
   let layer = null;
 
-  // Validate Parallax
   if (!$.isNumeric(par_x)) {
-    modal_error('Invalid input: parallax x (' + par_x + ') is invalid.');
+    modal_error('Invalid input: parralax x (' + par_x + ') is invalid.');
     return;
   }
   if (!$.isNumeric(par_y)) {
-    modal_error('Invalid input: parallax y (' + par_y + ') is invalid.');
+    modal_error('Invalid input: parralax y (' + par_y + ') is invalid.');
     return;
   }
-  
-  // Validate Dimensions
   if (!$.isNumeric(dims_x) && dims_x >= 0) {
     modal_error('Invalid input: dimension x (' + dims_x + ') is invalid.');
     return;
@@ -1259,21 +1106,8 @@ const update_layer = (dialog, layer_id, onComplete) => {
     return;
   }
   dims_y = parseInt(dims_y);
-
-  // Validate Offsets
-  if (!$.isNumeric(offset_x)) {
-    modal_error('Invalid input: offset x (' + offset_x + ') is invalid.');
-    return;
-  }
-  offset_x = parseInt(offset_x);
-  if (!$.isNumeric(offset_y)) {
-    modal_error('Invalid input: ofset y (' + offset_y + ') is invalid.');
-    return;
-  }
-  offset_y = parseInt(offset_y);
-
   if (!$.isNumeric(alpha) || alpha < 0 || alpha > 1) {
-    modal_error('Invalid input: alpha (' + alpha + ') is invalid.  Try values [0..1]');
+    modal_error('Invalid input: alpha (' + alpha + ') is invalid.  Try values [0...1]');
     return;
   }
 
@@ -1305,7 +1139,7 @@ const update_layer = (dialog, layer_id, onComplete) => {
 
   if (nameSet.indexOf(name) !== -1) {
     if (layers[layer_id] && layers[layer_id].name !== name) {
-      modal_error('Invalid input: layer name (' + name + ') is not unique on this map.  Try a new, unique name.');
+      modal_error('Invalid input: name (' + name + ') is not unique on this map.  Try a new, unique name.');
       return;
     }
   }
@@ -1323,10 +1157,6 @@ const update_layer = (dialog, layer_id, onComplete) => {
     dimensions: {
       X: new_dim_x,
       Y: new_dim_y
-    },
-    offset: {
-      X: offset_x,
-      Y: offset_y,
     },
     parallax: {
       X: parseFloat(par_x),
@@ -1366,17 +1196,16 @@ const update_layer = (dialog, layer_id, onComplete) => {
     console.log( "Resizing layer..." );
     map.mapRawTileData.tile_data[layer_id] = resize_layer( map.mapRawTileData.tile_data[layer_id], old_dim_x, old_dim_y, new_dim_x, new_dim_y );
     
-    const oldx = map.mapSizeInTiles.width;
-    const oldy = map.mapSizeInTiles.height;
+    // OOOOOH MY GOOOOOOD...
+    // todo: move away from this godawful "layer 0 is the size of the map" paradigm.
+    //   getting there! just the legacyObsData relies on it now?
 
     map.calculateSize();
-    map.regenerateZoneData();
-    map.legacyObsData = map.mapRawTileData.legacy_obstruction_data = resize_layer( 
-      map.mapRawTileData.legacy_obstruction_data, 
-      oldx, oldy, 
-      map.mapSizeInTiles.width, map.mapSizeInTiles.height 
-    );
+    if(layer_id === 0) {
+      map.regenerateZoneData();
 
+      map.legacyObsData = map.mapRawTileData.legacy_obstruction_data = resize_layer( map.mapRawTileData.legacy_obstruction_data, old_dim_x, old_dim_y, new_dim_x, new_dim_y );
+    }
     map.setCanvas($('.map_canvas'));
   }
 

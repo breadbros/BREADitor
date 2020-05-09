@@ -59,7 +59,7 @@ const copyMatrixToPasteboard = (matrix) => {
   }
 
   for (let y = 0; y < matrix[0].length; y++ ) {
-    //console.log("matrix[0][y].length-1: " + (matrix[0][y].length-1))
+    console.log("matrix[0][y].length-1: " + (matrix[0][y].length-1))
     for (let x = 0; x < matrix[0][y].length; x++) {
       addToPasteboard(x,y,-24601,matrix[0][x][y]);
     }

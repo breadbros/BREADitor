@@ -1,10 +1,9 @@
-import { getXYFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
-import { selectLayer, getObsVisibility, MAGICAL_OBS_LAYER_ID } from '../js/ui/LayersPalette';
+import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
+import { selectLayer, getObsVisibility } from '../js/ui/LayersPalette';
 import { setTileSelectorUI } from '../TileSelector';
 import { setActiveZone, scrollZonePalletteToZone, getZoneVisibility, show_edit_zone_dialog } from '../js/ui/ZonesPalette';
 import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToEntity, addEntityToHighlight,
          clearAllEntitysFromHighlight, show_edit_entity_dialog } from '../js/ui/EntityPalette';
-import { LOG } from '../Logging';
 
 const $ = require('jquery');
 
@@ -191,7 +190,7 @@ export default () => {
           return;
 
         default:
-          LOG( 'dblckick smartdropper, unknown item type: ' + curThing.type );
+          console.log( 'dblckick smartdropper, unknown item type: ' + curThing.type );
       }
     },
     'mousedown': function (map, e) {
@@ -202,16 +201,16 @@ export default () => {
 
       curThing = {};
 
-      LOG('EYEDROPPER->mousedown...');
+      console.log('EYEDROPPER->mousedown...');
 
       if (!(e.button === 0)) {
-        LOG("Unknown eyedropper button: we know left/right (0/2), got: '" + e.button + "'.");
+        console.log("Unknown eyedropper button: we know left/right (0/2), got: '" + e.button + "'.");
         return;
       }
 
       clearAllEntitysFromHighlight();
 
-      const clickSet = getXYFromMouse(map, e);
+      const clickSet = getTXTyFromMouse(map, e);
 
       // TODO if Zones are visible, check zone first.
       // TODO if Obs are visible, check obs next.
@@ -230,7 +229,7 @@ export default () => {
       }
 
       if (getObsVisibility()) {
-        const oIdx = map.getTile(clickSet[0], clickSet[1], MAGICAL_OBS_LAYER_ID);
+        const oIdx = map.getTile(clickSet[0], clickSet[1], 998);
         if (oIdx) {
           selectLayer('O');
           window.$$$toggle_pallete('tileset-selector', true);
@@ -255,7 +254,45 @@ export default () => {
           //setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
           return;
         }
+        debugger;
       }
+
+      debugger;
+
+
+      debugger;
+
+      // // TODO: using a valid integer as a sentinel is stupid. using sentinels is stupid. you're stupid, grue.
+      // if (getSelectedLayer().map_tileData_idx > 900) {
+      //   switch (getSelectedLayer().map_tileData_idx) {
+      //     case 999:
+      //       zIdx = map.getZone(tX, tY);
+      //       console.log('ZONES!: ' + zIdx);
+      //       setActiveZone(zIdx);
+
+      //       scrollZonePalletteToZone(zIdx);
+
+      //       return;
+      //     case 998:
+      //       console.log('OBS!');
+      //       doVSPselector(tX, tY, map);
+      //       tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
+      //       break;
+      //     default:
+      //       throw new Error('SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN');
+      //   }
+      // } else {
+      //   // TODO seriously branching code here is not a good idea for complexity reasons.  rework later?
+      //   if (map.mapData.isTileSelectorMap) {
+      //     tIdx = map.getTile(tX, tY, 0);
+      //     doVSPselector(tX, tY, map);
+      //   } else {
+      //     tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
+      //     doVSPselector(tX, tY, map);
+      //   }
+      // }
+
+      // setTileSelectorUI('#left-palette', tIdx, map, 0, getSelectedLayer().layer.vsp);
     },
     'button_element': '#btn-tool-smart-eyedropper',
     'human_name': 'iDrop +'

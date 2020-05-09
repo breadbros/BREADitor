@@ -2,11 +2,11 @@ import { ipcRenderer } from 'electron';
 
 import {
   clickSmartdropper, clickEyedropper, clickDrawBrush, clickMoveViewport, clickSelect, selectAll, clickFloodFill,
-  updateLocationFunction, clickDragItem, handle_esc
+  updateLocationFunction, clickDragItem
 } from '../Tools.js';
 
 import {
-  LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix, newLayerOnNewMap, selectEntityLayer
+  LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix, newLayerOnNewMap
 } from '../js/ui/LayersPalette.js';
 import { cut, copy, paste } from '../js/ui/CutCopyPaste.js';
 
@@ -94,13 +94,14 @@ export function setupIPCRenderer() {
         window.$$$about_breaditor();
         break;
       case 'focus-layer-O':
-        selectObstructionLayer(true);
+        selectObstructionLayer();
         break;
       case 'focus-layer-Z':
-        selectZoneLayer(true);
+        selectZoneLayer();
         break;
       case 'focus-layer-E':
-        selectEntityLayer(true);
+        // TODO implement the entities layer already.
+        console.log('TODO implement the entities layer already.');
         break;
       case 'focus-layer-1':
       case 'focus-layer-2':
@@ -152,9 +153,6 @@ export function setupIPCRenderer() {
         break;
       case 'screenview-indicator':
         alert('screenview-indicator! Yay1112');
-        break;
-      case 'cancel-selections':
-        handle_esc();
         break;
       default:
         console.error('Unknown action from main-menu:', arg);

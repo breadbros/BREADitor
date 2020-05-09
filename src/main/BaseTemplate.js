@@ -108,7 +108,6 @@ export function baseHTMLTemplate() {
             <h3 class="ui-widget-header">Info<button class="close-palette">x</button></h3>
             <ul>
                 <li>map: <span id="info-mapname"></span></li>
-                <li>vsps: <ul id="info-vsp-list"></ul>
                 <li>tx,ty: <span id="info-current-hover-tile"></span></li>
                 <li>dims: <span id="info-dims"></span></li>
                 <li>screen loc: <span id="info-location"></span></li>

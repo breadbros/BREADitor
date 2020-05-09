@@ -27,22 +27,16 @@ export const FakeMap = () => {
 
   const setMatrix = (newMatrix) => {
     matrix = newMatrix;
+
   };
 
   return {
-    layers: [{dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}, {dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}],
-    mapSizeInTiles: {
-      width: 3,
-      height: 3
-    },
+    layers: [{dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}, {dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}], // TODO kill map.layers[0].dimensions.X/Y as dim source of truth
     getTile: getTile,
     setTile: setTile,
     getLayerData: getLayerData,
     getMatrix: getMatrix,
     setMatrix: setMatrix,
-    getVSPTileLocation: () => { return 1234567890; },
-    mapData: {
-      isTileSelectorMap: false,
-    }
+    getVSPTileLocation: () => { return 1234567890; }
   };
 };

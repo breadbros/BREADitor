@@ -4,14 +4,17 @@
         <meta charset="utf-8">
         <title>The BREADitor</title>
 
+
         <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">
         <link href="stylesheets/main.css" rel="stylesheet" type="text/css">
         <link href="stylesheets/jquery-ui-fixes.css" rel="stylesheet" type="text/css">
         <link href="themes/ui-darkness/jquery-ui.min.css" rel="stylesheet" type="text/css">
+
         <script>
             window.jQuery = window.$ = require('jquery');
         </script>
         <script src="js/jquery-ui/jquery-ui-min.js"></script>
+
         <script type="text/javascript">
             $(document).keypress(function(event) {
                 if( event.charCode === 32 ) { // let's not scroll down on spacebar presses?
@@ -26,13 +29,6 @@
                 }
             });
         </script>
-
-        <link rel="stylesheet" href="js/jquery-context-menu-2.7.1/jquery.contextMenu.min.css">
-        <script src="js/jquery-context-menu-2.7.1/jquery.contextMenu.min.js"></script>
-        <script src="js/jquery-context-menu-2.7.1/jquery.ui.position.js"></script>
-<!-- Makes context menu look weird
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
--->
     </head>
     <body id="body">
         <script src="app.js"></script>
