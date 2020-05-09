@@ -74,9 +74,30 @@ export const selectNumberedLayer = (rstringNum) => {
   }
 };
 
+export const isSpecalLaye = (layer) => {
+  return layer.map_tileData_idx > 990;
+}
+
+export const isSpecialLayerEntities = (layer) => {
+  return layer.map_tileData_idx === 997;
+}
+
+export const isSpecialLayerObs = (layer) => {
+  return layer.map_tileData_idx === 998;
+}
+
+export const isSpecialLayerZone = (layer) => {
+  return layer.map_tileData_idx === 999;
+}
+
 let $zone_container = null;
 export const selectZoneLayer = () => {
   const selClass = 'selected';
+  let wasZone = false;
+  const prevLayer = getSelectedLayer();
+  if( prevLayer && isSpecialLayerZone(prevLayer) ) {
+    wasZone = true;
+  }
 
   removeAllSelectedLayers(selClass);
 
@@ -88,6 +109,10 @@ export const selectZoneLayer = () => {
   });
 
   $zone_container.addClass(selClass);
+
+  if (!wasZone && !getZoneVisibility() || wasZone) {
+    $('li.layer.selected button.eyeball_button').click();
+  }
 
   closeEditLayerDialog();
 };
