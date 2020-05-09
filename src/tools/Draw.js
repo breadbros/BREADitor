@@ -1,13 +1,17 @@
 import { getTXTyFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
 import { getActiveZone } from '../js/ui/ZonesPalette';
 import { getCurrentlySelectedTile } from '../TileSelector';
-import { getSelectedLayer } from '../js/ui/LayersPalette';
+import { 
+  getSelectedLayer,
+  isSpecialLayer,
+  isSpecialLayerEntity,
+  isSpecialLayerObs,
+  isSpecialLayerZone 
+} from '../js/ui/LayersPalette';
 
 export default () => {
   return {
     'mousedown': function (map, e) {
-    //   console.log('DRAW->mousedown...');
-
       if (isTileSelectorMap(map)) {
         _toolLogic['EYEDROPPER']['mousedown'](map, e);
         return;
@@ -41,8 +45,8 @@ export default () => {
         return;
       }
 
-      // TODO: Again, this is dumb.  LALALA.
-      if (getSelectedLayer().map_tileData_idx === 999) {
+      // TODO do Zone changes not undo/redo?
+      if (isSpecialLayerZone(getSelectedLayer())) {
         map.setZone(tX, tY, getActiveZone());
         return;
 

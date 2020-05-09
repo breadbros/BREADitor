@@ -3,7 +3,13 @@ import { checkEntities, doEntitySelection } from './SmartEyedropper';
 import { getTXTyFromMouse } from '../Tools';
 import { setActiveZone, scrollZonePalletteToZone } from '../js/ui/ZonesPalette';
 
-import { getSelectedLayer } from '../js/ui/LayersPalette';
+import { 
+  getSelectedLayer,
+  isSpecialLayer,
+  isSpecialLayerEntity,
+  isSpecialLayerObs,
+  isSpecialLayerZone 
+} from '../js/ui/LayersPalette';
 
 import { show_edit_zone_dialog } from '../js/ui/ZonesPalette';
 import { show_edit_entity_dialog } from '../js/ui/EntityPalette';
@@ -30,38 +36,35 @@ export default () => {
       const tX = clickSet[0];
       const tY = clickSet[1];
 
+      const layer = getSelectedLayer();
+
       // TODO: using a valid integer as a sentinel is stupid. using sentinels is stupid. you're stupid, grue.
-      if (getSelectedLayer().map_tileData_idx > 900) {
-        switch (getSelectedLayer().map_tileData_idx) {
-          case 999:
-            zIdx = map.getZone(tX, tY);
-            
-            if(zIdx === undefined) {
-              zIdx = 0;
-            }
+      if (isSpecialLayer(layer)) {
+        if(isSpecialLayerZone(layer)) {
 
-            setActiveZone(zIdx);
+          zIdx = map.getZone(tX, tY);
+          
+          if(zIdx === undefined) {
+            zIdx = 0;
+          }
 
-            scrollZonePalletteToZone(zIdx);
+          setActiveZone(zIdx);
 
+          scrollZonePalletteToZone(zIdx);
+
+        } else if( isSpecialLayerObs(layer) ) {
+          tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
+        } else if( isSpecialLayerEntity(layer) ) {
+          const ent = checkEntities(map.entities['Entity Layer (E)'], null, map, clickSet);
+          if (ent) {
+            doEntitySelection(ent);
             return;
-          case 998:
-            console.log('OBS!');
-            tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
-            break;
+          }
+        } else {
+          throw new Error('SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN');
+        }            
+      } else { // if a normal tile layer
 
-          case 997:
-
-            const ent = checkEntities(map.entities['Entity Layer (E)'], null, map, clickSet);
-            if (ent) {
-              doEntitySelection(ent);
-              return;
-            }
-            break;
-          default:
-            throw new Error('SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN');
-        }
-      } else {
         // TODO seriously branching code here is not a good idea for complexity reasons.  rework later?
         if (map.mapData.isTileSelectorMap) {
           tIdx = map.getTile(tX, tY, 0);
@@ -81,30 +84,26 @@ export default () => {
       let tIdx = null;
       let zIdx = -1;
 
-      if (getSelectedLayer().map_tileData_idx > 900) {
-        switch (getSelectedLayer().map_tileData_idx) {
-          case 999:
-            zIdx = map.getZone(tX, tY);
-            if(zIdx === undefined) {
-              zIdx = 0;
-            }
+      const layer = getSelectedLayer();
 
-            setActiveZone(zIdx);
-            scrollZonePalletteToZone(zIdx);
-            show_edit_zone_dialog(zIdx);
+      if (isSpecialLayer(layer)) {
+        if(isSpecialLayerZone(layer)) {
+          zIdx = map.getZone(tX, tY);
+          if(zIdx === undefined) {
+            zIdx = 0;
+          }
+          setActiveZone(zIdx);
+          scrollZonePalletteToZone(zIdx);
+          show_edit_zone_dialog(zIdx);
+        } else if(isSpecialLayerEntity(layer)) {
+          const ent = checkEntities(map.entities['Entity Layer (E)'], null, map, clickSet);
+          if (ent) {
+            doEntitySelection(ent);
+            show_edit_entity_dialog(ent.eIdx);
             return;
-
-          case 997:
-            const ent = checkEntities(map.entities['Entity Layer (E)'], null, map, clickSet);
-            if (ent) {
-              doEntitySelection(ent);
-              show_edit_entity_dialog(ent.eIdx);
-              return;
-            }
-            break;
-
-          default:
-            throw new Error('SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN');
+          }
+        } else {
+          throw new Error('SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN');
         }
       }
     },

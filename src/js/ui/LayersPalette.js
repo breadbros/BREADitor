@@ -74,7 +74,7 @@ export const selectNumberedLayer = (rstringNum) => {
   }
 };
 
-export const isSpecalLaye = (layer) => {
+export const isSpecialLayer = (layer) => {
   return layer.map_tileData_idx > 990;
 }
 
