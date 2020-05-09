@@ -56,6 +56,8 @@ const animateAlpha = (t, swag) => {
   return Math.sin(t / swag) * 0.3 + 0.5;
 };
 
+// Builds an image (well a uint8 array) where each pixel of the image maps to a tile index on the vsp.
+// A very dark minimap.
 const buildTileDataTexture = (data) => {
   const out = new Uint8Array(data.length * 4);
   for (let i = 0; i < data.length; i++) {

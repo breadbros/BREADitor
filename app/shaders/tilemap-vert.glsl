@@ -1,6 +1,6 @@
 precision mediump float;
 attribute vec2 a_position;
-varying vec2 v_position;
+varying vec2 v_position; // the position within the maplayer of the current vertex we are currently drawing (0..1 based)
 uniform vec4 u_dimensions; // map width, map height, tile bank width, tile bank height (all in tiles)
 uniform vec4 u_camera; // camera offset x, camera offset y, camera scale x, camera scale y
 
