@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron';
 
 import {
   clickSmartdropper, clickEyedropper, clickDrawBrush, clickMoveViewport, clickSelect, selectAll, clickFloodFill,
-  updateLocationFunction, clickDragItem
+  updateLocationFunction, clickDragItem, handle_esc
 } from '../Tools.js';
 
 import {
@@ -152,6 +152,9 @@ export function setupIPCRenderer() {
         break;
       case 'screenview-indicator':
         alert('screenview-indicator! Yay1112');
+        break;
+      case 'cancel-selections':
+        handle_esc();
         break;
       default:
         console.error('Unknown action from main-menu:', arg);

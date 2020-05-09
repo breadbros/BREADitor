@@ -10,10 +10,16 @@ import floodFillGenerator from './tools/FloodFill';
 import moveViewportGenerator from './tools/MoveViewport';
 import dragItemGenerator from './tools/DragItem'
 
+import { clearAllEntitysFromHighlight } from './js/ui/EntityPalette';
+
 import jetpack from 'fs-jetpack';
 
 const canvasBuffer = require('electron-canvas-to-buffer');
 const fs = require('fs');
+
+export const handle_esc = () => {
+  clearAllEntitysFromHighlight();
+}
 
 export const updateLocationFunction = (map) => {
   const x = map.camera[0];

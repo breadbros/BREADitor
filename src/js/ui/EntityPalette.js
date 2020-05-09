@@ -111,7 +111,7 @@ export const addEntityToHighlight = (ent) => {
   highlightedEnts.add(ent);
 };
 
-export const clearAllEntitysFromHighlight = (ent) => {
+export const clearAllEntitysFromHighlight = () => {
   highlightedEnts.forEach((e) => {
     delete e.MAPED_HIGHLIGHTED;
   });
