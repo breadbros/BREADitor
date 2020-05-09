@@ -94,13 +94,13 @@ export function setupIPCRenderer() {
         window.$$$about_breaditor();
         break;
       case 'focus-layer-O':
-        selectObstructionLayer();
+        selectObstructionLayer(true);
         break;
       case 'focus-layer-Z':
-        selectZoneLayer();
+        selectZoneLayer(true);
         break;
       case 'focus-layer-E':
-        selectEntityLayer();
+        selectEntityLayer(true);
         break;
       case 'focus-layer-1':
       case 'focus-layer-2':

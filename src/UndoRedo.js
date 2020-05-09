@@ -25,8 +25,6 @@ export const MakeUndoRedoStack = (_map) => {
     console.log(redoStack);
   };
 
-  // undolog('initializing undostack');
-
   const change_one_tile = (
     tileX, tileY,
     layerIdx, tileIdx
@@ -34,7 +32,6 @@ export const MakeUndoRedoStack = (_map) => {
     const was = map.getTile(tileX, tileY, layerIdx);
 
     if (was === tileIdx) {
-      // console.log('skip draw of duplicate tile.');
       return;
     }
 
@@ -86,14 +83,12 @@ export const MakeUndoRedoStack = (_map) => {
 
   const undo = () => {
     if (undoStack.length <= 0) {
-// console.log("aborting undo")
       return;
     }
 
     const changes = undoStack.pop();
 
     const redoSet = [];
-// console.log("changes.length: " + changes.length)
     for (let i = changes.length - 1; i >= 0; i--) {
       const was = map.getTile(changes[i][0], changes[i][1], changes[i][2]);
 
@@ -109,16 +104,9 @@ export const MakeUndoRedoStack = (_map) => {
       changes[i][3] = was;
 
       redoSet.push(changes[i]);
-      // console.log( "REDOSET: " )
-      // console.log( JSON.stringify(redoSet) );
     }
 
-    // console.log( "redostack length BEFORE: " + redoStack.length );
     redoStack.push(redoSet);
-    // console.log( "redostack length AFTER: " + redoStack.length );
-    // console.log("pushing redoSet on redoStack");
-    // console.log( "REDOSTACK: " );
-    // console.log( JSON.stringify(redoStack) );
   };
 
   const redo = () => {

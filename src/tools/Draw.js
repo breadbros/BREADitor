@@ -6,8 +6,9 @@ import {
   isSpecialLayer,
   isSpecialLayerEntity,
   isSpecialLayerObs,
-  isSpecialLayerZone 
+  isSpecialLayerZone,
 } from '../js/ui/LayersPalette';
+import { moveSelectedEntityToTile } from '../js/ui/EntityPalette';
 
 export default () => {
   return {
@@ -50,8 +51,10 @@ export default () => {
         map.setZone(tX, tY, getActiveZone());
         return;
 
-      // TODO obs do this too right now. MAGICAL_OBS_LAYER_ID
-      } else {
+      } else if(isSpecialLayerEntity(getSelectedLayer())) {
+        moveSelectedEntityToTile(tX, tY);
+        return;
+      } else { //OBS has special code way down in here :(
         map.UndoRedo.change_one_tile(
             tX, tY,
             getSelectedLayer().map_tileData_idx,

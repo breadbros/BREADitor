@@ -123,6 +123,28 @@ export const getSelectedEntities = () => {
   return Array.from(highlightedEnts);
 }
 
+export const moveSelectedEntityToTile  = (x, y, l) => {
+  const entList = getSelectedEntities();
+
+  if( entList.length != 1 ) {
+    alert("Invald number of entities selected.  Need 1, got " + entList.length );
+    return;
+  }
+
+  const ent = entList[0];
+
+  update_entity_location(ent.INDEX, {
+    tx: x,
+    ty: y,
+    px: null,
+    py: null
+  });
+
+  debugger;
+
+  do_the_no_things(null, redraw_palette);
+}
+
 export const selectEntityByIndex = (idx) => {
   if (!idx) {
     idx = 0;
@@ -650,7 +672,7 @@ const get_entity_data = (chr_filepath) => {
 
   const data = jetpack.read(fullpath, 'json');
 
-  return data;  
+  return data;
 }
 
 const get_animations_by_filepath = (chr_filepath) => {

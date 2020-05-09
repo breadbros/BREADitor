@@ -95,7 +95,7 @@ export const isSpecialLayerZone = (layer) => {
 }
 
 let $zone_container = null;
-export const selectZoneLayer = () => {
+export const selectZoneLayer = (wasHotkey) => {
   const selClass = 'selected';
   let wasZone = false;
   const prevLayer = getSelectedLayer();
@@ -114,7 +114,7 @@ export const selectZoneLayer = () => {
 
   $zone_container.addClass(selClass);
 
-  if (!wasZone && !getZoneVisibility() || wasZone) {
+  if (!wasZone && !getZoneVisibility() || (wasZone && wasHotkey)) {
     $('li.layer.selected button.eyeball_button').click();
   }
 
@@ -122,7 +122,7 @@ export const selectZoneLayer = () => {
 };
 
 let $ent_container = null;
-export const selectEntityLayer = () => {
+export const selectEntityLayer = (wasHotkey) => {
   const selClass = 'selected';
   let wasEnt = false;
   const prevLayer = getSelectedLayer();
@@ -143,7 +143,7 @@ export const selectEntityLayer = () => {
 
   $ent_container.addClass(selClass);
 
-  if (!wasEnt && !getNormalEntityVisibility() || wasEnt) {
+  if (!wasEnt && !getNormalEntityVisibility() || (wasEnt && wasHotkey)) {
     $('li.layer.selected button.eyeball_button').click();
   }
 
@@ -195,7 +195,7 @@ function getLayerSelectCallback() {
 }
 
 let $obs_container = null;
-export const selectObstructionLayer = () => {
+export const selectObstructionLayer = (wasHotkey) => {
   const selClass = 'selected';
 
   let wasObs = false;
@@ -236,7 +236,7 @@ export const selectObstructionLayer = () => {
     }
   });
 
-  if (!wasObs && !getObsVisibility() || wasObs) {
+  if (!wasObs && !getObsVisibility() || (wasObs && wasHotkey)) {
     $('li.layer.selected button.eyeball_button').click();
   }
 };

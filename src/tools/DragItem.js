@@ -1,5 +1,5 @@
 import { getTXTyFromMouse, _toolLogic } from '../Tools';
-import { getSelectedEntities, update_entity_location } from '../js/ui/EntityPalette';
+import { getSelectedEntities, update_entity_location, moveSelectedEntityToTile } from '../js/ui/EntityPalette';
 
 // window.isShiftKeyPressed
 // getSelectedEntities
@@ -7,24 +7,7 @@ import { getSelectedEntities, update_entity_location } from '../js/ui/EntityPale
 export default () => {
   return {
     'mousedown': function (map, e) {
-
-      const entList = getSelectedEntities();
-
-      if( entList.length != 1 ) {
-        alert("Invald number of entities selected.  Need 1, got " + entList.length );
-        return;
-      }
-
-      const ent = entList[0];
-
-      const result = getTXTyFromMouse(map, e);
-
-      update_entity_location(ent.INDEX, {
-        tx: result[0],
-        ty: result[1],
-        px: null,
-        py: null
-      });
+      // moveSelectedEntityToTile(result[0], result[1])
 
       // map.selection.deselect();
 
