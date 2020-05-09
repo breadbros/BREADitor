@@ -1074,15 +1074,31 @@ function get_layernames_by_rstring_order() {
   return ret;
 };
 
-let template = "<div>Name: <input id='layer_name'></div>";
-template += "<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> ";
-template += "   y: <input id='layer_parallax_y' value='1' size=3></div>";
-template += "<div>Dimensions (tiles): w: <input id='layer_dims_x' size=3> h: <input id='layer_dims_y' size=3></div>";
-template += "<div>Offset (pixels): x: <input id='layer_offset_x' value='0' size=3> y: <input id='layer_offset_y' value='0' size=3></div>";
-template += "<div>Alpha: <input id='layer_opacity' value='1' size=3></div>";
-template += "<div>vsp: <input id='layer_vsp' value='default'></div>";
-template += "<div>isTallEntity Redraw Layer? <input type='checkbox' id='layer_is_tall_redraw_layer'></div>";
-template += "<div>Index: <span id='layer_idx'></span></div>";
+let template = `
+<div>Name: <input id='layer_name'></div>
+
+<div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> 
+   y: <input id='layer_parallax_y' value='1' size=3></div>
+
+<div>Dimensions (tiles): w: <input id='layer_dims_x' size=3> h: <input id='layer_dims_y' size=3></div>
+
+<div>Offset (pixels): x: <input id='layer_offset_x' value='0' size=3> y: <input id='layer_offset_y' value='0' size=3></div>
+
+<div>Alpha: <input id='layer_opacity' value='1' size=3></div>
+
+<div>vsp: <input id='layer_vsp' value='default'></div>
+
+<div>isTallEntity Redraw Layer? <input type='checkbox' id='layer_is_tall_redraw_layer'></div>
+
+<div>Index: <span id='layer_idx'></span></div>
+
+<div>Border Color: 
+  <span id='border_color'>Off</span> 
+  <span id='border_color_example' style='display: none; width: 40px; border: 1px solid white; height: 20px;' >&nbsp;&nbsp;&nbsp;&nbsp;</span> 
+  <input id='border_color_picker_button'>Pick color</button>
+  <button id='border_off_button'>Turn off</button>
+</div>
+`;
 
 function setup_template() {
   const $template = $(template);
@@ -1094,6 +1110,19 @@ function setup_template() {
     $dims_x.val(window.$$$currentMap.mapSizeInTiles.width);
     $dims_y.val(window.$$$currentMap.mapSizeInTiles.height);
   }
+
+/*
+Options:
+
+color string or hash  The default color. String for hex color or hash for RGB and HSB ({r:255, r:0, b:0}) . Default: 'ff0000'
+flat  boolean Whatever if the color picker is appended to the element or triggered by an event. Default false
+livePreview boolean Whatever if the color values are filled in the fields while changing values on selector or a field. If false it may improve speed. Default true
+onShow  function  Callback function triggered when the color picker is shown
+onBeforeShow  function  Callback function triggered before the color picker is shown
+onHide  function  Callback function triggered when the color picker is hidden
+onChange  function  Callback function triggered when the color is changed
+onSubmit  function  Callback function triggered when the color it is chosen
+*/
 
   return $template;
 }
@@ -1155,6 +1184,18 @@ function _layer_click(evt, layerIdx, onComplete) {
       $template.find('#layer_is_tall_redraw_layer').prop(
         'checked', layer === window.$$$currentMap.getEntityTallRedrawLayer()
       );
+
+      if(layer.borderColor) {
+        $template.find('#border_color').text(layer.borderColor);
+        $template.find('#border_color_example').css('background-color', layer.borderColor);
+        $template.find('#border_off_button').css('display', 'block');
+      } else {
+        $template.find('#border_color').text("none");
+        $template.find('#border_color_example').css('display', 'none');
+        $template.find('#border_off_button').css('display', 'none');
+      }
+
+      $template.find('border_color_picker_button');
 
       newLayerId = layerIdx;
 

@@ -1110,6 +1110,8 @@ Map.prototype = {
       this.gl, readShader('shaders/selection-vert.glsl'), readShader('shaders/selection-frag.glsl'));
     this.screenviewShader = new ShaderProgram(
       this.gl, readShader('shaders/screenview-vert.glsl'), readShader('shaders/screenview-frag.glsl'));
+    this.layerBorderShader = new ShaderProgram(
+      this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/layerborder-frag.glsl'));
 
     this.tileLibraryTextures = {};
     for (const k in this.vspImages) {
@@ -1385,7 +1387,6 @@ Map.prototype = {
     const tallEntities = [];
 
     // render each layer in turn
-
     this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.SRC_ALPHA, this.gl.DST_ALPHA);
     const len = this.layerRenderOrder.length;
     for (let i = 0; i < len; i++) {
@@ -1466,6 +1467,7 @@ Map.prototype = {
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, this.tileLibraryTextures[vsp]);
 
+    // todo: rename u_tileLayout to something eles?  "Dark Minimap?"
     const u_tileLayout = this.tilemapShader.uniform('u_tileLayout');
     gl.uniform1i(u_tileLayout, 1);
     gl.activeTexture(gl.TEXTURE1);
@@ -1481,6 +1483,56 @@ Map.prototype = {
     gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    const tileWiseOffsetX = appliedOffset.X / this.vspData[layer.vsp].tilesize.width;
+    const tileWiseOffsetY = appliedOffset.Y / this.vspData[layer.vsp].tilesize.height;
+
+    this.lineBuf = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.lineBuf );
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
+      tileWiseOffsetX, -tileWiseOffsetY,
+      layer.dimensions.X, -tileWiseOffsetY,
+      layer.dimensions.X, -tileWiseOffsetY,
+      layer.dimensions.X, -layer.dimensions.Y, 
+      layer.dimensions.X, -layer.dimensions.Y, 
+      tileWiseOffsetX, -layer.dimensions.Y,
+      tileWiseOffsetX, -layer.dimensions.Y,
+      tileWiseOffsetX, -tileWiseOffsetY,]),
+      this.gl.STATIC_DRAW
+    );
+
+    this.layerBorderShader.use();
+    
+    const a_positionLayer = this.layerBorderShader.attribute('a_position');
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.lineBuf);
+    gl.enableVertexAttribArray(a_positionLayer);
+    gl.vertexAttribPointer(a_positionLayer, 2, gl.FLOAT, false, 0, 0);
+
+    gl.uniform4f(this.layerBorderShader.uniform('u_camera'),
+      Math.floor(layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
+      this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
+      this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
+    );
+
+    gl.uniform4f(this.layerBorderShader.uniform('u_dimensions'),
+      layer.dimensions.X,
+      layer.dimensions.Y,
+      this.vspData[vsp].tiles_per_row,
+      this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+    );
+
+    const r = layer.borderColor ? layer.borderColor.R : 0;
+    const g = layer.borderColor ? layer.borderColor.G : 0;
+    const b = layer.borderColor ? layer.borderColor.B : 0;
+    const a = layer.borderColor ? layer.borderColor.A : 0;
+
+    gl.uniform4f(
+      this.layerBorderShader.uniform('u_borderColor'),
+      r,g,b, a
+    );
+
+    gl.drawArrays( gl.LINES, 0, 8 );
 
     this.drawEntities(i, this, layer, tallEntities, tick);
   },
