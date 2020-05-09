@@ -5,13 +5,11 @@ const path = require('path');
 const appPath = app.getAppPath();
 const jetpack = require('fs-jetpack').cwd(appPath);
 import { ShaderProgram } from './ShaderProgram.js';
-import { updateRstringInfo, getCurrentHoverTile, updateInfoDims } from './Tools.js';
+import { updateRstringInfo, getCurrentHoverTile, updateInfoDims, updateLocationText, updateZoomText } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer, generate_unique_entity_uuid_for_this_map } from './js/ui/EntityPalette.js';
 const sprintf = require('sprintf-js').sprintf;
 const $ = require('jquery');
-
-
 
 import { getSelectedLayer } from './js/ui/LayersPalette.js';
 
@@ -1032,15 +1030,15 @@ Map.prototype = {
     const localStorage = window.localStorage;
 
     if (localStorage[key] + '-mapx') {
-      // TODO This is weird.  Why is the map palette being set here and then again in setPaletteLocations?
       if (localStorage[key + '-width']) { $cont.width(localStorage[key + '-width']); }
       if (localStorage[key + '-height']) { $cont.height(localStorage[key + '-height']); }
       if (localStorage[key + '-top']) { $cont.css('top', localStorage[key + '-top']); }
       if (localStorage[key + '-left']) { $cont.css('left', localStorage[key + '-left']); }
       if (localStorage[key + '-mapx']) { this.camera[0] = parseInt(localStorage[key + '-mapx']); }
       if (localStorage[key + '-mapy']) { this.camera[1] = parseInt(localStorage[key + '-mapy']); }
+      if (localStorage[key + '-mapzoom']) { this.camera[2] = parseInt(localStorage[key + '-mapzoom']); }
 
-      if (localStorage[key + '-layerspallete']) { this.camera[1] = parseInt(localStorage[key + '-mapy']); }
+      if (localStorage[key + '-layerspallete']) { this.camera[1] = parseInt(localStorage[key + '-layerspallete']); }
 
       if (localStorage['palettes']) {
         console.info('palletes found...');
@@ -1048,6 +1046,10 @@ Map.prototype = {
       } else {
         console.warn('no palettes registered.');
       }
+
+      updateInfoDims(this);
+      updateLocationText(this);
+      updateZoomText(this);
     }
 
     return this.readyPromise;

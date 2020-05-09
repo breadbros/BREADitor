@@ -15,19 +15,35 @@ import jetpack from 'fs-jetpack';
 const canvasBuffer = require('electron-canvas-to-buffer');
 const fs = require('fs');
 
-export const updateInfoDims = (map) => {
-  $('#info-dims').text(map.width + 'x' + map.height);
-};
-
 export const updateLocationFunction = (map) => {
   const x = map.camera[0];
   const y = map.camera[1];
+  const z = map.camera[2];
   const key = 'map-' + map.mapData.name;
 
-  $('#info-location').text(x + ',' + y);
+  updateLocationText(map);
 
   window.localStorage[key + '-mapx'] = x;
   window.localStorage[key + '-mapy'] = y;
+  window.localStorage[key + '-mapzoom'] = z;
+};
+
+export const updateInfoDims = (map) => {
+  $('#info-dims').text(map.mapSizeInTiles.width + 'x' + map.mapSizeInTiles.height);
+};
+
+export const updateLocationText = (map) => {
+  $('#info-location').text(map.camera[0] + ',' + map.camera[1]);
+}
+
+export const updateZoomText = (map) => {
+  if(!map) {
+    map = window.$$$currentMap;
+  }
+
+  const txt = (100 / map.camera[2]) + '%';
+
+  $('#info-zoom').text(txt);
 };
 
 let _currentHoverTile = null;
@@ -311,12 +327,6 @@ export const initTools = (renderContainer, map) => {
   renderContainer.on('mousewheel', function (e) {
     tools('mousewheel', map, e);
   });
-};
-
-const updateZoomText = () => {
-  const txt = (100 / window.$$$currentMap.camera[2]) + '%';
-
-  $('#info-zoom').text(txt);
 };
 
 const currentLayerCanHaveEntityOnIt = () => {
