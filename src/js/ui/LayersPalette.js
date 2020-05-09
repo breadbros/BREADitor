@@ -194,6 +194,12 @@ let $obs_container = null;
 export const selectObstructionLayer = () => {
   const selClass = 'selected';
 
+  let wasObs = false;
+  const prevLayer = getSelectedLayer();
+  if( prevLayer && isSpecialLayerObs(prevLayer) ) {
+    wasObs = true;
+  }
+
   removeAllSelectedLayers(selClass);
 
   // TODO this is the wrong place to do this
@@ -225,6 +231,10 @@ export const selectObstructionLayer = () => {
       setDefaultObsTiles();
     }
   });
+
+  if (!wasObs && !getObsVisibility() || wasObs) {
+    $('li.layer.selected button.eyeball_button').click();
+  }
 };
 
 let layers = null;
