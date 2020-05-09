@@ -78,7 +78,7 @@ export const isSpecalLaye = (layer) => {
   return layer.map_tileData_idx > 990;
 }
 
-export const isSpecialLayerEntities = (layer) => {
+export const isSpecialLayerEntity = (layer) => {
   return layer.map_tileData_idx === 997;
 }
 
@@ -120,6 +120,11 @@ export const selectZoneLayer = () => {
 let $ent_container = null;
 export const selectEntityLayer = () => {
   const selClass = 'selected';
+  let wasEnt = false;
+  const prevLayer = getSelectedLayer();
+  if( prevLayer && isSpecialLayerEntity(prevLayer) ) {
+    wasEnt = true;
+  }
 
   removeAllSelectedLayers(selClass);
 
@@ -133,6 +138,10 @@ export const selectEntityLayer = () => {
   });
 
   $ent_container.addClass(selClass);
+
+  if (!wasEnt && !getNormalEntityVisibility() || wasEnt) {
+    $('li.layer.selected button.eyeball_button').click();
+  }
 
   closeEditLayerDialog();
 };
