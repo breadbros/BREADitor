@@ -9,25 +9,25 @@ export const getVerboseLogging = () => {
   return verboseLogging;
 }
 
-export const INFO = () => {
-  if(verboseLogging) {
-    console.info.apply( console, Array.prototype.slice.call(arguments, 0) );
+export const INFO = (...args) => {
+  if (verboseLogging) {
+    console.info.apply(console, args);
   }
 }
 
-export const LOG = () => {
-  if(verboseLogging) {
-    console.log.apply( console, Array.prototype.slice.call(arguments, 0) );
+export const LOG = (...args) => {
+  if (verboseLogging) {
+    console.log.apply(console, args);
   }
 }
 
-export const WARN = () => {
-  if(verboseLogging) {
-    console.warn.apply( console, Array.prototype.slice.call(arguments, 0) );
+export const WARN = (...args) => {
+  if (verboseLogging) {
+    console.warn.apply(console, args);
   }
 }
 
 // no suppressions on errors!
-export const ERROR = () => {
-  console.error.apply( console, Array.prototype.slice.call(arguments, 0) );
+export const ERROR = (...args) => {
+  console.error.apply(console, args);
 }

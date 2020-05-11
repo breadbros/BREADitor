@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from 'electron';
-import { setVerboseLogging, getVerboseLogging } from '../Logging';
+import { send } from '../main/SendMsgToMainWindow';
 
 export const devMenuTemplate = {
   label: 'Development',
@@ -19,7 +19,7 @@ export const devMenuTemplate = {
     label: 'Toggle Verbose Console Debugging',
     accelerator: 'Alt+CmdOrCtrl+L',
     click: function () {
-      setVerboseLogging(!getVerboseLogging());
+      send('toggle-verbose-logging');
     }
   }, {
     label: 'Quit',

@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import { setVerboseLogging, getVerboseLogging } from '../Logging';
 
 import {
   clickSmartdropper, clickEyedropper, clickDrawBrush, clickMoveViewport, clickSelect, selectAll, clickFloodFill,
@@ -25,7 +26,6 @@ export function setupIPCRenderer() {
   console.log("==========================================================");
   console.log("==========================================================");
   console.log("==========================================================");
-
 
   // Setup IPC
   ipcRenderer.on('main-menu', (event, arg) => {
@@ -163,6 +163,9 @@ export function setupIPCRenderer() {
         break;
       case 'cancel-selections':
         handle_esc();
+        break;
+      case 'toggle-verbose-logging':
+        setVerboseLogging(!getVerboseLogging());
         break;
       default:
         console.error('Unknown action from main-menu:', arg);
