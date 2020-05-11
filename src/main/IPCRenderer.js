@@ -15,6 +15,18 @@ import { toggleSelectedTiles, moveSelectedTile } from '../TileSelector';
 
 
 export function setupIPCRenderer() {
+  console.log("==========================================================");
+  console.log("==========================================================");
+  console.log("==========================================================");
+  console.log("Welcome to the Breaditor!");
+  console.log("If you're going to use the Electron console, please undock");
+  console.log("it to a seperate window... or else it'll pick up your");
+  console.log("keystrokes as hotkey presses.  And that's annoying!");
+  console.log("==========================================================");
+  console.log("==========================================================");
+  console.log("==========================================================");
+
+
   // Setup IPC
   ipcRenderer.on('main-menu', (event, arg) => {
     if (typeof arg.accelerator === 'string') {
@@ -34,10 +46,6 @@ export function setupIPCRenderer() {
       if( arg.msg == 'tool-move-viewport' && el.type) {
         return;
       }
-
-      // console.log(document.activeElement);
-      // var el = document.activeElement;
-      // debugger;
     }
 
     switch (arg.msg) {
