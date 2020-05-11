@@ -33,13 +33,15 @@
     "validate": "npm ls"
   },
   "dependencies": {
+    "@sphinxxxx/color-conversion": "^2.2.2",
     "electron-canvas-to-buffer": "^2.0.0",
     "fs-jetpack": "^0.10.2",
     "lodash": "^4.17.13",
     "natives": "^1.1.6",
     "sprintf-js": "^1.0.3",
     "ui-contextmenu": "^1.18.1",
-    "uuid": "^8.0.0"
+    "uuid": "^8.0.0",
+    "vanilla-picker": "github:mcgrue/vanilla-picker"
   },
   "devDependencies": {
     "babel-jest": "^17.0.2",
@@ -71,5 +73,10 @@
     "rollup-plugin-istanbul": "^1.1.0",
     "source-map-support": "^0.4.2",
     "spectron": "^3.3.0"
-  }
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ]
 }

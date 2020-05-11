@@ -8,6 +8,7 @@ import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
 import { setTileSelectorUI, setDefaultObsTiles } from '../../TileSelector';
 import { resize_layer } from './Util.js';
 
+import Picker from 'vanilla-picker';
 
 const $ = require('jquery');
 
@@ -19,7 +20,7 @@ export const visibilityFix = () => {
   const $n = $('.layers-palette');
 
   if ($n.width() < 100) {
-    $n.css('width', '230px'); // todo  minwidth/height this in the css
+    $n.css('width', '330px'); // todo  minwidth/height this in the css
     $n.css('height', '330px');
   }
 };
@@ -1093,9 +1094,10 @@ let template = `
 <div>Index: <span id='layer_idx'></span></div>
 
 <div>Border Color: 
+  <input hidden id='layer_border_color' value='' />
   <span id='border_color'>Off</span> 
   <span id='border_color_example' style='display: none; width: 40px; border: 1px solid white; height: 20px;' >&nbsp;&nbsp;&nbsp;&nbsp;</span> 
-  <input id='border_color_picker_button'>Pick color</button>
+  <button id='border_color_picker_button'>Pick color</button>
   <button id='border_off_button'>Turn off</button>
 </div>
 `;
@@ -1111,19 +1113,6 @@ function setup_template() {
     $dims_y.val(window.$$$currentMap.mapSizeInTiles.height);
   }
 
-/*
-Options:
-
-color string or hash  The default color. String for hex color or hash for RGB and HSB ({r:255, r:0, b:0}) . Default: 'ff0000'
-flat  boolean Whatever if the color picker is appended to the element or triggered by an event. Default false
-livePreview boolean Whatever if the color values are filled in the fields while changing values on selector or a field. If false it may improve speed. Default true
-onShow  function  Callback function triggered when the color picker is shown
-onBeforeShow  function  Callback function triggered before the color picker is shown
-onHide  function  Callback function triggered when the color picker is hidden
-onChange  function  Callback function triggered when the color is changed
-onSubmit  function  Callback function triggered when the color it is chosen
-*/
-
   return $template;
 }
 
@@ -1134,6 +1123,8 @@ const closeEditLayerDialog = () => {
     dialog = null;
   }
 };
+
+let curLayer = null;
 
 /// TODO this function is overused and a wreck and has side-effects.
 function _layer_click(evt, layerIdx, onComplete) {
@@ -1151,8 +1142,91 @@ function _layer_click(evt, layerIdx, onComplete) {
     const $template = setup_template();
     let newLayerId = null;
 
+    const setLayerColor = (layer, color) => {
+      $template.find('#layer_border_color').val(color);
+      updateLayerColorUI(layer);
+    };
+
+    let off_button_initialized = false;
+
+    const updateLayerColorUI = (layer, _color) => {
+
+      const color = _color || $template.find('#layer_border_color').val();
+
+      if(color) {
+        $template.find('#border_color').text(color);
+        $template.find('#border_color_example').css('background-color', color);
+        $template.find('#border_color_example').css('display', 'inline');
+        $template.find('#border_off_button').css('display', 'inline');
+
+        if(!off_button_initialized) {
+          $template.find("#border_off_button").click( () => {
+            setLayerColor(layer, null);
+          } );
+
+          off_button_initialized = true;
+        }
+        
+      } else {
+        $template.find('#border_color').text("none");
+        $template.find('#border_color_example').css('display', 'none');
+        $template.find('#border_off_button').css('display', 'none');
+      }
+    }
+
     $('#modal-dialog').html('');
     $('#modal-dialog').append($template);
+
+    let elPicker = $('#global_picker');
+
+    if(!elPicker[0]) {
+      elPicker = $('<div id="global_picker"></div>');
+
+      elPicker.css('position', 'absolute');
+      elPicker.css('z-index', '2000000000'); // NO.
+
+      const body = $("body");
+      body.append(elPicker);
+    }
+
+    const pickerParent = $(elPicker);
+
+    const regWrap = () => {
+      picker = regeneratePicker();
+    };
+
+    const regeneratePicker = () => {
+      return new Picker({
+        parent: pickerParent[0],
+        cancelButton: true,
+        onChange: (color) => {
+        },
+        onDone: (color) => {
+          setLayerColor(curLayer, color.hex);
+
+          picker.ignoreButtonPressId = 'BUTTS';
+          picker.destroy();
+          picker = null;
+
+          setTimeout( regWrap, 10 );
+        },
+        onClose: (color) => {
+          picker.destroy();
+          picker = null;
+          
+          setTimeout( regWrap, 10 );
+        },
+        onOpen: (color)  => {
+          const position = $('#border_color_picker_button').offset();
+          position.left += $('#border_color_picker_button').width();
+          
+          $('#global_picker').offset(position);
+        },
+        ignoreButtonPressId: "border_color_picker_button"
+      });
+    };
+
+    var picker = regeneratePicker();
 
     let title = null;
 
@@ -1168,6 +1242,7 @@ function _layer_click(evt, layerIdx, onComplete) {
 
     if (typeof layerIdx === 'number') {
       const layer = window.$$$currentMap.mapData.layers[layerIdx]; // TODO needs better accessor
+      curLayer = layer;
 
       title = 'Edit Layer: ' + layer.name;
 
@@ -1185,17 +1260,13 @@ function _layer_click(evt, layerIdx, onComplete) {
         'checked', layer === window.$$$currentMap.getEntityTallRedrawLayer()
       );
 
-      if(layer.borderColor) {
-        $template.find('#border_color').text(layer.borderColor);
-        $template.find('#border_color_example').css('background-color', layer.borderColor);
-        $template.find('#border_off_button').css('display', 'block');
-      } else {
-        $template.find('#border_color').text("none");
-        $template.find('#border_color_example').css('display', 'none');
-        $template.find('#border_off_button').css('display', 'none');
-      }
+      updateLayerColorUI(layer, layer.borderColor_hex);
 
-      $template.find('border_color_picker_button');
+      $template.find('#border_color_picker_button').click( (evt) => {
+        evt.stopPropagation();
+        evt.preventDefault();
+        picker.openHandler();
+      } );
 
       newLayerId = layerIdx;
 
@@ -1209,7 +1280,7 @@ function _layer_click(evt, layerIdx, onComplete) {
           if(myIdx === 0) {
             alert('You cannot delete the base layer (index 0) presently.');
             return;
-          }
+          } 
 
           if(layer === window.$$$currentMap.getEntityTallRedrawLayer()) {
             alert('You cannot delete the tall redraw layer.  Please set it to another layer and try again.');
@@ -1261,10 +1332,23 @@ function _layer_click(evt, layerIdx, onComplete) {
       title: title,
       buttons: buttonsLol,
       close: function () {
+        curLayer = null;
+        picker.destroy();
+        picker = null;
         $('#modal-dialog').html('');
       }
     });
   });
+}
+
+function hexToRgba(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    R: parseInt(result[1], 16),
+    G: parseInt(result[2], 16),
+    B: parseInt(result[3], 16),
+    A: parseInt(result[4], 16),
+  } : {R:null, B:null, G:null, A:null};
 }
 
 const update_layer = (dialog, layer_id, onComplete) => {
@@ -1277,6 +1361,9 @@ const update_layer = (dialog, layer_id, onComplete) => {
   let offset_y = dialog.find('#layer_offset_y').val();
   let alpha = dialog.find('#layer_opacity').val();
   const vsp = dialog.find('#layer_vsp').val();
+  const borderColor_hex = dialog.find('#layer_border_color').val();
+  const borderColor = hexToRgba(borderColor_hex);
+
   let layer = null;
 
   // Validate Parallax
@@ -1373,7 +1460,9 @@ const update_layer = (dialog, layer_id, onComplete) => {
       X: parseFloat(par_x),
       Y: parseFloat(par_y)
     },
-    vsp: vsp
+    vsp: vsp,
+    borderColor_hex: borderColor_hex,
+    borderColor: borderColor
   };
 
   if (layer_id === layers.length) {

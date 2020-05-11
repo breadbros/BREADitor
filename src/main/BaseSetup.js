@@ -3,7 +3,7 @@ import { LOG, INFO } from '../Logging'
 import { TilesetSelectorWidget } from '../js/ui/TilesetSelectorPalette.js';
 import { Map, verifyTileData, verifyMap, cleanEntities } from '../Map.js';
 import { Palettes } from '../Palettes.js';
-import { LayersWidget } from '../js/ui/LayersPalette.js'; //, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix, newLayerOnNewMap
+import { LayersWidget, visibilityFix } from '../js/ui/LayersPalette.js'; //, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
 import { ZonesWidget } from '../js/ui/ZonesPalette.js';
 import { EntitiesWidget } from '../js/ui/EntityPalette.js';
 import { updateMapAndVSPFileInfo } from '../js/ui/InfoPalette.js';
