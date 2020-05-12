@@ -16,6 +16,30 @@ let list;
 
 let _obsAlpha = 1;
 
+// in leiu of types, for now...
+const generate_layer = (name, alpha, new_dim_x, new_dim_y, offset_x, offset_y, par_x, par_y, vsp, borderColor_hex, borderColor, map_tileData_idx) => {
+  return {
+    name: name,
+    alpha: alpha,
+    dimensions: {
+      X: new_dim_x,
+      Y: new_dim_y
+    },
+    offset: {
+      X: offset_x,
+      Y: offset_y,
+    },
+    parallax: {
+      X: parseFloat(par_x),
+      Y: parseFloat(par_y)
+    },
+    vsp: vsp,
+    borderColor_hex: borderColor_hex,
+    borderColor: borderColor,
+    map_tileData_idx: map_tileData_idx
+  };
+}
+
 export const visibilityFix = () => {
   const $n = $('.layers-palette');
 
@@ -1124,7 +1148,7 @@ const closeEditLayerDialog = () => {
   }
 };
 
-let curLayer = null;
+let curLayer = generate_layer();
 
 /// TODO this function is overused and a wreck and has side-effects.
 function _layer_click(evt, layerIdx, onComplete) {
@@ -1445,25 +1469,7 @@ const update_layer = (dialog, layer_id, onComplete) => {
 
   alpha = parseFloat(alpha);
 
-  layer = {
-    name: name,
-    alpha: alpha,
-    dimensions: {
-      X: new_dim_x,
-      Y: new_dim_y
-    },
-    offset: {
-      X: offset_x,
-      Y: offset_y,
-    },
-    parallax: {
-      X: parseFloat(par_x),
-      Y: parseFloat(par_y)
-    },
-    vsp: vsp,
-    borderColor_hex: borderColor_hex,
-    borderColor: borderColor
-  };
+  layer = generate_layer(name, alpha, new_dim_x, new_dim_y, offset_x, offset_y, par_x, par_y, vsp, borderColor_hex, borderColor);
 
   if (layer_id === layers.length) {
     old_dim_x = new_dim_x;
