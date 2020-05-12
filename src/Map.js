@@ -1522,10 +1522,10 @@ Map.prototype = {
       this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
     );
 
-    const r = layer.borderColor ? layer.borderColor.R : 0;
-    const g = layer.borderColor ? layer.borderColor.G : 0;
-    const b = layer.borderColor ? layer.borderColor.B : 0;
-    const a = layer.borderColor ? layer.borderColor.A : 0;
+    const r = layer.borderColor ? layer.borderColor.R / 255 : 0;
+    const g = layer.borderColor ? layer.borderColor.G / 255 : 0;
+    const b = layer.borderColor ? layer.borderColor.B / 255 : 0;
+    const a = layer.borderColor ? layer.borderColor.A / 255 : 0;
 
     gl.uniform4f(
       this.layerBorderShader.uniform('u_borderColor'),
