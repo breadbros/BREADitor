@@ -1215,8 +1215,18 @@ function _layer_click(evt, layerIdx, onComplete) {
 
     const pickerParent = $(elPicker);
 
+    // can this get any grosser?
     const regWrap = () => {
       picker = regeneratePicker();
+    };
+
+    const _bad_picker_hax_cleanup = (picker) => {
+      picker.ignoreButtonPressId = 'BUTTS';
+      picker.destroy();
+      picker = null;
+
+      // really?
+      setTimeout( regWrap, 10 );
     };
 
     const regeneratePicker = () => {
@@ -1228,17 +1238,10 @@ function _layer_click(evt, layerIdx, onComplete) {
         onDone: (color) => {
           setLayerColor(curLayer, color.hex);
 
-          picker.ignoreButtonPressId = 'BUTTS';
-          picker.destroy();
-          picker = null;
-
-          setTimeout( regWrap, 10 );
+          _bad_picker_hax_cleanup(picker);
         },
         onClose: (color) => {
-          picker.destroy();
-          picker = null;
-          
-          setTimeout( regWrap, 10 );
+          _bad_picker_hax_cleanup(picker);
         },
         onOpen: (color)  => {
           const position = $('#border_color_picker_button').offset();
