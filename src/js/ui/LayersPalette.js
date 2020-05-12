@@ -1255,6 +1255,12 @@ function _layer_click(evt, layerIdx, onComplete) {
 
     var picker = regeneratePicker();
 
+    $template.find('#border_color_picker_button').click( (evt) => {
+      evt.stopPropagation();
+      evt.preventDefault();
+      picker.openHandler();
+    } );
+
     let title = null;
 
     const buttonsLol = [{
@@ -1287,13 +1293,9 @@ function _layer_click(evt, layerIdx, onComplete) {
         'checked', layer === window.$$$currentMap.getEntityTallRedrawLayer()
       );
 
-      updateLayerColorUI(layer, layer.borderColor_hex);
+      $template.find('#layer_border_color').val(layer.borderColor_hex);
 
-      $template.find('#border_color_picker_button').click( (evt) => {
-        evt.stopPropagation();
-        evt.preventDefault();
-        picker.openHandler();
-      } );
+      updateLayerColorUI(layer, layer.borderColor_hex);
 
       newLayerId = layerIdx;
 
