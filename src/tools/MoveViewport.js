@@ -1,5 +1,21 @@
-import { _toolLogic, isTileSelectorMap } from '../Tools';
+import { _toolLogic, isTileSelectorMap, grue_zoom } from '../Tools';
 import { LOG } from '../Logging';
+
+const throttle = (func, limit) => {
+  let inThrottle;
+
+  return function() {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  }
+}
+
+const SCROLL_THROTTLE = 100;
 
 export default () => {
   return {
@@ -15,6 +31,17 @@ export default () => {
       window.$MAP_WINDOW.draggable('disable');
       _toolLogic['MOVE-VIEWPORT'].last_mouse = [ e.clientX, e.clientY ];
     },
+
+    'wheel': throttle( 
+      function (map, e) {
+        if( e.originalEvent.deltaY < 0 || e.originalEvent.deltaX < 0 ) {
+          grue_zoom(false, map);
+        } else if( e.originalEvent.deltaY > 0 || e.originalEvent.deltaX > 0 ) {
+          grue_zoom(true, map);
+        } else {
+          LOG('Lol, no wheel deltas?');
+        }
+      }, SCROLL_THROTTLE),
 
     'mousemove': function (map, e) {
       if (isTileSelectorMap(map)) {

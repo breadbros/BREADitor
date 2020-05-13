@@ -145,7 +145,7 @@ const zoomFn = function (map, e, zoomout) {
 };
 
 // TODO function to be renamed (and probably changed) later.  This is dumb.
-const grue_zoom = (zoomout, map, evt) => {
+export const grue_zoom = (zoomout, map, evt) => {
   // if no event, fake it and center on current view.
   // TODO Do we even ACCEPT events anymore?
   if (!evt) {
@@ -330,8 +330,8 @@ export const initTools = (renderContainer, map) => {
   renderContainer.on('dblclick', function (e) {
     tools('dblclick', map, e);
   });
-  renderContainer.on('mousewheel', function (e) {
-    tools('mousewheel', map, e);
+  renderContainer.on('wheel', function (e) {
+    tools('wheel', map, e);
   });
 };
 
@@ -395,7 +395,7 @@ const hackToolsInit = () => {
         window.TOOLMODE = 'MOVE-VIEWPORT';
       },
       mousedown: () => {},
-      mousewheel: () => {}
+      wheel: () => {}
     };
   });
 
