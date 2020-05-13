@@ -8,8 +8,6 @@ import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
 import { setTileSelectorUI, setDefaultObsTiles } from '../../TileSelector';
 import { resize_layer } from './Util.js';
 
-import Picker from 'vanilla-picker';
-
 const $ = require('jquery');
 
 let list;
@@ -1120,8 +1118,7 @@ let template = `
 <div>Border Color: 
   <input hidden id='layer_border_color' value='' />
   <span id='border_color'>Off</span> 
-  <span id='border_color_example' style='display: none; width: 40px; border: 1px solid white; height: 20px;' >&nbsp;&nbsp;&nbsp;&nbsp;</span> 
-  <button id='border_color_picker_button'>Pick color</button>
+  <input type='text' id="full-spectrum-inline"/>
   <button id='border_off_button'>Turn off</button>
 </div>
 `;
@@ -1173,14 +1170,32 @@ function _layer_click(evt, layerIdx, onComplete) {
 
     let off_button_initialized = false;
 
+    $('#modal-dialog').html('');
+    $('#modal-dialog').append($template);
+
+    const colorPicker = $('#full-spectrum-inline').spectrum({
+      color: $template.find('#layer_border_color').val(),
+      showInput: true,
+      // showAlpha: true,
+      className: "full-spectrum",
+      showInitial: true,
+      showSelectionPalette: true,
+      maxSelectionSize: 10,
+      preferredFormat: "hex",
+      change: function(color) {
+        const _color = color.toHexString() + "ff";
+        setLayerColor(curLayer, _color);
+        colorPicker.spectrum("set", color.toHexString());
+      }
+    });
+
     const updateLayerColorUI = (layer, _color) => {
 
       const color = _color || $template.find('#layer_border_color').val();
 
       if(color) {
-        $template.find('#border_color').text(color);
-        $template.find('#border_color_example').css('background-color', color);
-        $template.find('#border_color_example').css('display', 'inline');
+
+        $template.find('#border_color').text(color.substr(0,7));
         $template.find('#border_off_button').css('display', 'inline');
 
         if(!off_button_initialized) {
@@ -1195,71 +1210,9 @@ function _layer_click(evt, layerIdx, onComplete) {
         $template.find('#border_color').text("none");
         $template.find('#border_color_example').css('display', 'none');
         $template.find('#border_off_button').css('display', 'none');
+        colorPicker.spectrum("set", "00000000");
       }
     }
-
-    $('#modal-dialog').html('');
-    $('#modal-dialog').append($template);
-
-    let elPicker = $('#global_picker');
-
-    if(!elPicker[0]) {
-      elPicker = $('<div id="global_picker"></div>');
-
-      elPicker.css('position', 'absolute');
-      elPicker.css('z-index', '2000000000'); // NO.
-
-      const body = $("body");
-      body.append(elPicker);
-    }
-
-    const pickerParent = $(elPicker);
-
-    // can this get any grosser?
-    const regWrap = () => {
-      picker = regeneratePicker();
-    };
-
-    const _bad_picker_hax_cleanup = (picker) => {
-      picker.ignoreButtonPressId = 'BUTTS';
-      picker.destroy();
-      picker = null;
-
-      // really?
-      setTimeout( regWrap, 10 );
-    };
-
-    const regeneratePicker = () => {
-      return new Picker({
-        parent: pickerParent[0],
-        cancelButton: true,
-        onChange: (color) => {
-        },
-        onDone: (color) => {
-          setLayerColor(curLayer, color.hex);
-
-          _bad_picker_hax_cleanup(picker);
-        },
-        onClose: (color) => {
-          _bad_picker_hax_cleanup(picker);
-        },
-        onOpen: (color)  => {
-          const position = $('#border_color_picker_button').offset();
-          position.left += $('#border_color_picker_button').width();
-          
-          $('#global_picker').offset(position);
-        },
-        ignoreButtonPressId: "border_color_picker_button"
-      });
-    };
-
-    var picker = regeneratePicker();
-
-    $template.find('#border_color_picker_button').click( (evt) => {
-      evt.stopPropagation();
-      evt.preventDefault();
-      picker.openHandler();
-    } );
 
     let title = null;
 
@@ -1294,8 +1247,8 @@ function _layer_click(evt, layerIdx, onComplete) {
       );
 
       $template.find('#layer_border_color').val(layer.borderColor_hex);
-
       updateLayerColorUI(layer, layer.borderColor_hex);
+      colorPicker.spectrum("set", layer.borderColor_hex.substr(0,7));
 
       newLayerId = layerIdx;
 
@@ -1362,8 +1315,6 @@ function _layer_click(evt, layerIdx, onComplete) {
       buttons: buttonsLol,
       close: function () {
         curLayer = null;
-        picker.destroy();
-        picker = null;
         $('#modal-dialog').html('');
       }
     });
@@ -1373,10 +1324,10 @@ function _layer_click(evt, layerIdx, onComplete) {
 function hexToRgba(hex) {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? {
-    R: parseInt(result[1], 16),
-    G: parseInt(result[2], 16),
-    B: parseInt(result[3], 16),
-    A: parseInt(result[4], 16),
+    R: parseFloat(parseInt(result[1], 16)) / 255,
+    G: parseFloat(parseInt(result[2], 16)) / 255,
+    B: parseFloat(parseInt(result[3], 16)) / 255,
+    A: parseFloat(parseInt(result[4], 16)) / 255,
   } : {R:null, B:null, G:null, A:null};
 }
 

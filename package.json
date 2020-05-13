@@ -40,8 +40,7 @@
     "natives": "^1.1.6",
     "sprintf-js": "^1.0.3",
     "ui-contextmenu": "^1.18.1",
-    "uuid": "^8.0.0",
-    "vanilla-picker": "github:mcgrue/vanilla-picker"
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "babel-jest": "^17.0.2",
