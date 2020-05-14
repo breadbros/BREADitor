@@ -1248,7 +1248,9 @@ function _layer_click(evt, layerIdx, onComplete) {
 
       $template.find('#layer_border_color').val(layer.borderColor_hex);
       updateLayerColorUI(layer, layer.borderColor_hex);
-      colorPicker.spectrum("set", layer.borderColor_hex.substr(0,7));
+      if(layer.borderColor_hex) {
+        colorPicker.spectrum("set", layer.borderColor_hex.substr(0,7));
+      }
 
       newLayerId = layerIdx;
 
