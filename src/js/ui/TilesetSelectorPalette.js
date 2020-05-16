@@ -54,6 +54,7 @@ const create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer)
   ).ready().then((m) => {
     m.vspImages = newMap.vspImages; // TODO: somewhere something is going wrong here.  FIX.
     m.vspData = newMap.vspData;
+    m.vspAnimations = newMap.vspAnimations;
 
     m.mapData.layers[0].dimensions.X =
         parseInt(m.vspImages[newLayer.vsp].width / m.vspData[newLayer.vsp].tilesize.width);

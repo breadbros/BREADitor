@@ -15,6 +15,7 @@ const $ = require('jquery');
 import { getSelectedLayer } from './js/ui/LayersPalette.js';
 
 const ENTITY_PREVIEW_ALPHA = 0.75;
+const ANIMATE_TILES = true; // TODO hook this up to a toggle in the UI
 
 const HIGHLIGHT_R = 0;
 const HIGHLIGHT_G = 1;
@@ -58,10 +59,19 @@ const animateAlpha = (t, swag) => {
 
 // Builds an image (well a uint8 array) where each pixel of the image maps to a tile index on the vsp.
 // A very dark minimap.
-const buildTileDataTexture = (data) => {
+const buildTileDataTexture = (data, anims) => {
+  const now = Date.now() / 10; // the delay is in centiseconds
   const out = new Uint8Array(data.length * 4);
   for (let i = 0; i < data.length; i++) {
-    const t = data[i];
+    let t = data[i];
+
+    if (anims && anims[t]) {
+      const anim = anims[t];
+      const frameCount = 1 + anim.end - anim.start;
+      const frame = Math.floor(now / anim.delay) % frameCount;
+      t = anim.start + frame;
+    }
+
     out[i * 4 + 0] = t % 256;
     out[i * 4 + 1] = (t >> 8) % 256;
     out[i * 4 + 2] = (t >> 16) % 256;
@@ -497,6 +507,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   }.bind(this);
 
   this.vspImages = {};
+  this.vspAnimations = {};
   for (const k in this.vspData) {
     const vsp = this.vspData[k];
     if (!vsp) {
@@ -513,6 +524,13 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       this.vspImages[k].src = path.join(this.dataPath, this.vspData[k].source_image);
     } else {
       this.vspImages[k].src = this.vspData[k].source_image;
+    }
+
+    this.vspAnimations[k] = {};
+    if (vsp.animations) {
+      for (const anim of vsp.animations) {
+        this.vspAnimations[k][anim.start] = anim;
+      }
     }
   }
 
@@ -1142,6 +1160,7 @@ Map.prototype = {
     this.entityVertexBuffer = this.gl.createBuffer();
     this.selectionVertexBuffer = this.gl.createBuffer();
     this.screenviewVertexBuffer = this.gl.createBuffer();
+    this.lineBuf = this.gl.createBuffer();
 
     this.calculateSize();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.screenviewVertexBuffer);
@@ -1474,7 +1493,7 @@ Map.prototype = {
     gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
     gl.texImage2D(
       gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
-      gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex])
+      gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex], ANIMATE_TILES ? this.vspAnimations[vsp] : undefined)
     );
 
     const a_position = this.tilemapShader.attribute('a_position');
@@ -1484,20 +1503,16 @@ Map.prototype = {
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    const tileWiseOffsetX = appliedOffset.X / this.vspData[layer.vsp].tilesize.width;
-    const tileWiseOffsetY = appliedOffset.Y / this.vspData[layer.vsp].tilesize.height;
-
-    this.lineBuf = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, this.lineBuf );
     gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
-      tileWiseOffsetX, -tileWiseOffsetY,
-      layer.dimensions.X, -tileWiseOffsetY,
-      layer.dimensions.X, -tileWiseOffsetY,
+      0, 0,
+      layer.dimensions.X, 0,
+      layer.dimensions.X, 0,
       layer.dimensions.X, -layer.dimensions.Y, 
       layer.dimensions.X, -layer.dimensions.Y, 
-      tileWiseOffsetX, -layer.dimensions.Y,
-      tileWiseOffsetX, -layer.dimensions.Y,
-      tileWiseOffsetX, -tileWiseOffsetY,]),
+      0, -layer.dimensions.Y,
+      0, -layer.dimensions.Y,
+      0, 0,]),
       this.gl.STATIC_DRAW
     );
 
