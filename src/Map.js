@@ -1142,6 +1142,7 @@ Map.prototype = {
     this.entityVertexBuffer = this.gl.createBuffer();
     this.selectionVertexBuffer = this.gl.createBuffer();
     this.screenviewVertexBuffer = this.gl.createBuffer();
+    this.lineBuf = this.gl.createBuffer();
 
     this.calculateSize();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.screenviewVertexBuffer);
@@ -1484,20 +1485,16 @@ Map.prototype = {
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    const tileWiseOffsetX = appliedOffset.X / this.vspData[layer.vsp].tilesize.width;
-    const tileWiseOffsetY = appliedOffset.Y / this.vspData[layer.vsp].tilesize.height;
-
-    this.lineBuf = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, this.lineBuf );
     gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
-      tileWiseOffsetX, -tileWiseOffsetY,
-      layer.dimensions.X, -tileWiseOffsetY,
-      layer.dimensions.X, -tileWiseOffsetY,
+      0, 0,
+      layer.dimensions.X, 0,
+      layer.dimensions.X, 0,
       layer.dimensions.X, -layer.dimensions.Y, 
       layer.dimensions.X, -layer.dimensions.Y, 
-      tileWiseOffsetX, -layer.dimensions.Y,
-      tileWiseOffsetX, -layer.dimensions.Y,
-      tileWiseOffsetX, -tileWiseOffsetY,]),
+      0, -layer.dimensions.Y,
+      0, -layer.dimensions.Y,
+      0, 0,]),
       this.gl.STATIC_DRAW
     );
 
