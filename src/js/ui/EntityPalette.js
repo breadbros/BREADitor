@@ -1,4 +1,4 @@
-import { modal_error, do_the_no_things } from './Util.js';
+import { modal_error, do_the_no_things, hexToRgba } from './Util.js';
 import { LayersWidget } from './LayersPalette.js';
 import { centerMapOnXY } from '../../Tools';
 import { v4 as uuidv4 } from 'uuid';
@@ -79,6 +79,7 @@ const initEntitiesWidget = (map) => {
   currentEntities = map.mapData.entities;
 
   redraw_palette();
+  setupColorStuff();
 
   $('.entity-palette').resize(function () {
     fixContainerSize();
@@ -224,7 +225,7 @@ const fixContainerSize = () => {
   const palette = $('.entity-palette');
   const container = $('.entity-palette .window-container');
 
-  container.height(palette.height() - 95);
+  container.height(palette.height() - 135);
 };
 
 $(function() {
@@ -954,6 +955,56 @@ export const scrollEntityPalletteToEntity = (entToFocus) => {
   $('.entity-palette .window-container').scrollTop(loc);
 };
 
+
+const saveAllEntityBoundsColor = (hex) => {
+  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING_HEX = hex;
+  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING = hexToRgba(hex);
+};
+
+const setupColorStuff = () => {
+
+  if(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING_HEX) {
+    $('#all_entity_bounds_color').val(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING_HEX);
+  }
+  
+  let startColor = $('#all_entity_bounds_color').val() ? $('#all_entity_bounds_color').val() : '#00000000';
+
+  saveAllEntityBoundsColor(startColor);
+  if(startColor === '#00000000') {
+    $("#all_entity_bounds_draw_off").hide();
+  } else {
+    startColor = startColor.substr(0,7);
+  }
+
+  const allEntityBoundsColorpicker = $('#all_entity_bounds_draw_picker').spectrum({
+    color: startColor,
+    showInput: true,
+    className: "full-spectrum",
+    showInitial: true,
+    showSelectionPalette: true,
+    maxSelectionSize: 10,
+    preferredFormat: "hex",
+    change: function(color) {
+      const _color = color.toHexString() + "ff";
+      $('#all_entity_bounds_color').val(_color)
+      allEntityBoundsColorpicker.spectrum("set", color.toHexString());
+      if( _color !== '#00000000') {
+        $("#all_entity_bounds_draw_off").show();
+      }
+      saveAllEntityBoundsColor(_color);
+    }
+  });
+
+  // allEntityBoundsColorpicker.spectrum("set", startColor);
+
+  $("#all_entity_bounds_draw_off").click( () => {
+    $("#all_entity_bounds_draw_off").hide();
+    allEntityBoundsColorpicker.spectrum("set", "#00000000");
+    saveAllEntityBoundsColor("#00000000")
+  } );
+}
+
 export const EntitiesWidget = {
   initEntitiesWidget: initEntitiesWidget
 };
+

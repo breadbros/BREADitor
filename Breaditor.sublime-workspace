@@ -4,6 +4,42 @@
 		"selected_items":
 		[
 			[
+				"border",
+				"borderColor"
+			],
+			[
+				"cur",
+				"curLayer"
+			],
+			[
+				"col",
+				"colour"
+			],
+			[
+				"getE",
+				"getElementById"
+			],
+			[
+				"can",
+				"canvas"
+			],
+			[
+				"bind",
+				"bindBuffer"
+			],
+			[
+				"crea",
+				"createBuffer"
+			],
+			[
+				"lines",
+				"LINES"
+			],
+			[
+				"draw",
+				"drawArrays"
+			],
+			[
 				"unde",
 				"toBeUndefined"
 			],
@@ -264,66 +300,57 @@
 	"buffers":
 	[
 		{
-			"file": "src/Palettes.js",
+			"file": "src/js/ui/LayersPalette.js",
+			"settings":
+			{
+				"buffer_size": 42205,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/grue/Breaditor/src/Tools.js",
+			"settings":
+			{
+				"buffer_size": 16032,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/grue/Breaditor/src/tools/MoveViewport.js",
+			"settings":
+			{
+				"buffer_size": 2319,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/grue/Breaditor/src/Palettes.js",
 			"settings":
 			{
 				"buffer_size": 4686,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/grue/Breaditor/src/main/BaseTemplate.js",
+			"settings":
+			{
+				"buffer_size": 6026,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/tools/SmartEyedropper.js",
+			"contents": "Searching 63 files for \"$$$_BREDITOR_MOST_RECENT\"\n\nC:\\grue\\Breaditor\\src\\main\\BaseSetup.js:\n   22  }\n   23  \n   24: /// TODO: why have both $$$_BREDITOR_MOST_RECENT.json and $$$_MAPED.json... 🤔\n   25  /// I guess one should be in the appdir to at least point to the project directory...\n   26  const loadMostRecentFileOption = () => {\n   ..\n   32    const options = {};\n   33  \n   34:   const appConfigData = jetpack.read(path.join(dataPath, '$$$_BREDITOR_MOST_RECENT.json'), 'json');\n   35    window.$$$_most_recent_options = appConfigData;\n   36  \n   ..\n  576    const path = require('path');\n  577  \n  578:   const appConfigPath = path.join(app.getAppPath(), '$$$_BREDITOR_MOST_RECENT.json');\n  579    let appConfigData = jetpack.read(appConfigPath, 'json');\n  580    if( !appConfigData ) { \n\n3 matches in 1 file\n\n\nSearching 63 files for \"window.$$$_most_recent_options\"\n\nC:\\grue\\Breaditor\\src\\main\\BaseSetup.js:\n   33  \n   34    const appConfigData = jetpack.read(path.join(dataPath, '$$$_BREDITOR_MOST_RECENT.json'), 'json');\n   35:   window.$$$_most_recent_options = appConfigData;\n   36  \n   37    return appConfigData;\n   ..\n  229      const path = require('path');\n  230      \n  231:     const maps = window.$$$_most_recent_options.recent_maps;\n  232  \n  233      let $template = `\n  ...\n  455      };\n  456  \n  457:     if( window.$$$_most_recent_options && window.$$$_most_recent_options.abs_path_to_maps ) {\n  458:       options.defaultPath = window.$$$_most_recent_options.abs_path_to_maps;\n  459      }\n  460  \n  ...\n  465      const path = require('path');\n  466      \n  467:     const maps = window.$$$_most_recent_options.recent_maps;\n  468  \n  469      let $template = '';\n  ...\n  596    appConfigData.recent_maps = dedupeRecentMaps(appConfigData.recent_maps);\n  597  \n  598:   window.$$$_most_recent_options = appConfigData;\n  599  \n  600    jetpack.write(appConfigPath, appConfigData);\n\n7 matches in 1 file\n",
 			"settings":
 			{
-				"buffer_size": 7320,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/menu/prod_menu_template.js",
-			"settings":
-			{
-				"buffer_size": 358,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/menu/dev_menu_template.js",
-			"settings":
-			{
-				"buffer_size": 787,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/Logging.js",
-			"settings":
-			{
-				"buffer_size": 592,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/tools/MoveViewport.js",
-			"settings":
-			{
-				"buffer_size": 1639,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/Tools.js",
-			"settings":
-			{
-				"buffer_size": 16038,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
+				"buffer_size": 1927,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
 			}
 		},
 		{
@@ -336,20 +363,29 @@
 			}
 		},
 		{
-			"contents": "Searching 56 files for \"debug_menu\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\menu\\prod_menu_template.js:\n    3  import { layersMenuTemplate } from './layers_menu_template';\n    4  import { windowMenuTemplate } from './window_menu_template';\n    5: import { debugMenuTemplate } from './debug_menu_template';\n    6  \n    7  export const prodMenuTemplate = [\n\n1 match in 1 file\n\n\nSearching 56 files for \"info\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\js\\ui\\EntityPalette.js:\n  401      $template.find('#entity_location_py').val(ent.location.py);\n  402  \n  403:     // http://regex.info/blog/2006-09-15/247\n  404      $template.find('#entity_wander').val(JSON.stringify(ent.wander).replace(/{/g, '{\\n').replace(/}/g, '\\n}')\n  405        .replace(/,/g, ',\\n').replace(/\":/g, '\": ').replace(/^\"/mg, '\\t\"'));\n  ...\n  713    const animations = get_animations_by_filepath(chr_filepath);\n  714  \n  715:   console.info('data.animations['+animation_name+']: ' + animations[animation_name]);\n  716    return !!animations[animation_name];\n  717  };\n  ...\n  743  \n  744    // if( valDict.loc_py === 0 ) {\n  745:   //   console.info(\"Cooercing loc_ty to 0.\");\n  746    //   valDict.loc_ty = 0;\n  747    // }\n  748  \n  749    // if( valDict.loc_px === 0 ) {\n  750:   //   console.info(\"Cooercing loc_tx to 0.\");\n  751    //   valDict.loc_tx = 0;\n  752    // }\n\nC:\\grue\\Breaditor\\src\\js\\ui\\InfoPalette.js:\n   17    }\n   18  \n   19:   $('#info-mapname').attr('src', map.mapPath);\n   20  \n   21    var mapMenu = $(function() {\n   22        $.contextMenu({\n   23:           selector: `#info-mapname`, \n   24            callback: function(key, options) {\n   25                switch(key) {\n   ..\n   36  \n   37    const pathParts = map.mapPath.split(path.sep);\n   38:   $('#info-mapname').text(pathParts[pathParts.length - 1]);\n   39  \n   40:   $('#info-vsp-list').html('');\n   41  \n   42    let vspMenu = null;\n   ..\n   44    Object.keys(map.mapData.vsp).forEach( (keyName) => { \n   45      const vspPath = map.mapData.vsp[keyName];\n   46:     const className = `vsp-info-${keyName}`;\n   47      const $node = $(`<li class=\"${className}\">${keyName}: ${vspPath}</li>`);\n   48  \n   49      const fullpath = path.dirname($$$currentMap.mapPath) + path.sep + vspPath;\n   50  \n   51:     $('#info-vsp-list').append( $node );  \n   52  \n   53      vspMenu = $(function() {\n\nC:\\grue\\Breaditor\\src\\js\\ui\\LayersPalette.js:\n   54      const $node = $($list[i]);\n   55      if ($node.text().trim().startsWith(name)) {\n   56:       console.info(`Clicking named layer '${name}'..`);\n   57        $node.closest('li').click();\n   58        return true;\n   ..\n  187  let __layerSelectCallback = null;\n  188  export function setLayerSelectCallback(fn) {\n  189:   console.info('setting layerSelectCallback...', fn);\n  190    __layerSelectCallback = fn;\n  191  }\n  ...\n  498  \n  499            if( dim_x != new_obs_dim_x || dim_y != new_obs_dim_y ) {\n  500:             console.info( \"resizing obs layer data...\" );\n  501              map.legacyObsData = resize_layer( map.legacyObsData, dim_x, dim_y, new_obs_dim_x, new_obs_dim_y );\n  502            }\n\nC:\\grue\\Breaditor\\src\\Logging.js:\n   12  export const INFO = () => {\n   13    if(verboseLogging) {\n   14:     console.info( arguments );\n   15    }\n   16  }\n\nC:\\grue\\Breaditor\\src\\main\\BaseTemplate.js:\n  105          </div>\n  106  \n  107:         <div class=\"info-palette ui-widget-content draggable-window resizable-window\" data-minWidth=\"200\">\n  108              <h3 class=\"ui-widget-header\">Info<button class=\"close-palette\">x</button></h3>\n  109              <ul>\n  110:                 <li>map: <span id=\"info-mapname\"></span></li>\n  111:                 <li>vsps: <ul id=\"info-vsp-list\"></ul>\n  112:                 <li>tx,ty: <span id=\"info-current-hover-tile\"></span></li>\n  113:                 <li>dims: <span id=\"info-dims\"></span></li>\n  114:                 <li>screen loc: <span id=\"info-location\"></span></li>\n  115:                 <li>zoomlevel: <span id=\"info-zoom\"></span></li>\n  116:                 <li>selected tiles: <span id=info-selected-tiles></span></li>\n  117:                 <li>rstring: <span id=info-rstring></span></li>\n  118:                 <li>current tool: <span id=info-curTool></span></li>\n  119  \n  120              </ul>\n\nC:\\grue\\Breaditor\\src\\main\\IPCRenderer.js:\n   22        if (el.type && el.type === 'text') {\n   23          // NOTE - enabling this console log slows all data entry RIGHT the fuck down\n   24:         // console.info('in a textfield, ignoring the accelerator');\n   25          return;\n   26        }\n   ..\n   28        if (el.type && el.type === 'number') {\n   29          // NOTE - enabling this console log slows all data entry RIGHT the fuck down\n   30:         // console.info('in a textfield, ignoring the accelerator');\n   31          return;\n   32        }\n   ..\n  117        case 'map':\n  118        case 'tool':\n  119:       case 'info':\n  120        case 'layers':\n  121        case 'zones':\n\nC:\\grue\\Breaditor\\src\\menu\\window_menu_template.js:\n    7      { label: 'Map', click: function () { send('map'); } },\n    8      { label: 'Tools', click: function () { send('tool'); } },\n    9:     { label: 'Info', click: function () { send('info'); } },\n   10      { label: 'Layers', accelerator: 'L', click: function () { send('layers', 'L'); } },\n   11      { label: 'Zones', click: function () { send('zones'); } },\n\nC:\\grue\\Breaditor\\src\\Palettes.js:\n  169      'zones-palette',\n  170      'entity-palette',\n  171:     'info-palette',\n  172      'tileset-selector-palette',\n  173      \n\nC:\\grue\\Breaditor\\src\\TileSelector.js:\n   33  \n   34  const updateInfoWindow = () => {\n   35:   $('#info-selected-tiles').text(leftTile() + ',' + rightTile() + ' (vsp: ' + _last_vsp + ')');\n   36  };\n   37  \n   ..\n  125  \n  126    if (!selectedTilesPerVSP[whichVSP]) {\n  127:     console.info('generating new placeholder tiles for', whichVSP);\n  128      selectedTilesPerVSP[whichVSP] = {\n  129        leftTile: 0,\n  ...\n  133  \n  134    if (_last_vsp !== whichVSP) {\n  135:     console.info('_last_vsp !== whichVSP', _last_vsp, whichVSP);\n  136  \n  137      _last_vsp = whichVSP;\n\nC:\\grue\\Breaditor\\src\\Tools.js:\n   36  \n   37  export const updateInfoDims = (map) => {\n   38:   $('#info-dims').text(map.mapSizeInTiles.width + 'x' + map.mapSizeInTiles.height);\n   39  };\n   40  \n   41  export const updateLocationText = (map) => {\n   42:   $('#info-location').text(map.camera[0] + ',' + map.camera[1]);\n   43  }\n   44  \n   ..\n   50    const txt = (100 / map.camera[2]) + '%';\n   51  \n   52:   $('#info-zoom').text(txt);\n   53  };\n   54  \n   ..\n   70  \n   71      if (_currentHoverTile) {\n   72:       $('#info-current-hover-tile').text(_currentHoverTile[0] + ',' + _currentHoverTile[1]);\n   73        map.visibleHoverTile.add(_currentHoverTile[0], _currentHoverTile[1], 1, 1);\n   74      } else {\n   75:       $('#info-current-hover-tile').text('-');\n   76      }\n   77  \n   ..\n  240    }\n  241  \n  242:   $('#info-rstring').text(window.$$$currentMap.layerRenderOrder.join(','));\n  243  };\n  244  \n  ...\n  285  \n  286      window.TOOLMODE = toolName;\n  287:     $('#info-curTool').text(window.TOOLMODE); //TODO we should use react already, dammit. \n  288  \n  289      if (toolObj.init_fn) {\n\nC:\\grue\\Breaditor\\src\\tools\\SmartEyedropper.js:\n   72      py = ent.location.ty * tileSize.height;\n   73    } else {\n   74:     throw new Error('Entity has invalid location information', ent);\n   75    }\n   76  \n\nC:\\grue\\Breaditor\\src\\UndoRedo.js:\n   65  \n   66        if (was === tileIdx) {\n   67:         console.info('skip draw of duplicate tile.');\n   68          continue;\n   69        }\n\n41 matches across 12 files\n",
-			"settings":
-			{
-				"buffer_size": 7679,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "/C/grue/Breaditor/src/js/ui/InfoPalette.js",
+			"file": "src/js/ui/InfoPalette.js",
 			"settings":
 			{
 				"buffer_size": 1990,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "C:\\grue\\XNAVERGE\\Examples\\Sully\\SullyContent\\maps\\json\\evil_lab.obsvsp.json\nfile:///C:/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/evil_lab.obs.png  \n\n",
+			"settings":
+			{
+				"buffer_size": 159,
+				"line_ending": "Windows",
+				"name": "C:\\grue\\XNAVERGE\\Examples\\Sully\\SullyContent\\maps\\"
+			}
+		},
+		{
+			"file": "src/Map.js",
+			"settings":
+			{
+				"buffer_size": 64237,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
@@ -357,124 +393,7 @@
 			"file": "app/app.html",
 			"settings":
 			{
-				"buffer_size": 1791,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/background.js",
-			"settings":
-			{
-				"buffer_size": 10326,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/background.js",
-			"settings":
-			{
-				"buffer_size": 1165,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/check-frag.glsl",
-			"settings":
-			{
-				"buffer_size": 548,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/color-frag.glsl",
-			"settings":
-			{
-				"buffer_size": 92,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/screenview-frag.glsl",
-			"settings":
-			{
-				"buffer_size": 282,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/screenview-vert.glsl",
-			"settings":
-			{
-				"buffer_size": 673,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/selection-frag.glsl",
-			"settings":
-			{
-				"buffer_size": 1056,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/selection-vert.glsl",
-			"settings":
-			{
-				"buffer_size": 529,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/sprite-frag.glsl",
-			"settings":
-			{
-				"buffer_size": 419,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/sprite-vert.glsl",
-			"settings":
-			{
-				"buffer_size": 427,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/tilemap-frag.glsl",
-			"settings":
-			{
-				"buffer_size": 1032,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/tilemapObs-frag.glsl",
-			"settings":
-			{
-				"buffer_size": 825,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/shaders/tilemap-vert.glsl",
-			"settings":
-			{
-				"buffer_size": 564,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "$(document).keypress(function(event) {\n  if( event.charCode === 32 ) { // let's not scroll down on spacebar presses?\n    // but only if we're not trying to change a value.\n    $focused = $(':focus');\n    if($focused.is('textarea') || $focused.is('input')) {\n      return;\n    }\n        \n    event.preventDefault();\n  }\n});",
-			"file": "src/Init.js",
-			"file_size": 332,
-			"file_write_time": 132334731345289648,
-			"settings":
-			{
-				"buffer_size": 322,
+				"buffer_size": 1998,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -516,38 +435,73 @@
 	},
 	"expanded_folders":
 	[
-		"/C/grue/BREADitor",
-		"/C/grue/BREADitor/build",
-		"/C/grue/BREADitor/src"
+		"/C/grue/BREADitor"
 	],
 	"file_history":
 	[
+		"/C/Users/benmc/Downloads/art.txt",
+		"/C/Users/benmc/Downloads/horridhp.txt",
+		"/C/grue/Breaditor/src/Tools.js",
+		"/C/grue/BREADitor/package.json",
+		"/C/grue/BREADitor/node_modules/vanilla-picker/dist/vanilla-picker.js",
+		"/C/grue/BREADitor/src/main/IPCRenderer.js",
+		"/C/grue/Breaditor/src/menu/dev_menu_template.js",
+		"/C/grue/BREADitor/src/Logging.js",
+		"/C/grue/Breaditor/src/main/BaseSetup.js",
+		"/C/grue/vanilla-picker/src/js/picker.js",
+		"/C/grue/BREADitor/node_modules/vanilla-picker/src/js/picker.js",
+		"/C/grue/vanilla-picker/dist/vanilla-picker.js",
+		"/C/grue/Breaditor/src/menu/edit_menu_template.js",
+		"/C/grue/Breaditor/app/background.js",
+		"/C/grue/BREADitor/node_modules/vanilla-picker/src/index.js",
+		"/C/grue/Breaditor/src/main/SendMsgToMainWindow.js",
+		"/C/grue/BREADitor/src/Map.js",
+		"/C/grue/BREADitor/src/js/ui/LayersPalette.js",
+		"/C/grue/BREADitor/src/ShaderProgram.js",
+		"/C/grue/BREADitor/app/shaders/layerborder-frag.glsl",
+		"/C/grue/BREADitor/app/shaders/tilemap-vert.glsl",
+		"/C/grue/Breaditor/src/menu/file_menu_template.js",
+		"/C/grue/BREADitor/node_modules/vanilla-picker/dist/vanilla-picker.mjs",
+		"/C/grue/BREADitor/app/app.html",
+		"/C/grue/BREADitor/node_modules/vanilla-picker/package.json",
+		"/C/grue/Breaditor/src/Map.js",
+		"/C/Users/benmc/AppData/Local/Temp/Rar$DRa6132.1424/colpick-3.1.0/js/colpick.js",
+		"/C/grue/Breaditor/src/js/ui/LayersPalette.js",
+		"/C/grue/BREADitor/app/shaders/selection-vert.glsl",
+		"/C/grue/BREADitor/src/Palettes.js",
+		"/C/grue/BREADitor/src/tools/SmartEyedropper.js",
+		"/C/grue/BREADitor/app/shaders/screenview-frag.glsl",
+		"/C/grue/BREADitor/app/shaders/screenview-vert.glsl",
+		"/C/grue/BREADitor/app/shaders/selection-frag.glsl",
+		"/C/grue/BREADitor/app/shaders/sprite-frag.glsl",
+		"/C/grue/BREADitor/app/shaders/sprite-vert.glsl",
+		"/C/grue/BREADitor/app/shaders/tilemap-frag.glsl",
+		"/C/grue/BREADitor/app/shaders/tilemapObs-frag.glsl",
+		"/C/grue/BREADitor/src/Init.js",
+		"/C/grue/BREADitor/src/menu/prod_menu_template.js",
+		"/C/grue/BREADitor/src/menu/dev_menu_template.js",
+		"/C/grue/BREADitor/src/tools/MoveViewport.js",
+		"/C/grue/BREADitor/src/Tools.js",
+		"/C/grue/Breaditor/src/js/ui/InfoPalette.js",
+		"/C/grue/BREADitor/app/background.js",
+		"/C/grue/BREADitor/app/shaders/check-frag.glsl",
+		"/C/grue/BREADitor/app/shaders/color-frag.glsl",
 		"/C/Users/benmc/Downloads/j_inventory.vc",
 		"/C/Users/benmc/AppData/Local/Temp/Rar$DIa24280.17657/AMAXIS.VC",
 		"/C/grue/BREADitor/src/menu/debug_menu_template.js",
 		"/C/grue/Breaditor/src/tools/DragItem.js",
-		"/C/grue/BREADitor/src/Map.js",
-		"/C/grue/BREADitor/src/Logging.js",
-		"/C/grue/BREADitor/src/js/ui/LayersPalette.js",
 		"/C/grue/BREADitor/src/js/ui/EntityPalette.js",
 		"/C/grue/Breaditor/src/tools/Select.js",
-		"/C/grue/Breaditor/src/Tools.js",
-		"/C/grue/BREADitor/src/Tools.js",
-		"/C/grue/BREADitor/src/main/IPCRenderer.js",
-		"/C/grue/Breaditor/src/menu/edit_menu_template.js",
-		"/C/grue/Breaditor/src/js/ui/LayersPalette.js",
 		"/C/grue/Breaditor/src/js/ui/EntityPalette.js",
 		"/C/grue/BREADitor/src/UndoRedo.js",
 		"/C/grue/BREADitor/src/tools/Draw.js",
 		"/C/grue/Breaditor/src/tools/Eyedropper.js",
 		"/C/grue/Breaditor/src/tools/FloodFill.js",
 		"/C/grue/Breaditor/src/tools/SmartEyedropper.js",
-		"/C/grue/Breaditor/src/menu/file_menu_template.js",
 		"/C/grue/Breaditor/src/UndoRedo.js",
 		"/C/grue/Breaditor/src/tools/Draw.js",
 		"/C/grue/Breaditor/src/js/ui/CutCopyPaste.js",
 		"/C/grue/Breaditor/src/js/ui/ZonesPalette.js",
-		"/C/grue/Breaditor/src/Map.js",
 		"/C/grue/Breaditor/src/main/BaseTemplate.js",
 		"/C/grue/BREADitor/src/tools/Eyedropper.js",
 		"/C/grue/BREADitor/src/js/ui/ZonesPalette.js",
@@ -567,7 +521,6 @@
 		"/C/grue/BREADitor/src/tools/FloodFill.test.js",
 		"/C/grue/BREADitor/src/helpers/FakeMap.js",
 		"/C/grue/Breaditor/src/js/ui/TilesetSelectorPalette.js",
-		"/C/grue/BREADitor/package.json",
 		"/C/grue/Breaditor/app/app.js",
 		"/C/grue/BREADitor/src/TileSelector.js",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/NPC/npc_miami_vice.json",
@@ -613,47 +566,11 @@
 		"/C/grue/Breaditor/src/Tools.FloodFill.test.js",
 		"/C/grue/Breaditor/app/themes/ui-darkness/jquery-ui.theme.css",
 		"/C/grue/Breaditor/app/stylesheets/jquery-ui-fixes.css",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-bottom-brown.json",
-		"/C/Users/grue/Desktop/SMALL setup-maped4-dev - Copy.ahk",
-		"/C/grue/Breaditor/__mocks__/electron.js",
-		"/C/grue/Breaditor/__mocks__/fs-jetpack.js",
-		"/C/grue/Breaditor/src/menu/window_menu_template.js",
-		"/C/grue/Breaditor/README.md",
-		"/C/grue/Breaditor/src/menu/prod_menu_template.js",
-		"/C/grue/Breaditor/src/background.js",
-		"/C/grue/Breaditor/src/main/SendMsgToMainWindow.js",
-		"/C/grue/Breaditor/src/menu/layers_menu_template.js",
-		"/C/grue/Breaditor/app/stylesheets/main.css",
-		"/C/grue/Breaditor/src/ShaderProgram.js",
-		"/C/grue/Breaditor/src/menu/dev_menu_template.js",
-		"/C/grue/Breaditor/.eslintrc",
-		"/C/grue/Breaditor/src/helpers/FakeMap.test.js",
-		"/C/grue/Breaditor/tasks/build_app.js",
-		"/C/grue/Breaditor/tasks/build_tests.js",
-		"/C/grue/Breaditor/tasks/start.js",
-		"/C/Users/grue/Downloads/RULES (1).md",
-		"/C/grue/Breaditor/tasks/utils.js",
-		"/C/grue/Breaditor/tasks/bundle.js",
-		"/C/grue/Breaditor/.babelrc",
-		"/C/grue/Breaditor/src/main/MainWindowReference.js",
-		"/C/grue/Breaditor/app/background.js",
-		"/C/grue/Breaditor/src/shim/Shim.js",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/chrs_map/farmsville/farmsville-bottom.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.jso",
-		"/C/tmp/SullyContent/maps/json/$$$_MAPED.json",
-		"/C/grue/electron-boilerplate-5.0.0/src/app.js",
-		"/C/grue/electron-boilerplate-5.0.0/src/hello_world/hello_world.js",
-		"/C/grue/Breaditor-2/.gitignore",
-		"/C/grue/maped4/params.json",
-		"/C/grue/Breaditor-2/README.md",
-		"/C/grue/AUUUUGH/src/app.js",
-		"/C/grue/AUUUUGH/node_modules/jquery/dist/jquery.js",
-		"/C/grue/AUUUUGH/src/background.js.old"
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.json"
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 31.0
 	},
 	"find_in_files":
 	{
@@ -716,137 +633,137 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
-			"info",
-			"console.log",
-			"debug_menu",
-			"console.log",
-			"map-palette",
-			"pop_me_to_the_top",
-			"setupPaletteListeners",
-			"event.target",
-			"correctResizeWidget",
-			"pop_me_to_the_top",
-			"correctResizeWidget",
-			"console.log",
-			"console.",
-			"garbage_zsort",
-			"correctResizeWidget",
-			"correctResizeWidget\ncorrectResizeWidget",
-			"correctResizeWidget",
-			"capturePaletteMovementForRestore",
-			"active",
-			"console.info",
-			"console.log",
-			"console.",
-			"specified to autoload",
-			"console.log",
-			"console.info",
-			"isSpecialLayerEntity",
-			"getSelectedEntities",
-			"isSelecting",
-			"SELECT",
-			"DRAG-ITEM",
-			"_toolLogic",
-			"_toolLogic.SELECT",
-			"result",
-			"PY",
-			"PX",
-			"_toolLogic.SELECT",
-			"T",
-			"pY",
-			"pX",
-			"_toolLogic.SELECT",
-			"getTXTyFromMouse",
-			"oY",
-			"oX",
-			"esc",
-			"clearAllEntitysFromHighlight",
-			"highlighted",
-			"cancel-selections",
-			"tile-swap",
-			"update_entity_location(ent.INDEX, {",
-			"moveSelectedEntitiesToTile",
-			"moveSelectedEntityToTile",
-			"export const selectEntityLayer",
-			"Selected",
-			"moveSelectedEntityToTile",
-			"location",
-			"update_entity_",
-			"update_entity_layer",
-			"update_entity_location",
-			"getSelectedEntities",
-			"getSelectedEnt",
-			"OBS",
-			"prepare_one_tile",
-			"change_one_tile",
-			"dimensions",
-			"zoneData.dimensions",
-			"selectObs",
-			"selectZon",
-			"selectObstructionLayer",
-			"open",
-			"'e'",
-			"999",
-			"997",
-			"998",
-			"997",
-			"998",
-			"MAGICAL_ZONE_LAYER_ID",
-			"999",
-			"debugger",
-			"getActiveZone",
-			"isSpecialLayer",
-			"isSpecalLayer",
-			"isSpecialLayerZone",
-			"}\n",
-			"999",
-			"wasEnt",
-			"isSpecialLayer",
-			"wasEnt",
-			"Obstructi",
-			"selectObstructionLayer",
-			"getNormalEntityVisibility",
-			"LAYER_VISIBLE",
-			"getZoneVisibility",
-			"getEntVisibility",
-			"getEntityVisibility",
-			"getZoneVisibility",
-			"wasZone",
-			"997",
-			"998",
-			"999",
-			"selectZoneLayer",
-			"click",
-			"handleEyeball",
-			"visible",
-			"selectEntityLayer",
-			".height",
-			"updateZoomText",
-			"info-zoom",
-			"zoomlevel",
-			"-mapy",
-			"camera[0]",
-			"mapZoom",
+			":#",
+			"mcSurname",
+			"mcName",
+			"[mcName:",
+			"setName",
+			":",
+			"character",
+			"window.$$$_most_recent_options",
+			"$$$_BREDITOR_MOST_RECENT",
+			"$$$_MAPED.json",
+			"mapedConfigFile",
+			"_MAPED.json",
+			"$$$",
+			"settings",
+			"info-mapname",
+			"grue_zoom",
+			"zoomFn",
+			"mousewheel",
 			"Zoom",
-			"Eyedropper",
-			"implement the entities layer already",
-			"selectEnt",
-			"selectZoneLayer",
-			"implement the entities layer already",
-			"show_edit_entity_dialog",
-			"show",
-			"show_edit_zone_dialog",
-			"edit",
-			"open",
-			"clickSet",
-			"eyedropperGenerator",
-			"EYEDROPPER",
-			"unique",
-			"template",
-			"uuid"
+			"e.d",
+			"mousewheel",
+			"MOVE-VIEWPORT",
+			"info-palette",
+			"draggable",
+			"dragg",
+			"info",
+			".dialog(",
+			"colorPicker",
+			"debug",
+			"16)",
+			"arseInt",
+			"p",
+			"parseInt",
+			"Int",
+			",// ",
+			"layer_border_color",
+			"hexToRgba",
+			"/255",
+			"debugger",
+			"layer_border_color",
+			"set",
+			"picker",
+			"updateLayerColorUI",
+			"setLayerColor",
+			"border_color_example",
+			"border_color_picker_button",
+			"Pick color",
+			"pick colo",
+			"pickerParent",
+			"elPicker",
+			"layerBorder",
+			"layer",
+			"_domEdit",
+			"input",
+			"this._instance_id",
+			"events.",
+			"addEvent",
+			"_domEdit",
+			"picker_editor",
+			"layer_border_color",
+			"updateLayerColorUI",
+			"layer.borderColor",
+			"layer_border_color",
+			"picker",
+			"regeneratePicker",
+			"regWrap",
+			"regeneratePicker",
+			"curLayer",
+			"Edit",
+			"generate_layer",
+			"_id",
+			"id",
+			"newLayerId",
+			"curLayer",
+			"layer_border_color",
+			"Dynamic Tileselector VspMap Layer xTreem 7",
+			"Dynamic Tileselector VspMap Layer xTreem 7\n",
+			"send(",
+			"send",
+			"send(",
+			"setVerboseLogging",
+			"open-recent",
+			"setVerboseLogging",
+			"debugger",
+			"borderColor",
+			"updateLayerColorUI",
+			"layer.borderColor",
+			"borderColor",
+			"layer",
+			"border",
+			"updateLayerColorUI",
+			"borderColor",
+			"updateLayerColorUI",
+			"layer.borderColor",
+			"borderColor",
+			"#layer_",
+			"border",
+			"update_layer",
+			"save",
+			"border_off_button",
+			"update",
+			"visibilityFix",
+			"curLayer",
+			"regeneratePicker",
+			"setLayerColor",
+			"layerIdx = ",
+			"layerIdx =",
+			" layer = ",
+			"layer = ",
+			"layer =",
+			"layerIdx =",
+			"layerIdx",
+			"layer.",
+			"setup_template",
+			"border_color_example",
+			"ignore",
+			"_instance_id",
+			"ignoreButtonPressId",
+			"onDone",
+			"ignoreButtonPressId",
+			"_domOkay",
+			"ignoreButtonPressId",
+			"options.",
+			"ignore",
+			"border_color_picker_button",
+			"picker",
+			"layer",
+			"options"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -887,12 +804,102 @@
 	"groups":
 	[
 		{
-			"selected": 23,
+			"selected": 7,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/Palettes.js",
+					"file": "src/js/ui/LayersPalette.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 42205,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								33049,
+								33049
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 25699.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/grue/Breaditor/src/Tools.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16032,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4475,
+								4475
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2629.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/grue/Breaditor/src/tools/MoveViewport.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2319,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								432,
+								432
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 132.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/grue/Breaditor/src/Palettes.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -903,8 +910,8 @@
 						"selection":
 						[
 							[
-								4315,
-								4315
+								3650,
+								3650
 							]
 						],
 						"settings":
@@ -914,19 +921,19 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3065.0,
+						"translation.y": 2051.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "src/tools/SmartEyedropper.js",
+					"buffer": 4,
+					"file": "/C/grue/Breaditor/src/main/BaseTemplate.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7320,
+						"buffer_size": 6026,
 						"regions":
 						{
 						},
@@ -940,200 +947,22 @@
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1851.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/menu/prod_menu_template.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 358,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								358,
-								358
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 20,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/menu/dev_menu_template.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 787,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								787,
-								787
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 19,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/Logging.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 592,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								322,
-								322
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 17,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "src/tools/MoveViewport.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1639,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1114,
-								1114
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 18,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/Tools.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 16038,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								16038,
-								16038
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 12678.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 22,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "/C/grue/Breaditor/src/main/BaseSetup.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 19953,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9196,
-								9195
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 6041.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 21,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 7679,
+						"buffer_size": 1927,
 						"regions":
 						{
 							"match":
@@ -1142,172 +971,44 @@
 								"regions":
 								[
 									[
-										284,
-										294
+										140,
+										164
 									],
 									[
-										576,
-										580
+										443,
+										467
 									],
 									[
-										901,
-										905
+										663,
+										687
 									],
 									[
-										1110,
-										1114
+										1040,
+										1070
 									],
 									[
-										1261,
-										1265
+										1210,
+										1240
 									],
 									[
-										1418,
-										1422
+										1334,
+										1364
 									],
 									[
-										1563,
-										1567
+										1368,
+										1398
 									],
 									[
-										1749,
-										1753
+										1455,
+										1485
 									],
 									[
-										1824,
-										1828
+										1608,
+										1638
 									],
 									[
-										2043,
-										2047
-									],
-									[
-										2262,
-										2266
-									],
-									[
-										2502,
-										2506
-									],
-									[
-										2728,
-										2732
-									],
-									[
-										2933,
-										2937
-									],
-									[
-										3227,
-										3231
-									],
-									[
-										3368,
-										3372
-									],
-									[
-										3619,
-										3623
-									],
-									[
-										3687,
-										3691
-									],
-									[
-										3752,
-										3756
-									],
-									[
-										3833,
-										3837
-									],
-									[
-										3906,
-										3910
-									],
-									[
-										3982,
-										3986
-									],
-									[
-										4058,
-										4062
-									],
-									[
-										4136,
-										4140
-									],
-									[
-										4212,
-										4216
-									],
-									[
-										4483,
-										4487
-									],
-									[
-										4747,
-										4751
-									],
-									[
-										4911,
-										4915
-									],
-									[
-										5216,
-										5220
-									],
-									[
-										5499,
-										5503
-									],
-									[
-										5666,
-										5670
-									],
-									[
-										5854,
-										5858
-									],
-									[
-										6053,
-										6057
-									],
-									[
-										6249,
-										6253
-									],
-									[
-										6410,
-										6414
-									],
-									[
-										6563,
-										6567
-									],
-									[
-										6671,
-										6675
-									],
-									[
-										6880,
-										6884
-									],
-									[
-										6976,
-										6980
-									],
-									[
-										7132,
-										7136
-									],
-									[
-										7431,
-										7435
-									],
-									[
-										7573,
-										7577
+										1796,
+										1826
 									]
 								],
 								"scope": ""
@@ -1316,8 +1017,8 @@
 						"selection":
 						[
 							[
-								1374,
-								1374
+								1391,
+								1391
 							]
 						],
 						"settings":
@@ -1333,15 +1034,45 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 275.0,
+						"translation.y": 506.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "/C/grue/Breaditor/src/js/ui/InfoPalette.js",
+					"buffer": 6,
+					"file": "/C/grue/Breaditor/src/main/BaseSetup.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19953,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13041,
+								12996
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 8893.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/js/ui/InfoPalette.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1352,8 +1083,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								1440,
+								1440
 							]
 						],
 						"settings":
@@ -1363,10 +1094,68 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
+						"translation.y": 470.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 159,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								159,
+								159
+							]
+						],
+						"settings":
+						{
+							"auto_name": "C:\\grue\\XNAVERGE\\Examples\\Sully\\SullyContent\\maps\\",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/Map.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 64237,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8204,
+								8218
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5689.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -1375,15 +1164,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1791,
+						"buffer_size": 1998,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								589,
-								571
+								1998,
+								1998
 							]
 						],
 						"settings":
@@ -1396,411 +1185,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "app/background.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 10326,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								10249,
-								10249
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1779.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "src/background.js",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 1165,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								980,
-								980
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 75.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "app/shaders/check-frag.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 548,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "app/shaders/color-frag.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 92,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 15,
-					"file": "app/shaders/screenview-frag.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 282,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "app/shaders/screenview-vert.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 673,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 17,
-					"file": "app/shaders/selection-frag.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1056,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
 					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 18,
-					"file": "app/shaders/selection-vert.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 529,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 19,
-					"file": "app/shaders/sprite-frag.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 419,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 20,
-					"file": "app/shaders/sprite-vert.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 427,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 21,
-					"file": "app/shaders/tilemap-frag.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1032,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 22,
-					"file": "app/shaders/tilemapObs-frag.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 825,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 23,
-					"file": "app/shaders/tilemap-vert.glsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 564,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								564,
-								564
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 24,
-					"file": "src/Init.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 322,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								322,
-								322
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
 					"type": "text"
 				}
 			]
@@ -1808,7 +1193,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 34.0
+		"height": 31.0
 	},
 	"input":
 	{
@@ -1845,7 +1230,7 @@
 	"project": "Breaditor.sublime-project",
 	"replace":
 	{
-		"height": 80.0
+		"height": 58.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1855,24 +1240,56 @@
 		"selected_items":
 		[
 			[
-				"MoveV",
-				"src\\tools\\MoveViewport.js"
+				"Info",
+				"src\\js\\ui\\InfoPalette.js"
+			],
+			[
+				"map.js",
+				"BREADitor\\src\\Map.js"
+			],
+			[
+				"Layers",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"Loggi",
+				"src\\Logging.js"
+			],
+			[
+				"ipc",
+				"src\\main\\IPCRenderer.js"
 			],
 			[
 				"Loggin",
 				"src\\Logging.js"
 			],
 			[
-				"Smar",
-				"src\\tools\\SmartEyedropper.js"
+				"Map.js",
+				"src\\Map.js"
+			],
+			[
+				"app.html",
+				"app\\app.html"
+			],
+			[
+				"ShaderP",
+				"src\\ShaderProgram.js"
 			],
 			[
 				"map",
 				"src\\Map.js"
 			],
 			[
-				"Layers",
-				"src\\js\\ui\\LayersPalette.js"
+				"tilemap",
+				"app\\shaders\\tilemap-frag.glsl"
+			],
+			[
+				"MoveV",
+				"src\\tools\\MoveViewport.js"
+			],
+			[
+				"Smar",
+				"src\\tools\\SmartEyedropper.js"
 			],
 			[
 				"Entit",
@@ -1957,10 +1374,6 @@
 			[
 				"cutcopyp",
 				"src\\js\\ui\\CutCopyPaste.test.js"
-			],
-			[
-				"map.js",
-				"src\\Map.js"
 			],
 			[
 				"entitypal",
@@ -2221,10 +1634,6 @@
 			[
 				".less",
 				"src\\stylesheets\\jquery-ui-fixes.less"
-			],
-			[
-				"app.html",
-				"app\\app.html"
 			],
 			[
 				"tilesele",

@@ -6,7 +6,7 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
          setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js';
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
 import { setTileSelectorUI, setDefaultObsTiles } from '../../TileSelector';
-import { resize_layer } from './Util.js';
+import { resize_layer, hexToRgba } from './Util.js';
 
 const $ = require('jquery');
 
@@ -1321,16 +1321,6 @@ function _layer_click(evt, layerIdx, onComplete) {
       }
     });
   });
-}
-
-function hexToRgba(hex) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    R: parseFloat(parseInt(result[1], 16)) / 255,
-    G: parseFloat(parseInt(result[2], 16)) / 255,
-    B: parseFloat(parseInt(result[3], 16)) / 255,
-    A: parseFloat(parseInt(result[4], 16)) / 255,
-  } : {R:null, B:null, G:null, A:null};
 }
 
 const update_layer = (dialog, layer_id, onComplete) => {

@@ -96,12 +96,16 @@ export function baseHTMLTemplate() {
             <div class="window-container">
                 <div id="entity-count">entities: <span id="entity-number"></span></div>
                 <ul class="entity-list">
-
                 </ul>
             </div>
 
             <button id="entity-new">New</button>
             <!-- <button id="entity-spreadsheet">Spreadsheet Mode</button> -->
+            <br><br>
+
+            &nbsp;&nbsp;Entity Bounds Drawing:<br>
+            <input id="all_entity_bounds_color" type=hidden>
+            &nbsp;&nbsp;<input id="all_entity_bounds_draw_picker"> <button id="all_entity_bounds_draw_off">Turn Off</button>
         </div>
 
         <div class="info-palette ui-widget-content draggable-window resizable-window" data-minWidth="200">
