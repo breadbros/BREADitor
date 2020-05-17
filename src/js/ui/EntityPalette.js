@@ -225,7 +225,7 @@ const fixContainerSize = () => {
   const palette = $('.entity-palette');
   const container = $('.entity-palette .window-container');
 
-  container.height(palette.height() - 210);
+  container.height(palette.height() - 290);
 };
 
 $(function() {
@@ -957,19 +957,7 @@ export const scrollEntityPalletteToEntity = (entToFocus) => {
   $('.entity-palette .window-container').scrollTop(loc);
 };
 
-
-const saveAllEntityBoundsColor = (hex) => {
-  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING_HEX = hex;
-  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING = hexToRgba(hex);
-};
-
-const saveAllEntityHitboxBoundsColor = (hex) => {
-  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING_HEX = hex;
-  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING = hexToRgba(hex);
-};
-
-const setupColorStuff = () => {
-
+const setupEntityBoundsDrawing = () => {
   if(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING_HEX) {
     $('#all_entity_bounds_color').val(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING_HEX);
   }
@@ -1007,8 +995,14 @@ const setupColorStuff = () => {
     allEntityBoundsColorpicker.spectrum("set", "#00000000");
     saveAllEntityBoundsColor("#00000000")
   } );
+}
 
+const saveAllEntityBoundsColor = (hex) => {
+  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING_HEX = hex;
+  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING = hexToRgba(hex);
+};
 
+const setupEntityHitboxDrawing = () => {
   if(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING_HEX) {
     $('#all_entity_hitbox_bounds_color').val(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING_HEX);
   }
@@ -1045,7 +1039,61 @@ const setupColorStuff = () => {
     allEntityHitboxBoundsColorpicker.spectrum("set", "#00000000");
     saveAllEntityHitboxBoundsColor("#00000000")
   } );
+}
 
+const saveAllEntityHitboxBoundsColor = (hex) => {
+  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING_HEX = hex;
+  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING = hexToRgba(hex);
+};
+
+const setupEntityHitboxDrawing = () => {
+  if(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING_HEX) {
+    $('#all_entity_tallredraw_bounds_color').val(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING_HEX);
+  }
+  let tallRedrawStartColor = $('#all_entity_tallredraw_bounds_color').val() ? $('#all_entity_tallredraw_bounds_color').val() : '#00000000';
+  saveAllEntityTallRedrawBoundsColor(tallRedrawStartColor);
+
+  if(tallRedrawStartColor === '#00000000') {
+    $("#all_entity_tallredraw_bounds_draw_off").hide();
+  } else {
+    tallRedrawStartColor = tallRedrawStartColor.substr(0,7);
+  }
+
+  const allEntityTallRedrawBoundsColorpicker = $('#all_entity_tallredraw_bounds_draw_picker').spectrum({
+    color: tallRedrawStartColor,
+    showInput: true,
+    className: "full-spectrum",
+    showInitial: true,
+    showSelectionPalette: true,
+    maxSelectionSize: 10,
+    preferredFormat: "hex",
+    change: function(color) {
+      const _color = color.toHexString() + "ff";
+      $('#all_entity_tallredraw_bounds_color').val(_color)
+      allEntityTallRedrawBoundsColorpicker.spectrum("set", color.toHexString());
+      if( _color !== '#00000000') {
+        $("#all_entity_tallredraw_bounds_draw_off").show();
+      }
+      saveAllEntityTallRedrawBoundsColor(_color);
+    }
+  });
+
+  $("#all_entity_tallredraw_bounds_draw_off").click( () => {
+    $("#all_entity_tallredraw_bounds_draw_off").hide();
+    allEntityTallRedrawBoundsColorpicker.spectrum("set", "#00000000");
+    saveAllEntityTallRedrawBoundsColor("#00000000")
+  } );
+}
+
+const saveAllEntityTallRedrawBoundsColor = (hex) => {
+  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING_HEX = hex;
+  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING = hexToRgba(hex);
+};
+
+const setupColorStuff = () => {
+  setupEntityBoundsDrawing();
+  setupEntityHitboxDrawing();
+  setupEntityTallRedrawDrawing();
 }
 
 export const EntitiesWidget = {

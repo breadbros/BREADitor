@@ -1251,21 +1251,21 @@ Map.prototype = {
               map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
               (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
           ) {
-            map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA], null, mask);
+            map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA], null, mask, false);
           }
           if (entities[e].MAPED_HIGHLIGHTED) {
             map.renderEntity(
-              entities[e], layer, [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)], null, mask
+              entities[e], layer, [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)], null, mask, false
             );
           } else {
-            map.renderEntity(entities[e], layer, [1, 1, 1, 1], null, mask);
+            map.renderEntity(entities[e], layer, [1, 1, 1, 1], null, mask, false);
           }
           if (mask) {
             tallEntities.push(entities[e]);
           }
         }
       } else if (map.entityPreview) {
-        map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA], null, null);
+        map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA], null, null, false);
       }
 
       if (map.getEntityTallRedrawLayer() === layer) {
@@ -1277,14 +1277,16 @@ Map.prototype = {
               entity, layer,
               [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)],
               map.entityData[entity.filename].regions['Tall_Redraw'],
-              null, null
+              null, 
+              true
             );
           } else {
             map.renderEntity(
               entity, layer,
               [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A],
               map.entityData[entity.filename].regions['Tall_Redraw'],
-              null, null
+              null, 
+              true
             );
           }
         }
@@ -1728,7 +1730,7 @@ Map.prototype = {
     return e;
   },
 
-  renderEntity: function (entity, layer, tint, clip, mask) {
+  renderEntity: function (entity, layer, tint, clip, mask, isTallRedraw) {
     this.spriteShader.use();
 
     const gl = this.gl;
@@ -1855,6 +1857,78 @@ Map.prototype = {
     if( this.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING && this.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING.A ) {
       this.renderEntityHitBoxBounds(entity, layer, tint, clip, mask, verts, viewport);
     }
+
+    // if A is 0, it's not being drawn anyway.
+    if( isTallRedraw && this.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING && this.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING.A ) {
+      this.renderEntityTallRedrawBoundsBounds(entity, layer, tint, clip, mask, verts, viewport);
+    }
+  },
+
+  renderEntityTallRedrawBoundsBounds: function(entity, layer, tint, clip, mask, verts, viewport) {
+    this.entityBoundsShader.use();
+    
+    const gl = this.gl;
+    const tilesize = this.vspData[layer.vsp].tilesize;
+    const entityData = this._getEntityData(entity);
+    const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
+    if (!entityTexture) {
+      alert("Entity '" + entity.name + "' at (" + entity.location.tx + "," + entity.location.ty + ") with image path `" + entityData.image + "` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.");
+    }
+
+    clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
+
+    const a_vertices = this.spriteShader.attribute('a_vertices');
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.lineBuf);
+    gl.enableVertexAttribArray(a_vertices);
+    gl.vertexAttribPointer(a_vertices, 2, gl.FLOAT, false, 0, 0);
+
+    const hitbox_x = entityData.hitbox[0]; //-entityData.hitbox[0]
+    const hitbox_y = entityData.hitbox[1]; //-entityData.hitbox[1]
+    const hitbox_w = entityData.hitbox[2]; //-entityData.hitbox[0]
+    const hitbox_h = entityData.hitbox[3]; //-entityData.hitbox[1]
+
+    let x = entity.location.px / tilesize.width || entity.location.tx;
+    let y = entity.location.py / tilesize.height || entity.location.ty;
+    x -= hitbox_x / tilesize.width;
+    y -= hitbox_y / tilesize.height;
+    x += clip[0] / tilesize.width;
+    y += clip[1] / tilesize.height;
+
+
+    const w = clip[2] / tilesize.width;
+    const h = clip[3] / tilesize.height;
+
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
+      x, -y,
+      x+w, -y,
+      x+w, -y,
+      x+w, -(y+h), 
+      x+w, -(y+h), 
+      x, -(y+h),
+      x, -(y+h),
+      x, -y,]),
+      this.gl.STATIC_DRAW
+    );
+
+    gl.uniform4f(
+      this.entityBoundsShader.uniform('u_camera'),
+      Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / tilesize.height,
+      this.renderContainerDimensions.w / tilesize.width / this.camera[2],
+      this.renderContainerDimensions.h / tilesize.height / this.camera[2]
+    );
+
+    const borderColor = this.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING;
+
+    gl.uniform4f(
+      this.entityBoundsShader.uniform('u_entBoundsColor'),
+      borderColor.R,
+      borderColor.G,
+      borderColor.B, 
+      borderColor.A
+    );
+    
+    gl.drawArrays( gl.LINES, 0, 8 );
   },
 
   renderEntityBounds: function(entity, layer, tint, clip, mask, verts, viewport) {
@@ -1898,28 +1972,6 @@ Map.prototype = {
       x, -y,]),
       this.gl.STATIC_DRAW
     );
-
-/*
-    // hitbox rendering!
-
-    let x = entity.location.px / tilesize.width || entity.location.tx;
-    let y = entity.location.py / tilesize.height || entity.location.ty;
-    const w = entityData.hitbox[2] / tilesize.width;
-    const h = entityData.hitbox[3] / tilesize.height;
-
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
-      x, -y,
-      x+w, -y,
-      x+w, -y,
-      x+w, -(y+h), 
-      x+w, -(y+h), 
-      x, -(y+h),
-      x, -(y+h),
-      x, -y,]),
-      this.gl.STATIC_DRAW
-    );
-
-*/    
 
     gl.uniform4f(
       this.entityBoundsShader.uniform('u_camera'),

@@ -112,6 +112,12 @@ export function baseHTMLTemplate() {
             &nbsp;&nbsp;Entity Hitbox Drawing:<br>
             <input id="all_entity_hitbox_bounds_color" type=hidden>
             &nbsp;&nbsp;<input id="all_entity_hitbox_bounds_draw_picker"> <button id="all_entity_hitbox_bounds_draw_off">Turn Off</button>
+
+            <br><br>
+
+            &nbsp;&nbsp;Entity Tall Redraw Bounds Drawing:<br>
+            <input id="all_entity_tallredraw_bounds_color" type=hidden>
+            &nbsp;&nbsp;<input id="all_entity_tallredraw_bounds_draw_picker"> <button id="all_entity_tallredraw_bounds_draw_off">Turn Off</button>
         </div>
 
         <div class="info-palette ui-widget-content draggable-window resizable-window" data-minWidth="200">
