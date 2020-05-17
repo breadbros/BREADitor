@@ -1,5 +1,5 @@
 import { MakeUndoRedoStack } from './UndoRedo';
-import { LOG, INFO } from './Logging';
+import { LOG, INFO, WARN} from './Logging';
 import { getObsVisibility, MAGICAL_OBS_LAYER_ID } from './js/ui/LayersPalette';
 const app = require('electron').remote.app;
 const path = require('path');
@@ -498,6 +498,19 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.mapRawTileData.zone_data = tmpZones;
   };
 
+  this.entitySortFn = (a, b) => {
+    const entityDataA = this._getEntityData(a);
+    const entityDataB = this._getEntityData(b);
+
+    // Entities should Z-sort (within their layers) by the bottom of their hitbox (PY + hitbox.H), not the top. 
+    if (a.location.py && b.location.py) {
+      return (a.location.py+entityDataA.hitbox[3]) - (b.location.py+entityDataB.hitbox[3]);
+    }
+
+    WARN("Entity sorting is being done without px/py or hitbox calculations.  WARNING!");
+    return a.location.ty - b.location.ty;
+  }
+
   this.toLoad = 1;
   this.doneLoading = function () {
     this.toLoad--;
@@ -591,12 +604,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     for (const i in this.entities) {
       if (this.entities[i]) {
           INFO('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
-        this.entities[i].sort(function (a, b) {
-          if(a.location.py != b.location.py) {
-            return a.location.py - b.location.py;
-          }
-          return a.location.px - b.location.px;
-        });
+        this.entities[i].sort(this.entitySortFn);
       }
     }
   };
@@ -932,13 +940,7 @@ Map.prototype = {
   },
   addEntity: function (filename, location) {
     this.addEntityWithoutSort(filename, location);
-    this.entities[location.layer].sort(function (a, b) {
-      if (a.location.py && b.location.py) {
-        return a.location.py - b.location.py; // TODO almost certainly wrong; probably should convery from ty -> py if
-                                              //      no py and then compare py.
-      }
-      return a.location.ty - b.location.ty;
-    });
+    this.entities[location.layer].sort(this.entitySortFn);
   },
 
   getVSPTileLocation: function (vsp, idx) {
@@ -1893,7 +1895,6 @@ Map.prototype = {
     y -= hitbox_y / tilesize.height;
     x += clip[0] / tilesize.width;
     y += clip[1] / tilesize.height;
-
 
     const w = clip[2] / tilesize.width;
     const h = clip[3] / tilesize.height;
