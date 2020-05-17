@@ -1503,21 +1503,10 @@ Map.prototype = {
     gl.enableVertexAttribArray(a_position);
     gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
 
+    // draw the tiles!
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.lineBuf );
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
-      0, 0,
-      layer.dimensions.X, 0,
-      layer.dimensions.X, 0,
-      layer.dimensions.X, -layer.dimensions.Y, 
-      layer.dimensions.X, -layer.dimensions.Y, 
-      0, -layer.dimensions.Y,
-      0, -layer.dimensions.Y,
-      0, 0,]),
-      this.gl.STATIC_DRAW
-    );
-
+    /// TODO: extract everything below this this into its own helper function?
     this.layerBorderShader.use();
     
     const a_positionLayer = this.layerBorderShader.attribute('a_position');
@@ -1547,6 +1536,19 @@ Map.prototype = {
     gl.uniform4f(
       this.layerBorderShader.uniform('u_borderColor'),
       r,g,b, a
+    );
+
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.lineBuf );
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
+      0, 0,
+      layer.dimensions.X, 0,
+      layer.dimensions.X, 0,
+      layer.dimensions.X, -layer.dimensions.Y, 
+      layer.dimensions.X, -layer.dimensions.Y, 
+      0, -layer.dimensions.Y,
+      0, -layer.dimensions.Y,
+      0, 0,]),
+      this.gl.STATIC_DRAW
     );
 
     gl.drawArrays( gl.LINES, 0, 8 );
@@ -1727,7 +1729,7 @@ Map.prototype = {
 
   renderEntity: function (entity, layer, tint, clip, mask) {
     this.spriteShader.use();
-    
+
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
     const entityData = this._getEntityData(entity);
@@ -1888,11 +1890,22 @@ Map.prototype = {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     gl.bindBuffer( gl.ARRAY_BUFFER, this.lineBuf );
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(verts),
+    
+    const x = entityData.dims[0] / tilesize.width;
+    const y = entityData.dims[1] / tilesize.height;
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
+      0, 0,
+      x, 0,
+      x, 0,
+      x, -y, 
+      x, -y, 
+      0, -y,
+      0, -y,
+      0, 0,]),
       this.gl.STATIC_DRAW
     );
 
-    gl.drawArrays( gl.LINES, 0, verts.length/2 );
+    gl.drawArrays( gl.LINES, 0, 8 );
   },
 
   cleanUpCallbacks: function () {
