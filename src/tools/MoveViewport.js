@@ -1,4 +1,4 @@
-import { _toolLogic, isTileSelectorMap, grue_zoom } from '../Tools';
+import { _toolLogic, isTileSelectorMap, grue_zoom, updateZoomText } from '../Tools';
 import { LOG } from '../Logging';
 
 const throttle = (func, limit) => {
@@ -36,8 +36,10 @@ export default () => {
       function (map, e) {
         if( e.originalEvent.deltaY < 0 || e.originalEvent.deltaX < 0 ) {
           grue_zoom(false, map);
+          updateZoomText(map);
         } else if( e.originalEvent.deltaY > 0 || e.originalEvent.deltaX > 0 ) {
           grue_zoom(true, map);
+          updateZoomText(map);
         } else {
           LOG('Lol, no wheel deltas?');
         }

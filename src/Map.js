@@ -1058,6 +1058,9 @@ Map.prototype = {
       if (localStorage[key + '-mapx']) { this.camera[0] = parseInt(localStorage[key + '-mapx']); }
       if (localStorage[key + '-mapy']) { this.camera[1] = parseInt(localStorage[key + '-mapy']); }
       if (localStorage[key + '-mapzoom']) { this.camera[2] = parseInt(localStorage[key + '-mapzoom']); }
+      if( !this.camera[2] ) {
+        this.camera[2] = 1;
+      }
 
       if (localStorage[key + '-layerspallete']) { this.camera[1] = parseInt(localStorage[key + '-layerspallete']); }
 
@@ -1847,6 +1850,11 @@ Map.prototype = {
     if( this.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING && this.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING.A ) {
       this.renderEntityBounds(entity, layer, tint, clip, mask, verts, viewport);
     }
+
+    // if A is 0, it's not being drawn anyway.
+    if( this.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING && this.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING.A ) {
+      this.renderEntityHitBoxBounds(entity, layer, tint, clip, mask, verts, viewport);
+    }
   },
 
   renderEntityBounds: function(entity, layer, tint, clip, mask, verts, viewport) {
@@ -1932,6 +1940,94 @@ Map.prototype = {
     );
     
     gl.drawArrays( gl.LINES, 0, 8 );
+  },
+
+  renderEntityHitBoxBounds: function(entity, layer, tint, clip, mask, verts, viewport) {
+    this.entityBoundsShader.use();
+    
+    const gl = this.gl;
+    const tilesize = this.vspData[layer.vsp].tilesize;
+    const entityData = this._getEntityData(entity);
+    const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
+    if (!entityTexture) {
+      alert("Entity '" + entity.name + "' at (" + entity.location.tx + "," + entity.location.ty + ") with image path `" + entityData.image + "` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.");
+    }
+
+    clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
+
+    const a_vertices = this.spriteShader.attribute('a_vertices');
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.lineBuf);
+    gl.enableVertexAttribArray(a_vertices);
+    gl.vertexAttribPointer(a_vertices, 2, gl.FLOAT, false, 0, 0);
+
+    let x = entity.location.px / tilesize.width || entity.location.tx;
+    let y = entity.location.py / tilesize.height || entity.location.ty;
+    const w = entityData.hitbox[2] / tilesize.width;
+    const h = entityData.hitbox[3] / tilesize.height;
+
+    let x1 = x;
+    let x2 = x+w;
+
+    let y1 = y;
+    let y2 = y+h;
+
+    if( x2 < x1 ) {
+      [x1, x2] = [x2, x1];
+    }
+
+    if( y2 < y1 ) {
+      [y1, y2] = [y2, y1];
+    }
+
+    let arLines = [
+      x, -y,
+      x+w, -y,
+      x+w, -y,
+      x+w, -(y+h), 
+      x+w, -(y+h), 
+      x, -(y+h),
+      x, -(y+h),
+      x, -y,
+    ];
+
+    /* Playing around with "architectural" shading but I think I need some trig to do it how I thought I could :(
+  
+    let xi = x1;
+    let yi = y1;
+
+    while( xi < x2+w || yi < y2+w ) {
+      xi += .2;
+      yi += .2;
+
+      arLines.push(x1, -Math.min(yi, y2), Math.min(xi, x2), -y1);
+      arLines.push(Math.min(xi, x2), -y2, x2, -Math.max(yi, y1));
+    }
+    
+    */
+
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(arLines),
+      this.gl.STATIC_DRAW
+    );
+
+    gl.uniform4f(
+      this.entityBoundsShader.uniform('u_camera'),
+      Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / tilesize.height,
+      this.renderContainerDimensions.w / tilesize.width / this.camera[2],
+      this.renderContainerDimensions.h / tilesize.height / this.camera[2]
+    );
+
+    const borderColor = this.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING;
+
+    gl.uniform4f(
+      this.entityBoundsShader.uniform('u_entBoundsColor'),
+      borderColor.R,
+      borderColor.G,
+      borderColor.B, 
+      borderColor.A
+    );
+    
+    gl.drawArrays( gl.LINES, 0, arLines.length/2 );
   },
 
   cleanUpCallbacks: function () {

@@ -225,7 +225,7 @@ const fixContainerSize = () => {
   const palette = $('.entity-palette');
   const container = $('.entity-palette .window-container');
 
-  container.height(palette.height() - 135);
+  container.height(palette.height() - 210);
 };
 
 $(function() {
@@ -261,24 +261,26 @@ $(function() {
   });
 });
 
-let template = "<div>Name: <input id='entity_name'></div>";
-template += "<div>uuid: <input id='entity_uuid' readonly size=36></div>";
-template += "<div>Filename: <input id='entity_filename' size=50></div>";
-template += "<div>Animation: <select id='entity_animation'></select>";
-template += "<div>Facing: <select id='entity_facing'></select></div>";
-template += "<div>Activation Script: <input id='entity_activation_script'></div>";
-template += "<div>Pays attention to obstructions?: <input type='checkbox' " +
-            "id='entity_pays_attention_to_obstructions'></div>";
-template += "<div>Is an obstructions?: <input type='checkbox' id='entity_is_an_obstruction'></div>";
-template += "<div>Autofaces when activated?: <input type='checkbox' id='entity_autofaces'></div>";
-template += "<div>Speed: <input id='entity_speed' value='100' size=4></div>";
-template += "<div class='tile_coordinates'>Location.tx: <input id='entity_location_tx' size=4></div>";
-template += "<div class='tile_coordinates'>Location.ty: <input id='entity_location_ty' size=4></div>";
-template += "<div class='pixel_coordinates'>Location.px: <input id='entity_location_px' size=4></div>";
-template += "<div class='pixel_coordinates'>Location.py: <input id='entity_location_py' size=4></div>";
+let template = `
+  <div>Name: <input id='entity_name'></div>
+  <div>uuid: <input id='entity_uuid' readonly size=36></div>
+  <div>Filename: <input id='entity_filename' size=50></div>
+  <div>Animation: <select id='entity_animation'></select>
+  <div>Facing: <select id='entity_facing'></select></div>
+  <div>Activation Script: <input id='entity_activation_script'></div>
+  <div>Pays attention to obstructions?: <input type='checkbox' id='entity_pays_attention_to_obstructions'></div>
+  <div>Is an obstructions?: <input type='checkbox' id='entity_is_an_obstruction'></div>
+  <div>Autofaces when activated?: <input type='checkbox' id='entity_autofaces'></div>
+  <div>Speed: <input id='entity_speed' value='100' size=4></div>
+  <div class='tile_coordinates'>Location.tx: <input id='entity_location_tx' size=4></div>
+  <div class='tile_coordinates'>Location.ty: <input id='entity_location_ty' size=4></div>
+  <div class='pixel_coordinates'>Location.px: <input id='entity_location_px' size=4></div>
+  <div class='pixel_coordinates'>Location.py: <input id='entity_location_py' size=4></div>
 
-template += "<div>Location.layer: <select id='entity_location_layer'></select></div>";
-template += "<div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly></textarea></div>";
+
+  <div>Location.layer: <select id='entity_location_layer'></select></div>
+  <div>wander: <textarea rows=5 cols=40 id='entity_wander' readonly></textarea></div>
+`;
 
 let previousEntityRelPath = '';
 let hasDirtyArt = false;
@@ -961,6 +963,11 @@ const saveAllEntityBoundsColor = (hex) => {
   window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING = hexToRgba(hex);
 };
 
+const saveAllEntityHitboxBoundsColor = (hex) => {
+  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING_HEX = hex;
+  window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING = hexToRgba(hex);
+};
+
 const setupColorStuff = () => {
 
   if(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING_HEX) {
@@ -1000,6 +1007,45 @@ const setupColorStuff = () => {
     allEntityBoundsColorpicker.spectrum("set", "#00000000");
     saveAllEntityBoundsColor("#00000000")
   } );
+
+
+  if(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING_HEX) {
+    $('#all_entity_hitbox_bounds_color').val(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING_HEX);
+  }
+  let hitboxStartColor = $('#all_entity_hitbox_bounds_color').val() ? $('#all_entity_hitbox_bounds_color').val() : '#00000000';
+  saveAllEntityHitboxBoundsColor(hitboxStartColor);
+
+  if(hitboxStartColor === '#00000000') {
+    $("#all_entity_hitbox_bounds_draw_off").hide();
+  } else {
+    hitboxStartColor = hitboxStartColor.substr(0,7);
+  }
+
+  const allEntityHitboxBoundsColorpicker = $('#all_entity_hitbox_bounds_draw_picker').spectrum({
+    color: hitboxStartColor,
+    showInput: true,
+    className: "full-spectrum",
+    showInitial: true,
+    showSelectionPalette: true,
+    maxSelectionSize: 10,
+    preferredFormat: "hex",
+    change: function(color) {
+      const _color = color.toHexString() + "ff";
+      $('#all_entity_hitbox_bounds_color').val(_color)
+      allEntityHitboxBoundsColorpicker.spectrum("set", color.toHexString());
+      if( _color !== '#00000000') {
+        $("#all_entity_hitbox_bounds_draw_off").show();
+      }
+      saveAllEntityHitboxBoundsColor(_color);
+    }
+  });
+
+  $("#all_entity_hitbox_bounds_draw_off").click( () => {
+    $("#all_entity_hitbox_bounds_draw_off").hide();
+    allEntityHitboxBoundsColorpicker.spectrum("set", "#00000000");
+    saveAllEntityHitboxBoundsColor("#00000000")
+  } );
+
 }
 
 export const EntitiesWidget = {

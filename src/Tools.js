@@ -48,7 +48,7 @@ export const updateZoomText = (map) => {
   }
 
   const txt = (100 / map.camera[2]) + '%';
-
+  
   $('#info-zoom').text(txt);
 };
 
@@ -343,13 +343,13 @@ const hackToolsInit = () => {
   $('#btn-tool-zoomin').off('click');
   $('#btn-tool-zoomin').click(function (e) {
     grue_zoom(false, window.$$$currentMap);
-    updateZoomText();
+    updateZoomText(window.$$$currentMap);
   });
 
   $('#btn-tool-zoomout').off('click');
   $('#btn-tool-zoomout').click(function (e) {
     grue_zoom(true, window.$$$currentMap);
-    updateZoomText();
+    updateZoomText(window.$$$currentMap);
   });
 
   $('#btn-tool-drag').click();
