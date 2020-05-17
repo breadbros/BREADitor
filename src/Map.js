@@ -1262,12 +1262,10 @@ Map.prototype = {
           }
         }
       } else if (map.entityPreview) {
-        map.spriteShader.use();
         map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA], null, null);
       }
 
       if (map.getEntityTallRedrawLayer() === layer) {
-        map.spriteShader.use();
         for (const e in tallEntities) {
           const entity = tallEntities[e];
 
@@ -1627,9 +1625,9 @@ Map.prototype = {
         this.renderContainerDimensions.h / this.camera[2]
       );
       gl.uniform4f(this.screenviewShader.uniform('u_viewport'),
-        Math.floor(overlay.viewport.x),          
-        Math.floor(overlay.viewport.y),         
-        Math.floor(overlay.viewport.width),        
+        Math.floor(overlay.viewport.x),
+        Math.floor(overlay.viewport.y),
+        Math.floor(overlay.viewport.width),
         Math.floor(overlay.viewport.height)
       );
       gl.uniform4f(this.screenviewShader.uniform('u_color'),
@@ -1865,9 +1863,55 @@ Map.prototype = {
     clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
 
     const a_vertices = this.spriteShader.attribute('a_vertices');
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.lineBuf);
     gl.enableVertexAttribArray(a_vertices);
-    gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(a_vertices, 2, gl.FLOAT, false, 0, 0);
+
+    const hitbox_x = entityData.hitbox[0]; //-entityData.hitbox[0]
+    const hitbox_y = entityData.hitbox[1]; //-entityData.hitbox[1]
+    const hitbox_w = entityData.hitbox[2]; //-entityData.hitbox[0]
+    const hitbox_h = entityData.hitbox[3]; //-entityData.hitbox[1]
+
+    let x = entity.location.px / tilesize.width || entity.location.tx;
+    let y = entity.location.py / tilesize.height || entity.location.ty;
+    x -= hitbox_x / tilesize.width;;
+    y -= hitbox_y / tilesize.height;
+    const w = entityData.dims[0] / tilesize.width;
+    const h = entityData.dims[1] / tilesize.height;
+
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
+      x, -y,
+      x+w, -y,
+      x+w, -y,
+      x+w, -(y+h), 
+      x+w, -(y+h), 
+      x, -(y+h),
+      x, -(y+h),
+      x, -y,]),
+      this.gl.STATIC_DRAW
+    );
+
+/*
+    // hitbox rendering!
+
+    let x = entity.location.px / tilesize.width || entity.location.tx;
+    let y = entity.location.py / tilesize.height || entity.location.ty;
+    const w = entityData.hitbox[2] / tilesize.width;
+    const h = entityData.hitbox[3] / tilesize.height;
+
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
+      x, -y,
+      x+w, -y,
+      x+w, -y,
+      x+w, -(y+h), 
+      x+w, -(y+h), 
+      x, -(y+h),
+      x, -(y+h),
+      x, -y,]),
+      this.gl.STATIC_DRAW
+    );
+
+*/    
 
     gl.uniform4f(
       this.entityBoundsShader.uniform('u_camera'),
@@ -1886,25 +1930,7 @@ Map.prototype = {
       borderColor.B, 
       borderColor.A
     );
-
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.lineBuf );
     
-    const x = entityData.dims[0] / tilesize.width;
-    const y = entityData.dims[1] / tilesize.height;
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
-      0, 0,
-      x, 0,
-      x, 0,
-      x, -y, 
-      x, -y, 
-      0, -y,
-      0, -y,
-      0, 0,]),
-      this.gl.STATIC_DRAW
-    );
-
     gl.drawArrays( gl.LINES, 0, 8 );
   },
 
