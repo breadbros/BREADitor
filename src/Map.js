@@ -470,8 +470,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     INFO('loaded obsLayerData from ' + tmppath);
   }
 
-    // todo: stop being evil
-    // todo: that probably won't happen. MWAHAHAHAHHA.
+  // todo: stop being evil
+  // todo: that probably won't happen. MWAHAHAHAHHA.
   this.vspData['zones'] = $.extend(true, {}, this.vspData['obstructions']);
 
   this.vspData['zones'].source_image = path.join(window.appPath, '/images/zones.png');
@@ -1130,6 +1130,8 @@ Map.prototype = {
       this.gl, readShader('shaders/screenview-vert.glsl'), readShader('shaders/screenview-frag.glsl'));
     this.layerBorderShader = new ShaderProgram(
       this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/layerborder-frag.glsl'));
+    this.entityBoundsShader = new ShaderProgram(
+      this.gl, readShader('shaders/sprite-vert.glsl'), readShader('shaders/entitybounds-frag.glsl'));
 
     this.tileLibraryTextures = {};
     for (const k in this.vspImages) {
@@ -1724,6 +1726,8 @@ Map.prototype = {
   },
 
   renderEntity: function (entity, layer, tint, clip, mask) {
+    this.spriteShader.use();
+    
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
     const entityData = this._getEntityData(entity);
@@ -1838,6 +1842,57 @@ Map.prototype = {
     gl.bindTexture(gl.TEXTURE_2D, entityTexture.tex);
 
     gl.drawArrays(gl.TRIANGLES, 0, verts.length / 4);
+
+    // if A is 0, it's not being drawn anyway.
+    if( this.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING && this.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING.A ) {
+      this.renderEntityBounds(entity, layer, tint, clip, mask, verts, viewport);
+    }
+  },
+
+  renderEntityBounds: function(entity, layer, tint, clip, mask, verts, viewport) {
+    this.entityBoundsShader.use();
+    
+    const gl = this.gl;
+    const tilesize = this.vspData[layer.vsp].tilesize;
+    const entityData = this._getEntityData(entity);
+    const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
+    if (!entityTexture) {
+      alert("Entity '" + entity.name + "' at (" + entity.location.tx + "," + entity.location.ty + ") with image path `" + entityData.image + "` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.");
+    }
+
+    clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
+
+    const a_vertices = this.spriteShader.attribute('a_vertices');
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
+    gl.enableVertexAttribArray(a_vertices);
+    gl.vertexAttribPointer(a_vertices, 4, gl.FLOAT, false, 0, 0);
+
+    gl.uniform4f(
+      this.entityBoundsShader.uniform('u_camera'),
+      Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / tilesize.height,
+      this.renderContainerDimensions.w / tilesize.width / this.camera[2],
+      this.renderContainerDimensions.h / tilesize.height / this.camera[2]
+    );
+
+    const borderColor = this.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING;
+
+    gl.uniform4f(
+      this.entityBoundsShader.uniform('u_entBoundsColor'),
+      borderColor.R,
+      borderColor.G,
+      borderColor.B, 
+      borderColor.A
+    );
+
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    gl.bindBuffer( gl.ARRAY_BUFFER, this.lineBuf );
+    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(verts),
+      this.gl.STATIC_DRAW
+    );
+
+    gl.drawArrays( gl.LINES, 0, verts.length/2 );
   },
 
   cleanUpCallbacks: function () {

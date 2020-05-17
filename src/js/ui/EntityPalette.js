@@ -995,8 +995,6 @@ const setupColorStuff = () => {
     }
   });
 
-  // allEntityBoundsColorpicker.spectrum("set", startColor);
-
   $("#all_entity_bounds_draw_off").click( () => {
     $("#all_entity_bounds_draw_off").hide();
     allEntityBoundsColorpicker.spectrum("set", "#00000000");
