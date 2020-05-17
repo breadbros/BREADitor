@@ -1046,7 +1046,7 @@ const saveAllEntityHitboxBoundsColor = (hex) => {
   window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING = hexToRgba(hex);
 };
 
-const setupEntityHitboxDrawing = () => {
+const setupEntityTallRedrawDrawing = () => {
   if(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING_HEX) {
     $('#all_entity_tallredraw_bounds_color').val(window.$$$currentMap.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING_HEX);
   }
