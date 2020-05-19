@@ -12,14 +12,37 @@ export const setupNotifications = () => {
   $notifyDiv.css('color', 'white');
   $notifyDiv.css('text-align', 'right');
   $notifyDiv.css('overflow', 'hidden');
-  $notifyDiv.css('background', 'rgba(0,0,0, 0.2)');
+  $notifyDiv.css('background', 'rgba(0,0,0, 0.5)');
   $notifyDiv.css('padding', '10px');
+  $notifyDiv.css('z-index', '2000000000');
   $notifyDiv.css('display', 'none');
 }
 
+let fadeOutTimerId = null;
+let fadeOutTriggerTimeInMs = 1500;
+let fadeOutAnimationTimeInMs = 500;
+
+let fadeoutCallbackFn = () => {};
+
 export const notify = (msg) => {
+  const now = new Date();
+  const time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+
   $notifyDiv.css('display', 'block');
 
-  $notifyDiv.html( msg + '<br />' + $notifyDiv.html() );
+  $notifyDiv.html( time + ' ' + msg + '<br />' + $notifyDiv.html() );
+
+  setFadeOutTimer();
 };
 
+const setFadeOutTimer = () => {
+  if(fadeOutTimerId !== null) {
+    clearTimeout(fadeOutTimerId);
+    fadeOutTimerId = null;
+  }
+
+  fadeOutTimerId = setTimeout( () => {
+      $notifyDiv.fadeOut(fadeOutAnimationTimeInMs, "linear", fadeoutCallbackFn );
+
+  }, fadeOutTriggerTimeInMs);
+};
