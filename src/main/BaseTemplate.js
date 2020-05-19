@@ -138,5 +138,12 @@ export function baseHTMLTemplate() {
 
         <div id="modal-dialog" title="BUTTS, LOL">
           <p>This is the default dialog. Someone didn't put content into it.</p>
-        </div>`;
+        </div>
+
+        <div id="notifications-window"></div>
+
+
+`;
+
+        
 }

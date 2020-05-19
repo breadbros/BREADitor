@@ -10,6 +10,7 @@ import { updateMapAndVSPFileInfo } from '../js/ui/InfoPalette.js';
 import { initTools, updateRstringInfo, updateLocationFunction, selectAll, updateInfoDims } from '../Tools.js';
 import { cut, copy, paste } from '../js/ui/CutCopyPaste';
 import { handleUndo, handleRedo } from '../UndoRedo';
+import { setupNotifications, notify } from '../Notification-Pane';
 
 const path = require('path');
 
@@ -222,6 +223,8 @@ export function setupFreshApp() {
   setupChording();
 
   setupTheRestOfTheApp();
+
+  setupNotifications();
 }
 
 export function setupWindowFunctions() {
@@ -387,6 +390,8 @@ export function setupWindowFunctions() {
     jetpack.write(datafile, tileData);
 
     saveMostRecentMapLocation(mapfile);
+
+    notify("Saved map.");
 
     if(reloadAfterSave) {
       INFO("Reloading map after saveas...");
