@@ -10,7 +10,7 @@ const $ = require('jquery');
 
 let _entityLayersExpanded = false;
 
-const set_animation_dropdown = ($template, animationKeyset, animation) => {
+const set_animation_dropdown = ($template, animationKeyset, entity) => {
   const $entAnim = $template.find('#entity_animation');
 
   // repopulate animation select
@@ -23,8 +23,10 @@ const set_animation_dropdown = ($template, animationKeyset, animation) => {
       );
   });
 
+  debugger;
+
   // set value
-  $entAnim.val(animation);
+  $entAnim.val(entity.animation);
 }
 
 export const setNormalEntityVisibility = (val) => {
