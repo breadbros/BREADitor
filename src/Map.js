@@ -1732,6 +1732,19 @@ Map.prototype = {
     return e;
   },
 
+  _getAnimationSafe: function(entity, entityData) {
+    if(entityData.animations[entity.animation]) {
+      return entityData.animations[entity.animation][0][0][0];
+    }
+
+    if( Object.keys(entityData.animations).length ) {
+      return entityData.animations[Object.keys(entityData.animations)[0]][0][0][0];
+    }
+
+    ERROR("Entity didnt have any animations.  THAT'S ILLEGAL.");
+    debugger;      
+  },
+
   renderEntity: function (entity, layer, tint, clip, mask, isTallRedraw) {
     this.spriteShader.use();
 
@@ -1770,9 +1783,9 @@ Map.prototype = {
     let fx = (entityData.outer_pad + clip[0]) / entityTexture.img.width;
     let fy = (entityData.outer_pad + clip[1]) / entityTexture.img.height;
     const fw = clip[2] / entityTexture.img.width;
-    const fh = clip[3] / entityTexture.img.height;
+    const fh = clip[3] / entityTexture.img.height;    
 
-    const f = entityData.animations[entity.animation][0][0][0];
+    const f = this._getAnimationSafe(entity, entityData);
     fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
     fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
 
