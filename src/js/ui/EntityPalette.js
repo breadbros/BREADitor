@@ -23,8 +23,6 @@ const set_animation_dropdown = ($template, animationKeyset, entity) => {
       );
   });
 
-  debugger;
-
   // set value
   $entAnim.val(entity.animation);
 }
