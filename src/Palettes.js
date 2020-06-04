@@ -84,6 +84,19 @@ export const setupPaletteListeners = () => {
     $node2.click(() => { paletteCloseListener($node2); });
   });
 
+  $('.draggable-window .ui-widget-header').click( (event) => {
+      // File this under Monster: History's Greatest
+      const fakeEvent = {
+        target: event.currentTarget.parentElement
+      };
+
+      if ($(fakeEvent.target).hasClass('map-palette')) {
+        return;
+      }
+
+      pop_me_to_the_top(fakeEvent);
+  } );
+
   $('.draggable-window').draggable({
     handle: 'h3',
     stop: function (event, ui) {
