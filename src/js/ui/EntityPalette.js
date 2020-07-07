@@ -444,6 +444,20 @@ const setup_template = (ent, id) => {
   return $template;
 };
 
+const SIMPLE_MATH_REGEX = /([-+]?[0-9]*\.?[0-9]+[\/\+\-\*])+([-+]?[0-9]*\.?[0-9]+)/;
+
+function is_simple_math(str) {
+  return str.match(SIMPLE_MATH_REGEX) !== null;
+}
+
+function do_simple_math(str) {
+  if(is_simple_math(str)) {
+    return parseInt(eval(str)); // I AM LITERALLY HITLER
+  }
+
+  return null;
+}
+
 function assert_tileness() {
 
   let tx = $('#entity_location_tx').val();
@@ -452,14 +466,29 @@ function assert_tileness() {
   let ty = $('#entity_location_ty').val()
   if(!ty) { ty = 0; }
 
-  const loc_tx = parseInt(tx);
-  const loc_ty = parseInt(ty);
+  let loc_tx;
+  let loc_ty;
+debugger;
+  if(is_simple_math(tx)) {
+    loc_tx = do_simple_math(tx)
+  } else {
+    loc_tx = parseInt(tx);
+  }
+
+  if(is_simple_math(ty)) {
+    loc_ty = do_simple_math(ty)
+  } else {
+    loc_ty = parseInt(ty);
+  }
 
   $('#entity_location_px').val(loc_tx * 16);  // TODO should be tilesize not 16
   $('#entity_location_py').val(loc_ty * 16);  // TODO should be tilesize not 16
 }
 
 function assert_pixel_versus_tile_in_editing() {
+
+
+
   const loc_tx = parseInt($('#entity_location_tx').val());
   const loc_ty = parseInt($('#entity_location_ty').val());
 
@@ -570,15 +599,6 @@ function _entity_click(evt, id) {
         $('#modal-dialog').html('');
       }
     });
-  });
-
-  $('div.tile_coordinates input').on('change', () => {
-    assert_tileness();
-    assert_pixel_versus_tile_in_editing();
-  });
-
-  $('div.pixel_coordinates input').on('change', () => {
-    assert_pixel_versus_tile_in_editing();
   });
 }
 
@@ -733,26 +753,14 @@ const _loc_helper = (valDict) => {
   loc.py = valDict.loc_py;
 
   if( typeof loc.tx !== 'number' && typeof loc.px !== 'number') {
-    //modal_error('Invalid input: no valid x values given.');
     loc.tx = 0;
     loc.px = 0;
   }
 
   if( typeof loc.ty !== 'number' && typeof loc.py !== 'number')  {
-    //modal_error('Invalid input: no valid y values given.');
     loc.ty = 0;
     loc.tx = 0;
   }
-
-  // if( valDict.loc_py === 0 ) {
-  //   console.info("Cooercing loc_ty to 0.");
-  //   valDict.loc_ty = 0;
-  // }
-
-  // if( valDict.loc_px === 0 ) {
-  //   console.info("Cooercing loc_tx to 0.");
-  //   valDict.loc_tx = 0;
-  // }
 
   return loc;
 };
