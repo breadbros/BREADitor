@@ -458,9 +458,20 @@ function do_simple_math(str) {
   return null;
 }
 
+function _maf(selector) {
+  if(is_simple_math($(selector).val())) {
+    $(selector).val(do_simple_math($(selector).val()));
+  }
+}
+
+function do_simple_math_if_present() {
+  _maf('#entity_location_px');
+  _maf('#entity_location_py');
+  _maf('#entity_location_tx');
+  _maf('#entity_location_ty');
+}
+
 function assert_pixel_versus_tile_in_editing() {
-
-
 
   const loc_tx = parseInt($('#entity_location_tx').val());
   const loc_ty = parseInt($('#entity_location_ty').val());
@@ -525,7 +536,8 @@ function _entity_click(evt, id) {
     $('#modal-dialog').show();
 
     $('#entity_location_tx').on('change', () => {
-      $('#entity_location_px').valdo      $('#entity_location_py').val('');
+      $('#entity_location_px').val('');
+      $('#entity_location_py').val('');
     });
     $('#entity_location_ty').on('change', () => {
       $('#entity_location_px').val('');
@@ -595,6 +607,8 @@ export const update_entity = (dialog, ent_id) => {
 
   const entity_animation = $('#entity_animation').val();
   const entity_facing = $('#entity_facing').val();
+
+  do_simple_math_if_present();
 
   let loc_tx = parseInt($('#entity_location_tx').val());
   let loc_ty = parseInt($('#entity_location_ty').val());
