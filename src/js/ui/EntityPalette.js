@@ -458,33 +458,6 @@ function do_simple_math(str) {
   return null;
 }
 
-function assert_tileness() {
-
-  let tx = $('#entity_location_tx').val();
-  if(!tx) { tx = 0; }
-
-  let ty = $('#entity_location_ty').val()
-  if(!ty) { ty = 0; }
-
-  let loc_tx;
-  let loc_ty;
-debugger;
-  if(is_simple_math(tx)) {
-    loc_tx = do_simple_math(tx)
-  } else {
-    loc_tx = parseInt(tx);
-  }
-
-  if(is_simple_math(ty)) {
-    loc_ty = do_simple_math(ty)
-  } else {
-    loc_ty = parseInt(ty);
-  }
-
-  $('#entity_location_px').val(loc_tx * 16);  // TODO should be tilesize not 16
-  $('#entity_location_py').val(loc_ty * 16);  // TODO should be tilesize not 16
-}
-
 function assert_pixel_versus_tile_in_editing() {
 
 
@@ -552,8 +525,7 @@ function _entity_click(evt, id) {
     $('#modal-dialog').show();
 
     $('#entity_location_tx').on('change', () => {
-      $('#entity_location_px').val('');
-      $('#entity_location_py').val('');
+      $('#entity_location_px').valdo      $('#entity_location_py').val('');
     });
     $('#entity_location_ty').on('change', () => {
       $('#entity_location_px').val('');
