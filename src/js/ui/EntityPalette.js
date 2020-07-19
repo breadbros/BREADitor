@@ -770,6 +770,31 @@ export const _update_entity_inner = (ent_id, valDict) => {
     valDict.entity_facing = 'Down';
   }
 
+  debugger;
+
+  // if old_value_dict's null, we should undo to deleting ent_id.
+  let old_value_dict = null;
+
+  // if old_value_dict's not null, we should restore ent_id's old state.
+  if( currentEntities[ent_id] ) {
+    // these two dicts should be kept in sync for undo/redo.  Any abstraction patterns that could aid this?
+    old_value_dict = {
+      'name': valDict.entity_name,
+      'uuid': valDict.entity_uuid,
+      'filename': valDict.entity_filename,
+      'facing': valDict.entity_facing,
+      'pays_attention_to_obstructions': valDict.entity_pays_attention_to_obstructions,
+      'is_an_obstruction': valDict.entity_is_an_obstruction,
+      'autofaces': valDict.entity_autofaces,
+      'speed': valDict.entity_speed,
+      'wander': valDict.entity_wander,
+      'activation_script': valDict.entity_activation_script,
+      'animation': valDict.entity_animation,
+
+      'location': loc
+    };
+  }
+
   ent = {
     'name': valDict.entity_name,
     'uuid': valDict.entity_uuid,

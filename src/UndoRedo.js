@@ -10,6 +10,7 @@ export const handleRedo = () => {
   }
 };
 
+
 export const MakeUndoRedoStack = (_map) => {
   // todo: definitely need to wipeout undo stack on map change.
   // Probably should make it a child object of Maps, really....
@@ -25,6 +26,22 @@ export const MakeUndoRedoStack = (_map) => {
     console.log(redoStack);
   };
 
+  const undostack_add = ( foo ) => {
+    undoStack.push(foo);
+  }
+
+  /*
+  const change_one_entity = ( entIdx, oldEntDataDict, newEntDataDict ) => {
+
+    // nothing changed, no action.
+    if(JSON.stringify(oldEntDataDict) === JSON.stringify(newEntDataDict)) {
+      return;
+    }
+
+    throw "haha no";
+  };
+  */
+
   const change_one_tile = (
     tileX, tileY,
     layerIdx, tileIdx
@@ -35,7 +52,7 @@ export const MakeUndoRedoStack = (_map) => {
       return;
     }
 
-    undoStack.push(
+    undostack_add(
       [
         prepare_one_tile(tileX, tileY, layerIdx, was)
       ]
@@ -78,7 +95,7 @@ export const MakeUndoRedoStack = (_map) => {
       );
     }
 
-    undoStack.push(manyChangeStack);
+    undostack_add(manyChangeStack);
   };
 
   const undo = () => {
@@ -133,7 +150,7 @@ export const MakeUndoRedoStack = (_map) => {
       undoSet.push(changes[i]);
     }
 
-    undoStack.push(undoSet);
+    undostack_add(undoSet);
   };
 
   const UndoRedo = {
