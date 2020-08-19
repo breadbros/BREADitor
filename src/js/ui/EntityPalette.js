@@ -174,7 +174,8 @@ export const selectEntityByIndex = (idx) => {
   }
 
   const $it_me = $('.entity-row[data-index=' + idx + ']');
-  _select_entity_ui_inner($it_me);
+  //_select_entity_ui_inner($it_me);
+  $it_me.click();
   return $it_me;
 };
 
