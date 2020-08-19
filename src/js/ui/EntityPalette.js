@@ -10,6 +10,10 @@ const $ = require('jquery');
 
 let _entityLayersExpanded = false;
 
+const getDirFromPath = (path) => {
+  return path.match(/(.*)[\/\\]/)[1]||'';
+}
+
 const set_animation_dropdown = ($template, animationKeyset, entity) => {
   const $entAnim = $template.find('#entity_animation');
 
@@ -300,8 +304,15 @@ const setup_template = (ent, id) => {
     const curRelPath = $('#entity_filename').val();
 
     const whatDirToOpenFn = (curPath, absPath, prevRelPath) => { 
+      
       if( curPath ) { // "edit" mode
-        return curPath;
+        const dir = getDirFromPath(curPath);
+
+        if(dir.startsWith(absPath)) {
+          return dir;
+        }
+
+        return jetpack.path(absPath, dir);
       } else { // "new" mode
         if(prevRelPath) {
           return jetpack.path(absPath, prevRelPath);
@@ -357,7 +368,9 @@ const setup_template = (ent, id) => {
         }
 
         const data = get_entity_data(path);
-        if(ent) {         
+        previousEntityRelPath = getDirFromPath(path);
+
+        if(ent) {
           oldData = get_entity_data(ent.filename);
           oldEnt = ent;
           window.$$$currentMap.maybeAddEntityTexture(data, ent);
@@ -769,8 +782,6 @@ export const _update_entity_inner = (ent_id, valDict) => {
   if (!valDict.entity_facing) {
     valDict.entity_facing = 'Down';
   }
-
-  debugger;
 
   // if old_value_dict's null, we should undo to deleting ent_id.
   let old_value_dict = null;
