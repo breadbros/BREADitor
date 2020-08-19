@@ -18,21 +18,33 @@ const getDirFromPath = (path) => {
   return path.match(/(.*)[\/\\]/)[1]||'';
 }
 
+const get_sully_code_line_for_entity = (e) => {
+  let tmp = '';
+
+  if(e.activation_script) {
+    tmp += `public void ${e.activation_script}( Entity e ) {} `;
+  } else {
+    tmp += `// no activation script `;
+  }
+  tmp += `//"${e.name}", uuid: "${e.uuid}"\n`;
+
+  return tmp;
+}
+
 const copy_useful_entity_data_to_clipboard = () => {
   let tmp = '';
 
   window.$$$currentMap.mapData.entities.forEach((e) => {
-
-    if(e.activation_script) {
-      tmp += `public void ${e.activation_script}( Entity e ) {} `;
-    } else {
-      tmp += `// no activation script `;
-    }
-    tmp += `//"${e.name}", uuid: "${e.uuid}"\n`;
+    tmp += get_sully_code_line_for_entity(e);
   });
 
   clipboard.writeText(tmp, 'clipboard');
-  notify("Copied entity data to clipboard in Sully format.");
+  notify("Copied all entity data to clipboard in Sully format.");
+};
+
+const copy_useful_single_entity_data_to_clipboard = (e) => {
+  clipboard.writeText(get_sully_code_line_for_entity(e), 'clipboard');
+  notify(`Copied entity data for "${e.name}" to clipboard in Sully format.`);
 };
 
 const set_animation_dropdown = ($template, animationKeyset, entity) => {
@@ -280,6 +292,9 @@ $(function() {
         default:
           console.log('unknown key: ' + key);
           return;
+        case 'code':
+          copy_useful_single_entity_data_to_clipboard(currentEntities[$(this).data('index')]);
+          return;
         case 'clone':
           options.$menu.trigger("contextmenu:hide");
           var entity_to_copy = $(this).data('index');
@@ -300,6 +315,7 @@ $(function() {
         "edit": {name: "Edit", icon: "edit"},
         "clone": {name: "Clone", icon: "copy"},
         "delete": {name: "Delete", icon: "delete"},
+        "code": {name: "Copy useful entity data to clipboard", icon: "copy"},
     }
   });
 });
