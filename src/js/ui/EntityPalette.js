@@ -3,6 +3,10 @@ import { LayersWidget } from './LayersPalette.js';
 import { centerMapOnXY } from '../../Tools';
 import { v4 as uuidv4 } from 'uuid';
 
+import { notify } from '../../Notification-Pane';
+
+const { clipboard } = require('electron');
+
 const { dialog } = require('electron').remote;
 const jetpack = require('fs-jetpack');
 
@@ -13,6 +17,23 @@ let _entityLayersExpanded = false;
 const getDirFromPath = (path) => {
   return path.match(/(.*)[\/\\]/)[1]||'';
 }
+
+const copy_useful_entity_data_to_clipboard = () => {
+  let tmp = '';
+
+  window.$$$currentMap.mapData.entities.forEach((e) => {
+
+    if(e.activation_script) {
+      tmp += `public void ${e.activation_script}( Entity e ) {} `;
+    } else {
+      tmp += `// no activation script `;
+    }
+    tmp += `//"${e.name}", uuid: "${e.uuid}"\n`;
+  });
+
+  clipboard.writeText(tmp, 'clipboard');
+  notify("Copied entity data to clipboard in Sully format.");
+};
 
 const set_animation_dropdown = ($template, animationKeyset, entity) => {
   const $entAnim = $template.find('#entity_animation');
@@ -234,6 +255,23 @@ const fixContainerSize = () => {
 };
 
 $(function() {
+  $.contextMenu({
+    selector: '.entity-palette h3.ui-widget-header', 
+    callback: function(key, options) {
+      switch(key) {
+        default:
+          console.log('unknown key: ' + key);
+          return;
+        case 'copy_scriptnames':
+          copy_useful_entity_data_to_clipboard();
+          return;
+      }
+    },
+    items: {
+      "copy_scriptnames": {name: "Copy useful entity data to clipboard", icon: "copy"},
+    },
+  });
+
   $.contextMenu({
     selector: 'li.entity-row', 
     callback: function(key, options) {
