@@ -26,8 +26,26 @@ export const MakeUndoRedoStack = (_map) => {
     console.log(redoStack);
   };
 
-  const undostack_add = ( foo ) => {
-    undoStack.push(foo);
+  const get_operation_code = (operation) => {
+    switch(operation) {
+      case "tile-change":
+        return "tile-change";
+      default:
+        throw `Invalid Operation for undo/redo: ${operation}`;
+    }
+  };
+
+
+  const undostack_add = ( operation, data ) => {
+    // todo make a const define dict for ops to codes
+    const op = get_operation_code(operation);
+    undoStack.push( {op,data} );
+  }
+
+  const redostack_add = ( op, data ) => {
+    // todo verify the code is correct
+    //const op = get_operation_code(operation);
+    redoStack.push( {op,data} );
   }
 
   /*
@@ -53,6 +71,7 @@ export const MakeUndoRedoStack = (_map) => {
     }
 
     undostack_add(
+      "tile-change",
       [
         prepare_one_tile(tileX, tileY, layerIdx, was)
       ]
@@ -95,7 +114,7 @@ export const MakeUndoRedoStack = (_map) => {
       );
     }
 
-    undostack_add(manyChangeStack);
+    undostack_add("tile-change",manyChangeStack);
   };
 
   const undo = () => {
@@ -103,27 +122,27 @@ export const MakeUndoRedoStack = (_map) => {
       return;
     }
 
-    const changes = undoStack.pop();
+    const {op, data} = undoStack.pop();
 
     const redoSet = [];
-    for (let i = changes.length - 1; i >= 0; i--) {
-      const was = map.getTile(changes[i][0], changes[i][1], changes[i][2]);
+    for (let i = data.length - 1; i >= 0; i--) {
+      const was = map.getTile(data[i][0], data[i][1], data[i][2]);
 
-      if (was === changes[i][3]) {
+      if (was === data[i][3]) {
         throw new Error("undo/redo 'was' and 'is' are the same.  this should never happen.");
       }
 
       map.setTile(
-        changes[i][0], changes[i][1],
-        changes[i][2], changes[i][3]
+        data[i][0], data[i][1],
+        data[i][2], data[i][3]
       );
 
-      changes[i][3] = was;
+      data[i][3] = was;
 
-      redoSet.push(changes[i]);
+      redoSet.push(data[i]);
     }
 
-    redoStack.push(redoSet);
+    redostack_add(op, redoSet);
   };
 
   const redo = () => {
@@ -131,26 +150,26 @@ export const MakeUndoRedoStack = (_map) => {
       return;
     }
 
-    const changes = redoStack.pop();
+    const {op, data} = redoStack.pop();
     const undoSet = [];
-    for (let i = changes.length - 1; i >= 0; i--) {
-      const was = map.getTile(changes[i][0], changes[i][1], changes[i][2]);
+    for (let i = data.length - 1; i >= 0; i--) {
+      const was = map.getTile(data[i][0], data[i][1], data[i][2]);
 
-      if (was === changes[i][3]) {
+      if (was === data[i][3]) {
         throw new Error("undo/redo 'was' and 'is' are the same.  this should never happen.");
       }
 
       map.setTile(
-          changes[i][0], changes[i][1],
-          changes[i][2], changes[i][3]
+          data[i][0], data[i][1],
+          data[i][2], data[i][3]
       );
 
-      changes[i][3] = was;
+      data[i][3] = was;
 
-      undoSet.push(changes[i]);
+      undoSet.push(data[i]);
     }
 
-    undostack_add(undoSet);
+    undostack_add("tile-change",undoSet);
   };
 
   const UndoRedo = {

@@ -32,15 +32,18 @@ test('change_one_tile adds an item to the undo stack', () => {
 test('change_one_tile... changes the tile (no, really guys)', () => {
   ur.change_one_tile(tileX, tileY, layerIdx, 90210);
 
-  expect(90210).toEqual(map.getTile(tileX, tileY, layerIdx));
-});
+  expect(90210).toEqual(map.getTile(tileX, tileY, layerIdx))
+;});
 
-test('undostack frames are arrays of arrays of [tileX, tileY, layerIdx, oldTile]', () => {
+test('undostack tileedit frames are arrays of arrays of [tileX, tileY, layerIdx, oldTile]', () => {
   ur.change_one_tile(tileX, tileY, layerIdx, 1942);
 
-  expect(UNDO_stack[0]).toEqual([[tileX, tileY, layerIdx, oldTile]]);
-  expect(UNDO_stack[0][0][3]).not.toEqual(1942);
+  const {oper, data} = UNDO_stack[0];
+
+  expect(data).toEqual([[tileX, tileY, layerIdx, oldTile]]);
+  expect(data[0][0][3]).not.toEqual(1942);
 });
+
 
 test('change_one_tile does not add an item to the undo stack if nothing would have changed', () => {
   expect(UNDO_stack.length).toEqual(0);
