@@ -117,13 +117,7 @@ export const MakeUndoRedoStack = (_map) => {
     undostack_add("tile-change",manyChangeStack);
   };
 
-  const undo = () => {
-    if (undoStack.length <= 0) {
-      return;
-    }
-
-    const {op, data} = undoStack.pop();
-
+  const _undo_tiles = (data) => {
     const redoSet = [];
     for (let i = data.length - 1; i >= 0; i--) {
       const was = map.getTile(data[i][0], data[i][1], data[i][2]);
@@ -142,15 +136,10 @@ export const MakeUndoRedoStack = (_map) => {
       redoSet.push(data[i]);
     }
 
-    redostack_add(op, redoSet);
-  };
+    redostack_add("tile-change", redoSet);
+  }
 
-  const redo = () => {
-    if (redoStack.length <= 0) {
-      return;
-    }
-
-    const {op, data} = redoStack.pop();
+  const _redo_tiles = (data) => {
     const undoSet = [];
     for (let i = data.length - 1; i >= 0; i--) {
       const was = map.getTile(data[i][0], data[i][1], data[i][2]);
@@ -170,6 +159,24 @@ export const MakeUndoRedoStack = (_map) => {
     }
 
     undostack_add("tile-change",undoSet);
+  };
+
+  const undo = () => {
+    if (undoStack.length <= 0) {
+      return;
+    }
+
+    const {op, data} = undoStack.pop();
+    _undo_tiles(data);
+  };
+
+  const redo = () => {
+    if (redoStack.length <= 0) {
+      return;
+    }
+
+    const {op, data} = redoStack.pop();
+    _redo_tiles(data);
   };
 
   const UndoRedo = {
