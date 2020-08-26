@@ -11,7 +11,16 @@ export const handleRedo = () => {
 };
 
 
+
 export const MakeUndoRedoStack = (_map) => {
+
+  const _undo_functions = {};
+  const _redo_functions = {};
+  const add_handlers = (key, undo, redo) => {
+    _undo_functions[key] = undo;
+    _redo_functions[key] = redo;
+  }
+
   // todo: definitely need to wipeout undo stack on map change.
   // Probably should make it a child object of Maps, really....
   const undoStack = [];
@@ -28,8 +37,8 @@ export const MakeUndoRedoStack = (_map) => {
 
   const get_operation_code = (operation) => {
     switch(operation) {
-      case "tile-change":
-        return "tile-change";
+      case TILE_CHANGE:
+        return TILE_CHANGE;
       default:
         throw `Invalid Operation for undo/redo: ${operation}`;
     }
@@ -71,7 +80,7 @@ export const MakeUndoRedoStack = (_map) => {
     }
 
     undostack_add(
-      "tile-change",
+      TILE_CHANGE,
       [
         prepare_one_tile(tileX, tileY, layerIdx, was)
       ]
@@ -114,7 +123,7 @@ export const MakeUndoRedoStack = (_map) => {
       );
     }
 
-    undostack_add("tile-change",manyChangeStack);
+    undostack_add(TILE_CHANGE,manyChangeStack);
   };
 
   const _undo_tiles = (data) => {
@@ -136,7 +145,7 @@ export const MakeUndoRedoStack = (_map) => {
       redoSet.push(data[i]);
     }
 
-    redostack_add("tile-change", redoSet);
+    redostack_add(TILE_CHANGE, redoSet);
   }
 
   const _redo_tiles = (data) => {
@@ -158,8 +167,28 @@ export const MakeUndoRedoStack = (_map) => {
       undoSet.push(data[i]);
     }
 
-    undostack_add("tile-change",undoSet);
+    undostack_add(TILE_CHANGE,undoSet);
   };
+
+
+
+  ///////////////////////////////////////////
+  // The list of supported undo/redo types?
+  const TILE_CHANGE = "tile-change";
+  add_handlers(TILE_CHANGE, _undo_tiles, _redo_tiles);
+
+
+
+
+
+
+
+
+
+
+
+  ///////////////////////////////////////////
+  // the "public" interface
 
   const undo = () => {
     if (undoStack.length <= 0) {
@@ -168,14 +197,6 @@ export const MakeUndoRedoStack = (_map) => {
 
     const {op, data} = undoStack.pop();
     _undo_functions[op](data);
-  };
-
-  const _undo_functions = {
-    "tile-change": _undo_tiles
-  };
-
-  const _redo_functions = {
-    "tile-change": _redo_tiles
   };
 
   const redo = () => {
