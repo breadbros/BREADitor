@@ -17,6 +17,8 @@ import jetpack from 'fs-jetpack';
 const canvasBuffer = require('electron-canvas-to-buffer');
 const fs = require('fs');
 
+// TODO: this entire file is atrocious.  Kill it with fire.  Then: yourself.
+
 export const handle_esc = () => {
   clearAllEntitysFromHighlight();
 }

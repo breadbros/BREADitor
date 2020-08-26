@@ -1,3 +1,5 @@
+import { INFO } from './Logging'
+
 export const handleUndo = () => {
   if (window.$$$currentMap) {
     window.$$$currentMap.UndoRedo.undo();
@@ -14,11 +16,17 @@ export const handleRedo = () => {
 
 export const MakeUndoRedoStack = (_map) => {
 
+  const _registered_operations = {};
   const _undo_functions = {};
   const _redo_functions = {};
   const add_handlers = (key, undo, redo) => {
+    if(_registered_operations[key]) {
+      throw `Cannot re-register undo/redo handlers for ${key}`;
+    }
+
     _undo_functions[key] = undo;
     _redo_functions[key] = redo;
+    _registered_operations[key] = key;
   }
 
   // todo: definitely need to wipeout undo stack on map change.
@@ -36,12 +44,10 @@ export const MakeUndoRedoStack = (_map) => {
   };
 
   const get_operation_code = (operation) => {
-    switch(operation) {
-      case TILE_CHANGE:
-        return TILE_CHANGE;
-      default:
-        throw `Invalid Operation for undo/redo: ${operation}`;
+    if(_registered_operations[operation]) {
+      return _registered_operations[operation];
     }
+    throw `Invalid Operation for undo/redo: ${operation}`;
   };
 
 
@@ -57,18 +63,9 @@ export const MakeUndoRedoStack = (_map) => {
     redoStack.push( {op,data} );
   }
 
-  /*
-  const change_one_entity = ( entIdx, oldEntDataDict, newEntDataDict ) => {
-
-    // nothing changed, no action.
-    if(JSON.stringify(oldEntDataDict) === JSON.stringify(newEntDataDict)) {
-      return;
-    }
-
-    throw "haha no";
-  };
-  */
-
+  ///////////////////////////////////////////////////////////////
+  // TILE IMPLEMENTATION
+  ///////////////////////////////////////////////////////////////
   const change_one_tile = (
     tileX, tileY,
     layerIdx, tileIdx
@@ -109,7 +106,7 @@ export const MakeUndoRedoStack = (_map) => {
       const was = map.getTile(tileX, tileY, layerIdx);
 
       if (was === tileIdx) {
-        console.info('skip draw of duplicate tile.');
+        INFO('skip draw of duplicate tile.');
         continue;
       }
 
@@ -171,12 +168,45 @@ export const MakeUndoRedoStack = (_map) => {
   };
 
 
+  ///////////////////////////////////////////////////////////////
+  // ZONE IMPLEMENTATION
+  ///////////////////////////////////////////////////////////////
+  const change_one_zone = (
+    tileX, tileY, zoneIdx
+  ) => {
+    const was = map.getZone(tileX, tileY);
+
+    if (was === zoneIdx) {
+      return;
+    }
+
+    undostack_add(
+      ZONE_CHANGE,
+      [
+        prepare_one_zone(tileX, tileY, was)
+      ]
+    );
+
+    map.setZone(
+      tileX, tileY, zoneIdx
+    );
+  };
+
+  const prepare_one_zone = (tileX, tileY, zoneIdx) => {
+    return [tileX, tileY, zoneIdx];
+  };
+
+  const _undo_zones = () => {};
+  const _redo_zones = () => {};
+
+
 
   ///////////////////////////////////////////
   // The list of supported undo/redo types?
   const TILE_CHANGE = "tile-change";
   add_handlers(TILE_CHANGE, _undo_tiles, _redo_tiles);
-
+  const ZONE_CHANGE = "zone-change";
+  add_handlers(ZONE_CHANGE, _undo_zones, _redo_zones);
 
 
 
@@ -211,12 +241,15 @@ export const MakeUndoRedoStack = (_map) => {
   const UndoRedo = {
     undo: undo,
     redo: redo,
-    _undoStack: undoStack,
-    _redoStack: redoStack,
-    change_one_tile: change_one_tile,
+    
+    _undoStack: undoStack, //testing only
+    _redoStack: redoStack, //testing only
 
+    change_one_tile: change_one_tile,
     change_many_tiles: change_many_tiles,
-    prepare_one_tile: prepare_one_tile
+    prepare_one_tile: prepare_one_tile,
+
+    change_one_zone: change_one_zone,
   };
 
   return UndoRedo;

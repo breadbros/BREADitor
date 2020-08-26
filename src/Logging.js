@@ -2,7 +2,7 @@ let verboseLogging = true;
 
 export const setVerboseLogging = (onOrOff) => {
   verboseLogging = !!onOrOff;
-  console.log( 'verboseLogging now: ' + verboseLogging );
+  // console.log( 'verboseLogging now: ' + verboseLogging );
 }
 
 export const getVerboseLogging = () => {

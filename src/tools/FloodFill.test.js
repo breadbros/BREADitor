@@ -5,6 +5,8 @@ import { changeSelectedLayer } from '../js/ui/LayersPalette'; // TODO this shoul
 // TODO this definitely is too much junk that shouldnt be exposed. MOCK
 import { setCurrentlySelectedTile, getCurrentlySelectedTile, setTileSelectorUI } from '../TileSelector';
 
+import { setVerboseLogging } from '../Logging'
+
 import floodFillGenerator from './FloodFill';
 const doFloodFill = floodFillGenerator().doFloodFill;
 
@@ -14,6 +16,8 @@ let map = null;
 let mouseEvt = null;
 
 beforeEach(() => {
+  setVerboseLogging(false);
+
   map = FakeMap();
   map.camera = [0, 0, 1]; // loc: 0,0 zoom: 1
   map.UndoRedo = MakeUndoRedoStack(map);

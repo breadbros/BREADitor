@@ -48,7 +48,7 @@ export default () => {
 
       // TODO do Zone changes not undo/redo?
       if (isSpecialLayerZone(getSelectedLayer())) {
-        map.setZone(tX, tY, getActiveZone());
+        map.UndoRedo.change_one_zone(tX, tY, getActiveZone());
         return;
 
       } else if(isSpecialLayerEntity(getSelectedLayer())) {

@@ -249,6 +249,11 @@ export const getActiveZone = () => {
   return _activeZone;
 };
 
+// just mock it you jerk
+export const _test_setActiveZone = (newZone) => {
+  _activeZone = newZone;
+};
+
 export const setActiveZone = (newZone) => {
   select_zone_by_index(newZone);
   _activeZone = newZone;

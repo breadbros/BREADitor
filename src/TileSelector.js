@@ -1,6 +1,7 @@
 const $ = require('jquery');
 const app = require('electron').remote.app;
 const jetpack = require('fs-jetpack').cwd(app.getAppPath());
+import { INFO } from './Logging'
 
 import {setLayerSelectCallback} from './js/ui/LayersPalette';
 
@@ -124,7 +125,8 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
   // }
 
   if (!selectedTilesPerVSP[whichVSP]) {
-    console.info('generating new placeholder tiles for', whichVSP);
+    INFO('generating new placeholder tiles for', whichVSP);
+
     selectedTilesPerVSP[whichVSP] = {
       leftTile: 0,
       rightTile: 0
@@ -132,7 +134,7 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
   }
 
   if (_last_vsp !== whichVSP) {
-    console.info('_last_vsp !== whichVSP', _last_vsp, whichVSP);
+    INFO('_last_vsp !== whichVSP', _last_vsp, whichVSP);
 
     _last_vsp = whichVSP;
 

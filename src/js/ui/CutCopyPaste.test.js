@@ -17,6 +17,8 @@ import { MakeUndoRedoStack } from '../../UndoRedo';
 import { FakeMap } from '../../helpers/FakeMap';
 import { addToPasteboard, paste } from './CutCopyPaste'
 
+import { setVerboseLogging } from '../../Logging'
+
 let map, oldTile, ur, UNDO_stack, REDO_stack;
 
 const tileX = 1;
@@ -25,6 +27,8 @@ const layerIdx = 0;
 const tileIdx = 42;
 
 beforeEach(() => {
+  setVerboseLogging(false);
+  
   map = FakeMap();
   map.UndoRedo = MakeUndoRedoStack(map);
   ur = map.UndoRedo;

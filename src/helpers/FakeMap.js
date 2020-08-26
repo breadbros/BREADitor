@@ -1,3 +1,6 @@
+import { MakeUndoRedoStack } from '../UndoRedo';
+import { MAGICAL_OBS_LAYER_ID } from '../js/ui/LayersPalette';
+
 export const FakeMap = () => {
   let matrix = [[
     [0, 0, 0],
@@ -9,12 +12,49 @@ export const FakeMap = () => {
     [1, 1, 1]
   ]];
 
+  let zones = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]
+  ];
+
+  let legacyObsData = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]
+  ];
+
+  const getZone = (x, y) => {
+    return zones[x][y];
+  };
+
+  const setZone = (x, y, z) => {
+    zones[x][y] = z;
+  };
+
+  const _getObs = (x, y) => {
+    return legacyObsData[x][y];
+  };
+
+  const _setObs = (x, y, o) => {
+    legacyObsData[x][y] = o;
+  };
+
+
   const getTile = (x, y, l) => {
+    if( l === MAGICAL_OBS_LAYER_ID ) {
+      return _getObs(x,y); //this is an accurate representation of map.getTile().  I am a hack.
+    }
+
     return matrix[l][x][y];
   };
 
   const setTile = (x, y, l, t) => {
-    matrix[l][x][y] = t;
+    if( l === MAGICAL_OBS_LAYER_ID ) {
+      _setObs(x,y,t); //this is an accurate representation of map.getTile().  I am a hack.
+    } else {
+      matrix[l][x][y] = t;
+    }
   };
 
   const getLayerData = (l) => {
@@ -29,7 +69,7 @@ export const FakeMap = () => {
     matrix = newMatrix;
   };
 
-  return {
+  let ret = {
     layers: [{dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}, {dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}],
     mapSizeInTiles: {
       width: 3,
@@ -37,6 +77,8 @@ export const FakeMap = () => {
     },
     getTile: getTile,
     setTile: setTile,
+    getZone: getZone,
+    setZone: setZone,
     getLayerData: getLayerData,
     getMatrix: getMatrix,
     setMatrix: setMatrix,
@@ -45,4 +87,8 @@ export const FakeMap = () => {
       isTileSelectorMap: false,
     }
   };
+
+  ret.UndoRedo = MakeUndoRedoStack(ret);
+
+  return ret;
 };
