@@ -167,7 +167,15 @@ export const MakeUndoRedoStack = (_map) => {
     }
 
     const {op, data} = undoStack.pop();
-    _undo_tiles(data);
+    _undo_functions[op](data);
+  };
+
+  const _undo_functions = {
+    "tile-change": _undo_tiles
+  };
+
+  const _redo_functions = {
+    "tile-change": _redo_tiles
   };
 
   const redo = () => {
@@ -176,7 +184,7 @@ export const MakeUndoRedoStack = (_map) => {
     }
 
     const {op, data} = redoStack.pop();
-    _redo_tiles(data);
+    _redo_functions[op](data);
   };
 
   const UndoRedo = {
