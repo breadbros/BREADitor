@@ -123,8 +123,8 @@ export const MakeUndoRedoStack = (_map) => {
     undostack_add(TILE_CHANGE,manyChangeStack);
   };
 
-  const _undo_tiles = (data) => {
-    const redoSet = [];
+  const _tile_change  = (data, stack_func) => {
+    const workSet = [];
     for (let i = data.length - 1; i >= 0; i--) {
       const was = map.getTile(data[i][0], data[i][1], data[i][2]);
 
@@ -139,32 +139,18 @@ export const MakeUndoRedoStack = (_map) => {
 
       data[i][3] = was;
 
-      redoSet.push(data[i]);
+      workSet.push(data[i]);
     }
 
-    redostack_add(TILE_CHANGE, redoSet);
+    stack_func(TILE_CHANGE, workSet);
+  };
+
+  const _undo_tiles = (data) => {
+    _tile_change(data, redostack_add)
   }
 
   const _redo_tiles = (data) => {
-    const undoSet = [];
-    for (let i = data.length - 1; i >= 0; i--) {
-      const was = map.getTile(data[i][0], data[i][1], data[i][2]);
-
-      if (was === data[i][3]) {
-        throw new Error("undo/redo 'was' and 'is' are the same.  this should never happen.");
-      }
-
-      map.setTile(
-          data[i][0], data[i][1],
-          data[i][2], data[i][3]
-      );
-
-      data[i][3] = was;
-
-      undoSet.push(data[i]);
-    }
-
-    undostack_add(TILE_CHANGE,undoSet);
+    _tile_change(data, undostack_add)
   };
 
 
@@ -196,9 +182,8 @@ export const MakeUndoRedoStack = (_map) => {
     return [tileX, tileY, zoneIdx];
   };
 
-  const _undo_zones = (data) => {
-
-    const redoSet = [];
+  const _zone_change  = (data, cleanupfunc) => {
+    const workSet = [];
     for (let i = data.length - 1; i >= 0; i--) {
       const was = map.getZone(data[i][0], data[i][1]);
 
@@ -213,31 +198,17 @@ export const MakeUndoRedoStack = (_map) => {
 
       data[i][2] = was;
 
-      redoSet.push(data[i]);
+      workSet.push(data[i]);
     }
 
-    redostack_add(ZONE_CHANGE, redoSet);
+    cleanupfunc(ZONE_CHANGE, workSet);
+  }
+
+  const _undo_zones = (data) => {
+    _zone_change(data, redostack_add);
   };
   const _redo_zones = (data) => {
-    const undoSet = [];
-    for (let i = data.length - 1; i >= 0; i--) {
-      const was = map.getZone(data[i][0], data[i][1]);
-
-      if (was === data[i][2]) {
-        throw new Error("undo/redo 'was' and 'is' are the same.  this should never happen.");
-      }
-
-      map.setZone(
-          data[i][0], data[i][1],
-          data[i][2]
-      );
-
-      data[i][2] = was;
-
-      undoSet.push(data[i]);
-    }
-
-    undostack_add(ZONE_CHANGE,undoSet);
+    _zone_change(data, undostack_add);
   };
 
 
@@ -248,13 +219,6 @@ export const MakeUndoRedoStack = (_map) => {
   add_handlers(TILE_CHANGE, _undo_tiles, _redo_tiles);
   const ZONE_CHANGE = "zone-change";
   add_handlers(ZONE_CHANGE, _undo_zones, _redo_zones);
-
-
-
-
-
-
-
 
 
 
