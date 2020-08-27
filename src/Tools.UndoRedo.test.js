@@ -8,6 +8,7 @@ const tileX = 1;
 const tileY = 2;
 const layerIdx = 0;
 const tileIdx = 42;
+const zoneIdx = 69;
 
 beforeEach(() => {
   map = FakeMap();
@@ -20,6 +21,11 @@ beforeEach(() => {
   oldTile = map.getTile(tileX, tileY, layerIdx);
   expect(oldTile).toEqual(42);
 });
+
+
+////
+//// Tiles
+////
 
 test('change_one_tile adds an item to the undo stack', () => {
   expect(UNDO_stack.length).toEqual(0);
@@ -156,4 +162,39 @@ test('change_many_tiles but there is only one change', () => {
   expect(map.getTile(0, 0, layerIdx)).toEqual(101);
   expect(UNDO_stack.length).toEqual(1);
   expect(REDO_stack.length).toEqual(0);
+});
+
+////
+//// Tiles
+////
+test('change_one_zone adds an item to the undo stack', () => {
+  expect(UNDO_stack.length).toEqual(0);
+
+  ur.change_one_zone(tileX, tileY, zoneIdx);
+
+  expect(UNDO_stack.length).toEqual(1);
+
+  ur.undo();
+
+  expect(UNDO_stack.length).toEqual(0);
+});
+
+test('change zone. undo.', () => {
+  expect(0).not.toEqual(zoneIdx);
+  expect(0).toEqual(map.getZone(tileX, tileY));
+  ur.change_one_zone(tileX, tileY, zoneIdx);
+  expect(zoneIdx).toEqual(map.getZone(tileX, tileY));
+  ur.undo();
+  expect(0).toEqual(map.getZone(tileX, tileY));
+});
+
+test('change zone. undo. redo.', () => {
+  expect(0).not.toEqual(zoneIdx);
+  expect(0).toEqual(map.getZone(tileX, tileY));
+  ur.change_one_zone(tileX, tileY, zoneIdx);
+  expect(zoneIdx).toEqual(map.getZone(tileX, tileY));
+  ur.undo();
+  expect(0).toEqual(map.getZone(tileX, tileY));
+  ur.redo();
+  expect(zoneIdx).toEqual(map.getZone(tileX, tileY));
 });

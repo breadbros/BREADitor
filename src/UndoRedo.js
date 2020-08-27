@@ -196,8 +196,49 @@ export const MakeUndoRedoStack = (_map) => {
     return [tileX, tileY, zoneIdx];
   };
 
-  const _undo_zones = () => {};
-  const _redo_zones = () => {};
+  const _undo_zones = (data) => {
+
+    const redoSet = [];
+    for (let i = data.length - 1; i >= 0; i--) {
+      const was = map.getZone(data[i][0], data[i][1]);
+
+      if (was === data[i][2]) {
+        throw new Error("undo/redo 'was' and 'is' are the same.  this should never happen.");
+      }
+
+      map.setZone(
+        data[i][0], data[i][1], 
+        data[i][2]
+      );
+
+      data[i][2] = was;
+
+      redoSet.push(data[i]);
+    }
+
+    redostack_add(ZONE_CHANGE, redoSet);
+  };
+  const _redo_zones = (data) => {
+    const undoSet = [];
+    for (let i = data.length - 1; i >= 0; i--) {
+      const was = map.getZone(data[i][0], data[i][1]);
+
+      if (was === data[i][2]) {
+        throw new Error("undo/redo 'was' and 'is' are the same.  this should never happen.");
+      }
+
+      map.setZone(
+          data[i][0], data[i][1],
+          data[i][2]
+      );
+
+      data[i][2] = was;
+
+      undoSet.push(data[i]);
+    }
+
+    undostack_add(ZONE_CHANGE,undoSet);
+  };
 
 
 

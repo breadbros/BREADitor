@@ -52,6 +52,9 @@ export default () => {
 
           scrollZonePalletteToZone(zIdx);
 
+          setTileSelectorUI('#left-palette', tIdx, map, 0, 'zones'); // OMFFJSKLD 'zones'?!
+          return;
+
         } else if( isSpecialLayerObs(layer) ) {
           tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
         } else if( isSpecialLayerEntity(layer) ) {
