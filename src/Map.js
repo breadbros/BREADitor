@@ -1,6 +1,6 @@
 import { MakeUndoRedoStack } from './UndoRedo';
 import { LOG, INFO, WARN} from './Logging';
-import { getObsVisibility, MAGICAL_OBS_LAYER_ID } from './js/ui/LayersPalette';
+import { getObsVisibility, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID } from './js/ui/LayersPalette';
 const app = require('electron').remote.app;
 const path = require('path');
 const appPath = app.getAppPath();
@@ -985,6 +985,14 @@ Map.prototype = {
           'Something very strange happened where you were trying to access obs data when there was both no obs ' +
           'tiledata and multiple non-obs tile layers.');
       }
+    } else if (layerIdx === MAGICAL_ZONE_LAYER_ID) { // TODO the obs sentinel is the WORST
+      idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
+
+      try {
+        return this.zoneData[idx];
+      } catch(ig) {
+        return 0;
+      }
     } else { // we are on a normal  layer
       idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
     }
@@ -996,7 +1004,7 @@ Map.prototype = {
     let idx;
 
     /// jesus, right?  One day this won't be a thing, he lied to himself.
-    if( layerIdx !== MAGICAL_OBS_LAYER_ID ) {
+    if( layerIdx !== MAGICAL_OBS_LAYER_ID && layerIdx !== MAGICAL_ZONE_LAYER_ID ) {
       if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
         console.warn('attempted to set a tile out of layer bounds. ('+tileX+','+tileY+')');
         INFO('layerIdx: ' + layerIdx);
@@ -1014,6 +1022,14 @@ Map.prototype = {
 
     if (layerIdx === MAGICAL_OBS_LAYER_ID) { // TODO the obs sentinel is the WORST
       this.legacyObsData[idx] = tileIdx;
+    } else if(layerIdx === MAGICAL_ZONE_LAYER_ID) {
+
+      if( !tileIdx ) {
+        delete this.zoneData[idx]
+      } else {
+        this.zoneData[idx] = tileIdx;
+      }
+
     } else {
       this.tileData[layerIdx][idx] = tileIdx;
     }

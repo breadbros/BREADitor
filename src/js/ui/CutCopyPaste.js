@@ -1,4 +1,4 @@
-import { getSelectedLayer, MAGICAL_OBS_LAYER_ID } from './LayersPalette';
+import { getSelectedLayer, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID } from './LayersPalette';
 import { getXfromFlat, getYfromFlat } from '../../Map';
 import { getCurrentHoverTile } from '../../Tools';
 
@@ -76,7 +76,10 @@ export const paste = (map, tX, tY, newLayerIdx) => {
         layerX = map.obsLayerData.dimensions.X; 
         layerY = map.obsLayerData.dimensions.Y;
         break;
-      
+      case MAGICAL_ZONE_LAYER_ID: // yes, currently reusing obs dimentions for zones
+        layerX = window.$$$currentMap.mapSizeInTiles.width;
+        layerY = window.$$$currentMap.mapSizeInTiles.height;
+        break;
       default:
         alert("unknown layer id: " + newLayerIdx);
         return;
