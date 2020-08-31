@@ -47,7 +47,7 @@ const copy_useful_single_entity_data_to_clipboard = (e) => {
   notify(`Copied entity data for "${e.name}" to clipboard in Sully format.`);
 };
 
-const set_animation_dropdown = ($template, animationKeyset, entity) => {
+const set_animation_dropdown = ($template, animationKeyset, animation) => {
   const $entAnim = $template.find('#entity_animation');
 
   // repopulate animation select
@@ -61,7 +61,7 @@ const set_animation_dropdown = ($template, animationKeyset, entity) => {
   });
 
   // set value
-  $entAnim.val(entity.animation);
+  $entAnim.val(animation);
 }
 
 export const setNormalEntityVisibility = (val) => {
@@ -490,7 +490,7 @@ const setup_template = (ent, id) => {
 
     // = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];
     const animationKeyset = Object.keys(entData.animations);
-    set_animation_dropdown($template, animationKeyset, ent);
+    set_animation_dropdown($template, animationKeyset, ent.animation);
 
     // set value.
     $entFace.val(ent.facing);
