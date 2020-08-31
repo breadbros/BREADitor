@@ -198,3 +198,56 @@ test('change zone. undo. redo.', () => {
   ur.redo();
   expect(zoneIdx).toEqual(map.getZone(tileX, tileY));
 });
+
+const oldEnt0_loc_tiles = {tx:1, ty:2, px: null, py: null };
+const newEnt0_loc_tiles = {tx:3, ty:4, px: null, py: null };
+
+const oldEnt1_loc_pixels = {tx:null, ty:null, px: 5, py: 6 };
+const newEnt1_loc_pixels = {tx:null, ty:null, px: 7, py: 8 };
+
+/// 
+/// Entities
+/// 
+test('change_one_entity_location adds an item to the undo stack', () => {
+  expect(UNDO_stack.length).toEqual(0);
+
+  ur.change_one_entity_location(0, newEnt0_loc_tiles);
+
+  expect(UNDO_stack.length).toEqual(1);
+
+  ur.undo();
+
+  expect(UNDO_stack.length).toEqual(0);
+});
+
+test('change_one_entity_location. undo. redo.', () => {
+  expect(map.mapData.entities[0].location).toEqual(oldEnt0_loc_tiles);
+  expect(map.mapData.entities[1].location).toEqual(oldEnt1_loc_pixels);
+
+  ur.change_one_entity_location(0, newEnt0_loc_tiles);
+  ur.change_one_entity_location(1, newEnt1_loc_pixels);
+
+  expect(UNDO_stack.length).toEqual(2);
+
+  expect(map.mapData.entities[0].location).toEqual(newEnt0_loc_tiles);
+  expect(map.mapData.entities[1].location).toEqual(newEnt1_loc_pixels);
+
+  ur.undo();
+
+  expect(map.mapData.entities[1].location).toEqual(oldEnt1_loc_pixels);
+
+  ur.undo();
+
+  expect(map.mapData.entities[0].location).toEqual(oldEnt0_loc_tiles);
+
+  expect(UNDO_stack.length).toEqual(0);
+  expect(REDO_stack.length).toEqual(2);
+
+  ur.redo();
+
+  expect(map.mapData.entities[0].location).toEqual(newEnt0_loc_tiles);
+
+  ur.redo();
+  
+  expect(map.mapData.entities[1].location).toEqual(newEnt1_loc_pixels);
+});

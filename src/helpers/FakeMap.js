@@ -69,6 +69,11 @@ export const FakeMap = () => {
     matrix = newMatrix;
   };
 
+  const entities = [
+    { location : {tx:1, ty:2, px: null, py: null} }, //ent 0
+    { location : {tx:null, ty:null, px: 5, py: 6} }, //ent 1
+  ];
+
   let ret = {
     layers: [{dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}, {dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}],
     mapSizeInTiles: {
@@ -85,6 +90,7 @@ export const FakeMap = () => {
     getVSPTileLocation: () => { return 1234567890; },
     mapData: {
       isTileSelectorMap: false,
+      entities: entities
     }
   };
 

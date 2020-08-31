@@ -737,26 +737,9 @@ export const update_entity_location = (ent_id, valDict) => {
     return false;
   }
 
-  if( valDict.tx || valDict.tx === 0 ) {
-    currentEntities[ent_id].location.tx = valDict.tx;
-    currentEntities[ent_id].location.px = null;
-  }
-
-  if( valDict.ty || valDict.ty === 0 ) {
-    currentEntities[ent_id].location.ty = valDict.ty;
-    currentEntities[ent_id].location.py = null;
-  }
-
-  currentEntities[ent_id].location.px = valDict.px || currentEntities[ent_id].location.px;
-  currentEntities[ent_id].location.py = valDict.py || currentEntities[ent_id].location.py;
-
-  if( valDict.py === 0 ) {
-    currentEntities[ent_id].location.ty = 0;
-  }
-
-  if( valDict.px === 0 ) {
-    currentEntities[ent_id].location.tx = 0;
-  }
+  window.$$$currentMap.UndoRedo.change_one_entity_location(
+    ent_id, valDict
+  );
 
   do_the_no_things(null, redraw_palette);
 };

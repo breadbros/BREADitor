@@ -28,11 +28,13 @@ export const notify = (msg) => {
   const now = new Date();
   const time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
-  $notifyDiv.css('display', 'block');
+  if($notifyDiv) {
+    $notifyDiv.css('display', 'block');
 
-  $notifyDiv.html( time + ' ' + msg + '<br />' + $notifyDiv.html() );
+    $notifyDiv.html( time + ' ' + msg + '<br />' + $notifyDiv.html() );
 
-  setFadeOutTimer();
+    setFadeOutTimer();
+  }
 };
 
 const setFadeOutTimer = () => {
