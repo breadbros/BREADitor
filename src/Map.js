@@ -679,7 +679,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         // INFO(this.lines);
       },
 
-      hull: { x: null, y: null, w: 0, h: 0 },
+      hull: { x: null, y: null, w: 0, h: 0 }, // TODO: it's not w/x at least in mark mode.  It's x2,y2 (non-inclusive)
       tiles: [],
       lines: []
     };

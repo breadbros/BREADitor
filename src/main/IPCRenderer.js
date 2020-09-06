@@ -86,6 +86,9 @@ export function setupIPCRenderer() {
       case 'tool-smartdropper':
         clickSmartdropper();
         break;
+      case 'tool-supercut':
+        window.$$$supercut();
+        break;
       case 'tool-move-viewport':
         clickMoveViewport();
         break;

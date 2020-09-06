@@ -16,6 +16,7 @@ export const editMenuTemplate = {
 
     { label: 'Tool: Eyedropper', accelerator: 'I', click: function () { send('tool-eyedropper', 'I'); } },
     { label: 'Tool: Smart Eyedropper', accelerator: 'Shift+I', click: function () { send('tool-smartdropper', 'I'); } },
+    { label: 'Tool: Super Cut', accelerator: 'Shift+CmdOrCtrl+X', click: function () { send('tool-supercut', ''); } },
     { label: 'Tool: Move Viewport', accelerator: 'space', click: function () { send('tool-move-viewport', 'space'); } },
     { label: 'Tool: Drag Item', accelerator: 'V', click: function () { send('tool-drag-item', 'V'); } },
     { label: 'Tool: Marquee Select', accelerator: 'M', click: function () { send('tool-select', 'M'); } },

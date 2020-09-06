@@ -3,7 +3,7 @@ import { LOG, INFO } from '../Logging'
 import { TilesetSelectorWidget } from '../js/ui/TilesetSelectorPalette.js';
 import { Map, verifyTileData, verifyMap, cleanEntities } from '../Map.js';
 import { Palettes } from '../Palettes.js';
-import { LayersWidget, visibilityFix } from '../js/ui/LayersPalette.js'; //, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
+import { LayersWidget, visibilityFix, getSelectedLayer } from '../js/ui/LayersPalette.js'; //, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
 import { ZonesWidget } from '../js/ui/ZonesPalette.js';
 import { EntitiesWidget } from '../js/ui/EntityPalette.js';
 import { updateMapAndVSPFileInfo } from '../js/ui/InfoPalette.js';
@@ -128,13 +128,13 @@ function setupChording() {
       return;
     }
 
-    if (e.key === 'v' || e.key === 'V') {
+    if (!e.shiftKey && (e.key === 'v' || e.key === 'V')) {
       LOG('edit-paste, but the one on the document.  SIGH WINDOWS.');
       paste(window.$$$currentMap);
       return;
     }
 
-    if (e.key === 'x' || e.key === 'X') {
+    if (!e.shiftKey && (e.key === 'x' || e.key === 'X')) {
       LOG('edit-cut, but the one on the document.  SIGH WINDOWS.');
       cut(window.$$$currentMap);
       return;
@@ -466,6 +466,69 @@ export function setupWindowFunctions() {
     dialog.showOpenDialog( options, loadByFilename );
   };
 
+  window.$$$supercut = function() {
+    const map = window.$$$currentMap;
+
+    if( getSelectedLayer() === null ) {
+      alert("Supercut: Please select a layer first.");
+      return;
+    }
+
+    if (!map.selection.tiles || !map.selection.tiles.length) {
+      alert("Supercut: Please mark a selection on a layer first (hotkey 'm').");
+      return;
+    }
+
+    const title = 'Supercut Setup';
+
+    let $template = `
+      <h2>Selection: (${map.selection.hull.x},${map.selection.hull.y}) through (${map.selection.hull.w-1},${map.selection.hull.h-1})</h2>
+      <h3>${map.selection.hull.w-1-map.selection.hull.x}x${map.selection.hull.h-1-map.selection.hull.y}, ${(map.selection.hull.w-1-map.selection.hull.x)*(map.selection.hull.h-1-map.selection.hull.y)} tiles </h2>
+      <h3>Select layers to supercut from:</h3>
+
+      <input type=checkbox checked="true" class="supercut-layers" data-layer-id="zones">Zones<br> 
+      <input type=checkbox checked="true" class="supercut-layers" data-layer-id="obstructions">Obstructions<br> 
+      <input type=checkbox checked="true" class="supercut-layers" data-layer-id="entities">Entities<br> 
+      <hr>
+    `;
+
+    let layer = null;
+    for (var i = 0; i < map.layers.length; i++) { 
+      layer = map.layers[i];
+      $template += `
+        <input type=checkbox checked="true" class="supercut-layers" data-layer-id="${i}">${layer.name}<br> 
+      `;
+    }
+
+    //debugger;
+    //window.$$$currentMap;
+
+    $('#modal-dialog').html('');
+    $('#modal-dialog').append($template);
+
+    $('#modal-dialog').show();
+
+    const dialog = $('#modal-dialog').dialog({
+      width: 500,
+      modal: true,
+      title: title,
+      buttons: {
+        'Cut': () => {
+          $(".supercut-layers:checked").each(function() {
+            const me = $(this);
+            debugger;
+          });
+        },
+        'Cancel': function () {
+          $('#modal-dialog').dialog( "close" );
+        }
+      },
+      close: function () {
+        $('#modal-dialog').html('');
+      }
+    });
+  }
+
   window.$$$openRecent = function() {
     const path = require('path');
     
@@ -490,7 +553,7 @@ export function setupWindowFunctions() {
       $(`#recent-${i}`).on('click', (evt) => {
         $('#modal-dialog').dialog( "close" );
         loadByFilename(path.join(basePath, file));
-      })
+      });
     }
 
     $('#modal-dialog').show();

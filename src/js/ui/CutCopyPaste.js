@@ -21,6 +21,11 @@ export const cut = (map) => {
 };
 
 const _cut_or_copy = (map, isCut) => {
+  if( getSelectedLayer() === null ) {
+    alert("Please select a layer first.");
+    return;
+  }
+
   if (map.selection.tiles) {
     clearPasteboard();
     const curLayer = getSelectedLayer().map_tileData_idx;
