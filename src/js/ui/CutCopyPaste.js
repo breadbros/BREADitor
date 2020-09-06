@@ -20,6 +20,26 @@ export const cut = (map) => {
   _cut_or_copy(map, true);
 };
 
+export prepare_supercut_layer = (map, layerId) => {
+    const curLayer = layerId;
+    const hull_x = map.selection.hull.x;
+    const hull_y = map.selection.hull.y;
+    const mapWidth = map.mapSizeInTiles.width;
+
+    const cutSet = [];
+
+    for (const flatidx in map.selection.tiles) {
+      const x = getXfromFlat(flatidx, mapWidth);
+      const y = getYfromFlat(flatidx, mapWidth);
+
+      cutSet.push(
+        map.UndoRedo.prepare_one_tile(x, y, curLayer, 0)
+      );
+    }
+
+    map.UndoRedo.prepare_supercut_layer(layerId, cutSet);
+}
+
 const _cut_or_copy = (map, isCut) => {
   if( getSelectedLayer() === null ) {
     alert("Please select a layer first.");

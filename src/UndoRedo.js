@@ -280,6 +280,11 @@ export const MakeUndoRedoStack = (_map) => {
     notify(`ent[${ent_id}] moved to ${tx},${ty} p(${px},${px})` );
   }
 
+
+  const prepare_supercut_layer = (layerId, cutSet) => {
+    debugger;
+  };
+
   const _entmove_inner  = (data, cleanupfunc) => {
 
     const workSet = [];
@@ -378,6 +383,8 @@ export const MakeUndoRedoStack = (_map) => {
     change_one_zone: change_one_zone,
 
     change_one_entity_location: change_one_entity_location,
+
+    prepare_supercut_layer: prepare_supercut_layer,
   };
 
   return UndoRedo;
