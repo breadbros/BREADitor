@@ -20,7 +20,7 @@ export const cut = (map) => {
   _cut_or_copy(map, true);
 };
 
-export prepare_supercut_layer = (map, layerId) => {
+export const prepare_supercut_layer = (map, layerId) => {
     const curLayer = layerId;
     const hull_x = map.selection.hull.x;
     const hull_y = map.selection.hull.y;
