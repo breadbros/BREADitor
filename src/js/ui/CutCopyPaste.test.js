@@ -272,22 +272,22 @@ test('supercut superpaste', () => {
     height: 4
   };
   map.selection = {
-    tiles: [
-      getFlatIdx(1,1,4),
-      getFlatIdx(1,2,4),
-      getFlatIdx(1,3,4),
-      getFlatIdx(2,1,4),
-      getFlatIdx(2,2,4),
-      getFlatIdx(2,3,4),
-      getFlatIdx(3,1,4),
-      getFlatIdx(3,2,4),
-      getFlatIdx(3,3,4),
-    ],
+    tiles: {},
     hull: {
       x: 1,
       y: 1
     }
   };
+
+  map.selection.tiles[getFlatIdx(1,1,4)] = true; // map.selection.tiles is a Set of Flat Indexes.
+  map.selection.tiles[getFlatIdx(1,2,4)] = true; // map.selection.tiles is a Set of Flat Indexes.
+  map.selection.tiles[getFlatIdx(1,3,4)] = true; // map.selection.tiles is a Set of Flat Indexes.
+  map.selection.tiles[getFlatIdx(2,1,4)] = true; // map.selection.tiles is a Set of Flat Indexes.
+  map.selection.tiles[getFlatIdx(2,2,4)] = true; // map.selection.tiles is a Set of Flat Indexes.
+  map.selection.tiles[getFlatIdx(2,3,4)] = true; // map.selection.tiles is a Set of Flat Indexes.
+  map.selection.tiles[getFlatIdx(3,1,4)] = true; // map.selection.tiles is a Set of Flat Indexes.
+  map.selection.tiles[getFlatIdx(3,2,4)] = true; // map.selection.tiles is a Set of Flat Indexes.
+  map.selection.tiles[getFlatIdx(3,3,4)] = true; // map.selection.tiles is a Set of Flat Indexes.
 
   map.setMatrix(startTiles);
   map.layers = [ 

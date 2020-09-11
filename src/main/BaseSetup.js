@@ -3,14 +3,15 @@ import { LOG, INFO } from '../Logging'
 import { TilesetSelectorWidget } from '../js/ui/TilesetSelectorPalette.js';
 import { Map, verifyTileData, verifyMap, cleanEntities } from '../Map.js';
 import { Palettes } from '../Palettes.js';
-import { LayersWidget, visibilityFix, getSelectedLayer } from '../js/ui/LayersPalette.js'; //, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
+import { LayersWidget, visibilityFix, getSelectedLayer,  MAGICAL_ENT_LAYER_ID, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID } from '../js/ui/LayersPalette.js'; //, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
 import { ZonesWidget } from '../js/ui/ZonesPalette.js';
 import { EntitiesWidget } from '../js/ui/EntityPalette.js';
 import { updateMapAndVSPFileInfo } from '../js/ui/InfoPalette.js';
-import { initTools, updateRstringInfo, updateLocationFunction, selectAll, updateInfoDims } from '../Tools.js';
+import { getCurrentHoverTile, initTools, updateRstringInfo, updateLocationFunction, selectAll, updateInfoDims } from '../Tools.js';
 import { cut, copy, paste } from '../js/ui/CutCopyPaste';
 import { handleUndo, handleRedo } from '../UndoRedo';
 import { setupNotifications, notify } from '../Notification-Pane';
+import { setSuperCutPasteLayers, superCut, superPaste } from '../js/ui/SuperCutPaste';
 
 const path = require('path');
 
@@ -128,16 +129,28 @@ function setupChording() {
       return;
     }
 
-    if (!e.shiftKey && (e.key === 'v' || e.key === 'V')) {
-      LOG('edit-paste, but the one on the document.  SIGH WINDOWS.');
-      paste(window.$$$currentMap);
-      return;
+    if ((e.key === 'v' || e.key === 'V')) {
+      if( e.shiftKey ) {
+        LOG('super-paste, but the one on the document.  SIGH WINDOWS.');
+        window.$$$superpaste();
+        return;
+      } else {
+        LOG('edit-paste, but the one on the document.  SIGH WINDOWS.');
+        paste(window.$$$currentMap);
+        return;
+      }
     }
 
-    if (!e.shiftKey && (e.key === 'x' || e.key === 'X')) {
-      LOG('edit-cut, but the one on the document.  SIGH WINDOWS.');
-      cut(window.$$$currentMap);
-      return;
+    if ((e.key === 'x' || e.key === 'X')) {
+      if(e.shiftKey) {
+        LOG('super-cut, but the one on the document.  SIGH WINDOWS.');
+        window.$$$supercut();
+        return;
+      } else {
+        LOG('edit-cut, but the one on the document.  SIGH WINDOWS.');
+        cut(window.$$$currentMap);
+        return;
+      }
     }
 
     if (e.key === 'a' || e.key === 'A') {
@@ -466,6 +479,19 @@ export function setupWindowFunctions() {
     dialog.showOpenDialog( options, loadByFilename );
   };
 
+  window.$$$superpaste = function() {
+    const hoverTile = getCurrentHoverTile();
+    if (hoverTile === null) {
+      console.error('attempted to paste when hovertile was null.  wtf.');
+      return;
+    }
+    const map = window.$$$currentMap;
+    const tX = hoverTile[0];
+    const tY = hoverTile[1];
+
+    superPaste(map, tX, tY);
+  }
+
   window.$$$supercut = function() {
     const map = window.$$$currentMap;
 
@@ -486,9 +512,9 @@ export function setupWindowFunctions() {
       <h3>${map.selection.hull.w-1-map.selection.hull.x}x${map.selection.hull.h-1-map.selection.hull.y}, ${(map.selection.hull.w-1-map.selection.hull.x)*(map.selection.hull.h-1-map.selection.hull.y)} tiles </h2>
       <h3>Select layers to supercut from:</h3>
 
-      <input type=checkbox checked="true" class="supercut-layers" data-layer-id="zones">Zones<br> 
-      <input type=checkbox checked="true" class="supercut-layers" data-layer-id="obstructions">Obstructions<br> 
-      <input type=checkbox checked="true" class="supercut-layers" data-layer-id="entities">Entities<br> 
+      <input type=checkbox checked="true" class="supercut-layers" data-layer-id="${MAGICAL_ZONE_LAYER_ID}">Zones<br> 
+      <input type=checkbox checked="true" class="supercut-layers" data-layer-id="${MAGICAL_OBS_LAYER_ID}">Obstructions<br> 
+      <input type=checkbox checked="true" class="supercut-layers" data-layer-id="${MAGICAL_ENT_LAYER_ID}">Entities<br> 
       <hr>
     `;
 
@@ -514,10 +540,14 @@ export function setupWindowFunctions() {
       title: title,
       buttons: {
         'Cut': () => {
+          let layers = [];
           $(".supercut-layers:checked").each(function() {
             const me = $(this);
-            debugger;
+            layers.push($(me[0]).data("layer-id"));
           });
+          setSuperCutPasteLayers(layers);
+          superCut(window.$$$currentMap);
+          $('#modal-dialog').dialog( "close" );
         },
         'Cancel': function () {
           $('#modal-dialog').dialog( "close" );

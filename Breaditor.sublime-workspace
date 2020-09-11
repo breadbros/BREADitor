@@ -312,122 +312,55 @@
 	"buffers":
 	[
 		{
-			"contents": "\n\n\n\n\n\n\n\n\n\n\n      $notifyDiv.fadeOut(fadeOutAnimationTimeInMs, \"linear\", fadeoutCallbackFn );\n    clearTimeout(fadeOutTimerId);\n    fadeOutTimerId = null;\n  $notifyDiv = $(\"#notifications-window\");\n  $notifyDiv.css('background', 'rgba(0,0,0, 0.5)');\n  $notifyDiv.css('color', 'white');\n  $notifyDiv.css('display', 'block');\n  $notifyDiv.css('display', 'none');\n  $notifyDiv.css('height', '25%');\n  $notifyDiv.css('overflow', 'hidden');\n  $notifyDiv.css('padding', '10px');\n  $notifyDiv.css('position', 'absolute');\n  $notifyDiv.css('right', '10px');\n  $notifyDiv.css('text-align', 'right');\n  $notifyDiv.css('top', '10px');\n  $notifyDiv.css('width', '25%');\n  $notifyDiv.css('z-index', '2000000000');\n  $notifyDiv.html( time + ' ' + msg + '<br />' + $notifyDiv.html() );\n  const now = new Date();\n  const time = now.getHours() + \":\" + now.getMinutes() + \":\" + now.getSeconds();\n  fadeOutTimerId = setTimeout( () => {\n  if(fadeOutTimerId !== null) {\n  setFadeOutTimer();\n  }\n  }, fadeOutTriggerTimeInMs);\nconst $ = require('jquery');\nconst setFadeOutTimer = () => {\nexport const notify = (msg) => {\nexport const setupNotifications = () => {\nlet $notifyDiv = null; \nlet fadeOutAnimationTimeInMs = 500;\nlet fadeoutCallbackFn = () => {};\nlet fadeOutTimerId = null;\nlet fadeOutTriggerTimeInMs = 1500;\n}\n};\n};",
-			"file": "src/Notification-Pane.js",
-			"file_size": 1351,
-			"file_write_time": 132344060022200594,
+			"file": "src/js/ui/SuperCutPaste.js",
 			"settings":
 			{
-				"buffer_size": 1302,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/js/ui/EntityPalette.js",
-			"settings":
-			{
-				"buffer_size": 32186,
+				"buffer_size": 3755,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/Map.js",
+			"contents": "Searching 63 files for \"hull_x\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\js\\ui\\CutCopyPaste.js:\n   36      clearPasteboard();\n   37      const curLayer = getSelectedLayer().map_tileData_idx;\n   38:     const hull_x = map.selection.hull.x;\n   39      const hull_y = map.selection.hull.y;\n   40      const mapWidth = map.mapSizeInTiles.width;\n   ..\n   47  \n   48        addToPasteboard(\n   49:         x - hull_x,\n   50          y - hull_y,\n   51          curLayer,\n\nC:\\grue\\Breaditor\\src\\js\\ui\\SuperCutPaste.js:\n   34    throw (map.selection);\n   35  \n   36:   _cut(map, map.selection.hull_x, map.selection.hull_y);\n   37  };\n   38  \n   ..\n   61  \n   62  const _cut = (map, x1,y1) => { \n   63:   const hull_x = x1;\n   64    const hull_y = y1;\n   65    const cutSet = [];\n   ..\n   74        const y = getYfromFlat(flatidx, mapWidth);\n   75  \n   76:       console.log(`Pre add: x ${x} hull_x ${hull_x} passing ${(x - hull_x)} ` );\n   77  \n   78        addTileToPasteboard(\n   79:         x - hull_x,\n   80          y - hull_y,\n   81          curLayer,\n\n8 matches across 2 files\n\n\nSearching 63 files for \"boom\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\js\\ui\\CutCopyPaste.test.js:\n  310  \n  311    console.log(map.layers);\n  312:   throw \"boom\"\n  313  \n  314    expect(map.getMatrix()).toEqual(midTiles);\n\n1 match in 1 file\n\n\nSearching 63 files for \"layerX\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\js\\ui\\CutCopyPaste.js:\n   80    }\n   81  \n   82:   let layerX, layerY;\n   83  \n   84    if(newLayerIdx >= map.layers.length) {\n   85      switch(newLayerIdx) {\n   86        case MAGICAL_OBS_LAYER_ID: // obstuctions\n   87:         layerX = map.obsLayerData.dimensions.X; \n   88          layerY = map.obsLayerData.dimensions.Y;\n   89          break;\n   90        case MAGICAL_ZONE_LAYER_ID: // yes, currently reusing obs dimentions for zones\n   91:         layerX = window.$$$currentMap.mapSizeInTiles.width;\n   92          layerY = window.$$$currentMap.mapSizeInTiles.height;\n   93          break;\n   ..\n   97      }\n   98    } else {\n   99:     layerX = map.layers[newLayerIdx].dimensions.X;\n  100      layerY = map.layers[newLayerIdx].dimensions.Y;\n  101    }\n  ...\n  111      // out of bounds detection\n  112      // TODO do we need to detect negatives?  MAAAAYBE?\n  113:     if (targetX >= layerX || targetY >= layerY) {\n  114        continue;\n  115      }\n\nC:\\grue\\Breaditor\\src\\js\\ui\\SuperCutPaste.js:\n  110  \n  111  export const _paste = (map, tX, tY) => {\n  112:   let layerX, layerY;\n  113  \n  114    const pasteSet = [];\n  ...\n  125        switch(layerIdx) {\n  126          case MAGICAL_OBS_LAYER_ID: // obstuctions\n  127:           layerX = map.obsLayerData.dimensions.X; \n  128            layerY = map.obsLayerData.dimensions.Y;\n  129            break;\n  130          case MAGICAL_ZONE_LAYER_ID: // yes, currently reusing obs dimentions for zones\n  131:           layerX = map.mapSizeInTiles.width;\n  132            layerY = map.mapSizeInTiles.height;\n  133            break;\n  ...\n  137        }\n  138      } else {\n  139:       layerX = map.layers[layerIdx].dimensions.X;\n  140        layerY = map.layers[layerIdx].dimensions.Y;\n  141  \n  142:       throw \"layerX: \" + layerX;\n  143      }\n  144      \n  145      // out of bounds detection\n  146      // TODO do we need to detect negatives?  MAAAAYBE?\n  147:     if (targetX >= layerX || targetY >= layerY) {\n  148:       console.log(`${targetX} >= ${layerX} || ${targetY} >= ${layerY}`)\n  149        continue;\n  150      }\n\n13 matches across 2 files\n",
 			"settings":
 			{
-				"buffer_size": 73880,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/Palettes.js",
-			"settings":
-			{
-				"buffer_size": 5014,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "{\n    \"animations\": {\n        \"Idle Down\": [  \"T10 0 1 2 1  3 4 5 4\", \"Looping\" ],\n\n    },\n    \"dims\": [\n        16, \n        16\n    ], \n    \"hitbox\": [0,0,16,16],\n    \"hitbox_is_solid\": false,\n    \"frames\": 2, \n    \"image\": \"chrs_json/objects/exercise/weights.png\", \n    \"inner_pad\": 0, \n    \"outer_pad\": 0, \n    \"per_row\": 2\n}",
-			"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/weights.json",
-			"file_size": 710,
-			"file_write_time": 132379494480268371,
-			"settings":
-			{
-				"buffer_size": 328,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/TileSelector.js",
-			"settings":
-			{
-				"buffer_size": 5754,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/flex.json",
-			"settings":
-			{
-				"buffer_size": 367,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/rack.json",
-			"settings":
-			{
-				"buffer_size": 368,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/monsters/Manotaur.json",
-			"settings":
-			{
-				"buffer_size": 960,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/weights-vertical.json",
-			"settings":
-			{
-				"buffer_size": 313,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/Uranium Rod.json",
-			"settings":
-			{
-				"buffer_size": 688,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "Searching 59 files for \"$$$save\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\main\\BaseSetup.js:\n  319            };\n  320            \n  321:           window.$$$saveAs();\n  322            window.$$$show_all_windows();\n  323          }\n  ...\n  361    };\n  362  \n  363:   window.$$$save = function (newName, isSaveAs) {\n  364      window.$$$currentMap.compactifyZones();\n  365      window._save(newName, window.$$$currentMap, isSaveAs);\n  ...\n  510    }\n  511  \n  512:   window.$$$saveAs = function () {\n  513      const { dialog } = require('electron').remote;\n  514  \n  ...\n  517        (filename) => {\n  518          if (filename) {\n  519:           window.$$$save(filename, true);\n  520          }\n  521        }\n\nC:\\grue\\Breaditor\\src\\main\\IPCRenderer.js:\n   54          break;\n   55        case 'save':\n   56:         window.$$$save();\n   57          break;\n   58        case 'save-as':\n   59:         window.$$$saveAs();\n   60          break;\n   61        case 'open-recent':\n\n6 matches across 2 files\n",
-			"settings":
-			{
-				"buffer_size": 1003,
+				"buffer_size": 3505,
 				"line_ending": "Windows",
 				"name": "Find Results",
 				"scratch": true
 			}
 		},
 		{
-			"file": "/C/grue/Breaditor/src/main/BaseSetup.js",
+			"file": "src/helpers/FakeMap.js",
 			"settings":
 			{
-				"buffer_size": 20072,
+				"buffer_size": 3283,
 				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/js/ui/CutCopyPaste.test.js",
+			"settings":
+			{
+				"buffer_size": 7023,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/grue/Breaditor/src/Map.js",
+			"settings":
+			{
+				"buffer_size": 74436,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/js/ui/CutCopyPaste.js",
+			"settings":
+			{
+				"buffer_size": 3171,
 				"line_ending": "Windows"
 			}
 		}
@@ -469,26 +402,78 @@
 	"expanded_folders":
 	[
 		"/C/grue/BREADitor",
-		"/C/grue/BREADitor/src"
+		"/C/grue/BREADitor/.git",
+		"/C/grue/BREADitor/__mocks__",
+		"/C/grue/BREADitor/src",
+		"/C/grue/BREADitor/src/__mocks__",
+		"/C/grue/BREADitor/src/helpers",
+		"/C/grue/BREADitor/src/js",
+		"/C/grue/BREADitor/src/js/ui"
 	],
 	"file_history":
 	[
-		"/C/grue/BREADitor/app/stylesheets/main.css",
+		"/C/grue/BREADitor/src/js/ui/CutCopyPaste.js",
+		"/C/grue/Breaditor/src/main/BaseSetup.js",
+		"/C/grue/Breaditor/src/js/ui/LayersPalette.js",
+		"/C/grue/Breaditor/src/tools/Draw.test.js",
+		"/C/grue/BREADitor/src/helpers/FakeMap.js",
+		"/C/grue/BREADitor/src/Tools.UndoRedo.test.js",
+		"/C/grue/Breaditor/src/Map.js",
+		"/C/grue/Breaditor/src/Map.test.js",
+		"/C/grue/Breaditor/src/main/IPCRenderer.js",
+		"/C/grue/BREADitor/src/UndoRedo.js",
+		"/C/grue/Breaditor/src/js/ui/ZonesPalette.js",
+		"/C/grue/BREADitor/src/Notification-Pane.js",
 		"/C/grue/BREADitor/src/js/ui/EntityPalette.js",
 		"/C/grue/BREADitor/src/Map.js",
+		"/C/grue/Breaditor/src/js/ui/CutCopyPaste.js",
+		"/C/grue/Breaditor/src/menu/edit_menu_template.js",
+		"/C/grue/BREADitor/src/tools/Draw.test.js",
+		"/C/grue/Breaditor/src/js/ui/EntityPalette.js",
+		"/C/grue/BREADitor/src/tools/FloodFill.test.js",
+		"/C/grue/BREADitor/src/Logging.js",
+		"/C/grue/BREADitor/src/js/ui/Util.js",
+		"/C/grue/BREADitor/src/__mocks__/TileSelector.js",
+		"/C/grue/BREADitor/src/tools/Draw.js",
+		"/C/grue/BREADitor/src/tools/Eyedropper.js",
+		"/C/grue/BREADitor/src/js/ui/CutCopyPaste.test.js",
+		"/C/grue/Breaditor/src/js/ui/TilesetSelectorPalette.js",
+		"/C/grue/Breaditor/src/TileSelector.js",
+		"/C/grue/BREADitor/src/js/ui/LayersPalette.js",
+		"/C/grue/BREADitor/src/js/ui/ZonesPalette.js",
+		"/C/grue/Breaditor/src/tools/FloodFill.test.js",
+		"/C/grue/BREADitor/src/TileSelector.js",
+		"/C/grue/Breaditor/src/UndoRedo.js",
+		"/C/grue/Breaditor/src/Tools.js",
+		"/C/grue/BREADitor/src/__mocks__/Tools.js",
+		"/C/grue/BREADitor/package.json",
+		"/C/grue/Breaditor/src/js/ui/CutCopyPaste.test.js",
+		"/C/grue/BREADitor/src/Tools.js",
+		"/C/grue/Breaditor/src/js/ui/EntityPalette.test.js",
+		"/C/grue/Breaditor/src/tools/Draw.js",
+		"/C/grue/BREADitor/__mocks__/src/Tools.js",
+		"/C/grue/Breaditor/src/tools/FloodFill.js",
+		"/C/Users/benmc/Downloads/message.txt",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/conversations/dol_sauna/Lawyer_1.txt",
+		"/C/grue/Breaditor/src/Logging.js",
+		"/C/grue/BREADitor/.gitignore",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/Uranium Rod.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/weights-vertical.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/weights.json",
+		"/C/grue/BREADitor/src/Palettes.js",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol_new_2_gym.map.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol_bar.map.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/flex.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/rack.json",
+		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/monsters/Manotaur.json",
+		"/C/grue/BREADitor/app/stylesheets/main.css",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/evil_lab_f2.map.json",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_pine_short.json",
 		"/C/grue/BREADitor/src/main/BaseTemplate.js",
 		"/C/grue/BREADitor/src/app.js",
-		"/C/grue/BREADitor/src/js/ui/LayersPalette.js",
-		"/C/grue/BREADitor/src/js/ui/Util.js",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_tree2.json",
 		"/C/grue/BREADitor/app/shaders/sprite-vert.glsl",
 		"/C/grue/BREADitor/app/shaders/entitybounds-frag.glsl",
-		"/C/grue/Breaditor/src/main/BaseSetup.js",
-		"/C/grue/BREADitor/src/Palettes.js",
-		"/C/grue/Breaditor/src/Tools.js",
-		"/C/grue/Breaditor/src/Map.js",
 		"/C/grue/Breaditor/src/tools/MoveViewport.js",
 		"/C/grue/BREADitor/app/shaders/layerborder-frag.glsl",
 		"/C/grue/Breaditor/src/Palettes.js",
@@ -497,15 +482,12 @@
 		"/C/grue/BREADitor/app/app.html",
 		"/C/Users/benmc/Downloads/art.txt",
 		"/C/Users/benmc/Downloads/horridhp.txt",
-		"/C/grue/BREADitor/package.json",
 		"/C/grue/BREADitor/node_modules/vanilla-picker/dist/vanilla-picker.js",
 		"/C/grue/BREADitor/src/main/IPCRenderer.js",
 		"/C/grue/Breaditor/src/menu/dev_menu_template.js",
-		"/C/grue/BREADitor/src/Logging.js",
 		"/C/grue/vanilla-picker/src/js/picker.js",
 		"/C/grue/BREADitor/node_modules/vanilla-picker/src/js/picker.js",
 		"/C/grue/vanilla-picker/dist/vanilla-picker.js",
-		"/C/grue/Breaditor/src/menu/edit_menu_template.js",
 		"/C/grue/Breaditor/app/background.js",
 		"/C/grue/BREADitor/node_modules/vanilla-picker/src/index.js",
 		"/C/grue/Breaditor/src/main/SendMsgToMainWindow.js",
@@ -515,7 +497,6 @@
 		"/C/grue/BREADitor/node_modules/vanilla-picker/dist/vanilla-picker.mjs",
 		"/C/grue/BREADitor/node_modules/vanilla-picker/package.json",
 		"/C/Users/benmc/AppData/Local/Temp/Rar$DRa6132.1424/colpick-3.1.0/js/colpick.js",
-		"/C/grue/Breaditor/src/js/ui/LayersPalette.js",
 		"/C/grue/BREADitor/app/shaders/selection-vert.glsl",
 		"/C/grue/BREADitor/src/tools/SmartEyedropper.js",
 		"/C/grue/BREADitor/app/shaders/screenview-frag.glsl",
@@ -528,7 +509,6 @@
 		"/C/grue/BREADitor/src/menu/prod_menu_template.js",
 		"/C/grue/BREADitor/src/menu/dev_menu_template.js",
 		"/C/grue/BREADitor/src/tools/MoveViewport.js",
-		"/C/grue/BREADitor/src/Tools.js",
 		"/C/grue/Breaditor/src/js/ui/InfoPalette.js",
 		"/C/grue/BREADitor/app/background.js",
 		"/C/grue/BREADitor/app/shaders/check-frag.glsl",
@@ -538,38 +518,19 @@
 		"/C/grue/BREADitor/src/menu/debug_menu_template.js",
 		"/C/grue/Breaditor/src/tools/DragItem.js",
 		"/C/grue/Breaditor/src/tools/Select.js",
-		"/C/grue/Breaditor/src/js/ui/EntityPalette.js",
-		"/C/grue/BREADitor/src/UndoRedo.js",
-		"/C/grue/BREADitor/src/tools/Draw.js",
 		"/C/grue/Breaditor/src/tools/Eyedropper.js",
-		"/C/grue/Breaditor/src/tools/FloodFill.js",
 		"/C/grue/Breaditor/src/tools/SmartEyedropper.js",
-		"/C/grue/Breaditor/src/UndoRedo.js",
-		"/C/grue/Breaditor/src/tools/Draw.js",
-		"/C/grue/Breaditor/src/js/ui/CutCopyPaste.js",
-		"/C/grue/Breaditor/src/js/ui/ZonesPalette.js",
-		"/C/grue/BREADitor/src/tools/Eyedropper.js",
-		"/C/grue/BREADitor/src/js/ui/ZonesPalette.js",
-		"/C/grue/Breaditor/src/main/IPCRenderer.js",
 		"/C/grue/Breaditor/src/js/ui/Util.js",
 		"/C/grue/Breaditor/src/js/ui/__mocks__/EntityPalette.js",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/anville.map.json",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/anville_elevator.map.json",
 		"/C/grue/BREADitor/src/js/ui/EntityPalette.test.js",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/blue_tank.json",
-		"/C/grue/Breaditor/src/js/ui/CutCopyPaste.test.js",
-		"/C/grue/BREADitor/src/js/ui/CutCopyPaste.js",
-		"/C/grue/Breaditor/src/tools/FloodFill.test.js",
 		"/C/grue/Breaditor/src/helpers/FakeMap.js",
 		"/C/grue/BREADitor/src/tools/FloodFill.js",
-		"/C/grue/BREADitor/src/tools/FloodFill.test.js",
-		"/C/grue/BREADitor/src/helpers/FakeMap.js",
-		"/C/grue/Breaditor/src/js/ui/TilesetSelectorPalette.js",
 		"/C/grue/Breaditor/app/app.js",
-		"/C/grue/BREADitor/src/TileSelector.js",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/NPC/npc_miami_vice.json",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_whale_herbert.json",
-		"/C/grue/BREADitor/src/js/ui/CutCopyPaste.test.js",
 		"/C/grue/Breaditor/package.json",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/object_splash.json",
 		"/C/grue/Breaditor/src/app.js",
@@ -578,33 +539,11 @@
 		"/C/Users/grue/Desktop/DUAL setup-maped4-dev.ahk",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol_new_1.map.json",
 		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol_new_1.map.data.json",
-		"/C/grue/Breaditor/src/tools/Drag.js",
-		"/C/grue/Breaditor/src/TileSelector.js",
-		"/C/grue/Breaditor/src/stylesheets/main.less",
-		"/C/grue/Breaditor/src/stylesheets/jquery-ui-fixes.less",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.map.data.json",
-		"/C/Users/grue/Dropbox/Hyptosis-Sully-2017/Notes.txt",
-		"/C/grue/Breaditor/src/Tools.UndoRedo.test.js",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/farmsville.obsvsp.json",
-		"/C/grue/xnavERGE/Examples/Sully/Sully/bin/x86/Release/Content/conversations/farmsville/Zealot_3.txt",
-		"/C/grue/Breaditor/src/js/ui/EntityPalette.test.js",
-		"/C/grue/Breaditor/src/Map.test.js",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol_b5.map.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol.vsp.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/undersea_crystal.tiles.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/underwater_crystalcaves.map.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/mcdarin_cottage.map.data.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/mcdarin_cottage.map.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/jujube.exterior.vsp.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/jujube.exterior.obsvsp.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/paradise.vsp.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/paradise_nuevo.map.json",
-		"/C/grue/XNAVERGE/Examples/Sully/SullyContent/maps/json/dol.obsvsp.json"
+		"/C/grue/Breaditor/src/tools/Drag.js"
 	],
 	"find":
 	{
-		"height": 31.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -670,134 +609,134 @@
 		"case_sensitive": true,
 		"find_history":
 		[
-			"event",
-			"pop_me_to_the_top",
-			"click",
-			"anima",
-			"today",
-			"$$$save",
-			"setup",
-			"baseHTMLTemplate",
-			"BaseTemplate",
-			"jquery",
-			"a",
-			"jquery",
+			"layerX",
+			"boom",
+			"matrix",
+			"layers",
+			"_paste",
+			"layers",
+			"console",
+			"obsLayerData",
+			"addTileToPasteboard",
+			"clearPasteboard",
+			"addTileToPasteboard",
+			"console.",
+			"addTileToPasteboard",
+			"curLayer",
+			"addTileToPasteboard",
+			"hull_x",
+			"_cut",
+			"hull_x",
+			"add",
+			"addTileToPasteboard",
+			"superPaste",
+			"newLayerIdx",
+			"getCurrentHoverTile",
+			"flatidx",
+			"_cut",
+			"getFlatIdx =",
+			"Hull",
+			"hull.",
+			"addToPasteboard",
+			"),",
+			"mapSizeInTiles =",
+			"getXfromFlat",
+			"ToFlat",
+			"map.selection",
+			"cutSet",
+			"isCut",
+			"addToPasteboard",
+			"isCut",
+			"MAGICAL_ZONE_LAYER_ID",
+			"prepare_supercut_layer",
+			"is_numeric",
+			"prepare_supercut_layer",
+			"pasteboard",
+			"mid",
+			"start",
+			"MAGICAL_ENT_LAYER_ID",
+			"_ZONE",
+			"ENTITY_",
+			"(",
+			"l(",
+			"(",
+			"Map",
+			"Obs",
+			"entities",
+			"(",
+			"workSet",
+			"prepare_supercut_layer",
+			"_cut_or_copy",
+			"buttons:",
+			"templ",
+			"edit-cut",
+			"accelerator",
+			"ctrl-x",
+			"cut or copy",
+			"hull",
+			".map",
+			"map",
+			"cut_or",
+			"$$$super",
+			"cut_or",
+			"recent",
+			"S-S",
+			"window.$$$currentMap\n",
+			"Open recent",
+			"Open Recent Map",
+			"_cut_or_copy =",
+			"tool-supercut",
+			"tool-smartdropper",
+			"Smart",
+			"obsLayerData.dimensions =",
+			"MAGICAL_ZONE",
+			"zoneLayerData",
+			"zonesLayerData",
+			"unknown layer id",
+			"this.zoneData",
+			"MAGICAL_OBS_LAYER_ID",
+			"set_animation_dropdown",
+			"entity",
+			"set_animation_dropdown",
+			"prepare",
+			"_debug_REDOSTACK",
+			"_debug_UNDOSTACK",
+			"UNDOSTACK",
+			"redoStack",
+			"undo(",
+			"_redoStack",
+			"prepare_one_entloc",
+			"$notifyDiv",
+			"oldEnt0_loc_tiles",
+			"oldEnt1_loc_pixels",
+			"mapDat",
+			"handleUndo",
+			"undo",
+			"handleUndo",
+			"entIdx",
 			"debugger",
-			"WARN",
-			"tilesize",
-			"layer",
-			"hitbox",
-			"entitySortFn",
-			"_getEntityData",
-			"hitbox",
-			"sort",
-			"addEn",
-			"entitySortFn",
-			"addEntityWithoutSort",
-			"addEntityWithout",
-			"addEntity(",
-			"addEntity",
-			"setupEntityHitboxDrawing",
-			"sort",
-			"zsort",
-			"z-sort",
-			"sort",
-			"z-sort",
-			"bar",
-			"entityData.dims",
-			"clip",
-			"renderEntity",
-			"render",
-			"isTallRedraw",
-			"renderEntity",
-			"renderEntity(",
-			"renderEntity",
-			"getEntityTallRedrawLayer",
-			"tall",
-			"Hitbox",
-			"fixContainerSize",
-			"200",
-			"all_entity_tallredraw_bounds_draw_picker",
-			"saveAllEntityHitboxBoundsColor",
-			"saveAllEntityTallRedrawBoundsColor",
-			"allEntityHitboxBoundsColorpicker",
-			"all_entity_hitbox_bounds_color",
-			"all_entity_hitbox_bounds_draw_off",
-			"saveAllEntityHitboxBoundsColor",
-			"hitboxStartColor",
-			"TY_TALLREDRAW",
-			"HITBOX",
-			"saveAllEntityHitboxBoundsColor",
-			"allEntityHitboxBoundsColorpicker",
-			"all_entity_hitbox_bounds_draw_off",
-			"all_entity_hitbox_bounds_color",
-			"HITBOX",
-			"all_entity_hitbox_bounds_draw_off",
-			"MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING_HEX",
-			"MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING",
-			"MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING",
-			"MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING_HEX",
-			"MAPED_GLOBAL_ENTITY_HITBOX_DRAWING_HEX",
-			"MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING_HEX",
-			"MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING_HEX",
-			"MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING",
-			"startColor",
-			"saveAllEntityHitboxBoundsColor",
-			"updateZoomText",
-			"wheel",
-			"mousemove",
-			"updateZoomText",
-			"camera",
-			"zoom",
-			"window.$$$",
-			"zoom",
-			"BOUNDS",
-			"_BOUNDS",
-			"_bounds",
-			"_BOUNDS",
-			"fixContainerSize",
-			"entity-palette",
-			"entit",
-			"template += \"",
-			"\";",
-			"xi",
-			"x",
-			"x1",
-			"x2",
-			"MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING",
-			"MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING",
-			"lineBuf",
-			"gl.bindBuffer",
-			"a_vertices",
-			"vertexattribpointer",
-			"renderEntity",
-			"drawEntities",
-			"gl.drawArrays( gl.LINES, 0",
-			"gl.drawArrays( gl.LINES, 0,",
-			"layer.dimensions.Y",
-			"layer.dimensions.X",
-			"tilesize",
-			"gl.drawArrays",
-			"spriteShader",
-			"entBounds",
-			"viewport",
-			"renderContainerDimensions",
-			"gl.drawArrays( gl.LINES, 0, 8 );",
-			"entityBoundsShader",
-			"entitybounds",
-			"tex",
-			"v_texcoords",
-			"a_vertices",
-			"spriteShader",
-			"renderEntity",
-			"spriteShader",
-			"entityBoundsShader",
-			"layerBorderShader",
-			"entityBoundsShader",
-			"layerBorderShader",
-			"entityBoundsShader",
-			"layer",
-			"layerBorderShader"
+			"was",
+			"_ent_move",
+			"_entmove_inner",
+			"prepare_one_entloc",
+			"_ent_move",
+			"_entmove_inner",
+			"undostack_add",
+			"prepare_one_entloc",
+			"location.",
+			"_ent_move",
+			"notify",
+			"was.location",
+			"undostack_add",
+			"currentEntities",
+			"change_one_entity_location",
+			"_ent_move",
+			"$$$",
+			"update_entity_location",
+			"map =",
+			"map.",
+			"moveSelectedEntityToTile",
+			"update_entity_location"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -838,24 +777,24 @@
 	"groups":
 	[
 		{
-			"selected": 8,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/Notification-Pane.js",
+					"file": "src/js/ui/SuperCutPaste.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1302,
+						"buffer_size": 3755,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1299,
-								1299
+								2621,
+								2621
 							]
 						],
 						"settings":
@@ -865,318 +804,18 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 264.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/js/ui/EntityPalette.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 32186,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1158,
-								1158
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 195.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/Map.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 73880,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								61750,
-								61750
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 38923.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/Palettes.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5014,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2500,
-								2500
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1430.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/weights.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 328,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								153,
-								153
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/TileSelector.js",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 5754,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/flex.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 367,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								191,
-								191
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/rack.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 368,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								188,
-								188
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 66.0,
+						"translation.y": 2161.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/monsters/Manotaur.json",
+					"buffer": 1,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 960,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								802,
-								802
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/exercise/weights-vertical.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 313,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								138,
-								138
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "/C/grue/XNAVERGE/Examples/Sully/SullyContent/chrs_json/objects/Uranium Rod.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 688,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								291,
-								296
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1003,
+						"buffer_size": 3505,
 						"regions":
 						{
 							"match":
@@ -1185,28 +824,92 @@
 								"regions":
 								[
 									[
-										154,
-										161
+										207,
+										213
 									],
 									[
-										273,
-										280
+										403,
+										409
 									],
 									[
-										472,
-										479
+										583,
+										589
 									],
 									[
-										654,
-										661
+										700,
+										706
 									],
 									[
-										825,
-										832
+										881,
+										887
 									],
 									[
-										909,
-										916
+										890,
+										896
+									],
+									[
+										913,
+										919
+									],
+									[
+										988,
+										994
+									],
+									[
+										1232,
+										1236
+									],
+									[
+										1446,
+										1452
+									],
+									[
+										1621,
+										1627
+									],
+									[
+										1846,
+										1852
+									],
+									[
+										2036,
+										2042
+									],
+									[
+										2284,
+										2290
+									],
+									[
+										2467,
+										2473
+									],
+									[
+										2633,
+										2639
+									],
+									[
+										2866,
+										2872
+									],
+									[
+										3032,
+										3038
+									],
+									[
+										3161,
+										3167
+									],
+									[
+										3173,
+										3179
+									],
+									[
+										3332,
+										3338
+									],
+									[
+										3405,
+										3411
 									]
 								],
 								"scope": ""
@@ -1215,15 +918,15 @@
 						"selection":
 						[
 							[
-								277,
-								277
+								3174,
+								3174
 							]
 						],
 						"settings":
 						{
 							"detect_indentation": false,
 							"line_numbers": false,
-							"output_tag": 1,
+							"output_tag": 3,
 							"result_base_dir": "",
 							"result_file_regex": "^([^ \t].*):$",
 							"result_line_regex": "^ +([0-9]+):",
@@ -1232,27 +935,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1020.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
-					"file": "/C/grue/Breaditor/src/main/BaseSetup.js",
+					"buffer": 2,
+					"file": "src/helpers/FakeMap.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 20072,
+						"buffer_size": 3283,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								913,
-								913
+								905,
+								905
 							]
 						],
 						"settings":
@@ -1262,10 +965,100 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 281.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/js/ui/CutCopyPaste.test.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7023,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5663,
+								5663
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5533.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/grue/Breaditor/src/Map.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 74436,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								21380,
+								21380
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 14065.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/js/ui/CutCopyPaste.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3171,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1408,
+								1408
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 480.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
@@ -1273,7 +1066,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 31.0
+		"height": 30.0
 	},
 	"input":
 	{
@@ -1310,7 +1103,7 @@
 	"project": "Breaditor.sublime-project",
 	"replace":
 	{
-		"height": 58.0
+		"height": 56.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1319,6 +1112,146 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"CutCopy",
+				"src\\js\\ui\\CutCopyPaste.js"
+			],
+			[
+				"CutCop",
+				"src\\js\\ui\\CutCopyPaste.test.js"
+			],
+			[
+				"fakeMap",
+				"src\\helpers\\FakeMap.js"
+			],
+			[
+				"undo",
+				"src\\UndoRedo.js"
+			],
+			[
+				"map.js",
+				"src\\Map.js"
+			],
+			[
+				"Entity",
+				"src\\js\\ui\\EntityPalette.js"
+			],
+			[
+				"Notif",
+				"src\\Notification-Pane.js"
+			],
+			[
+				"fakema",
+				"src\\helpers\\FakeMap.js"
+			],
+			[
+				"Und",
+				"src\\UndoRedo.js"
+			],
+			[
+				"Draw",
+				"src\\tools\\Draw.js"
+			],
+			[
+				"Eyedrop",
+				"src\\tools\\Eyedropper.js"
+			],
+			[
+				"EntityPal",
+				"src\\js\\ui\\EntityPalette.js"
+			],
+			[
+				"ut",
+				"src\\js\\ui\\Util.js"
+			],
+			[
+				"Loggin",
+				"src\\Logging.js"
+			],
+			[
+				"Logg",
+				"src\\Logging.js"
+			],
+			[
+				"Floo",
+				"src\\tools\\FloodFill.test.js"
+			],
+			[
+				"Flood",
+				"src\\tools\\FloodFill.test.js"
+			],
+			[
+				"Un",
+				"src\\UndoRedo.js"
+			],
+			[
+				"UndoR",
+				"src\\Tools.UndoRedo.test.js"
+			],
+			[
+				"tilesel",
+				"src\\TileSelector.js"
+			],
+			[
+				"map.",
+				"src\\Map.js"
+			],
+			[
+				"Layers",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"ZonesPalette",
+				"src\\js\\ui\\ZonesPalette.js"
+			],
+			[
+				"Draw.js",
+				"src\\tools\\Draw.js"
+			],
+			[
+				"UndoRe",
+				"src\\Tools.UndoRedo.test.js"
+			],
+			[
+				"package.json",
+				"package.json"
+			],
+			[
+				"layers",
+				"src\\js\\ui\\LayersPalette.js"
+			],
+			[
+				"TileSelector",
+				"src\\TileSelector.js"
+			],
+			[
+				"FakeMap",
+				"src\\helpers\\FakeMap.js"
+			],
+			[
+				"test.js",
+				"src\\Tools.UndoRedo.test.js"
+			],
+			[
+				"tools undoredo",
+				"src\\Tools.UndoRedo.test.js"
+			],
+			[
+				"src/js/ui/EntityPalette.js",
+				"src\\js\\ui\\EntityPalette.js"
+			],
+			[
+				"src/UndoRedo.js",
+				"src\\UndoRedo.js"
+			],
+			[
+				"undo ",
+				"src\\UndoRedo.js"
+			],
+			[
+				"EntityPa",
+				"src\\js\\ui\\EntityPalette.js"
+			],
 			[
 				"Palette",
 				"src\\Palettes.js"
@@ -1368,20 +1301,8 @@
 				"src\\js\\ui\\LayersPalette.js"
 			],
 			[
-				"Entity",
-				"src\\js\\ui\\EntityPalette.js"
-			],
-			[
 				"Info",
 				"src\\js\\ui\\InfoPalette.js"
-			],
-			[
-				"map.js",
-				"BREADitor\\src\\Map.js"
-			],
-			[
-				"Layers",
-				"src\\js\\ui\\LayersPalette.js"
 			],
 			[
 				"Loggi",
@@ -1390,10 +1311,6 @@
 			[
 				"ipc",
 				"src\\main\\IPCRenderer.js"
-			],
-			[
-				"Loggin",
-				"src\\Logging.js"
 			],
 			[
 				"Map.js",
@@ -1428,10 +1345,6 @@
 				"src\\Tools.js"
 			],
 			[
-				"Draw.js",
-				"src\\tools\\Draw.js"
-			],
-			[
 				"IPC",
 				"src\\main\\IPCRenderer.js"
 			],
@@ -1454,10 +1367,6 @@
 			[
 				"Undo",
 				"src\\UndoRedo.js"
-			],
-			[
-				"CutCop",
-				"src\\js\\ui\\CutCopyPaste.js"
 			],
 			[
 				"entity test",
@@ -1492,14 +1401,6 @@
 				"src\\TileSelector.js"
 			],
 			[
-				"package.json",
-				"package.json"
-			],
-			[
-				"undo",
-				"src\\UndoRedo.js"
-			],
-			[
 				"cutcopyp",
 				"src\\js\\ui\\CutCopyPaste.test.js"
 			],
@@ -1526,10 +1427,6 @@
 			[
 				"tools.",
 				"src\\Tools.js"
-			],
-			[
-				"tilesel",
-				"src\\TileSelector.js"
 			],
 			[
 				"app",
@@ -1576,24 +1473,12 @@
 				"src\\js\\ui\\LayersPalette.js"
 			],
 			[
-				"layers",
-				"src\\js\\ui\\LayersPalette.js"
-			],
-			[
 				"app.js",
 				"src\\app.js"
 			],
 			[
 				"palettes",
 				"src\\Palettes.js"
-			],
-			[
-				"fakema",
-				"src\\helpers\\FakeMap.js"
-			],
-			[
-				"map.",
-				"src\\Map.js"
 			],
 			[
 				"zonespalette",
@@ -1704,10 +1589,6 @@
 				"src\\js\\ui\\EntityPalette.test.js"
 			],
 			[
-				"test.js",
-				"src\\Tools.UndoRedo.test.js"
-			],
-			[
 				"entitypl",
 				"src\\js\\ui\\EntityPalette.js"
 			],
@@ -1742,94 +1623,6 @@
 			[
 				"rea",
 				"README.md"
-			],
-			[
-				".less",
-				"src\\stylesheets\\jquery-ui-fixes.less"
-			],
-			[
-				"tilesele",
-				"src\\js\\ui\\TilesetSelectorPalette.js"
-			],
-			[
-				"backg",
-				"src\\background.js"
-			],
-			[
-				"build_app",
-				"tasks\\build_app.js"
-			],
-			[
-				"shaderpro",
-				"src\\ShaderProgram.js"
-			],
-			[
-				"background",
-				"src\\background.js"
-			],
-			[
-				"backgrou",
-				"src\\background.js"
-			],
-			[
-				"bac",
-				"app\\background.js"
-			],
-			[
-				"",
-				"app\\Tools.js"
-			],
-			[
-				"tileset",
-				"app\\js\\ui\\TilesetSelectorPalette.js"
-			],
-			[
-				"build.js",
-				"tasks\\build.js"
-			],
-			[
-				"node_modules/jest-cli/node_modules/jest-runtime/build/transform.js",
-				"node_modules\\jest-cli\\node_modules\\jest-runtime\\build\\transform.js"
-			],
-			[
-				"tileselec",
-				"app\\js\\ui\\TilesetSelectorPalette.js"
-			],
-			[
-				"lower_fg.json",
-				"chrs_json\\chrs_map\\undersea_cave\\lower\\lower_fg.json"
-			],
-			[
-				"module.js",
-				"node_modules\\rollup\\src\\Module.js"
-			],
-			[
-				"read",
-				"README.md"
-			],
-			[
-				"gulp",
-				"gulpfile.js"
-			],
-			[
-				"lower_bg.",
-				"app\\map_assets\\chrs_map\\undersea_cave\\lower\\lower_bg.json"
-			],
-			[
-				"util.",
-				"app\\js\\ui\\Util.js"
-			],
-			[
-				"entitypalette",
-				"maped4\\app\\js\\ui\\EntityPalette.js"
-			],
-			[
-				"tilemap-vert.glsl",
-				"maped4\\app\\shaders\\tilemap-vert.glsl"
-			],
-			[
-				"tilemap-frag.glsl",
-				"maped4\\app\\shaders\\tilemapObs-frag.glsl"
 			]
 		],
 		"width": 0.0
@@ -1860,7 +1653,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 146.0,
+	"side_bar_width": 234.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

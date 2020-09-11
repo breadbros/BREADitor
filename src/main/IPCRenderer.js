@@ -89,6 +89,9 @@ export function setupIPCRenderer() {
       case 'tool-supercut':
         window.$$$supercut();
         break;
+      case 'tool-superpaste':
+        window.$$$superpaste();
+        break;
       case 'tool-move-viewport':
         clickMoveViewport();
         break;

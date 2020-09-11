@@ -9,6 +9,10 @@ const addTileToPasteboard = (dx, dy, originalLayer, tile) => {
   pasteboard.push([dx, dy, originalLayer, tile]);
 };
 
+const getPasteBoard = () => {
+  return pasteboard;
+}
+
 export const superCut = (map) => {
   if(layers === null) {
     throw `No supercut layers selected.`;
@@ -21,6 +25,8 @@ let layers = null;
 let doEntities = false;
 
 export const setSuperCutPasteLayers = (arLayers) => {
+  doEntities = false;  
+
   if(!_.isArray(arLayers)) {
     throw `Illegal arguments (arLayers) expected to be an array of layer indices.`;
   }
@@ -31,8 +37,6 @@ export const setSuperCutPasteLayers = (arLayers) => {
   } else {
     layers = arLayers;  
   }
-
-  debugger;
 };
 
 const clearSuperCutPasteLayers = (arLayers) => {
@@ -46,11 +50,11 @@ const _cut = (map, x1,y1) => {
   const cutSet = [];
 
   for (var i = layers.length - 1; i >= 0; i--) {
+
     const curLayer = layers[i];
     const mapWidth = map.mapSizeInTiles.width;
 
-    for (const i in map.selection.tiles) {
-      const flatidx = map.selection.tiles[i];
+    for (const flatidx in map.selection.tiles) {
       const x = getXfromFlat(flatidx, mapWidth);
       const y = getYfromFlat(flatidx, mapWidth);
 
@@ -122,10 +126,7 @@ export const _paste = (map, tX, tY) => {
     if(layerIdx >= map.layers.length) {
       switch(layerIdx) {
         case MAGICAL_OBS_LAYER_ID: // obstuctions
-          layerX = map.obsLayerData.dimensions.X; 
-          layerY = map.obsLayerData.dimensions.Y;
-          break;
-        case MAGICAL_ZONE_LAYER_ID: // yes, currently reusing obs dimentions for zones
+        case MAGICAL_ZONE_LAYER_ID: // TODO: these are both bad
           layerX = map.mapSizeInTiles.width;
           layerY = map.mapSizeInTiles.height;
           break;
