@@ -1,6 +1,7 @@
 import { updateInfoDims } from '../../Tools.js';
 
 const {shell} = require('electron');
+const { clipboard } = require('electron');
 
 const path = require('path');
 
@@ -55,17 +56,25 @@ export const updateMapAndVSPFileInfo = (map) => {
           selector: `.${className}`, 
           callback: function(key, options) {
               switch(key) {
-              	case "JSON":
-              		shell.openItem(fullpath);
+                case "JSON":
+                  shell.openItem(fullpath);
+                  return;
+                case "Image":
+                  shell.openItem(map.vspImages[keyName].src);
               		return;
-              	case "Image":
-              		shell.openItem(map.vspImages[keyName].src);
-              		return;
+                case "Copy-JSON":
+                  clipboard.writeText(fullpath, 'clipboard');
+                  return;
+                case "Copy-Image":
+                  clipboard.writeText(map.vspImages[keyName].src, 'clipboard');
+                  return;
               }
           },
           items: {
               "JSON": {name: "Open VSP JSON", icon: "fa-edit"},
+              "Copy-JSON": {name: "Copy VSP JSON Path to Clipboard", icon: "fa-edit"},
               "Image": {name: "Open VSP Image", icon: "fa-palette"},
+              "Copy-Image": {name: "Copy VSP Image Path to Clipboard", icon: "fa-palette"},
           }
       });
     });
