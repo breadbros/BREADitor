@@ -1766,6 +1766,16 @@ Map.prototype = {
 
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
+
+
+    let layerOffsetTx = 0;
+    let layerOffsetTy = 0;
+
+    if(layer.offset) {
+      layerOffsetTx = layer.offset.X / tilesize.width;
+      layerOffsetTy = layer.offset.Y / tilesize.height;
+    }
+
     const entityData = this._getEntityData(entity);
     const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
     if (!entityTexture) {
@@ -1782,6 +1792,7 @@ Map.prototype = {
     let tx;
     let ty;
 
+    // the coordinatespace isn't what you think it is.  tx/ty can be fractional here.  Time is a flat circle
     if (Number.isInteger(entity.location.px) && Number.isInteger(entity.location.py)) {
       tx = entity.location.px / tilesize.width;
       ty = entity.location.py / tilesize.height;
@@ -1790,8 +1801,13 @@ Map.prototype = {
       ty = entity.location.ty;
     }
 
+    // apply hitbox xform
     tx -= (entityData.hitbox[0] / tilesize.width);
     ty -= (entityData.hitbox[1] / tilesize.height);
+
+    // apply layer offset xform
+    tx += layerOffsetTx;
+    ty += layerOffsetTy;
 
     const tw = clip[2] / tilesize.width;
     const th = clip[3] / tilesize.height;
