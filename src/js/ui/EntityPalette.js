@@ -22,11 +22,16 @@ const get_sully_code_line_for_entity = (e) => {
   let tmp = '';
 
   if(e.activation_script) {
-    tmp += `public void ${e.activation_script}( Entity e ) {} `;
+    tmp += `public void ${e.activation_script}( Entity e ) {`;
   } else {
     tmp += `// no activation script `;
   }
+  
   tmp += `//"${e.name}", uuid: "${e.uuid}"\n`;
+  
+  if(e.activation_script) {
+    tmp += `\n}\n\n`;    
+  }
 
   return tmp;
 }

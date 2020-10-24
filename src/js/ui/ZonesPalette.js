@@ -1,6 +1,9 @@
 import { modal_error } from './Util.js';
 const $ = require('jquery');
 
+const { clipboard } = require('electron');
+import { notify } from '../../Notification-Pane';
+
 let currentZones = null;
 
 const initZonesWidget = (map) => {
@@ -281,6 +284,64 @@ export const scrollZonePalletteToZone = (zoneToFocus) => {
 
   $('.zones-palette .window-container').scrollTop(loc);
 };
+
+const get_sully_code_line_for_zone = (z, idx) => {
+  let tmp = '';
+
+  if(z.activation_script) {
+    tmp += `public void ${z.activation_script}( ZoneActivationData zad ) { `;
+  } else {
+    tmp += `// no activation script `;
+  }
+  tmp += `//Zone #${idx}, name: "${z.name}, act chance: ${z.activation_chance}, adj?${z.can_by_adjacent_activated}, same?${z.can_by_same_tile_activated}\n`;
+
+  if(z.activation_script) {
+    tmp += `\n}\n\n`;    
+  }
+
+  return tmp;
+}
+
+const copy_useful_zone_data_to_clipboard = () => {
+  let tmp = '';
+
+  let i = 0;
+
+  window.$$$currentMap.mapData.zones.forEach((z) => {
+    if(i) { // skip zone #0
+      tmp += get_sully_code_line_for_zone(z, i);
+    }
+
+    i++;    
+  });
+
+  clipboard.writeText(tmp, 'clipboard');
+  notify("Copied all entity data to clipboard in Sully format.");
+};
+
+const copy_useful_single_zone_data_to_clipboard = (z) => {
+  clipboard.writeText(get_sully_code_line_for_zone(z), 'clipboard');
+  notify(`Copied entity data for "${z.name}" to clipboard in Sully format.`);
+};
+
+$(function() {
+  $.contextMenu({
+    selector: '.zones-palette h3.ui-widget-header', 
+    callback: function(key, options) {
+      switch(key) {
+        default:
+          console.log('unknown key: ' + key);
+          return;
+        case 'copy_scriptnames':
+          copy_useful_zone_data_to_clipboard();
+          return;
+      }
+    },
+    items: {
+      "copy_scriptnames": {name: "Copy useful zone data to clipboard", icon: "copy"},
+    },
+  });
+});
 
 export const ZonesWidget = {
   initZonesWidget: initZonesWidget

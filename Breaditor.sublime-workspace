@@ -315,16 +315,16 @@
 			"file": "src/js/ui/SuperCutPaste.js",
 			"settings":
 			{
-				"buffer_size": 3755,
+				"buffer_size": 3641,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "Searching 63 files for \"hull_x\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\js\\ui\\CutCopyPaste.js:\n   36      clearPasteboard();\n   37      const curLayer = getSelectedLayer().map_tileData_idx;\n   38:     const hull_x = map.selection.hull.x;\n   39      const hull_y = map.selection.hull.y;\n   40      const mapWidth = map.mapSizeInTiles.width;\n   ..\n   47  \n   48        addToPasteboard(\n   49:         x - hull_x,\n   50          y - hull_y,\n   51          curLayer,\n\nC:\\grue\\Breaditor\\src\\js\\ui\\SuperCutPaste.js:\n   34    throw (map.selection);\n   35  \n   36:   _cut(map, map.selection.hull_x, map.selection.hull_y);\n   37  };\n   38  \n   ..\n   61  \n   62  const _cut = (map, x1,y1) => { \n   63:   const hull_x = x1;\n   64    const hull_y = y1;\n   65    const cutSet = [];\n   ..\n   74        const y = getYfromFlat(flatidx, mapWidth);\n   75  \n   76:       console.log(`Pre add: x ${x} hull_x ${hull_x} passing ${(x - hull_x)} ` );\n   77  \n   78        addTileToPasteboard(\n   79:         x - hull_x,\n   80          y - hull_y,\n   81          curLayer,\n\n8 matches across 2 files\n\n\nSearching 63 files for \"boom\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\js\\ui\\CutCopyPaste.test.js:\n  310  \n  311    console.log(map.layers);\n  312:   throw \"boom\"\n  313  \n  314    expect(map.getMatrix()).toEqual(midTiles);\n\n1 match in 1 file\n\n\nSearching 63 files for \"layerX\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\js\\ui\\CutCopyPaste.js:\n   80    }\n   81  \n   82:   let layerX, layerY;\n   83  \n   84    if(newLayerIdx >= map.layers.length) {\n   85      switch(newLayerIdx) {\n   86        case MAGICAL_OBS_LAYER_ID: // obstuctions\n   87:         layerX = map.obsLayerData.dimensions.X; \n   88          layerY = map.obsLayerData.dimensions.Y;\n   89          break;\n   90        case MAGICAL_ZONE_LAYER_ID: // yes, currently reusing obs dimentions for zones\n   91:         layerX = window.$$$currentMap.mapSizeInTiles.width;\n   92          layerY = window.$$$currentMap.mapSizeInTiles.height;\n   93          break;\n   ..\n   97      }\n   98    } else {\n   99:     layerX = map.layers[newLayerIdx].dimensions.X;\n  100      layerY = map.layers[newLayerIdx].dimensions.Y;\n  101    }\n  ...\n  111      // out of bounds detection\n  112      // TODO do we need to detect negatives?  MAAAAYBE?\n  113:     if (targetX >= layerX || targetY >= layerY) {\n  114        continue;\n  115      }\n\nC:\\grue\\Breaditor\\src\\js\\ui\\SuperCutPaste.js:\n  110  \n  111  export const _paste = (map, tX, tY) => {\n  112:   let layerX, layerY;\n  113  \n  114    const pasteSet = [];\n  ...\n  125        switch(layerIdx) {\n  126          case MAGICAL_OBS_LAYER_ID: // obstuctions\n  127:           layerX = map.obsLayerData.dimensions.X; \n  128            layerY = map.obsLayerData.dimensions.Y;\n  129            break;\n  130          case MAGICAL_ZONE_LAYER_ID: // yes, currently reusing obs dimentions for zones\n  131:           layerX = map.mapSizeInTiles.width;\n  132            layerY = map.mapSizeInTiles.height;\n  133            break;\n  ...\n  137        }\n  138      } else {\n  139:       layerX = map.layers[layerIdx].dimensions.X;\n  140        layerY = map.layers[layerIdx].dimensions.Y;\n  141  \n  142:       throw \"layerX: \" + layerX;\n  143      }\n  144      \n  145      // out of bounds detection\n  146      // TODO do we need to detect negatives?  MAAAAYBE?\n  147:     if (targetX >= layerX || targetY >= layerY) {\n  148:       console.log(`${targetX} >= ${layerX} || ${targetY} >= ${layerY}`)\n  149        continue;\n  150      }\n\n13 matches across 2 files\n",
+			"contents": "Searching 63 files for \"hull_x\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\js\\ui\\CutCopyPaste.js:\n   36      clearPasteboard();\n   37      const curLayer = getSelectedLayer().map_tileData_idx;\n   38:     const hull_x = map.selection.hull.x;\n   39      const hull_y = map.selection.hull.y;\n   40      const mapWidth = map.mapSizeInTiles.width;\n   ..\n   47  \n   48        addToPasteboard(\n   49:         x - hull_x,\n   50          y - hull_y,\n   51          curLayer,\n\nC:\\grue\\Breaditor\\src\\js\\ui\\SuperCutPaste.js:\n   34    throw (map.selection);\n   35  \n   36:   _cut(map, map.selection.hull_x, map.selection.hull_y);\n   37  };\n   38  \n   ..\n   61  \n   62  const _cut = (map, x1,y1) => { \n   63:   const hull_x = x1;\n   64    const hull_y = y1;\n   65    const cutSet = [];\n   ..\n   74        const y = getYfromFlat(flatidx, mapWidth);\n   75  \n   76:       console.log(`Pre add: x ${x} hull_x ${hull_x} passing ${(x - hull_x)} ` );\n   77  \n   78        addTileToPasteboard(\n   79:         x - hull_x,\n   80          y - hull_y,\n   81          curLayer,\n\n8 matches across 2 files\n\n\nSearching 63 files for \"boom\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\js\\ui\\CutCopyPaste.test.js:\n  310  \n  311    console.log(map.layers);\n  312:   throw \"boom\"\n  313  \n  314    expect(map.getMatrix()).toEqual(midTiles);\n\n1 match in 1 file\n\n\nSearching 63 files for \"layerX\" (case sensitive)\n\nC:\\grue\\Breaditor\\src\\js\\ui\\CutCopyPaste.js:\n   80    }\n   81  \n   82:   let layerX, layerY;\n   83  \n   84    if(newLayerIdx >= map.layers.length) {\n   85      switch(newLayerIdx) {\n   86        case MAGICAL_OBS_LAYER_ID: // obstuctions\n   87:         layerX = map.obsLayerData.dimensions.X; \n   88          layerY = map.obsLayerData.dimensions.Y;\n   89          break;\n   90        case MAGICAL_ZONE_LAYER_ID: // yes, currently reusing obs dimentions for zones\n   91:         layerX = window.$$$currentMap.mapSizeInTiles.width;\n   92          layerY = window.$$$currentMap.mapSizeInTiles.height;\n   93          break;\n   ..\n   97      }\n   98    } else {\n   99:     layerX = map.layers[newLayerIdx].dimensions.X;\n  100      layerY = map.layers[newLayerIdx].dimensions.Y;\n  101    }\n  ...\n  111      // out of bounds detection\n  112      // TODO do we need to detect negatives?  MAAAAYBE?\n  113:     if (targetX >= layerX || targetY >= layerY) {\n  114        continue;\n  115      }\n\nC:\\grue\\Breaditor\\src\\js\\ui\\SuperCutPaste.js:\n  110  \n  111  export const _paste = (map, tX, tY) => {\n  112:   let layerX, layerY;\n  113  \n  114    const pasteSet = [];\n  ...\n  125        switch(layerIdx) {\n  126          case MAGICAL_OBS_LAYER_ID: // obstuctions\n  127:           layerX = map.obsLayerData.dimensions.X; \n  128            layerY = map.obsLayerData.dimensions.Y;\n  129            break;\n  130          case MAGICAL_ZONE_LAYER_ID: // yes, currently reusing obs dimentions for zones\n  131:           layerX = map.mapSizeInTiles.width;\n  132            layerY = map.mapSizeInTiles.height;\n  133            break;\n  ...\n  137        }\n  138      } else {\n  139:       layerX = map.layers[layerIdx].dimensions.X;\n  140        layerY = map.layers[layerIdx].dimensions.Y;\n  141  \n  142:       throw \"layerX: \" + layerX;\n  143      }\n  144      \n  145      // out of bounds detection\n  146      // TODO do we need to detect negatives?  MAAAAYBE?\n  147:     if (targetX >= layerX || targetY >= layerY) {\n  148:       console.log(`${targetX} >= ${layerX} || ${targetY} >= ${layerY}`)\n  149        continue;\n  150      }\n\n13 matches across 2 files\n\n\nSearching 1 file for \"useful entity data\" (case sensitive)\n\nC:\\grue\\Breaditor\\:\n    ERROR: Unable to open file\n\n0 matches\n\nSearching 71 files for \"useful entity data\" (case sensitive)\n\nD:\\dev\\grue\\Breaditor\\app\\app.js:\n 1443      },\n 1444      items: {\n 1445:       \"copy_scriptnames\": {name: \"Copy useful entity data to clipboard\", icon: \"copy\"},\n 1446      },\n 1447    });\n ....\n 1478          \"clone\": {name: \"Clone\", icon: \"copy\"},\n 1479          \"delete\": {name: \"Delete\", icon: \"delete\"},\n 1480:         \"code\": {name: \"Copy useful entity data to clipboard\", icon: \"copy\"},\n 1481      }\n 1482    });\n\nD:\\dev\\grue\\Breaditor\\src\\js\\ui\\EntityPalette.js:\n  281      },\n  282      items: {\n  283:       \"copy_scriptnames\": {name: \"Copy useful entity data to clipboard\", icon: \"copy\"},\n  284      },\n  285    });\n  ...\n  316          \"clone\": {name: \"Clone\", icon: \"copy\"},\n  317          \"delete\": {name: \"Delete\", icon: \"delete\"},\n  318:         \"code\": {name: \"Copy useful entity data to clipboard\", icon: \"copy\"},\n  319      }\n  320    });\n\n4 matches across 2 files\n",
 			"settings":
 			{
-				"buffer_size": 3505,
+				"buffer_size": 4577,
 				"line_ending": "Windows",
 				"name": "Find Results",
 				"scratch": true
@@ -343,16 +343,8 @@
 			"file": "src/js/ui/CutCopyPaste.test.js",
 			"settings":
 			{
-				"buffer_size": 7023,
+				"buffer_size": 7673,
 				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/grue/Breaditor/src/Map.js",
-			"settings":
-			{
-				"buffer_size": 74436,
 				"line_ending": "Windows"
 			}
 		},
@@ -401,24 +393,18 @@
 	},
 	"expanded_folders":
 	[
-		"/C/grue/BREADitor",
-		"/C/grue/BREADitor/.git",
-		"/C/grue/BREADitor/__mocks__",
-		"/C/grue/BREADitor/src",
-		"/C/grue/BREADitor/src/__mocks__",
-		"/C/grue/BREADitor/src/helpers",
-		"/C/grue/BREADitor/src/js",
-		"/C/grue/BREADitor/src/js/ui"
+		"/D/dev/grue/BREADitor",
+		"/D/dev/grue/BREADitor/app"
 	],
 	"file_history":
 	[
+		"/C/grue/Breaditor/src/Map.js",
 		"/C/grue/BREADitor/src/js/ui/CutCopyPaste.js",
 		"/C/grue/Breaditor/src/main/BaseSetup.js",
 		"/C/grue/Breaditor/src/js/ui/LayersPalette.js",
 		"/C/grue/Breaditor/src/tools/Draw.test.js",
 		"/C/grue/BREADitor/src/helpers/FakeMap.js",
 		"/C/grue/BREADitor/src/Tools.UndoRedo.test.js",
-		"/C/grue/Breaditor/src/Map.js",
 		"/C/grue/Breaditor/src/Map.test.js",
 		"/C/grue/Breaditor/src/main/IPCRenderer.js",
 		"/C/grue/BREADitor/src/UndoRedo.js",
@@ -543,13 +529,14 @@
 	],
 	"find":
 	{
-		"height": 39.0
+		"height": 24.0
 	},
 	"find_in_files":
 	{
 		"height": 176.0,
 		"where_history":
 		[
+			"D:\\dev\\grue\\Breaditor\\,*.js",
 			"C:\\grue\\Breaditor\\,*.js",
 			"C:\\grue\\Breaditor\\,*test.js",
 			"C:\\grue\\Breaditor\\,*.js",
@@ -609,6 +596,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"useful entity data",
 			"layerX",
 			"boom",
 			"matrix",
@@ -735,8 +723,7 @@
 			"update_entity_location",
 			"map =",
 			"map.",
-			"moveSelectedEntityToTile",
-			"update_entity_location"
+			"moveSelectedEntityToTile"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -777,7 +764,7 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -786,15 +773,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3755,
+						"buffer_size": 3641,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2621,
-								2621
+								0,
+								0
 							]
 						],
 						"settings":
@@ -807,7 +794,7 @@
 						"translation.y": 2161.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -815,7 +802,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3505,
+						"buffer_size": 4577,
 						"regions":
 						{
 							"match":
@@ -910,6 +897,22 @@
 									[
 										3405,
 										3411
+									],
+									[
+										3806,
+										3824
+									],
+									[
+										4038,
+										4056
+									],
+									[
+										4244,
+										4262
+									],
+									[
+										4476,
+										4494
 									]
 								],
 								"scope": ""
@@ -918,15 +921,15 @@
 						"selection":
 						[
 							[
-								3174,
-								3174
+								4577,
+								4577
 							]
 						],
 						"settings":
 						{
 							"detect_indentation": false,
 							"line_numbers": false,
-							"output_tag": 3,
+							"output_tag": 5,
 							"result_base_dir": "",
 							"result_file_regex": "^([^ \t].*):$",
 							"result_line_regex": "^ +([0-9]+):",
@@ -935,10 +938,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1020.0,
+						"translation.y": 1845.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -968,7 +971,7 @@
 						"translation.y": 281.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -977,15 +980,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7023,
+						"buffer_size": 7673,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5663,
-								5663
+								7241,
+								7241
 							]
 						],
 						"settings":
@@ -995,44 +998,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5533.0,
+						"translation.y": 4205.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "/C/grue/Breaditor/src/Map.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 74436,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								21380,
-								21380
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 14065.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
 					"file": "src/js/ui/CutCopyPaste.js",
 					"semi_transient": false,
 					"settings":
@@ -1066,7 +1039,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 30.0
+		"height": 24.0
 	},
 	"input":
 	{
@@ -1103,7 +1076,7 @@
 	"project": "Breaditor.sublime-project",
 	"replace":
 	{
-		"height": 56.0
+		"height": 44.0
 	},
 	"save_all_on_build": true,
 	"select_file":

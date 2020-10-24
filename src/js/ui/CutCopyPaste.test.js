@@ -318,5 +318,4 @@ test('supercut superpaste', () => {
   expect(map._getZoneMatrix()).toEqual(endZones);
   expect(map._getObsMatrix()).toEqual(endObs);
   //expect(map._getAllEntities()).toEqual(endEnts);
-  
 });
