@@ -1767,7 +1767,6 @@ Map.prototype = {
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
 
-
     let layerOffsetTx = 0;
     let layerOffsetTy = 0;
 
@@ -1916,6 +1915,15 @@ Map.prototype = {
     
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
+
+    let layerOffsetTx = 0;
+    let layerOffsetTy = 0;
+
+    if(layer.offset) {
+      layerOffsetTx = layer.offset.X / tilesize.width;
+      layerOffsetTy = layer.offset.Y / tilesize.height;
+    }
+
     const entityData = this._getEntityData(entity);
     const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
     if (!entityTexture) {
@@ -1936,6 +1944,8 @@ Map.prototype = {
 
     let x = entity.location.px / tilesize.width || entity.location.tx;
     let y = entity.location.py / tilesize.height || entity.location.ty;
+    x += layerOffsetTx;
+    y += layerOffsetTy;
     x -= hitbox_x / tilesize.width;
     y -= hitbox_y / tilesize.height;
     x += clip[0] / tilesize.width;
@@ -1982,6 +1992,15 @@ Map.prototype = {
     
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
+
+    let layerOffsetTx = 0;
+    let layerOffsetTy = 0;
+
+    if(layer.offset) {
+      layerOffsetTx = layer.offset.X / tilesize.width;
+      layerOffsetTy = layer.offset.Y / tilesize.height;
+    }
+
     const entityData = this._getEntityData(entity);
     const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
     if (!entityTexture) {
@@ -2004,6 +2023,8 @@ Map.prototype = {
     let y = entity.location.py / tilesize.height || entity.location.ty;
     x -= hitbox_x / tilesize.width;;
     y -= hitbox_y / tilesize.height;
+    x+= layerOffsetTx;
+    y+= layerOffsetTy;
     const w = entityData.dims[0] / tilesize.width;
     const h = entityData.dims[1] / tilesize.height;
 
@@ -2045,6 +2066,13 @@ Map.prototype = {
     
     const gl = this.gl;
     const tilesize = this.vspData[layer.vsp].tilesize;
+    let layerOffsetTx = 0;
+    let layerOffsetTy = 0;
+
+    if(layer.offset) {
+      layerOffsetTx = layer.offset.X / tilesize.width;
+      layerOffsetTy = layer.offset.Y / tilesize.height;
+    }
     const entityData = this._getEntityData(entity);
     const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
     if (!entityTexture) {
@@ -2060,6 +2088,8 @@ Map.prototype = {
 
     let x = entity.location.px / tilesize.width || entity.location.tx;
     let y = entity.location.py / tilesize.height || entity.location.ty;
+    x+=layerOffsetTx;
+    y+=layerOffsetTy;
     const w = entityData.hitbox[2] / tilesize.width;
     const h = entityData.hitbox[3] / tilesize.height;
 
