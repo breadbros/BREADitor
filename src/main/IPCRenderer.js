@@ -9,7 +9,7 @@ import {
 import {
   LayersWidget, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, visibilityFix, newLayerOnNewMap, selectEntityLayer
 } from '../js/ui/LayersPalette.js';
-import { cut, copy, paste } from '../js/ui/CutCopyPaste.js';
+import { cut, copy, paste, convertPasteboardToCode } from '../js/ui/CutCopyPaste.js';
 
 import { handleUndo, handleRedo } from '../UndoRedo';
 import { toggleSelectedTiles, moveSelectedTile } from '../TileSelector';
@@ -163,6 +163,9 @@ export function setupIPCRenderer() {
           map.camera[2] = 1; // Zoom (1x)
         };
         ResetCamera(window.$$$currentMap);
+        break;
+      case 'clipboard-tiles-to-sullycode':
+        convertPasteboardToCode(window.$$$currentMap);
         break;
       case 'screenview-indicator':
         alert('screenview-indicator! Yay1112');

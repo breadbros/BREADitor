@@ -8,6 +8,9 @@ import {
 import { getXfromFlat, getYfromFlat } from '../../Map';
 import { getCurrentHoverTile } from '../../Tools';
 
+const { clipboard } = require('electron');
+import { notify } from '../../Notification-Pane';
+
 let pasteboard = [];
 
 const clearPasteboard = () => {
@@ -31,6 +34,9 @@ const _cut_or_copy = (map, isCut) => {
     alert("Please select a layer first.");
     return;
   }
+
+  origin_tx = map.selection.hull.x;
+  origin_ty = map.selection.hull.y;
 
   if (map.selection.tiles) {
     clearPasteboard();
@@ -123,4 +129,33 @@ export const paste = (map, tX, tY, newLayerIdx) => {
   }
 
   map.UndoRedo.change_many_tiles(pasteSet);
+};
+
+let origin_tx, origin_ty;
+export const convertPasteboardToCode = (map, tX, tY, newLayerIdx) => {
+  
+  if( !pasteboard.length ) {
+    alert("Pasteboard is empty; cannot convert anything.");
+    return;
+  }
+
+  const pasteSet = [];
+
+  let tmp = "";
+  let tx, ty, layerIndex, tileIndex;
+  //origin_tx, origin_ty
+  for (let i = pasteboard.length - 1; i >= 0; i--) {
+    tx = origin_tx + pasteboard[i][0];
+    ty = origin_ty + pasteboard[i][1];
+    layerIndex = pasteboard[i][2];
+    tileIndex = pasteboard[i][3];
+
+    // SetTile( int tx, int ty, int layerIndex, ushort tileIndex ) -- SullyRPG\Examples\Sully\Sully\MapScripts\$$$_SullyMapScriptBank.cs
+    tmp += `SetTile( ${tx}, ${ty}, ${layerIndex}, ${tileIndex} );\n`; 
+  }
+
+  clipboard.writeText(tmp, 'clipboard');
+  notify("Copied all entity data to clipboard in Sully format.");
+
+  debugger;
 };

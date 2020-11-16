@@ -30,6 +30,9 @@ export const editMenuTemplate = {
       click: function () { send('edit-select-all'); } },
 
     { type: 'separator' },
+    { label: 'Convert tiles in clipboard to c# code', accelerator: 'Shift+CmdOrCtrl+Y', selector: 'clipboard-tiles-to-sullycode:', click: function () { send('clipboard-tiles-to-sullycode'); } },
+
+    { type: 'separator' },
     { label: 'Cancel selections', accelerator: 'ESC', selector: 'cancel-selections:', click: function () { send('cancel-selections'); } },
 
     { type: 'separator' },
