@@ -1,0 +1,8 @@
+title: BREADitor
+description: A Photoshop-ish editor for your game assets that you can extend if you know JS!
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-architect
+
+gems:
+  - jekyll-mentions
