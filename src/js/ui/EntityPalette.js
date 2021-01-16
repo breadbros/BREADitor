@@ -1,5 +1,5 @@
 import { modal_error, do_the_no_things, hexToRgba } from './Util.js';
-import { LayersWidget } from './LayersPalette.js';
+import { LayersWidget, selectEntityLayer } from './LayersPalette.js';
 import { centerMapOnXY } from '../../Tools';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -902,7 +902,16 @@ export const _update_entity_inner = (ent_id, valDict) => {
     relocate_entity_for_map_rendering(currentEntities[ent_id].uuid, old_layer, new_layer);
   }
 
+
   do_the_no_things(currentEntities[ent_id], redraw_palette); // these args seem dumb
+
+  if( window.$$$currentMap.mapedConfigData.autoSelectEntityAfterEdit ) {
+    addEntityToHighlight(currentEntities[ent_id]);
+
+    if(currentEntities[ent_id].location.layer === "Entity Layer (E)") {
+      selectEntityLayer(false);  
+    }
+  }
 
   return true;
 };
