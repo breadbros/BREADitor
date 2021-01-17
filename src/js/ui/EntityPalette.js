@@ -36,6 +36,30 @@ const get_sully_code_line_for_entity = (e) => {
   return tmp;
 }
 
+const maybe_change_script_name = (e) => {
+  if( !e.activation_script && e.name ) {
+    let tmp = e.name.toLowerCase();
+    tmp = tmp.replace(/\W/g, '_');
+    e.activation_script = tmp;
+    return true;
+  }
+
+  return false;
+};
+
+const generate_functions_from_names = () => {
+  let count = 0;
+
+  window.$$$currentMap.mapData.entities.forEach((e) => {
+    
+    if( maybe_change_script_name(e) ) {
+      count++;
+    }
+  });
+
+  notify(`Generated ${count} activation scripts from names.`);
+}
+
 const copy_useful_entity_data_to_clipboard = () => {
   let tmp = '';
 
@@ -279,6 +303,9 @@ $(function() {
         default:
           console.log('unknown key: ' + key);
           return;
+        case 'generate_functions':
+          generate_functions_from_names();
+          return;
         case 'copy_scriptnames':
           copy_useful_entity_data_to_clipboard();
           return;
@@ -286,6 +313,7 @@ $(function() {
     },
     items: {
       "copy_scriptnames": {name: "Copy useful entity data to clipboard", icon: "copy"},
+      "generate_functions": {name: "Autogenerate activation scripts from name", icon: "gear"},
     },
   });
 
