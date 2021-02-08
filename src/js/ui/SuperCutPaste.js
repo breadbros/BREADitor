@@ -17,7 +17,7 @@ export const superCut = (map) => {
   if(layers === null) {
     throw `No supercut layers selected.`;
   }
-
+  pasteboard = [];
   _cut(map, map.selection.hull.x, map.selection.hull.y);
 };
 
