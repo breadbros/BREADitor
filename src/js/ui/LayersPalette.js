@@ -341,6 +341,10 @@ const redraw_palette = (map) => {
 
       evt.stopPropagation();
     });
+
+    $eyeball.on('dblclick', function (evt) {
+      evt.stopPropagation();
+    });
   };
 
   const handleEntityEyeball = ($btn, layerName) => {
@@ -383,6 +387,10 @@ const redraw_palette = (map) => {
 
       handleEntityEyeball($btn, layerName);
 
+      evt.stopPropagation();
+    });
+
+    $btn.on('dblclick', (evt) => {
       evt.stopPropagation();
     });
   };
@@ -451,6 +459,9 @@ const redraw_palette = (map) => {
 
       handleEyeball($eyeball, tmpLayer);
 
+      evt.stopPropagation();
+    });
+    $eyeball.on('dblclick', (evt) => {
       evt.stopPropagation();
     });
 
@@ -646,6 +657,10 @@ const redraw_palette = (map) => {
 
       handleEntityExpand($expand_entities);
 
+      evt.stopPropagation();
+    });
+
+    $expand_entities.dblclick((evt) => {
       evt.stopPropagation();
     });
   }
@@ -940,6 +955,9 @@ const redraw_palette = (map) => {
 
     const visible_div = $("<button class='eyeball_button'></button>");
     const tall_div = $("<button class='tall-entity-layer' title='Tall entities redraw on this layer'></button>");
+    tall_div.on('dblclick', (evt) => {
+      evt.stopPropagation();
+    });
     const name_div = $("<div class='layer_name'></div>");
 
     const right_div = $("<div class='rightmost_div'></div>");
