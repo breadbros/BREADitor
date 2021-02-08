@@ -1,4 +1,5 @@
 Breaditor.sublime-workspace
+*.sublime-workspace
 
 node_modules
 .DS_Store
