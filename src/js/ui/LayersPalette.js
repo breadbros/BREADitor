@@ -7,6 +7,7 @@ import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
 import { setTileSelectorUI, setDefaultObsTiles } from '../../TileSelector';
 import { resize_layer, hexToRgba } from './Util.js';
+import { popPaletteToTop } from '../../Palettes';
 
 const $ = require('jquery');
 
@@ -410,7 +411,11 @@ const redraw_palette = (map) => {
     $zone_container.on('dblclick', (evt) => {
       window.$$$toggle_pallete('zones', true);
 
-      alert("Summon zone-editing modal?");
+      const fakeEvent = {
+        target: $('.zones-palette')
+      };
+
+      popPaletteToTop('.zones-palette', fakeEvent)
 
       evt.stopPropagation();
     });

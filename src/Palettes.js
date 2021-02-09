@@ -113,21 +113,6 @@ export const setupPaletteListeners = () => {
     }
   });
 
-  const pop_me_to_the_top = (event) => {
-
-    let zsort = 0;
-    if(active_palette_selector === '.map-palette') {
-      zsort = 1;
-    } else {
-      zsort = garbage_zsort;
-    }
-
-    $(event.target).css('z-index', zsort);
-    correctResizeWidget(event.target, zsort);
-
-    garbage_zsort += 2;
-  };
-
   var draggables = $('.resizable-window');
 
   $.each(draggables, (idx) => {
@@ -187,10 +172,30 @@ function setupPaletteRegistry() {
   ];
 }
 
+const pop_me_to_the_top = (event) => {
+  let zsort = 0;
+  if(active_palette_selector === '.map-palette') {
+    zsort = 1;
+  } else {
+    zsort = garbage_zsort;
+  }
+
+  $(event.target).css('z-index', zsort);
+  correctResizeWidget(event.target, zsort);
+
+  garbage_zsort += 2;
+};
+
+export const popPaletteToTop = ( new_active_selector, evt ) => {
+  active_palette_selector = new_active_selector;
+  pop_me_to_the_top(evt);
+}
+
 export const Palettes = {
   correctResizeWidget: correctResizeWidget,
   setupPaletteRegistry: setupPaletteRegistry,
   setupPaletteListeners: setupPaletteListeners,
   savePalettePositions: savePalettePositions,
+  popPaletteToTop: popPaletteToTop,
   getActivePaletteSelector: () => { return active_palette_selector; }
 };
