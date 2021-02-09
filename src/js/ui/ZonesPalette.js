@@ -1,8 +1,20 @@
 import { modal_error } from './Util.js';
 const $ = require('jquery');
 
+import { paletteToTop } from '../../Palettes';
+import { popPaletteToTop } from '../../Palettes';
+
 const { clipboard } = require('electron');
 import { notify } from '../../Notification-Pane';
+
+const paletteToTop = ( selector ) => {
+  const fakeEvent = {
+    target: $(selector)
+  };
+
+  popPaletteToTop(selector, fakeEvent)
+}
+
 
 let currentZones = null;
 
@@ -146,6 +158,7 @@ function _zone_click(evt, id) {
 
   $(() => {
     const $template = setup_template();
+    let is_new = false;
 
     $('#modal-dialog').html('');
 
@@ -153,6 +166,7 @@ function _zone_click(evt, id) {
       $('#modal-dialog').attr('title', 'Edit Zone (' + id + ')');
     } else {
       $('#modal-dialog').attr('title', 'Add New Zone (id: ' + (currentZones.length) + ')');
+      is_new = true;
     }
 
     $('#modal-dialog').append($template);
@@ -176,7 +190,7 @@ function _zone_click(evt, id) {
         Save: () => {
           const _id = ($.isNumeric(id) && zone) ? id : currentZones.length;
 
-          update_zone(dialog, _id);
+          update_zone(dialog, _id, is_new);
         },
         'Cancel': function () {
           dialog.dialog('close');
@@ -189,7 +203,7 @@ function _zone_click(evt, id) {
   });
 }
 
-const update_zone = (dialog, zone_id) => {
+const update_zone = (dialog, zone_id, is_new) => {
   const name = dialog.find('#zone_name').val();
   const script = dialog.find('#zone_activation_script').val();
   const chance = dialog.find('#zone_activation_chance').val();
@@ -226,6 +240,12 @@ const update_zone = (dialog, zone_id) => {
   redraw_palette();
 
   dialog.dialog('close');
+
+  if(is_new) {
+    paletteToTop('.zones-palette');
+  }
+
+  select_zone_by_index(zone_id);
 };
 
 let _zoneAlpha = 1;
