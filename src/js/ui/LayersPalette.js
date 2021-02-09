@@ -3,7 +3,7 @@ import { modal_error } from './Util.js';
 import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js';
 import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
          setNormalEntityVisibility, getNormalEntityVisibility,
-         setEntityLayersExpanded, getEntityLayersExpanded } from './EntityPalette.js';
+         setEntityLayersExpanded, getEntityLayersExpanded, clearAllEntitysFromHighlight } from './EntityPalette.js';
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
 import { setTileSelectorUI, setDefaultObsTiles } from '../../TileSelector';
 import { resize_layer, hexToRgba } from './Util.js';
@@ -137,6 +137,8 @@ export const selectZoneLayer = (wasHotkey) => {
 
   paletteToTop('.layers-palette');
 
+  clearAllEntitysFromHighlight();
+
   removeAllSelectedLayers(selClass);
 
   // TODO: this is disgusting, right?  right.
@@ -186,10 +188,12 @@ export const selectEntityLayer = (wasHotkey) => {
   closeEditLayerDialog();
 };
 
-export function doLayerSelect($layer_container, layer_idx, dialog, map, evt) {
+export function doNumberedLayerSelect($layer_container, layer_idx, dialog, map, evt) {
   const selClass = 'selected';
 
   paletteToTop('.layers-palette');
+
+  clearAllEntitysFromHighlight();
 
   removeAllSelectedLayers(selClass);
 
@@ -243,6 +247,8 @@ export const selectObstructionLayer = (wasHotkey) => {
   }
 
   paletteToTop('.layers-palette');
+
+  clearAllEntitysFromHighlight();
 
   removeAllSelectedLayers(selClass);
 
@@ -436,7 +442,7 @@ const redraw_palette = (map) => {
   const addLayerSelectHandler = ($layer_container, i) => {
     $layer_container.on('click', (evt) => {
       // TODO: third parameter was 'dialog': where's that coming from
-      doLayerSelect($layer_container, i, false, map, evt);
+      doNumberedLayerSelect($layer_container, i, false, map, evt);
 
       evt.stopPropagation();
     });
