@@ -15,6 +15,14 @@ let list;
 
 let _obsAlpha = 1;
 
+const paletteToTop = ( selector ) => {
+  const fakeEvent = {
+    target: $(selector)
+  };
+
+  popPaletteToTop(selector, fakeEvent)
+}
+
 // in leiu of types, for now...
 const generate_layer = (name, alpha, new_dim_x, new_dim_y, offset_x, offset_y, par_x, par_y, vsp, borderColor_hex, borderColor, map_tileData_idx) => {
   return {
@@ -127,6 +135,8 @@ export const selectZoneLayer = (wasHotkey) => {
     wasZone = true;
   }
 
+  paletteToTop('.layers-palette');
+
   removeAllSelectedLayers(selClass);
 
   // TODO: this is disgusting, right?  right.
@@ -154,6 +164,8 @@ export const selectEntityLayer = (wasHotkey) => {
     wasEnt = true;
   }
 
+  paletteToTop('.layers-palette');
+
   removeAllSelectedLayers(selClass);
 
   // TODO: this is disgusting, right?  right.
@@ -176,6 +188,8 @@ export const selectEntityLayer = (wasHotkey) => {
 
 export function doLayerSelect($layer_container, layer_idx, dialog, map, evt) {
   const selClass = 'selected';
+
+  paletteToTop('.layers-palette');
 
   removeAllSelectedLayers(selClass);
 
@@ -227,6 +241,8 @@ export const selectObstructionLayer = (wasHotkey) => {
   if( prevLayer && isSpecialLayerObs(prevLayer) ) {
     wasObs = true;
   }
+
+  paletteToTop('.layers-palette');
 
   removeAllSelectedLayers(selClass);
 
@@ -411,11 +427,7 @@ const redraw_palette = (map) => {
     $zone_container.on('dblclick', (evt) => {
       window.$$$toggle_pallete('zones', true);
 
-      const fakeEvent = {
-        target: $('.zones-palette')
-      };
-
-      popPaletteToTop('.zones-palette', fakeEvent)
+      paletteToTop('.zones-palette');
 
       evt.stopPropagation();
     });
