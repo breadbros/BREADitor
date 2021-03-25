@@ -1,4 +1,4 @@
-const $ = require('jquery');
+const $ = window.$;
 
 import { LOG } from './Logging';
 

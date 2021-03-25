@@ -1,4 +1,4 @@
-const $ = require('jquery');
+const $ = window.$;
 
 let $notifyDiv = null; 
 

@@ -9,7 +9,7 @@ import { setTileSelectorUI, setDefaultObsTiles } from '../../TileSelector';
 import { resize_layer, hexToRgba } from './Util.js';
 import { popPaletteToTop } from '../../Palettes';
 
-const $ = require('jquery');
+const $ = window.$;
 
 let list;
 

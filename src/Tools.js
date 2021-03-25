@@ -1,4 +1,4 @@
-const $ = require('jquery');
+const $ = window.$;
 const sprintf = require('sprintf-js').sprintf;
 import { getSelectedLayer, MAGICAL_ENT_LAYER_ID } from './js/ui/LayersPalette';
 import { LOG } from './Logging'

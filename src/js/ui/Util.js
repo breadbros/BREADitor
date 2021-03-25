@@ -1,4 +1,4 @@
-const $ = require('jquery');
+const $ = window.$;
 
 import { getFlatIdx } from '../../Map';
 

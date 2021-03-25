@@ -1,0 +1,21 @@
+.ui-icon-gripsmall-diagonal-se {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  cursor: se-resize;
+}
+.ui-resizable-s {
+  cursor: s-resize;
+  height: 4px;
+  width: 100%;
+  bottom: 0px;
+  position: absolute;
+}
+.ui-resizable-e {
+  cursor: e-resize;
+  width: 4px;
+  height: 100%;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}

@@ -6,7 +6,7 @@ import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToE
          clearAllEntitysFromHighlight, show_edit_entity_dialog } from '../js/ui/EntityPalette';
 import { LOG } from '../Logging';
 
-const $ = require('jquery');
+const $ = window.$;
 
 export const checkEntities = (ents, layer, map, click) => {
   const tileSize = layer ? map.vspData[layer.vsp].tilesize : map.vspData['default'].tilesize;

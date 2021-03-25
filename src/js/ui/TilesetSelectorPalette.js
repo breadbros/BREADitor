@@ -3,7 +3,7 @@ import {
   two_zoom_seriously_all_zoom_functions_suck_kill_them_all, zoomLevels, updateLocationFunction, initTools,
   deriveMapZoomForPixels
 } from '../../Tools.js';
-const $ = require('jquery');
+const $ = window.$;
 
 let old_map = null;
 let old_layer = null;

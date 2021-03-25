@@ -12,6 +12,7 @@ import { cut, copy, paste } from '../js/ui/CutCopyPaste';
 import { handleUndo, handleRedo } from '../UndoRedo';
 import { setupNotifications, notify } from '../Notification-Pane';
 import { setSuperCutPasteLayers, superCut, superPaste } from '../js/ui/SuperCutPaste';
+import { BREADPATH } from './FileSystemSetup';
 
 const path = require('path');
 
@@ -27,13 +28,9 @@ const updateScreenview = (map) => {
 /// I guess one should be in the appdir to at least point to the project directory...
 const loadMostRecentFileOption = () => {
   /// TODO: is there a reason for requiring these in-block like this, or is it just cargo cult copypasta? 
-  const app = require('electron').remote.app;
-  const jetpack = require('fs-jetpack').cwd(app.getAppPath());
-  const dataPath = app.getAppPath();
+  const jetpack = BREADPATH.getJetpack();
 
-  const options = {};
-
-  const appConfigData = jetpack.read(path.join(dataPath, '$$$_BREDITOR_MOST_RECENT.json'), 'json');
+  const appConfigData = jetpack.read(BREADPATH.getMostRecentFilesJSONPath(), 'json');
   window.$$$_most_recent_options = appConfigData;
 
   return appConfigData;
@@ -378,8 +375,7 @@ export function setupWindowFunctions() {
   };
 
   window._save = function (newName, map, reloadAfterSave) {
-    const app = require('electron').remote.app;
-    const jetpack = require('fs-jetpack').cwd(app.getAppPath());
+    const jetpack = BREADPATH.getJetpack();
 
     let mapfile = null;
     let datafile = null;
@@ -648,7 +644,7 @@ export function setupWindowFunctions() {
     Palettes.savePalettePositions();
   };
 
-  window.appPath = path.dirname(require.main.filename);
+  window.appPath = path.dirname(require('electron').remote.app.getAppPath());
 }
 
 
@@ -669,11 +665,10 @@ function loadByFilename(fileNames) {
 };
 
 function saveMostRecentMapLocation(filename) {
-  const app = require('electron').remote.app;
-  const jetpack = require('fs-jetpack').cwd(app.getAppPath());
-  const path = require('path');
+  
+  const jetpack = BREADPATH.getJetpack();
+  const appConfigPath = BREADPATH.getMostRecentFilesJSONPath();
 
-  const appConfigPath = path.join(app.getAppPath(), '$$$_BREDITOR_MOST_RECENT.json');
   let appConfigData = jetpack.read(appConfigPath, 'json');
   if( !appConfigData ) { 
     appConfigData = {};
@@ -722,61 +717,67 @@ function dedupeRecentMaps(mapQueue) {
 export function bootstrapMap(mapFile, tiledataFile) {
 
   // replace entire contents of the body with a fresh copy.
-  const $body = $('body');
+  const $body = $('#jquery-ui-base');
   $body.html(baseHTMLTemplate());
   Palettes.setupPaletteRegistry();
   Palettes.setupPaletteListeners();
   setupFreshApp();
   
+  const errorHandler = (e) => {
+    debugger;
+    console.error(e);
+  };
+
   verifyTileData(tiledataFile)
     .then(() => {
       LOG('verify map?');
       verifyMap(mapFile)
         .then(() => {
           LOG('create map?');
-          new Map(
-              mapFile, tiledataFile, (map) => {  updateLocationFunction(map); updateScreenview(map); }
-          ).ready()
-              .then(function (m) {
-                const currentMap = m;
-                m.setCanvas($('.map_canvas'));
 
-                window.$$$currentMap = currentMap;
-
-                for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
-                  if (!m.mapData.entities[i].animation) {
-                    // TODO this is very bad
-                    window.alert('Theres an entity ' + i + ' with unset animation; ALERT GRUE wtf');
-                    // mapData.entities[0].filename
-                    m.mapData.entities[i].animation = 'Idle Down'; // TOD no no no
-                  }
+            new Map(
+                mapFile, tiledataFile, (map) => {  updateLocationFunction(map); updateScreenview(map); }
+            ).ready().then( (m) => {
+              const currentMap = m;
+              m.setCanvas($('.map_canvas'));
+            
+              window.$$$currentMap = currentMap;
+            
+              for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
+                if (!m.mapData.entities[i].animation) {
+                  // TODO this is very bad
+                  window.alert('Theres an entity ' + i + ' with unset animation; ALERT GRUE wtf');
+                  // mapData.entities[0].filename
+                  m.mapData.entities[i].animation = 'Idle Down'; // TOD no no no
                 }
-
-                if (typeof window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE === 'undefined') {
-                  window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE = true;
-                }
-
-                if (typeof window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE === 'undefined') {
-                  window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE = true;
-                }
-
-                if (typeof window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE === 'undefined') {
-                  window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE = true;
-                }
-
-                LayersWidget.initLayersWidget(currentMap);
-                initInfoWidget(currentMap);
-                initScreen(currentMap);
-                ZonesWidget.initZonesWidget(currentMap);
-                EntitiesWidget.initEntitiesWidget(currentMap);
-
-                initTools($('.map_canvas'), window.$$$currentMap);
-
-                updateRstringInfo();
-
-                // TODO do we need to do this at all?
-                // window.$$$hide_all_windows();
-              });
-        });
-    });
+              }
+            
+              if (typeof window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE === 'undefined') {
+                window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE = true;
+              }
+            
+              if (typeof window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE === 'undefined') {
+                window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE = true;
+              }
+            
+              if (typeof window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE === 'undefined') {
+                window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE = true;
+              }
+            
+              LayersWidget.initLayersWidget(currentMap);
+              initInfoWidget(currentMap);
+              initScreen(currentMap);
+              ZonesWidget.initZonesWidget(currentMap);
+              EntitiesWidget.initEntitiesWidget(currentMap);
+            
+              initTools($('.map_canvas'), window.$$$currentMap);
+            
+              updateRstringInfo();
+            
+              // TODO do we need to do this at all?
+              // window.$$$hide_all_windows();
+            }).catch( (e) => {LOG(e); throw e;} )
+        })
+    })
 };
+

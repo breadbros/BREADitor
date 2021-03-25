@@ -2,15 +2,11 @@ import { modal_error, do_the_no_things, hexToRgba } from './Util.js';
 import { LayersWidget, selectEntityLayer } from './LayersPalette.js';
 import { centerMapOnXY } from '../../Tools';
 import { v4 as uuidv4 } from 'uuid';
-
 import { notify } from '../../Notification-Pane';
-
 const { clipboard } = require('electron');
-
-const { dialog } = require('electron').remote;
 const jetpack = require('fs-jetpack');
 
-const $ = require('jquery');
+const $ = window.$;
 
 let _entityLayersExpanded = false;
 
@@ -295,63 +291,65 @@ const fixContainerSize = () => {
   container.height(palette.height() - 290);
 };
 
-$(function() {
-  $.contextMenu({
-    selector: '.entity-palette h3.ui-widget-header', 
-    callback: function(key, options) {
-      switch(key) {
-        default:
-          console.log('unknown key: ' + key);
-          return;
-        case 'generate_functions':
-          generate_functions_from_names();
-          return;
-        case 'copy_scriptnames':
-          copy_useful_entity_data_to_clipboard();
-          return;
-      }
-    },
-    items: {
-      "copy_scriptnames": {name: "Copy useful entity data to clipboard", icon: "copy"},
-      "generate_functions": {name: "Autogenerate activation scripts from name", icon: "gear"},
-    },
-  });
+export const init = () => {
+  $(function() {
+    $.contextMenu({
+      selector: '.entity-palette h3.ui-widget-header', 
+      callback: function(key, options) {
+        switch(key) {
+          default:
+            console.log('unknown key: ' + key);
+            return;
+          case 'generate_functions':
+            generate_functions_from_names();
+            return;
+          case 'copy_scriptnames':
+            copy_useful_entity_data_to_clipboard();
+            return;
+        }
+      },
+      items: {
+        "copy_scriptnames": {name: "Copy useful entity data to clipboard", icon: "copy"},
+        "generate_functions": {name: "Autogenerate activation scripts from name", icon: "gear"},
+      },
+    });
 
-  $.contextMenu({
-    selector: 'li.entity-row', 
-    callback: function(key, options) {
+    $.contextMenu({
+      selector: 'li.entity-row', 
+      callback: function(key, options) {
 
-      switch(key) {
-        default:
-          console.log('unknown key: ' + key);
-          return;
-        case 'code':
-          copy_useful_single_entity_data_to_clipboard(currentEntities[$(this).data('index')]);
-          return;
-        case 'clone':
-          options.$menu.trigger("contextmenu:hide");
-          var entity_to_copy = $(this).data('index');
-          clone_entity(entity_to_copy);
-          return;
-        case 'edit':
-          $(this).dblclick();
-          return;
-        case 'delete':
-          var entity_to_delete = $(this).data('index');
-          if( confirm('Are you sure you want to delete entity #'+entity_to_delete+'?') ) {
-            delete_entity(entity_to_delete);
-          }
-          return;
+        switch(key) {
+          default:
+            console.log('unknown key: ' + key);
+            return;
+          case 'code':
+            copy_useful_single_entity_data_to_clipboard(currentEntities[$(this).data('index')]);
+            return;
+          case 'clone':
+            options.$menu.trigger("contextmenu:hide");
+            var entity_to_copy = $(this).data('index');
+            clone_entity(entity_to_copy);
+            return;
+          case 'edit':
+            $(this).dblclick();
+            return;
+          case 'delete':
+            var entity_to_delete = $(this).data('index');
+            if( confirm('Are you sure you want to delete entity #'+entity_to_delete+'?') ) {
+              delete_entity(entity_to_delete);
+            }
+            return;
+        }
+      },
+      items: {
+          "edit": {name: "Edit", icon: "edit"},
+          "clone": {name: "Clone", icon: "copy"},
+          "delete": {name: "Delete", icon: "delete"},
+          "code": {name: "Copy useful entity data to clipboard", icon: "copy"},
       }
-    },
-    items: {
-        "edit": {name: "Edit", icon: "edit"},
-        "clone": {name: "Clone", icon: "copy"},
-        "delete": {name: "Delete", icon: "delete"},
-        "code": {name: "Copy useful entity data to clipboard", icon: "copy"},
-    }
+    });
   });
-});
+};
 
 let template = `
   <div>Name: <input id='entity_name'></div>
@@ -414,6 +412,7 @@ const setup_template = (ent, id) => {
     const whatDirToOpen = whatDirToOpenFn(curRelPath, absPathToChrs, previousEntityRelPath); 
     previousEntityRelPath = whatDirToOpen;
 
+    const { dialog } = require('electron').remote;
     dialog.showOpenDialog({
         title: 'Choose a new entity file',
         defaultPath: whatDirToOpen,
@@ -655,6 +654,8 @@ function _entity_click(evt, id) {
 
     assert_pixel_versus_tile_in_editing();
 
+    const { dialog } = require('electron').remote;
+
     dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
@@ -758,6 +759,7 @@ export const update_entity = (dialog, ent_id) => {
   };
 
   if (_update_entity_inner(ent_id, vals)) {
+    const { dialog } = require('electron').remote;
     dialog.dialog('close');
     selectEntityByIndex(ent_id);
     scrollEntityPalletteToEntity(ent_id);

@@ -1,7 +1,6 @@
 import { modal_error } from './Util.js';
-const $ = require('jquery');
+const $ = window.$;
 
-import { paletteToTop } from '../../Palettes';
 import { popPaletteToTop } from '../../Palettes';
 
 const { clipboard } = require('electron');
@@ -344,24 +343,26 @@ const copy_useful_single_zone_data_to_clipboard = (z) => {
   notify(`Copied entity data for "${z.name}" to clipboard in Sully format.`);
 };
 
-$(function() {
-  $.contextMenu({
-    selector: '.zones-palette h3.ui-widget-header', 
-    callback: function(key, options) {
-      switch(key) {
-        default:
-          console.log('unknown key: ' + key);
-          return;
-        case 'copy_scriptnames':
-          copy_useful_zone_data_to_clipboard();
-          return;
-      }
-    },
-    items: {
-      "copy_scriptnames": {name: "Copy useful zone data to clipboard", icon: "copy"},
-    },
+export const init = () => {
+  $(function() {
+    $.contextMenu({
+      selector: '.zones-palette h3.ui-widget-header', 
+      callback: function(key, options) {
+        switch(key) {
+          default:
+            console.log('unknown key: ' + key);
+            return;
+          case 'copy_scriptnames':
+            copy_useful_zone_data_to_clipboard();
+            return;
+        }
+      },
+      items: {
+        "copy_scriptnames": {name: "Copy useful zone data to clipboard", icon: "copy"},
+      },
+    });
   });
-});
+}
 
 export const ZonesWidget = {
   initZonesWidget: initZonesWidget

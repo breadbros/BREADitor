@@ -1,6 +1,7 @@
 import { MainWindow } from './MainWindowReference';
 
 export const send = (msg, accelerator) => {
+  debugger;
   const contents = MainWindow.get().webContents;
 
   const message = {
