@@ -1,13 +1,13 @@
-const $ = window.$;
-
 import { getFlatIdx } from '../../Map';
+
+const {$} = window;
 
 export var modal_error = (errormsg) => {
   console.error(errormsg);
   alert(errormsg); // for now...
 };
 
-/// TODO NO NO NONONONON
+// / TODO NO NO NONONONON
 export const do_the_no_things = (entity, redraw_palette) => {
   redraw_palette();
 
@@ -33,7 +33,7 @@ export const resize_layer = ( old_layer_data, old_dim_x, old_dim_y, new_dim_x, n
   let x = 0;
   let y = 0;
 
-  let new_data = [];
+  const new_data = [];
 
   for( y=0; y<new_dim_y; y++ ) {
     for( x=0; x<new_dim_x; x++ ) {
@@ -49,7 +49,7 @@ export const resize_layer = ( old_layer_data, old_dim_x, old_dim_y, new_dim_x, n
 }
 
 export const hexToRgba = (hex) => {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? {
     R: parseFloat(parseInt(result[1], 16)) / 255,
     G: parseFloat(parseInt(result[2], 16)) / 255,

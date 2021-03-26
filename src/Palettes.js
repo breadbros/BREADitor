@@ -1,6 +1,6 @@
-const $ = window.$;
-
 import { LOG } from './Logging';
+
+const {$} = window;
 
 const capturePaletteMovementForRestore = ($node) => {
   const $pal = $($node);
@@ -26,22 +26,22 @@ const capturePaletteMovementForRestore = ($node) => {
   }
 
   // TODO: add us into the custom palette registry
-  let pals = window.localStorage['palettes'] || '{}';
+  let pals = window.localStorage.palettes || '{}';
   if (pals) {
     pals = JSON.parse(pals);
     pals[key] = true; // todo make this a cache-key so we can invalidate the settings?
-    window.localStorage['palettes'] = JSON.stringify(pals);
+    window.localStorage.palettes = JSON.stringify(pals);
   }
 
     // / save our specific settings
   const obj = {};
-  obj['w'] = $pal.width();
-  obj['h'] = $pal.height();
-  obj['x'] = $pal.css('left');
-  obj['y'] = $pal.css('top');
-  obj['hide'] = !$pal.is(':visible');
+  obj.w = $pal.width();
+  obj.h = $pal.height();
+  obj.x = $pal.css('left');
+  obj.y = $pal.css('top');
+  obj.hide = !$pal.is(':visible');
 
-  window.localStorage[key + ' settings'] = JSON.stringify(obj);
+  window.localStorage[`${key  } settings`] = JSON.stringify(obj);
 };
 
 const paletteCloseListener = ($pal_close_button) => {
@@ -51,7 +51,7 @@ const paletteCloseListener = ($pal_close_button) => {
 
 export const savePalettePositions = () => {
   window.$$$palette_registry.map((pal) => {
-    const node_selector = '.' + pal;
+    const node_selector = `.${  pal}`;
     const $node = $(node_selector);
 
     capturePaletteMovementForRestore($node);
@@ -64,7 +64,7 @@ let active_palette_selector = '.tool-palette';
 
 export const setupPaletteListeners = () => {
   window.$$$palette_registry.map((pal) => {
-    const node_selector = '.' + pal;
+    const node_selector = `.${  pal}`;
     const $node = $(node_selector);
 
     if(node_selector === '.tool-palette') {
@@ -80,7 +80,7 @@ export const setupPaletteListeners = () => {
     $node.mouseup(() => { capturePaletteMovementForRestore($node); });
 
     // palette "X" button listener
-    const $node2 = $(node_selector + ' button.close-palette');
+    const $node2 = $(`${node_selector  } button.close-palette`);
     $node2.click(() => { paletteCloseListener($node2); });
   });
 
@@ -99,11 +99,11 @@ export const setupPaletteListeners = () => {
 
   $('.draggable-window').draggable({
     handle: 'h3',
-    stop: function (event, ui) {
+    stop (event, ui) {
               // console.log("draggable STOP");
               // console.log(event);
     },
-    start: function (event, ui) {
+    start (event, ui) {
               // / map palette is always on bottom.
       if ($(event.target).hasClass('map-palette')) {
         return;
@@ -113,11 +113,11 @@ export const setupPaletteListeners = () => {
     }
   });
 
-  var draggables = $('.resizable-window');
+  const draggables = $('.resizable-window');
 
   $.each(draggables, (idx) => {
-    var me = $(draggables[idx]);
-    var options = {};
+    const me = $(draggables[idx]);
+    const options = {};
 
     const checkAndAdd = (name, key) => {
       const val = me.data(name);
@@ -192,10 +192,10 @@ export const popPaletteToTop = ( new_active_selector, evt ) => {
 }
 
 export const Palettes = {
-  correctResizeWidget: correctResizeWidget,
-  setupPaletteRegistry: setupPaletteRegistry,
-  setupPaletteListeners: setupPaletteListeners,
-  savePalettePositions: savePalettePositions,
-  popPaletteToTop: popPaletteToTop,
+  correctResizeWidget,
+  setupPaletteRegistry,
+  setupPaletteListeners,
+  savePalettePositions,
+  popPaletteToTop,
   getActivePaletteSelector: () => { return active_palette_selector; }
 };

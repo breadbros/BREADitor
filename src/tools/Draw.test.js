@@ -1,12 +1,10 @@
-/*eslint no-undef: 0*/
+/* eslint no-undef: 0 */
 import { MakeUndoRedoStack } from '../UndoRedo';
 import { FakeMap } from '../helpers/FakeMap';
 
 import { _test_SetXYFromMouse, _test_clearXYFromMouse, getXYFromMouse } from '../Tools';
-jest.mock('../Tools');
 
 import { _test_clearSelector, setCurrentlySelectedTile, getCurrentlySelectedTile } from '../TileSelector';
-jest.mock('../TileSelector');
 
 
 import { 
@@ -19,6 +17,9 @@ import { getActiveZone, _test_setActiveZone } from '../js/ui/ZonesPalette'; // T
 
 
 import drawGenerator from './Draw';
+
+jest.mock('../Tools');
+jest.mock('../TileSelector');
 
 let map;
 let drawTool = null;
@@ -71,43 +72,43 @@ test('test draw tile', () => {
   changeSelectedLayer({layer: map.layers[0], map_tileData_idx: 0}); // what's going on here this is weird
   _test_SetXYFromMouse(INITIAL_TILE_TX,INITIAL_TILE_TY);
 
-  drawTool['mousedown'](map, {button: 0}); // click left button, draw the tile!
+  drawTool.mousedown(map, {button: 0}); // click left button, draw the tile!
 
   expect(getTestTile()).toEqual(new_tile_index);
 });
 
 
 test('test draw zone', () => {
-  //precond
+  // precond
   const expectedZone = 4;
   expect(getTestZone()).not.toEqual(expectedZone);
   
-  //setup
+  // setup
   _test_setActiveZone(expectedZone);
   _test_SetXYFromMouse(INITIAL_TILE_TX,INITIAL_TILE_TY);
   changeSelectedLayer({layer: map.layers[0], map_tileData_idx: MAGICAL_ZONE_LAYER_ID}); // GROSS GROSS GROSS
   
-  //execute
-  drawTool['mousedown'](map, {button: 0}); // click left button, draw the tile!
+  // execute
+  drawTool.mousedown(map, {button: 0}); // click left button, draw the tile!
 
-  //test
+  // test
   expect(getTestZone()).toEqual(expectedZone);
 });
 
 
 test('test draw obs', () => {
-  //precond
+  // precond
   const expectedObsIdx = 99;
   expect(getTestObs()).not.toEqual(expectedObsIdx);
   
-  //setup
+  // setup
   setCurrentlySelectedTile(expectedObsIdx);
   _test_SetXYFromMouse(INITIAL_TILE_TX,INITIAL_TILE_TY);
   changeSelectedLayer({layer: map.layers[0], map_tileData_idx: MAGICAL_OBS_LAYER_ID}); // GROSS GROSS GROSS
   
-  //execute
-  drawTool['mousedown'](map, {button: 0}); // click left button, draw the tile!
+  // execute
+  drawTool.mousedown(map, {button: 0}); // click left button, draw the tile!
 
-  //test
+  // test
   expect(getTestObs()).toEqual(expectedObsIdx);
 });

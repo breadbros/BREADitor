@@ -1,8 +1,8 @@
-/*eslint no-undef: 0*/
+/* eslint no-undef: 0 */
 import { MakeUndoRedoStack } from './UndoRedo';
 import { FakeMap } from './helpers/FakeMap';
 
-let map, oldTile, ur, UNDO_stack, REDO_stack;
+let map; let oldTile; let ur; let UNDO_stack; let REDO_stack;
 
 const tileX = 1;
 const tileY = 2;
@@ -23,9 +23,9 @@ beforeEach(() => {
 });
 
 
-////
-//// Tiles
-////
+// //
+// // Tiles
+// //
 
 test('change_one_tile adds an item to the undo stack', () => {
   expect(UNDO_stack.length).toEqual(0);
@@ -164,9 +164,9 @@ test('change_many_tiles but there is only one change', () => {
   expect(REDO_stack.length).toEqual(0);
 });
 
-////
-//// Tiles
-////
+// //
+// // Tiles
+// //
 test('change_one_zone adds an item to the undo stack', () => {
   expect(UNDO_stack.length).toEqual(0);
 
@@ -205,9 +205,9 @@ const newEnt0_loc_tiles = {tx:3, ty:4, px: null, py: null };
 const oldEnt1_loc_pixels = {tx:null, ty:null, px: 5, py: 6 };
 const newEnt1_loc_pixels = {tx:null, ty:null, px: 7, py: 8 };
 
-/// 
-/// Entities
-/// 
+// / 
+// / Entities
+// / 
 test('change_one_entity_location adds an item to the undo stack', () => {
   expect(UNDO_stack.length).toEqual(0);
 

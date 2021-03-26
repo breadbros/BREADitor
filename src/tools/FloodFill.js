@@ -27,7 +27,7 @@ const doFloodFill = (map, e) => {
   const workQueue = [];
 
   const keyify = (x, y) => {
-    return x + '-' + y;
+    return `${x  }-${  y}`;
   };
 
   workQueue.push(keyify(tX, tY));
@@ -81,11 +81,11 @@ const doFloodFill = (map, e) => {
 
 export default () => {
   return {
-    doFloodFill: doFloodFill,
+    doFloodFill,
     'mousemove': () => {},
     'mousedown': function (map, e) {
       if (isTileSelectorMap(map)) {
-        _toolLogic['EYEDROPPER']['mousedown'](map, e);
+        _toolLogic.EYEDROPPER.mousedown(map, e);
         return;
       }
 

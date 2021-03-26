@@ -3,7 +3,8 @@ import {
   two_zoom_seriously_all_zoom_functions_suck_kill_them_all, zoomLevels, updateLocationFunction, initTools,
   deriveMapZoomForPixels
 } from '../../Tools.js';
-const $ = window.$;
+
+const {$} = window;
 
 let old_map = null;
 let old_layer = null;
@@ -82,7 +83,7 @@ const create_map = (mapData, tileData, updateLocationFunction, newMap, newLayer)
 
     $('#btn-vsp-zero').click(function (e) {
       two_zoom_seriously_all_zoom_functions_suck_kill_them_all(vsp_map);
-      $('#vsp-zoom-label').text((zoomLevels[vsp_map.zoom_level] * 100) + '%');
+      $('#vsp-zoom-label').text(`${zoomLevels[vsp_map.zoom_level] * 100  }%`);
     });
 
     finalize_process(newMap, newLayer);
@@ -155,8 +156,8 @@ const initTilesetSelectorWidget = (newMap, newLayer, optionalTiledata, callback)
   if (newLayer) {
     if (!window.$$$currentMap.vspData[newLayer.vsp]) {
       throw new Error(
-        "current map didnt contain vsp '" + newLayer.vsp + "'.  Only contained: " +
-        Object.keys(window.$$$currentMap.vspData).join(',')
+        `current map didnt contain vsp '${  newLayer.vsp  }'.  Only contained: ${ 
+        Object.keys(window.$$$currentMap.vspData).join(',')}`
       );
     }
 
@@ -182,7 +183,7 @@ const getObsLayerData = () => {
 };
 
 export const TilesetSelectorWidget = {
-  initTilesetSelectorWidget: initTilesetSelectorWidget,
-  renderTilesetSelectorWidget: renderTilesetSelectorWidget,
-  getObsLayerData: getObsLayerData
+  initTilesetSelectorWidget,
+  renderTilesetSelectorWidget,
+  getObsLayerData
 };

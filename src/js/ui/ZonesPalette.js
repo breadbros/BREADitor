@@ -1,10 +1,11 @@
 import { modal_error } from './Util.js';
-const $ = window.$;
 
 import { popPaletteToTop } from '../../Palettes';
+import { notify } from '../../Notification-Pane';
+
+const {$} = window;
 
 const { clipboard } = require('electron');
-import { notify } from '../../Notification-Pane';
 
 const paletteToTop = ( selector ) => {
   const fakeEvent = {
@@ -45,7 +46,7 @@ function select_zone_by_index(idx) {
     idx = 0;
   }
 
-  const $it_me = $('.zone-row[data-index=' + idx + ']');
+  const $it_me = $(`.zone-row[data-index=${  idx  }]`);
   _select_zone_ui_inner($it_me);
   return $it_me;
 }
@@ -73,8 +74,8 @@ function redraw_palette() {
   };
 
   for (let i = 0; i < currentZones.length; i++) {
-    $tmp = $("<li class='zone-row' data-index='" + i + "'>" +
-             "<span class='zone-index'></span><span class='zone-name'></span></li>");
+    $tmp = $(`<li class='zone-row' data-index='${  i  }'>` +
+             `<span class='zone-index'></span><span class='zone-name'></span></li>`);
     $tmp.find('.zone-index').text(i);
     $tmp.find('.zone-name').text(currentZones[i].name);
 
@@ -115,7 +116,7 @@ function setup_template() {
 
   // Front load list with common values
   const vals = [ 0.00, 0.125, 0.25, 0.333, 0.50, 0.667, 0.75, 0.95, 1.00 ]; // 0, 1/8, 1/4, 1/3, 1/2, 2/3, 3/4, 1
-  var frontloadCount = vals.length;
+  const frontloadCount = vals.length;
 
   // Full Range of "Detailed" Values (Every 0.5%)
   for (var i = 0; i <= steps; i++) { // <= so that max gets included
@@ -126,8 +127,8 @@ function setup_template() {
   // Add Values To UI Element
   for (var i = 0; i < vals.length; i++) {
     var v = vals[i];
-    var p = (v*100).toFixed(1) + "%";
-    var $option = $('<option />').val(v).text(p);
+    const p = `${(v*100).toFixed(1)  }%`;
+    const $option = $('<option />').val(v).text(p);
     if (i < frontloadCount) { $option.css('font-weight', 'bold'); }
     select.append($option);
   }
@@ -162,16 +163,16 @@ function _zone_click(evt, id) {
     $('#modal-dialog').html('');
 
     if (zone) {
-      $('#modal-dialog').attr('title', 'Edit Zone (' + id + ')');
+      $('#modal-dialog').attr('title', `Edit Zone (${  id  })`);
     } else {
-      $('#modal-dialog').attr('title', 'Add New Zone (id: ' + (currentZones.length) + ')');
+      $('#modal-dialog').attr('title', `Add New Zone (id: ${  currentZones.length  })`);
       is_new = true;
     }
 
     $('#modal-dialog').append($template);
 
     if (zone) {
-      console.log('Editing: ' + zone.name);
+      console.log(`Editing: ${  zone.name}`);
 
       $template.find('#zone_name').val(zone.name);
       $template.find('#zone_activation_script').val(zone.activation_script);
@@ -195,7 +196,7 @@ function _zone_click(evt, id) {
           dialog.dialog('close');
         }
       },
-      close: function () {
+      close () {
         $('#modal-dialog').html('');
       }
     });
@@ -210,7 +211,7 @@ const update_zone = (dialog, zone_id, is_new) => {
   const sameAct = dialog.find('#zone_can_by_same_tile_activated').is(':checked');
 
   if (!$.isNumeric(zone_id) || zone_id < 0) {
-    modal_error('Invalid input: zone_id (' + zone_id + ') is invalid.');
+    modal_error(`Invalid input: zone_id (${  zone_id  }) is invalid.`);
     return;
   }
 
@@ -228,7 +229,7 @@ const update_zone = (dialog, zone_id, is_new) => {
   console.log('TODO: optional scriptname existance-in-source check.');
 
   const zone = {
-    name: name,
+    name,
     activation_script: script,
     activation_chance: chance,
     can_by_adjacent_activated: adjAct,
@@ -292,7 +293,7 @@ export const scrollZonePalletteToZone = (zoneToFocus) => {
   }
 
   if (zoneIdx !== zoneToFocus) {
-    msg = 'unexpected zone index, expected ' + zoneToFocus + ', got ' + zoneIdx;
+    msg = `unexpected zone index, expected ${  zoneToFocus  }, got ${  zoneIdx}`;
     console.log(msg);
     throw msg;
   }
@@ -347,14 +348,14 @@ export const init = () => {
   $(function() {
     $.contextMenu({
       selector: '.zones-palette h3.ui-widget-header', 
-      callback: function(key, options) {
+      callback(key, options) {
         switch(key) {
           default:
-            console.log('unknown key: ' + key);
+            console.log(`unknown key: ${  key}`);
             return;
           case 'copy_scriptnames':
             copy_useful_zone_data_to_clipboard();
-            return;
+            
         }
       },
       items: {
@@ -365,5 +366,5 @@ export const init = () => {
 }
 
 export const ZonesWidget = {
-  initZonesWidget: initZonesWidget
+  initZonesWidget
 };

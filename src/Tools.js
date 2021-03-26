@@ -1,5 +1,4 @@
-const $ = window.$;
-const sprintf = require('sprintf-js').sprintf;
+import jetpack from 'fs-jetpack';
 import { getSelectedLayer, MAGICAL_ENT_LAYER_ID } from './js/ui/LayersPalette';
 import { LOG } from './Logging'
 import eyedropperGenerator from './tools/Eyedropper';
@@ -12,7 +11,8 @@ import dragItemGenerator from './tools/DragItem'
 
 import { clearAllEntitysFromHighlight } from './js/ui/EntityPalette';
 
-import jetpack from 'fs-jetpack';
+const {$} = window;
+const {sprintf} = require('sprintf-js');
 
 const canvasBuffer = require('electron-canvas-to-buffer');
 const fs = require('fs');
@@ -27,21 +27,21 @@ export const updateLocationFunction = (map) => {
   const x = map.camera[0];
   const y = map.camera[1];
   const z = map.camera[2];
-  const key = 'map-' + map.mapData.name;
+  const key = `map-${  map.mapData.name}`;
 
   updateLocationText(map);
 
-  window.localStorage[key + '-mapx'] = x;
-  window.localStorage[key + '-mapy'] = y;
-  window.localStorage[key + '-mapzoom'] = z;
+  window.localStorage[`${key  }-mapx`] = x;
+  window.localStorage[`${key  }-mapy`] = y;
+  window.localStorage[`${key  }-mapzoom`] = z;
 };
 
 export const updateInfoDims = (map) => {
-  $('#info-dims').text(map.mapSizeInTiles.width + 'x' + map.mapSizeInTiles.height);
+  $('#info-dims').text(`${map.mapSizeInTiles.width  }x${  map.mapSizeInTiles.height}`);
 };
 
 export const updateLocationText = (map) => {
-  $('#info-location').text(map.camera[0] + ',' + map.camera[1]);
+  $('#info-location').text(`${map.camera[0]  },${  map.camera[1]}`);
 }
 
 export const updateZoomText = (map) => {
@@ -49,7 +49,7 @@ export const updateZoomText = (map) => {
     map = window.$$$currentMap;
   }
 
-  const txt = (100 / map.camera[2]) + '%';
+  const txt = `${100 / map.camera[2]  }%`;
   
   $('#info-zoom').text(txt);
 };
@@ -71,7 +71,7 @@ const setCurrentHoverTile = (map, mouseEvt) => {
     map.visibleHoverTile.deselect();
 
     if (_currentHoverTile) {
-      $('#info-current-hover-tile').text(_currentHoverTile[0] + ',' + _currentHoverTile[1]);
+      $('#info-current-hover-tile').text(`${_currentHoverTile[0]  },${  _currentHoverTile[1]}`);
       map.visibleHoverTile.add(_currentHoverTile[0], _currentHoverTile[1], 1, 1);
     } else {
       $('#info-current-hover-tile').text('-');
@@ -123,9 +123,9 @@ const zoomFn = function (map, e, zoomout) {
     if (zoomLevels.indexOf(map.camera[2]) === -1) {
       zero_zoom(map);
       return;
-    } else {
+    } 
       map.zoom_level = baseZoomIndex;
-    }
+    
   }
 
   if (!zoomout) {
@@ -249,11 +249,11 @@ export const clickDragItem = () => {
 };
 
 export const clickFloodFill = () => {
-  $(_toolLogic['FLOOD'].button_element).click();
+  $(_toolLogic.FLOOD.button_element).click();
 };
 
 export const clickEyedropper = () => {
-  $(_toolLogic['EYEDROPPER'].button_element).click();
+  $(_toolLogic.EYEDROPPER.button_element).click();
 };
 
 export const clickSmartdropper = () => {
@@ -265,11 +265,11 @@ export const clickMoveViewport = () => {
 };
 
 export const clickSelect = () => {
-  $(_toolLogic['SELECT'].button_element).click();
+  $(_toolLogic.SELECT.button_element).click();
 };
 
 export const clickDrawBrush = () => {
-  $(_toolLogic['DRAW'].button_element).click();
+  $(_toolLogic.DRAW.button_element).click();
 };
 
 const setupToolClick = (toolObj, toolName) => {
@@ -286,7 +286,7 @@ const setupToolClick = (toolObj, toolName) => {
     $(this).addClass('selected');
 
     window.TOOLMODE = toolName;
-    $('#info-curTool').text(window.TOOLMODE); //TODO we should use react already, dammit. 
+    $('#info-curTool').text(window.TOOLMODE); // TODO we should use react already, dammit. 
 
     if (toolObj.init_fn) {
       toolObj.init_fn(e, toolName, toolObj);
@@ -385,7 +385,7 @@ const hackToolsInit = () => {
         const mapOffsetY = map.camera[1];
         const mouseOffsetX = evt.offsetX;
         const mouseOffsetY = evt.offsetY;
-        const tilesize = map.vspData[vsp].tilesize;
+        const {tilesize} = map.vspData[vsp];
 
         map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX / map.camera[2])) / tilesize.width);
         map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY / map.camera[2])) / tilesize.height);
@@ -457,7 +457,7 @@ export const isTileSelectorMap = (map) => {
 
 export const auditSullyMaps = () => {
 
-  var path = require('path')
+  const path = require('path')
   const mapFiles = [];
 
   function fromDir(startPath,filter){
@@ -466,12 +466,12 @@ export const auditSullyMaps = () => {
           return;
       }
 
-      var files=fs.readdirSync(startPath);
-      for(var i=0; i<files.length; i++){
-          var filename=path.join(startPath,files[i]);
-          var stat = fs.lstatSync(filename);
+      const files=fs.readdirSync(startPath);
+      for(let i=0; i<files.length; i++){
+          const filename=path.join(startPath,files[i]);
+          const stat = fs.lstatSync(filename);
           if (stat.isDirectory()){
-              fromDir(filename,filter); //recurse
+              fromDir(filename,filter); // recurse
           }
           else if (filename.indexOf(filter)>=0) {
               // LOG('-- found: ',filename);
@@ -498,9 +498,9 @@ export const auditSullyMaps = () => {
         if (name.endsWith('.json')) {
           continue;
         } else if (name.endsWith('.chr')) {
-          name = name + '.json';
+          name += '.json';
         } else if (name.indexOf('.') === -1) {
-          name = name + '.chr.json';
+          name += '.chr.json';
         } else {
           debugger; // SHOUNT HAPPEN AFAIK
         }
@@ -508,9 +508,9 @@ export const auditSullyMaps = () => {
         if (name.endsWith('.json')) {
           debugger; // idk wtf
         } else if (name.endsWith('.chr')) {
-          name = 'chrs/' + name + '.json';
+          name = `chrs/${  name  }.json`;
         } else if (name.indexOf('.') === -1) {
-          name = 'chrs/' + name + '.chr.json';
+          name = `chrs/${  name  }.chr.json`;
         } else {
           debugger; // SHOUNT HAPPEN AFAIK
         }
@@ -555,5 +555,5 @@ export const getTopLeftmostCoordinatesAndOffsets = (x1, y1, x2, y2) => {
 };
 
 export const Tools = {
-  grue_zoom: grue_zoom
+  grue_zoom
 };

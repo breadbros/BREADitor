@@ -1,4 +1,4 @@
-const $ = window.$;
+const {$} = window;
 
 let $notifyDiv = null; 
 
@@ -19,19 +19,19 @@ export const setupNotifications = () => {
 }
 
 let fadeOutTimerId = null;
-let fadeOutTriggerTimeInMs = 1500;
-let fadeOutAnimationTimeInMs = 500;
+const fadeOutTriggerTimeInMs = 1500;
+const fadeOutAnimationTimeInMs = 500;
 
-let fadeoutCallbackFn = () => {};
+const fadeoutCallbackFn = () => {};
 
 export const notify = (msg) => {
   const now = new Date();
-  const time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+  const time = `${now.getHours()  }:${  now.getMinutes()  }:${  now.getSeconds()}`;
 
   if($notifyDiv) {
     $notifyDiv.css('display', 'block');
 
-    $notifyDiv.html( time + ' ' + msg + '<br />' + $notifyDiv.html() );
+    $notifyDiv.html( `${time  } ${  msg  }<br />${  $notifyDiv.html()}` );
 
     setFadeOutTimer();
   }

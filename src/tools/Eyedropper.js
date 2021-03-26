@@ -1,7 +1,7 @@
 import { setTileSelectorUI } from '../TileSelector';
 import { checkEntities, doEntitySelection } from './SmartEyedropper';
 import { getXYFromMouse } from '../Tools';
-import { setActiveZone, scrollZonePalletteToZone } from '../js/ui/ZonesPalette';
+import { setActiveZone, scrollZonePalletteToZone , show_edit_zone_dialog } from '../js/ui/ZonesPalette';
 
 import { 
   getSelectedLayer,
@@ -11,7 +11,7 @@ import {
   isSpecialLayerZone 
 } from '../js/ui/LayersPalette';
 
-import { show_edit_zone_dialog } from '../js/ui/ZonesPalette';
+
 import { show_edit_entity_dialog } from '../js/ui/EntityPalette';
 
 export default () => {
@@ -25,7 +25,7 @@ export default () => {
       }
 
       if (!(e.button === 0)) {
-        console.warn("Unknown eyedropper button: we know left/right (0/2), got: '" + e.button + "'.");
+        console.warn(`Unknown eyedropper button: we know left/right (0/2), got: '${  e.button  }'.`);
         return;
       }
 
@@ -55,7 +55,7 @@ export default () => {
           setTileSelectorUI('#left-palette', tIdx, map, 0, 'zones'); // OMFFJSKLD 'zones'?!
           return;
 
-        } else if( isSpecialLayerObs(layer) ) {
+        } if( isSpecialLayerObs(layer) ) {
           tIdx = map.getTile(tX, tY, getSelectedLayer().map_tileData_idx);
         } else if( isSpecialLayerEntity(layer) ) {
           const ent = checkEntities(map.entities['Entity Layer (E)'], null, map, clickSet);
@@ -84,7 +84,7 @@ export default () => {
       const tX = clickSet[0];
       const tY = clickSet[1];
 
-      let tIdx = null;
+      const tIdx = null;
       let zIdx = -1;
 
       const layer = getSelectedLayer();
@@ -103,7 +103,7 @@ export default () => {
           if (ent) {
             doEntitySelection(ent);
             show_edit_entity_dialog(ent.eIdx);
-            return;
+            
           }
         } else {
           throw new Error('SOMETHING IS TERRIBLYH WRONG WITH A TERLKNDSHBLE SENTINEL AND GRUE IS A BAD MAN');

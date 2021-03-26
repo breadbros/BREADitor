@@ -1,4 +1,4 @@
-/*eslint no-undef: 0*/
+/* eslint no-undef: 0 */
 // import { MakeUndoRedoStack } from '../UndoRedo';
 // import { FakeMap } from '../helpers/FakeMap';
 // import { changeSelectedLayer } from '../js/ui/LayersPalette'; // TODO this shouldnt be public?
@@ -12,7 +12,7 @@
 // import { getXfromFlat, getYfromFlat } from '../../Map';
 // import { getCurrentHoverTile } from '../../Tools';
 
-/*eslint no-undef: 0*/
+/* eslint no-undef: 0 */
 import { MakeUndoRedoStack } from '../../UndoRedo';
 import { FakeMap } from '../../helpers/FakeMap';
 import { addToPasteboard, paste } from './CutCopyPaste'
@@ -28,7 +28,7 @@ import {
   MAGICAL_ZONE_LAYER_ID
 } from './LayersPalette';
 
-let map, oldTile, ur, UNDO_stack, REDO_stack;
+let map; let oldTile; let ur; let UNDO_stack; let REDO_stack;
 
 const tileX = 1;
 const tileY = 2;
@@ -72,7 +72,7 @@ const copyMatrixToPasteboard = (matrix) => {
   }
 
   for (let y = 0; y < matrix[0].length; y++ ) {
-    //console.log("matrix[0][y].length-1: " + (matrix[0][y].length-1))
+    // console.log("matrix[0][y].length-1: " + (matrix[0][y].length-1))
     for (let x = 0; x < matrix[0][y].length; x++) {
       addToPasteboard(x,y,-24601,matrix[0][x][y]);
     }
@@ -247,24 +247,24 @@ test('supercut superpaste', () => {
   ];
 
   const startEnts = [
-    { location : {tx:0, ty:0, px: null, py: null} },   //ent 0
-    { location : {tx:null, ty:null, px: 16, py: 16} }, //ent 1
-    { location : {tx:2, ty:2, px: null, py: null } },  //ent 2
-    { location : {tx:null, ty:null, px: 48, py: 48} }, //ent 3
+    { location : {tx:0, ty:0, px: null, py: null} },   // ent 0
+    { location : {tx:null, ty:null, px: 16, py: 16} }, // ent 1
+    { location : {tx:2, ty:2, px: null, py: null } },  // ent 2
+    { location : {tx:null, ty:null, px: 48, py: 48} }, // ent 3
   ]
 
   const midEnts = [
-    { location : {tx:0, ty:0, px: null, py: null} },       //ent 0
-    { location : {tx:null, ty:null, px: null, py: null} }, //ent 1
-    { location : {tx:null, ty:null, px: null, py: null } },//ent 2
-    { location : {tx:null, ty:null, px: null, py: null} }, //ent 3
+    { location : {tx:0, ty:0, px: null, py: null} },       // ent 0
+    { location : {tx:null, ty:null, px: null, py: null} }, // ent 1
+    { location : {tx:null, ty:null, px: null, py: null } },// ent 2
+    { location : {tx:null, ty:null, px: null, py: null} }, // ent 3
   ]
 
   const endEnts = [
-    { location : {tx:0, ty:0, px: null, py: null} },       //ent 0
-    { location : {tx:null, ty:null, px: 32, py: 32} },     //ent 1
-    { location : {tx:3, ty:3, px: null, py: null } },      //ent 2
-    { location : {tx:null, ty:null, px: null, py: null} }, //ent 3
+    { location : {tx:0, ty:0, px: null, py: null} },       // ent 0
+    { location : {tx:null, ty:null, px: 32, py: 32} },     // ent 1
+    { location : {tx:3, ty:3, px: null, py: null } },      // ent 2
+    { location : {tx:null, ty:null, px: null, py: null} }, // ent 3
   ]
 
   map.mapSizeInTiles = {
@@ -304,7 +304,7 @@ test('supercut superpaste', () => {
   expect(map._getObsMatrix()).toEqual(startObs);
   expect(map._getAllEntities()).toEqual(startEnts);
 
-  setSuperCutPasteLayers([0,1, /*MAGICAL_ENT_LAYER_ID,*/ MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID]);
+  setSuperCutPasteLayers([0,1, /* MAGICAL_ENT_LAYER_ID, */ MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID]);
   superCut( map ); // x,y, w,h
 
   expect(map.getMatrix()).toEqual(midTiles);
@@ -317,5 +317,5 @@ test('supercut superpaste', () => {
   expect(map.getMatrix()).toEqual(endTiles);
   expect(map._getZoneMatrix()).toEqual(endZones);
   expect(map._getObsMatrix()).toEqual(endObs);
-  //expect(map._getAllEntities()).toEqual(endEnts);
+  // expect(map._getAllEntities()).toEqual(endEnts);
 });

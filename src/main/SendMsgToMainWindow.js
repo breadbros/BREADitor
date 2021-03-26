@@ -5,7 +5,7 @@ export const send = (msg, accelerator) => {
   const contents = MainWindow.get().webContents;
 
   const message = {
-    msg: msg
+    msg
   };
 
   if (typeof accelerator !== 'undefined') {

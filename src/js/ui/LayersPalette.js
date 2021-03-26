@@ -1,15 +1,15 @@
 import { updateRstringInfo } from '../../Tools.js';
-import { modal_error } from './Util.js';
+import { modal_error , resize_layer, hexToRgba } from './Util.js';
 import { setZoneVisibility, getZoneVisibility, setZoneAlpha, getZoneAlpha } from './ZonesPalette.js';
 import { setShowEntitiesForLayer, shouldShowEntitiesForLayer,
          setNormalEntityVisibility, getNormalEntityVisibility,
          setEntityLayersExpanded, getEntityLayersExpanded, clearAllEntitysFromHighlight } from './EntityPalette.js';
 import { TilesetSelectorWidget } from './TilesetSelectorPalette.js';
 import { setTileSelectorUI, setDefaultObsTiles } from '../../TileSelector';
-import { resize_layer, hexToRgba } from './Util.js';
+
 import { popPaletteToTop } from '../../Palettes';
 
-const $ = window.$;
+const {$} = window;
 
 let list;
 
@@ -26,8 +26,8 @@ const paletteToTop = ( selector ) => {
 // in leiu of types, for now...
 const generate_layer = (name, alpha, new_dim_x, new_dim_y, offset_x, offset_y, par_x, par_y, vsp, borderColor_hex, borderColor, map_tileData_idx) => {
   return {
-    name: name,
-    alpha: alpha,
+    name,
+    alpha,
     dimensions: {
       X: new_dim_x,
       Y: new_dim_y
@@ -40,10 +40,10 @@ const generate_layer = (name, alpha, new_dim_x, new_dim_y, offset_x, offset_y, p
       X: parseFloat(par_x),
       Y: parseFloat(par_y)
     },
-    vsp: vsp,
-    borderColor_hex: borderColor_hex,
-    borderColor: borderColor,
-    map_tileData_idx: map_tileData_idx
+    vsp,
+    borderColor_hex,
+    borderColor,
+    map_tileData_idx
   };
 }
 
@@ -97,7 +97,7 @@ export const selectNamedLayer = (name) => {
 };
 
 export const selectNumberedLayer = (rstringNum) => {
-  const name = window.$$$currentMap.getLayerByRStringCode(rstringNum).name;
+  const {name} = window.$$$currentMap.getLayerByRStringCode(rstringNum);
 
   if (!name) {
     console.warn('No such numbered layer', rstringNum, 'found on this map');
@@ -507,7 +507,7 @@ const redraw_palette = (map) => {
 
         const map = window.$$$currentMap;
 
-        let dim_x, dim_y, offs_x, offs_y;
+        let dim_x; let dim_y; let offs_x; let offs_y;
         let warning = '';
 
         if( map.mapData.obstructions_layer ) {
@@ -532,7 +532,7 @@ const redraw_palette = (map) => {
           }
         }
 
-        let template = `
+        const template = `
           <div class="warning">${warning}</div>
           <div>
             Dimensions: x <input id="obs_dim_x" value="${dim_x}" type="number" style="width: 50px;">
@@ -576,7 +576,7 @@ const redraw_palette = (map) => {
               dialog.dialog('close');
             }
           },
-          close: function () {
+          close () {
             $('#modal-dialog').html('');
           }
         });
@@ -644,7 +644,7 @@ const redraw_palette = (map) => {
           const idx = $layer.data('layer_idx');
           if ($.isNumeric(idx)) {
 
-            //console.log( "layers[",idx,"].MAPED_HIDDEN", layers[idx].MAPED_HIDDEN )
+            // console.log( "layers[",idx,"].MAPED_HIDDEN", layers[idx].MAPED_HIDDEN )
 
             $layer.find('.entity_layer .eyeball_button').prop('disabled', !!layers[idx].MAPED_HIDDEN);
           }
@@ -735,7 +735,7 @@ const redraw_palette = (map) => {
           node.data('rstring_ref', 'R');
           $list.append(node);
         } else {
-          console.log("UNKNOWN RSTRING PARTICLE '" + rstring_cur_target + "'");
+          console.log(`UNKNOWN RSTRING PARTICLE '${  rstring_cur_target  }'`);
         }
 
         continue;
@@ -795,9 +795,9 @@ const redraw_palette = (map) => {
       if (val < 0 || val > 100) {
         modal_error('INVALID PERCENTAGE VALUE, range: [0...100]');
         return;
-      } else {
-        val = val / 100;
-      }
+      } 
+        val /= 100;
+      
     } else { // parse fraction
       val = parseFloat(val);
       if (val < 0 || val > 1) {
@@ -843,8 +843,8 @@ const redraw_palette = (map) => {
     evt.stopPropagation();
 
     $(() => {
-      let template = '<div>Layer: ' + layer.name + '</div>';
-      template += '<div>Current: ' + formatAlphaAsPercentage(layer.alpha) + '</div>';
+      let template = `<div>Layer: ${  layer.name  }</div>`;
+      template += `<div>Current: ${  formatAlphaAsPercentage(layer.alpha)  }</div>`;
       template += "<div>New: <input id='new_layer_lucent'>%</div>";
 
       $('#modal-dialog').attr('title', 'Set layer Opacity');
@@ -859,7 +859,7 @@ const redraw_palette = (map) => {
             dialog.dialog('close');
           }
         },
-        close: function () {
+        close () {
           $('#modal-dialog').html('');
         }
       });
@@ -876,8 +876,8 @@ const redraw_palette = (map) => {
     let dialog = null;
 
     $(() => {
-      let template = '<div>Layer: ' + layer.name + '</div>';
-      template += '<div>Current (X:Y): ' + layer.parallax.X + ':' + layer.parallax.Y + '</div>';
+      let template = `<div>Layer: ${  layer.name  }</div>`;
+      template += `<div>Current (X:Y): ${  layer.parallax.X  }:${  layer.parallax.Y  }</div>`;
       template += "<div>New: <input id='new_layer_parallax_x' size=3>&nbsp;:&nbsp;";
       template += "<input id='new_layer_parallax_y' size=3></div>";
 
@@ -893,7 +893,7 @@ const redraw_palette = (map) => {
             dialog.dialog('close');
           }
         },
-        close: function () {
+        close () {
           $('#modal-dialog').html('');
         }
       });
@@ -901,8 +901,8 @@ const redraw_palette = (map) => {
   }
 
   function update_parallax(layer, dialog) {
-    let x = $('#new_layer_parallax_x').val().trim();
-    let y = $('#new_layer_parallax_y').val().trim();
+    const x = $('#new_layer_parallax_x').val().trim();
+    const y = $('#new_layer_parallax_y').val().trim();
     const newParallax = _get_validated_xy_float_input(x, y);
     if (!newParallax) { return; }
 
@@ -948,21 +948,21 @@ const redraw_palette = (map) => {
       if (nodeLayer.hasClass('nosort')) {
         if (nodeLayer.data('rstring_ref') === 'ZZZ') {
           lucentDomNode = nodeLayer.find('.layer_lucency');
-          lucentDomNode.text(formatAlphaAsPercentage(getZoneAlpha()) + '%');
+          lucentDomNode.text(`${formatAlphaAsPercentage(getZoneAlpha())  }%`);
         }
 
         return;
       }
 
       if (!$.isNumeric(rstring)) {
-        return;
+        
       } else {
         mapLayer = map.mapData.layers[parseInt(rstring) - 1]; // todo: seperate human-indx from 0-based.
         lucentDomNode = nodeLayer.find('.layer_lucency');
-        lucentDomNode.text(formatAlphaAsPercentage(mapLayer.alpha) + '%');
+        lucentDomNode.text(`${formatAlphaAsPercentage(mapLayer.alpha)  }%`);
 
         parallaxDomNode = nodeLayer.find('.layer_parallax');
-        parallaxDomNode.text(mapLayer.parallax.X + ':' + mapLayer.parallax.Y);
+        parallaxDomNode.text(`${mapLayer.parallax.X  }:${  mapLayer.parallax.Y}`);
 
         if (!$.isNumeric(mapLayer.alpha)) {
           debugger;
@@ -997,13 +997,13 @@ const redraw_palette = (map) => {
 
     // TODO we are using id's as classes for most buttons.  STOPIT.
     name_div.html(
-      '<button class="no-button" id="white-icon-art"></button> <span class="name-label">' + l.name + '</span>'
+      `<button class="no-button" id="white-icon-art"></button> <span class="name-label">${  l.name  }</span>`
     );
     entity_name_div.html(
-      '<button class="no-button" id="white-icon-entity"></button> <span class="entity-name-label">' + l.name + '</span>'
+      `<button class="no-button" id="white-icon-entity"></button> <span class="entity-name-label">${  l.name  }</span>`
     );
 
-    lucent_div.text(formatAlphaAsPercentage(l.alpha) + '%');
+    lucent_div.text(`${formatAlphaAsPercentage(l.alpha)  }%`);
 
     lucent_div.click(lucent_click);
     parallax_div.click(parallax_click);
@@ -1031,7 +1031,7 @@ const redraw_palette = (map) => {
   function generateLayerContainer(layer, layer_index) {
     const newLayerContainer = $("<li class='layer ui-state-default'></li>");
     newLayerContainer.data('alpha', layer.alpha);
-    newLayerContainer.data('rstring_ref', '' + (layer_index + 1));
+    newLayerContainer.data('rstring_ref', `${  layer_index + 1}`);
     newLayerContainer.data('layer_name', layer.name);
     newLayerContainer.data('layer_idx', layer_index);
 
@@ -1138,7 +1138,7 @@ function get_layernames_by_rstring_order() {
   return ret;
 };
 
-let template = `
+const template = `
 <div>Name: <input id='layer_name'></div>
 
 <div>Parallax: x: <input id='layer_parallax_x' value='1' size=3> 
@@ -1188,7 +1188,7 @@ const closeEditLayerDialog = () => {
 
 let curLayer = generate_layer();
 
-/// TODO this function is overused and a wreck and has side-effects.
+// / TODO this function is overused and a wreck and has side-effects.
 function _layer_click(evt, layerIdx, onComplete) {
   evt.stopPropagation();
 
@@ -1223,8 +1223,8 @@ function _layer_click(evt, layerIdx, onComplete) {
       showSelectionPalette: true,
       maxSelectionSize: 10,
       preferredFormat: "hex",
-      change: function(color) {
-        const _color = color.toHexString() + "ff";
+      change(color) {
+        const _color = `${color.toHexString()  }ff`;
         setLayerColor(curLayer, _color);
         colorPicker.spectrum("set", color.toHexString());
       }
@@ -1264,14 +1264,14 @@ function _layer_click(evt, layerIdx, onComplete) {
     }, {
       id: "cancel-layer",
       text: "Cancel",
-      click: function () { closeEditLayerDialog(); }
+      click () { closeEditLayerDialog(); }
     }];
 
     if (typeof layerIdx === 'number') {
       const layer = window.$$$currentMap.mapData.layers[layerIdx]; // TODO needs better accessor
       curLayer = layer;
 
-      title = 'Edit Layer: ' + layer.name;
+      title = `Edit Layer: ${  layer.name}`;
 
       $template.find('#layer_name').val(layer.name);
       $template.find('#layer_parallax_x').val(layer.parallax.X);
@@ -1326,9 +1326,9 @@ function _layer_click(evt, layerIdx, onComplete) {
               if(num === myIdx+1) {
                 continue;
               } else if(num > myIdx) {
-                newOrder.push(""+num-1);
+                newOrder.push(`${num}`-1);
               } else {
-                newOrder.push(""+num);
+                newOrder.push(`${num}`);
               }
             }
           }
@@ -1354,9 +1354,9 @@ function _layer_click(evt, layerIdx, onComplete) {
     dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
-      title: title,
+      title,
       buttons: buttonsLol,
-      close: function () {
+      close () {
         curLayer = null;
         $('#modal-dialog').html('');
       }
@@ -1381,40 +1381,40 @@ const update_layer = (dialog, layer_id, onComplete) => {
 
   // Validate Parallax
   if (!$.isNumeric(par_x)) {
-    modal_error('Invalid input: parallax x (' + par_x + ') is invalid.');
+    modal_error(`Invalid input: parallax x (${  par_x  }) is invalid.`);
     return;
   }
   if (!$.isNumeric(par_y)) {
-    modal_error('Invalid input: parallax y (' + par_y + ') is invalid.');
+    modal_error(`Invalid input: parallax y (${  par_y  }) is invalid.`);
     return;
   }
   
   // Validate Dimensions
   if (!$.isNumeric(dims_x) && dims_x >= 0) {
-    modal_error('Invalid input: dimension x (' + dims_x + ') is invalid.');
+    modal_error(`Invalid input: dimension x (${  dims_x  }) is invalid.`);
     return;
   }
   dims_x = parseInt(dims_x);
   if (!$.isNumeric(dims_y) && dims_y >= 0) {
-    modal_error('Invalid input: dimension y (' + dims_y + ') is invalid.');
+    modal_error(`Invalid input: dimension y (${  dims_y  }) is invalid.`);
     return;
   }
   dims_y = parseInt(dims_y);
 
   // Validate Offsets
   if (!$.isNumeric(offset_x)) {
-    modal_error('Invalid input: offset x (' + offset_x + ') is invalid.');
+    modal_error(`Invalid input: offset x (${  offset_x  }) is invalid.`);
     return;
   }
   offset_x = parseInt(offset_x);
   if (!$.isNumeric(offset_y)) {
-    modal_error('Invalid input: ofset y (' + offset_y + ') is invalid.');
+    modal_error(`Invalid input: ofset y (${  offset_y  }) is invalid.`);
     return;
   }
   offset_y = parseInt(offset_y);
 
   if (!$.isNumeric(alpha) || alpha < 0 || alpha > 1) {
-    modal_error('Invalid input: alpha (' + alpha + ') is invalid.  Try values [0..1]');
+    modal_error(`Invalid input: alpha (${  alpha  }) is invalid.  Try values [0..1]`);
     return;
   }
 
@@ -1446,7 +1446,7 @@ const update_layer = (dialog, layer_id, onComplete) => {
 
   if (nameSet.indexOf(name) !== -1) {
     if (layers[layer_id] && layers[layer_id].name !== name) {
-      modal_error('Invalid input: layer name (' + name + ') is not unique on this map.  Try a new, unique name.');
+      modal_error(`Invalid input: layer name (${  name  }) is not unique on this map.  Try a new, unique name.`);
       return;
     }
   }
@@ -1466,7 +1466,7 @@ const update_layer = (dialog, layer_id, onComplete) => {
     layers.push(layer);
     const layersLength = layers.length;
     map.layerLookup[name] = layers[layersLength - 1];
-    map.layerRenderOrder.push('' + (layersLength));
+    map.layerRenderOrder.push(`${  layersLength}`);
     map.mapRawTileData.tile_data.push(new Array((dims_x * dims_y)).fill(0));
 
     map.updateRstring(map.layerRenderOrder.join(','));
@@ -1522,6 +1522,6 @@ const update_layer = (dialog, layer_id, onComplete) => {
 };
 
 export const LayersWidget = {
-  initLayersWidget: initLayersWidget,
-  get_layernames_by_rstring_order: get_layernames_by_rstring_order
+  initLayersWidget,
+  get_layernames_by_rstring_order
 };

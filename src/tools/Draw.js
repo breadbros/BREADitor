@@ -14,7 +14,7 @@ export default () => {
   return {
     'mousedown': function (map, e) {
       if (isTileSelectorMap(map)) {
-        _toolLogic['EYEDROPPER']['mousedown'](map, e);
+        _toolLogic.EYEDROPPER.mousedown(map, e);
         return;
       }
 
@@ -25,7 +25,7 @@ export default () => {
       }
 
       if (!(e.button === 0)) {
-        console.log("Unknown draw button: we know left (0), got: '" + e.button + "'.");
+        console.log(`Unknown draw button: we know left (0), got: '${  e.button  }'.`);
         return;
       }
 
@@ -37,24 +37,24 @@ export default () => {
       const dims = getSelectedLayer().layer.dimensions;
 
       if (tX < 0 || tX >= dims.X) {
-        console.log('Invalid tx to draw on for this layer, tried: ' + tX);
+        console.log(`Invalid tx to draw on for this layer, tried: ${  tX}`);
         return;
       }
 
       if (tY < 0 || tY >= dims.Y) {
-        console.log('Invalid ty to draw on for this layer, tried: ' + tY);
+        console.log(`Invalid ty to draw on for this layer, tried: ${  tY}`);
         return;
       }
 
       // TODO do Zone changes not undo/redo?
       if (isSpecialLayerZone(getSelectedLayer())) {
         map.UndoRedo.change_one_zone(tX, tY, getActiveZone());
-        return;
+        
 
       } else if(isSpecialLayerEntity(getSelectedLayer())) {
         moveSelectedEntityToTile(tX, tY);
-        return;
-      } else { //OBS has special code way down in here :(
+        
+      } else { // OBS has special code way down in here :(
         map.UndoRedo.change_one_tile(
             tX, tY,
             getSelectedLayer().map_tileData_idx,
@@ -73,7 +73,7 @@ export default () => {
       // / if there's one button pressed and it's the left button...
       if (e.buttons === 1 && (e.button === 0)) {
         // TODO this duplicates work. if it's costly, check before everything.  I doubt it'll matter.
-        _toolLogic['DRAW']['mousedown'](map, e); // let's be lazy.
+        _toolLogic.DRAW.mousedown(map, e); // let's be lazy.
       }
     },
 

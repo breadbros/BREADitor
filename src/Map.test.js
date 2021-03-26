@@ -1,4 +1,4 @@
-/*eslint no-undef: 1*/
+/* eslint no-undef: 1 */
 import { setObsColor, getObsColor } from './Map';
 import { getFlatIdx, getXfromFlat, getYfromFlat } from './Map';
 import { resize_layer } from './js/ui/Util'

@@ -1,4 +1,4 @@
-/// the contents of a fresh BODY for the app
+// / the contents of a fresh BODY for the app
 export function baseHTMLTemplate() {
 	return `	
         <div class="map-palette ui-widget-content resizable-window draggable-window" data-minwidth="280">

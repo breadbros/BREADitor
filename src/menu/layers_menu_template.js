@@ -1,8 +1,8 @@
 import { send } from '../main/SendMsgToMainWindow';
 
 const makeLayer = (title, accelerator) => {
-  return { label: title, accelerator: accelerator, click: function () {
-    send('focus-layer-' + accelerator, accelerator);
+  return { label: title, accelerator, click () {
+    send(`focus-layer-${  accelerator}`, accelerator);
   } };
 };
 

@@ -13,7 +13,9 @@
     "prestart": "npm run build",
     "start": "electron .",
     "lint": "eslint --ext=jsx,js,tsx,ts src",
-    "test": "jest '(\\/test\\/(?!e2e/)).*'",
+    "lint-fix": "eslint --fix --ext=jsx,js,tsx,ts src",
+    "test": "jest --detectOpenHandles",
+    "watch": "jest --detectOpenHandles --watchAll",
     "pretest:e2e": "npm run build",
     "test:e2e": "jest '(\\/test\\/e2e/).*'",
     "pack": "npm run build && electron-builder --dir",
@@ -36,9 +38,8 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.(j|t)sx?$": "ts-jest"
     },
-    "testRegex": "(/test/.+\\.spec)\\.tsx?$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -49,7 +50,8 @@
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/mocks/fileMock.js",
       "\\.(s?css|sass)$": "<rootDir>/mocks/styleMock.js"
-    }
+    },
+    "setupFiles": ["./setup-jest.js"]
   },
   "build": {
     "productName": "Breaditor",

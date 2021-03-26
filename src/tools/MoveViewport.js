@@ -79,9 +79,9 @@ export default () => {
 
     'button_element': '#btn-tool-move-viewport',
     'human_name': 'Move Viewport'
-    /*,
+    /* ,
     "mousewheel": function(map, e) {
         zoomFn(map, e, e.originalEvent.deltaY < 0);
-    }*/
+    } */
   };
 };

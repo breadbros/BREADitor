@@ -6,17 +6,17 @@ import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToE
          clearAllEntitysFromHighlight, show_edit_entity_dialog } from '../js/ui/EntityPalette';
 import { LOG } from '../Logging';
 
-const $ = window.$;
+const {$} = window;
 
 export const checkEntities = (ents, layer, map, click) => {
-  const tileSize = layer ? map.vspData[layer.vsp].tilesize : map.vspData['default'].tilesize;
+  const tileSize = layer ? map.vspData[layer.vsp].tilesize : map.vspData.default.tilesize;
 
   for (let i = ents.length - 1; i >= 0; i--) {
     if (determineEntityCollision(ents[i], click, map, tileSize)) {
       return {
         type: 'ENTITY',
         layerName: layer ? layer.name : 'E',
-        layer: layer,
+        layer,
         ent: ents[i],
         eIdx: map.mapData.entities.indexOf(ents[i]) // todo man, map.mapData.entities vs map.entities is rough...
       };
@@ -48,8 +48,8 @@ const checkTiles = (map, layer, click) => {
   if (tIdx) {
     return {
       type: 'TILE',
-      tIdx: tIdx,
-      layer: layer
+      tIdx,
+      layer
     };
   }
 
@@ -81,10 +81,10 @@ const determineEntityCollision = (ent, clickSet, map, tileSize) => {
     py -= 16;
 
     return isInRectangle(clickSet[2], clickSet[3], px, py, w, h);
-  } else {
+  } 
     const data = map.entityData[ent.filename];
-    const dims = data.dims;
-    const hitbox = data.hitbox;
+    const {dims} = data;
+    const {hitbox} = data;
 
     // todo THIS is the lazy rect way, without calculating for empty pixels and things underneath.  FIX.
     if (isInRectangle(clickSet[2], clickSet[3], px - hitbox[0], py - hitbox[1], dims[0], dims[1])) {
@@ -114,15 +114,15 @@ const determineEntityCollision = (ent, clickSet, map, tileSize) => {
       if (pixel[3] === 0) {
         return false;
       // TODO make "transparent" color configurable
-      } else if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
+      } if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
         return false;
       }
 
       return true;
-    } else {
+    } 
       return false;
-    }
-  }
+    
+  
 };
 
 const seekResultFromLayers = (map, clickSet) => {
@@ -169,7 +169,7 @@ const seekResultFromLayers = (map, clickSet) => {
       continue;
     }
 
-    throw new Error('Unknown rstring layercode: ' + layerCode);
+    throw new Error(`Unknown rstring layercode: ${  layerCode}`);
   }
 };
 
@@ -191,12 +191,12 @@ export default () => {
           return;
 
         default:
-          LOG( 'dblckick smartdropper, unknown item type: ' + curThing.type );
+          LOG( `dblckick smartdropper, unknown item type: ${  curThing.type}` );
       }
     },
     'mousedown': function (map, e) {
       if (isTileSelectorMap(map)) {
-        _toolLogic['EYEDROPPER']['mousedown'](map, e);
+        _toolLogic.EYEDROPPER.mousedown(map, e);
         return;
       }
 
@@ -205,7 +205,7 @@ export default () => {
       LOG('EYEDROPPER->mousedown...');
 
       if (!(e.button === 0)) {
-        LOG("Unknown eyedropper button: we know left/right (0/2), got: '" + e.button + "'.");
+        LOG(`Unknown eyedropper button: we know left/right (0/2), got: '${  e.button  }'.`);
         return;
       }
 
@@ -251,9 +251,9 @@ export default () => {
         if (ret.type === 'ENTITY') {
           doEntitySelection(ret);
           curThing = { type: 'entity', id: ret.eIdx };
-          //selectLayer(ret.layer.name);
-          //setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
-          return;
+          // selectLayer(ret.layer.name);
+          // setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
+          
         }
       }
     },
