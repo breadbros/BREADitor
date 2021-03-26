@@ -1,4 +1,4 @@
-/*eslint no-undef: 0*/
+/* eslint no-undef: 0 */
 import { MakeUndoRedoStack } from '../UndoRedo';
 import { FakeMap } from '../helpers/FakeMap';
 import { changeSelectedLayer } from '../js/ui/LayersPalette'; // TODO this shouldnt be public?
@@ -8,7 +8,8 @@ import { setCurrentlySelectedTile, getCurrentlySelectedTile, setTileSelectorUI }
 import { setVerboseLogging } from '../Logging'
 
 import floodFillGenerator from './FloodFill';
-const doFloodFill = floodFillGenerator().doFloodFill;
+
+const {doFloodFill} = floodFillGenerator();
 
 // jest.mock('fs-jetpack');
 
@@ -45,7 +46,7 @@ beforeEach(() => {
   // expect(oldTile).toEqual(42);
 });
 
-test('getCurrentlyExpectedTile / setCurrentlySelectedTile', () => {
+test.only('getCurrentlyExpectedTile and setCurrentlySelectedTile', () => {
   expect(getCurrentlySelectedTile()).toEqual(13083);
 
   setCurrentlySelectedTile(90210);

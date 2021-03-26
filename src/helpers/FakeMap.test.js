@@ -1,4 +1,4 @@
-/*eslint no-undef: 1*/
+/* eslint no-undef: 1 */
 import { FakeMap } from './FakeMap';
 
 test('get and set tile on fake map', () => {

@@ -1,16 +1,12 @@
+import { v4 as uuidv4 } from 'uuid';
 import { modal_error, do_the_no_things, hexToRgba } from './Util.js';
 import { LayersWidget, selectEntityLayer } from './LayersPalette.js';
-import { centerMapOnXY } from '../../Tools';
-import { v4 as uuidv4 } from 'uuid';
-
 import { notify } from '../../Notification-Pane';
 
 const { clipboard } = require('electron');
-
-const { dialog } = require('electron').remote;
 const jetpack = require('fs-jetpack');
 
-const $ = require('jquery');
+const {$} = window;
 
 let _entityLayersExpanded = false;
 
@@ -111,7 +107,7 @@ export const getEntityLayersExpanded = () => {
 
 export const shouldShowEntitiesForLayer = (layername) => {
   if (!window.$$$currentMap.layerLookup[layername]) {
-    modal_error("cannot shouldShowEntitiesForLayer, '" + layername + "' is not a layer");
+    modal_error(`cannot shouldShowEntitiesForLayer, '${  layername  }' is not a layer`);
   }
 
   const shouldHide = window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS;
@@ -121,12 +117,12 @@ export const shouldShowEntitiesForLayer = (layername) => {
 
 export const setShowEntitiesForLayer = (layername, isVisible) => {
   if (!window.$$$currentMap.layerLookup[layername]) {
-    modal_error("cannot setShowEntitiesForLayer, '" + layername + "' is not a layer");
+    modal_error(`cannot setShowEntitiesForLayer, '${  layername  }' is not a layer`);
   }
 
   window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS = !isVisible;
 
-  console.log('ents(' + layername + ')' + window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS);
+  console.log(`ents(${  layername  })${  window.$$$currentMap.layerLookup[layername].maped_HIDE_ENTS}`);
 };
 
 let currentEntities = null;
@@ -194,7 +190,7 @@ export const moveSelectedEntityToTile  = (x, y) => {
   const entList = getSelectedEntities();
 
   if( entList.length != 1 ) {
-    alert("Invald number of entities selected.  Need 1, got " + entList.length );
+    alert(`Invald number of entities selected.  Need 1, got ${  entList.length}` );
     return;
   }
 
@@ -214,7 +210,7 @@ export const moveSelectedEntityToPixel  = (px, py) => {
   const entList = getSelectedEntities();
 
   if( entList.length != 1 ) {
-    alert("Invald number of entities selected.  Need 1, got " + entList.length );
+    alert(`Invald number of entities selected.  Need 1, got ${  entList.length}` );
     return;
   }
 
@@ -223,8 +219,8 @@ export const moveSelectedEntityToPixel  = (px, py) => {
   update_entity_location(ent.INDEX, {
     tx: null,
     ty: null,
-    px: px, 
-    py: py,
+    px, 
+    py,
   });
 
   do_the_no_things(null, redraw_palette);
@@ -235,8 +231,8 @@ export const selectEntityByIndex = (idx) => {
     idx = 0;
   }
 
-  const $it_me = $('.entity-row[data-index=' + idx + ']');
-  //_select_entity_ui_inner($it_me);
+  const $it_me = $(`.entity-row[data-index=${  idx  }]`);
+  // _select_entity_ui_inner($it_me);
   $it_me.click();
   return $it_me;
 };
@@ -250,8 +246,9 @@ const singleclick_handler = (evt) => {
 
   addEntityToHighlight(ent);
 
-  const hitbox = window.$$$currentMap.entityData[ent.filename].hitbox;
-  //centerMapOnXY(window.$$$currentMap, ent.location.px - hitbox[0], ent.location.py - hitbox[1], hitbox[2], hitbox[3]);
+
+  const {hitbox} = window.$$$currentMap.entityData[ent.filename];
+  // centerMapOnXY(window.$$$currentMap, ent.location.px - hitbox[0], ent.location.py - hitbox[1], hitbox[2], hitbox[3]);
 };
 
 const doubleclick_handler = (evt) => {
@@ -268,13 +265,13 @@ const redraw_palette = () => {
   for (let i = 0; i < currentEntities.length; i++) {
     const myBaseData = $$$currentMap.entityData[currentEntities[i].filename];
 
-    const $tmp = $("<li class='entity-row' data-index='" + i +
-             "'><span class='entity-index'></span><span class='is-maybe-tall'></span><span class='entity-name'></span></li>");
+    const $tmp = $(`<li class='entity-row' data-index='${  i 
+             }'><span class='entity-index'></span><span class='is-maybe-tall'></span><span class='entity-name'></span></li>`);
     
     $tmp.find('.entity-name').text(currentEntities[i].name);
 
     if(myBaseData && myBaseData.regions && myBaseData.regions.Tall_Redraw) {
-      $tmp.find('.entity-index').html(i + ' <img src=images/icons/svg/pine.svg style="width: 16px; height: 16px; position: relative; top: 2px;">');     
+      $tmp.find('.entity-index').html(`${i  } <img src=images/icons/svg/pine.svg style="width: 16px; height: 16px; position: relative; top: 2px;">`);     
     } else {
       $tmp.find('.entity-index').text(i);
     }
@@ -295,65 +292,67 @@ const fixContainerSize = () => {
   container.height(palette.height() - 290);
 };
 
-$(function() {
-  $.contextMenu({
-    selector: '.entity-palette h3.ui-widget-header', 
-    callback: function(key, options) {
-      switch(key) {
-        default:
-          console.log('unknown key: ' + key);
-          return;
-        case 'generate_functions':
-          generate_functions_from_names();
-          return;
-        case 'copy_scriptnames':
-          copy_useful_entity_data_to_clipboard();
-          return;
+export const init = () => {
+  $(function() {
+    $.contextMenu({
+      selector: '.entity-palette h3.ui-widget-header', 
+      callback(key, options) {
+        switch(key) {
+          default:
+            console.log(`unknown key: ${  key}`);
+            return;
+          case 'generate_functions':
+            generate_functions_from_names();
+            return;
+          case 'copy_scriptnames':
+            copy_useful_entity_data_to_clipboard();
+            
+        }
+      },
+      items: {
+        "copy_scriptnames": {name: "Copy useful entity data to clipboard", icon: "copy"},
+        "generate_functions": {name: "Autogenerate activation scripts from name", icon: "gear"},
+      },
+    });
+
+    $.contextMenu({
+      selector: 'li.entity-row', 
+      callback(key, options) {
+
+        switch(key) {
+          default:
+            console.log(`unknown key: ${  key}`);
+            return;
+          case 'code':
+            copy_useful_single_entity_data_to_clipboard(currentEntities[$(this).data('index')]);
+            return;
+          case 'clone':
+            options.$menu.trigger("contextmenu:hide");
+            var entity_to_copy = $(this).data('index');
+            clone_entity(entity_to_copy);
+            return;
+          case 'edit':
+            $(this).dblclick();
+            return;
+          case 'delete':
+            var entity_to_delete = $(this).data('index');
+            if( confirm(`Are you sure you want to delete entity #${entity_to_delete}?`) ) {
+              delete_entity(entity_to_delete);
+            }
+            
+        }
+      },
+      items: {
+          "edit": {name: "Edit", icon: "edit"},
+          "clone": {name: "Clone", icon: "copy"},
+          "delete": {name: "Delete", icon: "delete"},
+          "code": {name: "Copy useful entity data to clipboard", icon: "copy"},
       }
-    },
-    items: {
-      "copy_scriptnames": {name: "Copy useful entity data to clipboard", icon: "copy"},
-      "generate_functions": {name: "Autogenerate activation scripts from name", icon: "gear"},
-    },
+    });
   });
+};
 
-  $.contextMenu({
-    selector: 'li.entity-row', 
-    callback: function(key, options) {
-
-      switch(key) {
-        default:
-          console.log('unknown key: ' + key);
-          return;
-        case 'code':
-          copy_useful_single_entity_data_to_clipboard(currentEntities[$(this).data('index')]);
-          return;
-        case 'clone':
-          options.$menu.trigger("contextmenu:hide");
-          var entity_to_copy = $(this).data('index');
-          clone_entity(entity_to_copy);
-          return;
-        case 'edit':
-          $(this).dblclick();
-          return;
-        case 'delete':
-          var entity_to_delete = $(this).data('index');
-          if( confirm('Are you sure you want to delete entity #'+entity_to_delete+'?') ) {
-            delete_entity(entity_to_delete);
-          }
-          return;
-      }
-    },
-    items: {
-        "edit": {name: "Edit", icon: "edit"},
-        "clone": {name: "Clone", icon: "copy"},
-        "delete": {name: "Delete", icon: "delete"},
-        "code": {name: "Copy useful entity data to clipboard", icon: "copy"},
-    }
-  });
-});
-
-let template = `
+const template = `
   <div>Name: <input id='entity_name'></div>
   <div>uuid: <input id='entity_uuid' readonly size=36></div>
   <div>Filename: <input id='entity_filename' size=50></div>
@@ -382,9 +381,9 @@ const setup_template = (ent, id) => {
   const $template = $(template);
 
   if (ent) {
-    $('#modal-dialog').attr('title', 'Edit Entity (id: ' + id + ')');
+    $('#modal-dialog').attr('title', `Edit Entity (id: ${  id  })`);
   } else {
-    $('#modal-dialog').attr('title', 'Add New Entity (id: ' + (currentEntities.length) + ')');
+    $('#modal-dialog').attr('title', `Add New Entity (id: ${  currentEntities.length  })`);
   }
 
   const entityFilenameClickFn = () => {
@@ -401,19 +400,20 @@ const setup_template = (ent, id) => {
         }
 
         return jetpack.path(absPath, dir);
-      } else { // "new" mode
+      }  // "new" mode
         if(prevRelPath) {
           return jetpack.path(absPath, prevRelPath);
-        } else {
+        } 
           return jetpack.path(absPath, curPath);
-        }
-      };
+        
+      ;
     }
 
     // This "could" have been nested trinaries... but NO.
     const whatDirToOpen = whatDirToOpenFn(curRelPath, absPathToChrs, previousEntityRelPath); 
     previousEntityRelPath = whatDirToOpen;
 
+    const { dialog } = require('electron').remote;
     dialog.showOpenDialog({
         title: 'Choose a new entity file',
         defaultPath: whatDirToOpen,
@@ -484,7 +484,7 @@ const setup_template = (ent, id) => {
   });
   
   if (ent) {
-    console.log('Editing: ' + ent.name);
+    console.log(`Editing: ${  ent.name}`);
 
     $template.find('#entity_name').val(ent.name);
     $template.find('#entity_uuid').val(ent.uuid);
@@ -517,8 +517,8 @@ const setup_template = (ent, id) => {
       entData = window.$$$currentMap.entityData[ent.filename];
     } else {
       // TODO: load the new entitydata in!
-      console.warn('I DO NOT KNOW HOW TO RENDER [' + ent.filename + ']');
-      entData = window.$$$currentMap.entityData['__default__'];
+      console.warn(`I DO NOT KNOW HOW TO RENDER [${  ent.filename  }]`);
+      entData = window.$$$currentMap.entityData.__default__;
     }
 
     // = window.$$$currentMap.entityData[ent.filename] || window.$$$currentMap.entityData['__default__'];
@@ -591,13 +591,11 @@ function assert_pixel_versus_tile_in_editing() {
 
   if (!loc_px && !loc_py) {
     tiles_on = true;
-  } else {
-    if (loc_tx * 16 === loc_px && loc_ty * 16 === loc_py) { // TODO: pi
+  } else if (loc_tx * 16 === loc_px && loc_ty * 16 === loc_py) { // TODO: pi
       tiles_on = true;
     } else {
       pixels_on = true;
     }
-  }
 
   if (tiles_on) {
     tiles.css('background-color', 'white');
@@ -655,6 +653,8 @@ function _entity_click(evt, id) {
 
     assert_pixel_versus_tile_in_editing();
 
+    const { dialog } = require('electron').remote;
+
     dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
@@ -670,7 +670,7 @@ function _entity_click(evt, id) {
         'Cancel': function () {
 
           if( hasDirtyArt ) {
-            /// put it back!
+            // / put it back!
             window.$$$currentMap.maybeAddEntityTexture(oldData, oldEnt);
             oldData = null;
             oldEnt = null;
@@ -680,7 +680,7 @@ function _entity_click(evt, id) {
           dialog.dialog('close');
         }
       },
-      close: function () {
+      close () {
         $('#modal-dialog').html('');
       }
     });
@@ -739,25 +739,26 @@ export const update_entity = (dialog, ent_id) => {
   }
 
   const vals = {
-    loc_tx: loc_tx,
-    loc_ty: loc_ty,
-    loc_px: loc_px,
-    loc_py: loc_py,
-    loc_l: loc_l,
-    entity_animation: entity_animation,
-    entity_facing: entity_facing,
-    entity_wander: entity_wander,
-    entity_name: entity_name,
-    entity_uuid: entity_uuid,
-    entity_filename: entity_filename,
-    entity_activation_script: entity_activation_script,
-    entity_speed: entity_speed,
-    entity_pays_attention_to_obstructions: entity_pays_attention_to_obstructions,
-    entity_is_an_obstruction: entity_is_an_obstruction,
-    entity_autofaces: entity_autofaces
+    loc_tx,
+    loc_ty,
+    loc_px,
+    loc_py,
+    loc_l,
+    entity_animation,
+    entity_facing,
+    entity_wander,
+    entity_name,
+    entity_uuid,
+    entity_filename,
+    entity_activation_script,
+    entity_speed,
+    entity_pays_attention_to_obstructions,
+    entity_is_an_obstruction,
+    entity_autofaces
   };
 
   if (_update_entity_inner(ent_id, vals)) {
+    const { dialog } = require('electron').remote;
     dialog.dialog('close');
     selectEntityByIndex(ent_id);
     scrollEntityPalletteToEntity(ent_id);
@@ -766,7 +767,7 @@ export const update_entity = (dialog, ent_id) => {
 
 export const update_entity_location = (ent_id, valDict) => {
   if (!$.isNumeric(ent_id) || ent_id < 0) {
-    modal_error('Invalid input: ent_id (' + ent_id + ') is invalid.');
+    modal_error(`Invalid input: ent_id (${  ent_id  }) is invalid.`);
     return false;
   }
 
@@ -779,7 +780,7 @@ export const update_entity_location = (ent_id, valDict) => {
 
 const get_entity_data = (chr_filepath) => {
   const fullpath = jetpack.path(window.$$$currentMap.dataPath, window.$$$currentMap.mapedConfigData.path_to_chrs, chr_filepath);
-  console.log( 'fullpath to entity for animation verificaiton: ' + fullpath );
+  console.log( `fullpath to entity for animation verificaiton: ${  fullpath}` );
 
   const data = jetpack.read(fullpath, 'json');
 
@@ -790,12 +791,12 @@ const get_animations_by_filepath = (chr_filepath) => {
   const data = get_entity_data(chr_filepath);
 
   if(!data) {
-    console.error('Invalid entity filepath: ' + fullpath);
+    console.error(`Invalid entity filepath: ${  fullpath}`);
     return [];
   }
 
   if( !data.animations ) {
-    console.error('Entity has no animations: ' + fullpath);
+    console.error(`Entity has no animations: ${  fullpath}`);
     return [];
   }
 
@@ -805,13 +806,13 @@ const get_animations_by_filepath = (chr_filepath) => {
 const is_valid_animation = (chr_filepath, animation_name) => {
   const animations = get_animations_by_filepath(chr_filepath);
 
-  console.info('data.animations['+animation_name+']: ' + animations[animation_name]);
+  console.info(`data.animations[${animation_name}]: ${  animations[animation_name]}`);
   return !!animations[animation_name];
 };
 
 const _loc_helper = (valDict) => {
 
-  let loc = {};
+  const loc = {};
 
   if( valDict.loc_l ) {
     loc.layer = valDict.loc_l;
@@ -841,12 +842,12 @@ export const _update_entity_inner = (ent_id, valDict) => {
   let ent = null;
 
   if (!$.isNumeric(ent_id) || ent_id < 0) {
-    modal_error('Invalid input: ent_id (' + ent_id + ') is invalid.');
+    modal_error(`Invalid input: ent_id (${  ent_id  }) is invalid.`);
     return false;
   }
 
   if (!$.isNumeric(valDict.entity_speed)) {
-    modal_error('Invalid input: speed not numeric (' + valDict.entity_speed + ').');
+    modal_error(`Invalid input: speed not numeric (${  valDict.entity_speed  }).`);
     return false;
   }
 
@@ -903,7 +904,7 @@ export const _update_entity_inner = (ent_id, valDict) => {
   if( ent.animation != valDict.entity_animation ) {
     // todo lookahead in the new file to see if the new animation name is valid.
     if( !is_valid_animation(ent.filename, ent.animation) ) {
-      alert(ent.filename +' does not have animation ' + ent.animation );
+      alert(`${ent.filename } does not have animation ${  ent.animation}` );
       ent.animation = '';
     }
   }
@@ -923,7 +924,7 @@ export const _update_entity_inner = (ent_id, valDict) => {
   }
 
   if( !ent.uuid ) {
-    currentEntities[ent_id]['uuid'] = generate_unique_entity_uuid_for_this_map();
+    currentEntities[ent_id].uuid = generate_unique_entity_uuid_for_this_map();
   }
 
   if (old_layer && new_layer && old_layer !== new_layer) {
@@ -952,7 +953,7 @@ export const _does_uuid_already_exist = (uuid, map) => {
     curEnts = map.mapData.entities;
   }
 
-  for (var i = curEnts.length - 1; i >= 0; i--) {
+  for (let i = curEnts.length - 1; i >= 0; i--) {
     if( curEnts[i].uuid && curEnts[i].uuid === uuid ) {
       return true;
     }
@@ -975,7 +976,7 @@ export const generate_unique_entity_uuid_for_this_map = (map) => {
 
 export const delete_entity = ( ent_id ) => {
   if( ent_id < 0 || ent_id >= currentEntities.length ) {
-    console.warn('Attempted to delete out-of bounds entity: ' + ent_id + ' (out of '+currentEntities.length+'). ');
+    console.warn(`Attempted to delete out-of bounds entity: ${  ent_id  } (out of ${currentEntities.length}). `);
     return;
   }
 
@@ -1041,8 +1042,8 @@ const relocate_entity_for_map_rendering = (ent_uuid, old_layer, new_layer) => {
   }
 
   window.alert(
-    "FAILED TO MOVE entity '" + ent_name + "' from layer '" + old_layer +
-    "' to layer '" + new_layer + "'.  FOR REASONS."
+    `FAILED TO MOVE entity '${  ent_name  }' from layer '${  old_layer 
+    }' to layer '${  new_layer  }'.  FOR REASONS.`
   );
 };
 
@@ -1057,7 +1058,7 @@ export const scrollEntityPalletteToEntity = (entToFocus) => {
   }
 
   if (entIdx !== entToFocus) {
-    msg = 'unexpected entity index, expected ' + entToFocus + ', got ' + entIdx;
+    msg = `unexpected entity index, expected ${  entToFocus  }, got ${  entIdx}`;
     console.log(msg);
     throw msg;
   }
@@ -1089,8 +1090,8 @@ const setupEntityBoundsDrawing = () => {
     showSelectionPalette: true,
     maxSelectionSize: 10,
     preferredFormat: "hex",
-    change: function(color) {
-      const _color = color.toHexString() + "ff";
+    change(color) {
+      const _color = `${color.toHexString()  }ff`;
       $('#all_entity_bounds_color').val(_color)
       allEntityBoundsColorpicker.spectrum("set", color.toHexString());
       if( _color !== '#00000000') {
@@ -1133,8 +1134,8 @@ const setupEntityHitboxDrawing = () => {
     showSelectionPalette: true,
     maxSelectionSize: 10,
     preferredFormat: "hex",
-    change: function(color) {
-      const _color = color.toHexString() + "ff";
+    change(color) {
+      const _color = `${color.toHexString()  }ff`;
       $('#all_entity_hitbox_bounds_color').val(_color)
       allEntityHitboxBoundsColorpicker.spectrum("set", color.toHexString());
       if( _color !== '#00000000') {
@@ -1177,8 +1178,8 @@ const setupEntityTallRedrawDrawing = () => {
     showSelectionPalette: true,
     maxSelectionSize: 10,
     preferredFormat: "hex",
-    change: function(color) {
-      const _color = color.toHexString() + "ff";
+    change(color) {
+      const _color = `${color.toHexString()  }ff`;
       $('#all_entity_tallredraw_bounds_color').val(_color)
       allEntityTallRedrawBoundsColorpicker.spectrum("set", color.toHexString());
       if( _color !== '#00000000') {
@@ -1207,6 +1208,6 @@ const setupColorStuff = () => {
 }
 
 export const EntitiesWidget = {
-  initEntitiesWidget: initEntitiesWidget
+  initEntitiesWidget
 };
 

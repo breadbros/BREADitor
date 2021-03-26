@@ -1,18 +1,18 @@
 import { MakeUndoRedoStack } from './UndoRedo';
 import { LOG, INFO, WARN} from './Logging';
-import { getObsVisibility, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID } from './js/ui/LayersPalette';
-const app = require('electron').remote.app;
-const path = require('path');
-const appPath = app.getAppPath();
-const jetpack = require('fs-jetpack').cwd(appPath);
+import { getObsVisibility, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID , getSelectedLayer } from './js/ui/LayersPalette';
+
 import { ShaderProgram } from './ShaderProgram.js';
-import { updateRstringInfo, getCurrentHoverTile, updateInfoDims, updateLocationText, updateZoomText } from './Tools.js';
+import { updateRstringInfo, updateInfoDims, updateLocationText, updateZoomText } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer, generate_unique_entity_uuid_for_this_map } from './js/ui/EntityPalette.js';
-const sprintf = require('sprintf-js').sprintf;
-const $ = require('jquery');
 
-import { getSelectedLayer } from './js/ui/LayersPalette.js';
+
+
+const path = require('path');
+const {sprintf} = require('sprintf-js');
+
+const {$} = window;
 
 const ENTITY_PREVIEW_ALPHA = 0.75;
 const ANIMATE_TILES = true; // TODO hook this up to a toggle in the UI
@@ -89,28 +89,17 @@ export const getObsColor = () => {
 };
 
 export const verifyTileData = (mapdatafile) => {
-  let promiseResolver = null;
-  // let promiseRejecter = null;
   const readyPromise = new Promise(function (resolve, reject) {
-    promiseResolver = resolve;
-    // promiseRejecter = reject;
-    // TODO add promise rejection here
+    resolve();
   });
 
   LOG('No verification done on tile data yet...');
-
-  promiseResolver();
 
   return readyPromise;
 };
 
 const saveData = (mapFile, mapData) => {
-  // TODO these lines shouldnt be necessary.  delete?
-  // var app = require('electron').remote.app;
-  // var jetpack = require('fs-jetpack').cwd(app.getAppPath());
-
-  // var map = window.$$$currentMap;
-
+  const jetpack = require('fs-jetpack').cwd(__dirname);
   jetpack.write(mapFile, mapData);
 };
 
@@ -125,6 +114,7 @@ export const verifyMap = (mapfile) => {
     verifyPromiseRejecter = reject;
   });
 
+  const jetpack = require('fs-jetpack').cwd(__dirname);
   const mapData = jetpack.read(mapfile, 'json');
 
   let needsDefault = false;
@@ -132,16 +122,16 @@ export const verifyMap = (mapfile) => {
 
   if (typeof mapData.vsp === 'string') {
     window.alert(
-      "Detected old format vsps: '" + mapData.vsp + "'.\n\nPlease select a json vsp for the map's default and" +
-      ' a second one for the obstructions.');
+      `Detected old format vsps: '${  mapData.vsp  }'.\n\nPlease select a json vsp for the map's default and` +
+      ` a second one for the obstructions.`);
     needsDefault = true;
     needsObstructions = true;
   } else {
-    if (!mapData.vsp['default']) {
+    if (!mapData.vsp.default) {
       needsDefault = true;
     }
 
-    if (!mapData.vsp['obstructions']) {
+    if (!mapData.vsp.obstructions) {
       needsObstructions = true;
     }
   }
@@ -153,7 +143,7 @@ export const verifyMap = (mapfile) => {
     });
 
     if (!truth.has(true)) {
-      throw new Error('looking for mapData.tallentitylayer "' + mapData.tallentitylayer + '", but could not find it');
+      throw new Error(`looking for mapData.tallentitylayer "${  mapData.tallentitylayer  }", but could not find it`);
     }
   }
 
@@ -182,7 +172,7 @@ export const verifyMap = (mapfile) => {
     }
   }
 
-  INFO('mapData.tallentitylayer verified as ' + mapData.tallentitylayer);
+  INFO(`mapData.tallentitylayer verified as ${  mapData.tallentitylayer}`);
 
   if (typeof mapData.vsp !== 'object') {
     mapData.vsp = {};
@@ -202,7 +192,7 @@ export const verifyMap = (mapfile) => {
 
     filename = filenames[0].replace(path.dirname(mapfile) + path.sep, '');
 
-    mapData.vsp['default'] = filename;
+    mapData.vsp.default = filename;
   }
 
   if (needsObstructions) {
@@ -215,12 +205,12 @@ export const verifyMap = (mapfile) => {
 
     filename = filenames[0].replace(path.dirname(mapfile) + path.sep, '');
 
-    mapData.vsp['obstructions'] = filename;
+    mapData.vsp.obstructions = filename;
   }
 
   for (let i = mapData.layers.length - 1; i >= 0; i--) {
     if (!mapData.layers[i].vsp) {
-      LOG('setting layer[' + i + ']s vsp to default...');
+      LOG(`setting layer[${  i  }]s vsp to default...`);
       mapData.layers[i].vsp = 'default';
     }
   }
@@ -231,6 +221,7 @@ export const verifyMap = (mapfile) => {
 
   return readyPromise;
 };
+
 
 // todo all of this.mapData should be obfuscated
 export function Map(mapfile, mapdatafile, updateLocationFunction) {
@@ -252,7 +243,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       delete this.vspImages[i];
     }
 
-    for ( let key in this.entityTextures ) {
+    for ( const key in this.entityTextures ) {
       if (this.entityTextures.hasOwnProperty(key)) {
         LOG("deleting entityTextures",key,this.entityTextures[key].img);
         delete this.entityTextures[key].img;
@@ -273,7 +264,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       return tallentitylayer_layerref;
     }
 
-    throw new Error('Unknown layer name: "' + name + '"');
+    throw new Error(`Unknown layer name: "${  name  }"`);
   };
 
   const FILELOAD_MODE = (typeof mapfile === 'string');
@@ -283,7 +274,9 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   if (FILELOAD_MODE) {
     this.filenames.mapfile = mapfile;
     this.filenames.mapdatafile = mapdatafile;
-    lastKnownPath = this.dataPath = path.dirname(mapdatafile);
+
+    this.dataPath = path.dirname(mapdatafile);
+    lastKnownPath = this.dataPath;
     
     // TODO probably need a better concept of project management
     this.mapedConfigFile = path.join(this.dataPath, '$$$_MAPED.json');
@@ -297,11 +290,13 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.updateLocationFn = updateLocationFunction;
 
   this.readyPromise = new Promise(function (resolve, reject) {
+    
     this.promiseResolver = resolve;
     this.promiseRejecter = reject;
   }.bind(this));
 
   if (FILELOAD_MODE) {
+    const jetpack = require('fs-jetpack').cwd(__dirname);
     this.mapData = jetpack.read(mapfile, 'json');
     this.mapPath = mapfile;
   } else {
@@ -319,7 +314,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       }
     }
 
-    throw new Error('Unknown layer by name of "' + name + '"');
+    throw new Error(`Unknown layer by name of "${  name  }"`);
   };
 
   this.getLayerByRStringCode = (rstringcode) => {
@@ -331,7 +326,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       }
     }
 
-    throw new Error('Invalid rstring code "' + rstringcode + '".  Valid range [1, ' + (this.layers.length) + ']');
+    throw new Error(`Invalid rstring code "${  rstringcode  }".  Valid range [1, ${  this.layers.length  }]`);
   };
 
   this.getLayerByIdx_DANGEROUS = (idx) => {
@@ -343,9 +338,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       }
     }
 
-    throw new Error('Invalid layer index "' + idx + '".  Valid range [0, ' + (this.layers.length - 1) + ']');
+    throw new Error(`Invalid layer index "${  idx  }".  Valid range [0, ${  this.layers.length - 1  }]`);
   };
 
+  const jetpack = require('fs-jetpack').cwd(__dirname);
   this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
 
   this.checkerColorA = checkerColorA;
@@ -380,11 +376,11 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.updateRstring = (rstring) => {
     if (typeof rstring === 'string') {
-      LOG("Setting new rstring: '" + rstring + "'");
+      LOG(`Setting new rstring: '${  rstring  }'`);
       this.layerRenderOrder = rstring.split(',');
     } else if (typeof rstring.length === 'number') {
       LOG("Setting new rstring: '");
-      this.layerRenderOrder = rstring.map( (r) => ""+r );
+      this.layerRenderOrder = rstring.map( (r) => `${r}` );
       LOG(this.layerRenderOrder);
     } else {
       throw new Error('What fresh hell is this.  What are you throwing at updateRstring?!');
@@ -428,6 +424,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.camera = [0, 0, 1];
 
   if (FILELOAD_MODE) {
+    const jetpack = require('fs-jetpack').cwd(__dirname);
     this.mapRawTileData = jetpack.read(mapdatafile, 'json'); // zone_data: [{x:x,y:y,z:zIdx}, ...]
   } else {
     this.mapRawTileData = mapdatafile;
@@ -452,7 +449,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     // if( FILELOAD_MODE ) {
   for (const k in this.filenames.vspfiles) {
     const tmppath = path.join(this.dataPath, this.filenames.vspfiles[k]);
-    INFO("Loading '" + tmppath + "'...");
+    INFO(`Loading '${  tmppath  }'...`);
+    const jetpack = require('fs-jetpack').cwd(__dirname);
     this.vspData[k] = jetpack.read(tmppath, 'json');
     INFO(k, '->', this.vspData[k]);
   }
@@ -460,6 +458,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     // / "if this.dataPath" as a sentinel for only doing this to "real" maps.  This file is garbage.
   if (this.dataPath && this.mapData.vsp.obstructions) {
     const tmppath = path.join(this.dataPath, this.mapData.vsp.obstructions);
+    const jetpack = require('fs-jetpack').cwd(__dirname);
     this.obsLayerData = jetpack.read(tmppath, 'json');
     if (!this.obsLayerData) {
       debugger;
@@ -467,14 +466,13 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     if (!this.obsLayerData.vsp) {
       this.obsLayerData.vsp = 'obstructions';
     }
-    INFO('loaded obsLayerData from ' + tmppath);
+    INFO(`loaded obsLayerData from ${  tmppath}`);
   }
 
   // todo: stop being evil
   // todo: that probably won't happen. MWAHAHAHAHHA.
-  this.vspData['zones'] = $.extend(true, {}, this.vspData['obstructions']);
-
-  this.vspData['zones'].source_image = path.join(window.appPath, '/images/zones.png');
+  this.vspData.zones = $.extend(true, {}, this.vspData.obstructions);
+  this.vspData.zones.source_image = $('#zones_tileset')[0].src;
 
   this.compactifyZones = () => {
     // zone_data: [{x,y,z}, ...]
@@ -487,7 +485,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         const x = getXfromFlat(idx, mapWidth);
         const y = getYfromFlat(idx, mapWidth);
 
-        const zone = {x: x, y: y, z: this.zoneData[idx]};
+        const zone = {x, y, z: this.zoneData[idx]};
 
         LOG('saving out flatzone', zone);
 
@@ -511,11 +509,16 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     return a.location.ty - b.location.ty;
   }
 
-  this.toLoad = 1;
-  this.doneLoading = function () {
+  this.toLoad = 0;
+  this.doneLoading = function (name) {
     this.toLoad--;
+    LOG(`done loading ${name}`);
+    LOG(`${this.toLoad} left...`)
     if (this.toLoad === 0) {
       this.promiseResolver(this);
+    } 
+    if(this.toLoad < 0) {
+      throw new Error("Someone done fucked up")
     }
   }.bind(this);
 
@@ -551,8 +554,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.entityTextures = {
     '__default__': { img: new window.Image() }
   };
-  this.entityTextures['__default__'].img.onload = this.doneLoading;
-  this.entityTextures['__default__'].img.src = path.join(window.appPath, '/images/defaultsprite.png');
+  this.entityTextures.__default__.img.onload = this.doneLoading;
+  this.entityTextures.__default__.img.src = $('#default_sprite').src; // path.join(window.appPath, 'assets/images/defaultsprite.png');
 
   const defaultEntityLayer = this.fakeEntityLayer.name;
 
@@ -585,8 +588,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       return;
     }
 
-    const tilewidth = this.vspData['default'].tilesize.width;
-    const tileheight = this.vspData['default'].tilesize.height;
+    const tilewidth = this.vspData.default.tilesize.width;
+    const tileheight = this.vspData.default.tilesize.height;
 
     INFO('createEntityRenderData...');
     this.entities = {};
@@ -615,7 +618,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.selectionMaker = function () {
     return {
-      add: function (x, y, w, h) {
+      add (x, y, w, h) {
         if (x < this.hull.x || this.hull.x === null) { this.hull.x = x; }
         if (y < this.hull.y || this.hull.y === null) { this.hull.y = y; }
         if (x + w > this.hull.x + this.hull.w) { this.hull.w = x + w; }
@@ -633,7 +636,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
         this.recalculateLines();
       },
-      remove: function (x, y, w, h) {
+      remove (x, y, w, h) {
         // TODO update hull -- it's much harder to recalc the hull on subtraction
         let ix = null;
         let iy = null;
@@ -647,7 +650,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
         this.recalculateLines();
       },
-      deselect: function () {
+      deselect () {
         this.hull.x = null;
         this.hull.y = null;
         this.hull.w = 0;
@@ -658,7 +661,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       },
 
           // "private"
-      recalculateLines: function () {
+      recalculateLines () {
         this.lines = [];
 
         const mapWidth = this.map.mapSizeInTiles.width;
@@ -712,7 +715,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.visibleHoverTile = this.selectionMaker();
   this.visibleHoverTile.map = this;
 
-  //heal uuids into uuid-less maps
+  // heal uuids into uuid-less maps
   if(has_unset_uuids(this)) {
     heal_uuids_for_this_map(this);
     alert("Your map lacked entity uuids.  We've added them in.  Please save before using these uuids.");
@@ -722,7 +725,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 };
 
 const has_unset_uuids = (map) => {
-  for (var i = map.mapData.entities.length - 1; i >= 0; i--) {
+  for (let i = map.mapData.entities.length - 1; i >= 0; i--) {
     if( !map.mapData.entities[i].uuid ) {
       return true;
     }
@@ -756,20 +759,21 @@ Map.prototype = {
   sullyDataHealing(entity) {
     // TODO this section is full of asset-healing code that's super Sully-specific.  Clean it up for general release.
     if (!this.entityData[entity.filename]) {
+      const jetpack = require('fs-jetpack').cwd(__dirname);
       const originalDatafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
       let datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
       let data = null;
 
       if (entity.filename.endsWith('chr')) {
-        if (jetpack.exists(datafile + '.json')) {
-          entity.filename = entity.filename + '.json';
-          datafile = datafile + '.json';
+        if (jetpack.exists(`${datafile  }.json`)) {
+          entity.filename += '.json';
+          datafile += '.json';
         } else {
           const lastDitch = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename);
 
           if (jetpack.exists(lastDitch)) {
-            entity.filename = 'chrs' + '/' + entity.filename + '.json';
-            datafile = lastDitch + '.json';
+            entity.filename = `${'chrs' + '/'}${  entity.filename  }.json`;
+            datafile = `${lastDitch  }.json`;
           } else {
             datafile = null;
           }
@@ -778,11 +782,11 @@ Map.prototype = {
 
       if (datafile === null && !entity.filename.endsWith('json')) {
         const lastDitch = jetpack.path(
-          this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename + '.chr.json'
+          this.dataPath, this.mapedConfigData.path_to_chrs, `${entity.filename  }.chr.json`
         );
 
         if (jetpack.exists(lastDitch)) {
-          entity.filename = jetpack.path(entity.filename + '.chr.json');
+          entity.filename = jetpack.path(`${entity.filename  }.chr.json`);
           datafile = lastDitch;
         } else {
           datafile = null;
@@ -804,11 +808,11 @@ Map.prototype = {
 
       if (datafile === null && !entity.filename.startsWith('chr') && !entity.filename.endsWith('json')) {
         const lastDitch = jetpack.path(
-          this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename + '.chr.json'
+          this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', `${entity.filename  }.chr.json`
         );
 
         if (jetpack.exists(lastDitch)) {
-          entity.filename = jetpack.path('chrs', entity.filename + '.chr.json');
+          entity.filename = jetpack.path('chrs', `${entity.filename  }.chr.json`);
           datafile = lastDitch;
         } else {
           datafile = null;
@@ -819,18 +823,18 @@ Map.prototype = {
         // TODO: use aen's loaders in MAPPO and convert binary chrs to images and json files, motherfucker!
         data = jetpack.read(datafile, 'json');
       } catch (e) {
-        window.alert('Failure while attempting to parse json for ' + datafile + '\nReason: \n' + e );
+        window.alert(`Failure while attempting to parse json for ${  datafile  }\nReason: \n${  e}` );
         if (entity.filename.endsWith('json')) {
           console.error('Couldnt read a json entity file:', entity.filename);
         }
-        console.warn("Totally couldnt read datafile: '" + datafile + "'");
+        console.warn(`Totally couldnt read datafile: '${  datafile  }'`);
         data = null;
       }
 
       if (data) {
         this.maybeAddEntityTexture(data, entity);
       } else {
-        console.warn("Could not find '" + entity.filename + "', using the default. Path: ", datafile);
+        console.warn(`Could not find '${  entity.filename  }', using the default. Path: `, datafile);
         // debugger;
         entity.MAPED_USEDEFAULT = true;
       }
@@ -866,7 +870,9 @@ Map.prototype = {
       }
     }
 
-    LOG("this.entityTextures["+data.image+"] " + this.entityTextures[data.image])
+    const jetpack = require('fs-jetpack').cwd(__dirname);
+
+    LOG(`this.entityTextures[${data.image}] ${  this.entityTextures[data.image]}`)
     if (!this.entityTextures[data.image]) {
       // TODO maybe make this definable in this.mapedConfigData too?
       let imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image);
@@ -883,12 +889,12 @@ Map.prototype = {
         return;
       }
 
-      INFO("Adding '" + imagePath + "' to entityTextures cache...");
+      INFO(`Adding '${  imagePath  }' to entityTextures cache...`);
       this.toLoad++;
       this.entityTextures[data.image] = {};
       this.entityTextures[data.image].img = new window.Image();
       const fn = this.doneLoading;
-      this.entityTextures[data.image].img.onload = function() { LOG('done loading ' + data.image); fn(); }
+      this.entityTextures[data.image].img.onload = function() { fn(data.image); }
       this.entityTextures[data.image].img.src = imagePath;  
     }
 
@@ -913,13 +919,13 @@ Map.prototype = {
     this.sullyDataHealing(entity);
 
     if (entity.filename.endsWith('chr')) {
-      console.warn("entity ('" + entity.filename + "') is binary in format.  Skipping for now.");
+      console.warn(`entity ('${  entity.filename  }') is binary in format.  Skipping for now.`);
       entity.MAPED_USEDEFAULT = true;
       return;
     }
 
     if (!entity.filename.endsWith('chr') && !entity.filename.endsWith('json')) {
-      console.warn("entity ('" + entity.filename + "') has an unknown format.  Skipping for now. (2)");
+      console.warn(`entity ('${  entity.filename  }') has an unknown format.  Skipping for now. (2)`);
       entity.MAPED_USEDEFAULT = true;
       return;
     }
@@ -927,10 +933,10 @@ Map.prototype = {
     if (!entity.MAPED_USEDEFAULT) {
       if (
         this.entityData[entity.filename].regions &&
-        this.entityData[entity.filename].regions['Tall_Redraw'] &&
+        this.entityData[entity.filename].regions.Tall_Redraw &&
         !this.getEntityTallRedrawLayer()
       ) {
-        window.alert('ERROR: Loading tall entity ' + entity.filename + ' with no tallentitylayer in map!');
+        window.alert(`ERROR: Loading tall entity ${  entity.filename  } with no tallentitylayer in map!`);
       }
 
       entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
@@ -938,12 +944,12 @@ Map.prototype = {
       entity.animation = 'Idle Down'; // / m-m-m-magick (__default__ has this)
     }
   },
-  addEntity: function (filename, location) {
+  addEntity (filename, location) {
     this.addEntityWithoutSort(filename, location);
     this.entities[location.layer].sort(this.entitySortFn);
   },
 
-  getVSPTileLocation: function (vsp, idx) {
+  getVSPTileLocation (vsp, idx) {
     let x = null;
     let y = null;
 
@@ -954,31 +960,31 @@ Map.prototype = {
     x *= this.vspData[vsp].tilesize.width;
 
     return {
-      x: x,
-      y: y
+      x,
+      y
     };
   },
 
-  getZone: function (tileX, tileY) {
+  getZone (tileX, tileY) {
     const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
 
     return this.zoneData[idx];
   },
 
-  setZone: function (tileX, tileY, zoneIdx) {
+  setZone (tileX, tileY, zoneIdx) {
     const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
 
     this.zoneData[idx] = zoneIdx;
   },
 
-  getTile: function (tileX, tileY, layerIdx) {
+  getTile (tileX, tileY, layerIdx) {
     let idx;
 
     if (layerIdx === MAGICAL_OBS_LAYER_ID) { // TODO the obs sentinel is the WORST
       idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
       if (this.legacyObsData) { // we are in the main map.
         return this.legacyObsData[idx];
-      } else if (this.tileData && this.tileData.length === 1) { // we are in the obs map
+      } if (this.tileData && this.tileData.length === 1) { // we are in the obs map
         layerIdx = 0;
       } else {
         throw new Error(
@@ -1000,14 +1006,14 @@ Map.prototype = {
     return this.tileData[layerIdx][idx];
   },
 
-  setTile: function (tileX, tileY, layerIdx, tileIdx) {
+  setTile (tileX, tileY, layerIdx, tileIdx) {
     let idx;
 
-    /// jesus, right?  One day this won't be a thing, he lied to himself.
+    // / jesus, right?  One day this won't be a thing, he lied to himself.
     if( layerIdx !== MAGICAL_OBS_LAYER_ID && layerIdx !== MAGICAL_ZONE_LAYER_ID ) {
       if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
-        console.warn('attempted to set a tile out of layer bounds. ('+tileX+','+tileY+')');
-        INFO('layerIdx: ' + layerIdx);
+        console.warn(`attempted to set a tile out of layer bounds. (${tileX},${tileY})`);
+        INFO(`layerIdx: ${  layerIdx}`);
         INFO(this.layers[layerIdx].dimensions)
         return;
       }
@@ -1035,8 +1041,9 @@ Map.prototype = {
     }
   },
 
-  ready: function () {
-    const key = 'map-' + this.mapData.name;
+  ready () {
+
+    const key = `map-${  this.mapData.name}`;
     const $cont = $('.map-palette');
 
     const setPaletteLocations = function (paletteDict) {
@@ -1045,8 +1052,8 @@ Map.prototype = {
 
       for (const k in paletteDict) {
         // INFO('paletteDict.' + k);
-        configVar = k + ' settings'; // this should be CONST'd somewhere and referenced in both places
-        const $pal = $('.' + k);
+        configVar = `${k  } settings`; // this should be CONST'd somewhere and referenced in both places
+        const $pal = $(`.${  k}`);
 
         // INFO('configVar: ' + configVar);
         // INFO('$pal: ' + $pal);
@@ -1066,25 +1073,25 @@ Map.prototype = {
       }
     };
 
-    const localStorage = window.localStorage;
+    const {localStorage} = window;
 
-    if (localStorage[key] + '-mapx') {
-      if (localStorage[key + '-width']) { $cont.width(localStorage[key + '-width']); }
-      if (localStorage[key + '-height']) { $cont.height(localStorage[key + '-height']); }
-      if (localStorage[key + '-top']) { $cont.css('top', localStorage[key + '-top']); }
-      if (localStorage[key + '-left']) { $cont.css('left', localStorage[key + '-left']); }
-      if (localStorage[key + '-mapx']) { this.camera[0] = parseInt(localStorage[key + '-mapx']); }
-      if (localStorage[key + '-mapy']) { this.camera[1] = parseInt(localStorage[key + '-mapy']); }
-      if (localStorage[key + '-mapzoom']) { this.camera[2] = parseInt(localStorage[key + '-mapzoom']); }
+    if (`${localStorage[key]  }-mapx`) {
+      if (localStorage[`${key  }-width`]) { $cont.width(localStorage[`${key  }-width`]); }
+      if (localStorage[`${key  }-height`]) { $cont.height(localStorage[`${key  }-height`]); }
+      if (localStorage[`${key  }-top`]) { $cont.css('top', localStorage[`${key  }-top`]); }
+      if (localStorage[`${key  }-left`]) { $cont.css('left', localStorage[`${key  }-left`]); }
+      if (localStorage[`${key  }-mapx`]) { this.camera[0] = parseInt(localStorage[`${key  }-mapx`]); }
+      if (localStorage[`${key  }-mapy`]) { this.camera[1] = parseInt(localStorage[`${key  }-mapy`]); }
+      if (localStorage[`${key  }-mapzoom`]) { this.camera[2] = parseInt(localStorage[`${key  }-mapzoom`]); }
       if( !this.camera[2] ) {
         this.camera[2] = 1;
       }
 
-      if (localStorage[key + '-layerspallete']) { this.camera[1] = parseInt(localStorage[key + '-layerspallete']); }
+      if (localStorage[`${key  }-layerspallete`]) { this.camera[1] = parseInt(localStorage[`${key  }-layerspallete`]); }
 
-      if (localStorage['palettes']) {
+      if (localStorage.palettes) {
         INFO('palletes found...');
-        setPaletteLocations(JSON.parse(localStorage['palettes']));
+        setPaletteLocations(JSON.parse(localStorage.palettes));
       } else {
         console.warn('no palettes registered.');
       }
@@ -1097,7 +1104,7 @@ Map.prototype = {
     return this.readyPromise;
   },
 
-  uniqueLayerName: function (like) {
+  uniqueLayerName (like) {
     if (like && !this.layerLookup[like]) { return like; }
     if (!like) { like = 'Layer 0'; } // will have 1 added to the 0 so unnamed layers will be Layer 1, Layer 2, etc.
 
@@ -1116,7 +1123,7 @@ Map.prototype = {
     return name;
   },
 
-  setCanvas: function ($canvas) {
+  setCanvas ($canvas) {
     INFO('Setting canvas on map');
     if (this.renderContainer) { this.cleanUpCallbacks(); }
 
@@ -1130,7 +1137,10 @@ Map.prototype = {
     this.gl.clearColor(0.5, 0.5, 0.5, 1.0);
 
     const readShader = (path) => {
-      const p = jetpack.path(appPath, 'app', path);
+      // const appPath = require('electron').remote.app.getAppPath();
+      // const p = jetpack.path(appPath, 'app', path);
+      const jetpack = require('fs-jetpack');
+      const p = jetpack.path(path);
       const res = jetpack.read(p);
       return res;
     };
@@ -1216,7 +1226,7 @@ Map.prototype = {
     }
   },
 
-  calculateSize: function() {
+  calculateSize() {
     this.mapSizeInTiles = {
       width: 0,
       height: 0
@@ -1247,7 +1257,7 @@ Map.prototype = {
     }
   },
 
-  drawEntities: function (i, map, layer, tallEntities, tick) {
+  drawEntities (i, map, layer, tallEntities, tick) {
     if (!map.entities) {
       return;
     }
@@ -1262,8 +1272,8 @@ Map.prototype = {
 
         for (let e = 0; e < entities.length; e++) {
           const mask = (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions &&
-                         map.entityData[entities[e].filename].regions['Tall_Redraw'] ?
-                         map.entityData[entities[e].filename].regions['Tall_Redraw'] : null);
+                         map.entityData[entities[e].filename].regions.Tall_Redraw ?
+                         map.entityData[entities[e].filename].regions.Tall_Redraw : null);
 
           if (showEntityPreview &&
               map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
@@ -1294,7 +1304,7 @@ Map.prototype = {
             map.renderEntity(
               entity, layer,
               [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)],
-              map.entityData[entity.filename].regions['Tall_Redraw'],
+              map.entityData[entity.filename].regions.Tall_Redraw,
               null, 
               true
             );
@@ -1302,7 +1312,7 @@ Map.prototype = {
             map.renderEntity(
               entity, layer,
               [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A],
-              map.entityData[entity.filename].regions['Tall_Redraw'],
+              map.entityData[entity.filename].regions.Tall_Redraw,
               null, 
               true
             );
@@ -1312,7 +1322,7 @@ Map.prototype = {
     }
   },
 
-  maybeRenderZones: function (gl) {
+  maybeRenderZones (gl) {
     // ZONES
     if (getZoneVisibility() && this.zoneData.length > 1) {
       const vsp = 'zones'; // TODO zones layer shouldn't just default like this
@@ -1364,7 +1374,7 @@ Map.prototype = {
     }
   },
 
-  maybeRenderObstructions: function (gl) {
+  maybeRenderObstructions (gl) {
     // OBSTRUCTIONS
     if (getObsVisibility() && this.legacyObsData) {
       const vsp = 'obstructions'; // TODO obstruction layer shouldn't just default like this
@@ -1377,7 +1387,7 @@ Map.prototype = {
         layer.dimensions = this.mapData.obstructions_layer.dimensions;
       }
 
-      //TODO this.mapData.obstructions_layer.offset
+      // TODO this.mapData.obstructions_layer.offset
 
       this.obstructionmapShader.use();
 
@@ -1425,7 +1435,7 @@ Map.prototype = {
     }
   },
 
-  renderTilesAndEntityLayers: function (gl, tick) {
+  renderTilesAndEntityLayers (gl, tick) {
     const tallEntities = [];
 
     // render each layer in turn
@@ -1438,7 +1448,7 @@ Map.prototype = {
     }
   },
 
-  renderLayer: function (gl, i, tallEntities, tick) {
+  renderLayer (gl, i, tallEntities, tick) {
     const layerIndex = parseInt(this.layerRenderOrder[i], 10) - 1;
     const layer = this.mapData.layers[layerIndex];
 
@@ -1465,14 +1475,14 @@ Map.prototype = {
             this.renderEntity(
               entity, layer,
               [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)],
-              this.entityData[entity.filename].regions['Tall_Redraw'],
+              this.entityData[entity.filename].regions.Tall_Redraw,
               null, null
             );
           } else {
             this.renderEntity(
               entity, layer,
               [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A],
-              this.entityData[entity.filename].regions['Tall_Redraw'],
+              this.entityData[entity.filename].regions.Tall_Redraw,
               null, null
             );
           }
@@ -1482,7 +1492,7 @@ Map.prototype = {
       return;
     }
 
-    const vsp = layer.vsp;
+    const {vsp} = layer;
 
     this.tilemapShader.use();
 
@@ -1527,7 +1537,7 @@ Map.prototype = {
     // draw the tiles!
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    /// TODO: extract everything below this this into its own helper function?
+    // / TODO: extract everything below this this into its own helper function?
     this.layerBorderShader.use();
     
     const a_positionLayer = this.layerBorderShader.attribute('a_position');
@@ -1577,7 +1587,7 @@ Map.prototype = {
     this.drawEntities(i, this, layer, tallEntities, tick);
   },
 
-  maybeRenderMarchingAnts: function (gl, selection) {
+  maybeRenderMarchingAnts (gl, selection) {
     const vsp = 'default'; // TODO this is definitely wrong. Definitely if we allow vsp size mixing.
 
     // MARCHING ANTS
@@ -1619,7 +1629,7 @@ Map.prototype = {
     }
   },
 
-  maybeRenderScreenviewOverlay: function(gl, overlay) {
+  maybeRenderScreenviewOverlay(gl, overlay) {
 
     /*
       overlay = {
@@ -1669,8 +1679,8 @@ Map.prototype = {
     }
   },
 
-  render: function () {
-    const gl = this.gl;
+  render () {
+    const {gl} = this;
     const tick = Date.now();
 
     this.renderContainerDimensions = {
@@ -1697,7 +1707,7 @@ Map.prototype = {
     // LOG((tock-tick) + 'ms to render');
   },
 
-  renderBackground: function (gl) {
+  renderBackground (gl) {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     if (window.$$$SCREENSHOT) {
@@ -1738,17 +1748,17 @@ Map.prototype = {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   },
 
-  _getEntityData: function (entity) {
-    const e = entity.MAPED_USEDEFAULT ? this.entityData['__default__'] : this.entityData[entity.filename];
+  _getEntityData (entity) {
+    const e = entity.MAPED_USEDEFAULT ? this.entityData.__default__ : this.entityData[entity.filename];
 
-    if (!entity.MAPED_USEDEFAULT && e === this.entityData['__default__']) {
+    if (!entity.MAPED_USEDEFAULT && e === this.entityData.__default__) {
       debugger;
     }
 
     return e;
   },
 
-  _getAnimationSafe: function(entity, entityData) {
+  _getAnimationSafe(entity, entityData) {
     if(entityData.animations[entity.animation]) {
       return entityData.animations[entity.animation][0][0][0];
     }
@@ -1761,11 +1771,11 @@ Map.prototype = {
     debugger;      
   },
 
-  renderEntity: function (entity, layer, tint, clip, mask, isTallRedraw) {
+  renderEntity (entity, layer, tint, clip, mask, isTallRedraw) {
     this.spriteShader.use();
 
-    const gl = this.gl;
-    const tilesize = this.vspData[layer.vsp].tilesize;
+    const {gl} = this;
+    const {tilesize} = this.vspData[layer.vsp];
 
     let layerOffsetTx = 0;
     let layerOffsetTy = 0;
@@ -1778,7 +1788,7 @@ Map.prototype = {
     const entityData = this._getEntityData(entity);
     const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
     if (!entityTexture) {
-      alert("Entity '" + entity.name + "' at (" + entity.location.tx + "," + entity.location.ty + ") with image path `" + entityData.image + "` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.");
+      alert(`Entity '${  entity.name  }' at (${  entity.location.tx  },${  entity.location.ty  }) with image path \`${  entityData.image  }\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`);
     }
 
     clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
@@ -1820,7 +1830,7 @@ Map.prototype = {
     fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
     fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
 
-    let verts = [];
+    const verts = [];
     if (!mask) {
       verts.push(tx, -ty, fx, fy);
       verts.push(tx + tw, -ty, fx + fw, fy);
@@ -1829,13 +1839,13 @@ Map.prototype = {
       verts.push(tx, -ty - th, fx, fy + fh);
       verts.push(tx + tw, -ty, fx + fw, fy);
     } else {
-        let tm = [
+        const tm = [
           mask[0] / tilesize.width,
           mask[1] / tilesize.height,
           mask[2] / tilesize.width,
           mask[3] / tilesize.height
         ];
-        let fm = [
+        const fm = [
           mask[0] / entityTexture.img.width,
           mask[1] / entityTexture.img.height,
           mask[2] / entityTexture.img.width,
@@ -1910,11 +1920,11 @@ Map.prototype = {
     }
   },
 
-  renderEntityTallRedrawBoundsBounds: function(entity, layer, tint, clip, mask, verts, viewport) {
+  renderEntityTallRedrawBoundsBounds(entity, layer, tint, clip, mask, verts, viewport) {
     this.entityBoundsShader.use();
     
-    const gl = this.gl;
-    const tilesize = this.vspData[layer.vsp].tilesize;
+    const {gl} = this;
+    const {tilesize} = this.vspData[layer.vsp];
 
     let layerOffsetTx = 0;
     let layerOffsetTy = 0;
@@ -1927,7 +1937,7 @@ Map.prototype = {
     const entityData = this._getEntityData(entity);
     const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
     if (!entityTexture) {
-      alert("Entity '" + entity.name + "' at (" + entity.location.tx + "," + entity.location.ty + ") with image path `" + entityData.image + "` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.");
+      alert(`Entity '${  entity.name  }' at (${  entity.location.tx  },${  entity.location.ty  }) with image path \`${  entityData.image  }\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`);
     }
 
     clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
@@ -1937,10 +1947,10 @@ Map.prototype = {
     gl.enableVertexAttribArray(a_vertices);
     gl.vertexAttribPointer(a_vertices, 2, gl.FLOAT, false, 0, 0);
 
-    const hitbox_x = entityData.hitbox[0]; //-entityData.hitbox[0]
-    const hitbox_y = entityData.hitbox[1]; //-entityData.hitbox[1]
-    const hitbox_w = entityData.hitbox[2]; //-entityData.hitbox[0]
-    const hitbox_h = entityData.hitbox[3]; //-entityData.hitbox[1]
+    const hitbox_x = entityData.hitbox[0]; // -entityData.hitbox[0]
+    const hitbox_y = entityData.hitbox[1]; // -entityData.hitbox[1]
+    const hitbox_w = entityData.hitbox[2]; // -entityData.hitbox[0]
+    const hitbox_h = entityData.hitbox[3]; // -entityData.hitbox[1]
 
     let x = entity.location.px / tilesize.width || entity.location.tx;
     let y = entity.location.py / tilesize.height || entity.location.ty;
@@ -1987,11 +1997,11 @@ Map.prototype = {
     gl.drawArrays( gl.LINES, 0, 8 );
   },
 
-  renderEntityBounds: function(entity, layer, tint, clip, mask, verts, viewport) {
+  renderEntityBounds(entity, layer, tint, clip, mask, verts, viewport) {
     this.entityBoundsShader.use();
     
-    const gl = this.gl;
-    const tilesize = this.vspData[layer.vsp].tilesize;
+    const {gl} = this;
+    const {tilesize} = this.vspData[layer.vsp];
 
     let layerOffsetTx = 0;
     let layerOffsetTy = 0;
@@ -2004,7 +2014,7 @@ Map.prototype = {
     const entityData = this._getEntityData(entity);
     const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
     if (!entityTexture) {
-      alert("Entity '" + entity.name + "' at (" + entity.location.tx + "," + entity.location.ty + ") with image path `" + entityData.image + "` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.");
+      alert(`Entity '${  entity.name  }' at (${  entity.location.tx  },${  entity.location.ty  }) with image path \`${  entityData.image  }\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`);
     }
 
     clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
@@ -2014,10 +2024,10 @@ Map.prototype = {
     gl.enableVertexAttribArray(a_vertices);
     gl.vertexAttribPointer(a_vertices, 2, gl.FLOAT, false, 0, 0);
 
-    const hitbox_x = entityData.hitbox[0]; //-entityData.hitbox[0]
-    const hitbox_y = entityData.hitbox[1]; //-entityData.hitbox[1]
-    const hitbox_w = entityData.hitbox[2]; //-entityData.hitbox[0]
-    const hitbox_h = entityData.hitbox[3]; //-entityData.hitbox[1]
+    const hitbox_x = entityData.hitbox[0]; // -entityData.hitbox[0]
+    const hitbox_y = entityData.hitbox[1]; // -entityData.hitbox[1]
+    const hitbox_w = entityData.hitbox[2]; // -entityData.hitbox[0]
+    const hitbox_h = entityData.hitbox[3]; // -entityData.hitbox[1]
 
     let x = entity.location.px / tilesize.width || entity.location.tx;
     let y = entity.location.py / tilesize.height || entity.location.ty;
@@ -2061,11 +2071,11 @@ Map.prototype = {
     gl.drawArrays( gl.LINES, 0, 8 );
   },
 
-  renderEntityHitBoxBounds: function(entity, layer, tint, clip, mask, verts, viewport) {
+  renderEntityHitBoxBounds(entity, layer, tint, clip, mask, verts, viewport) {
     this.entityBoundsShader.use();
     
-    const gl = this.gl;
-    const tilesize = this.vspData[layer.vsp].tilesize;
+    const {gl} = this;
+    const {tilesize} = this.vspData[layer.vsp];
     let layerOffsetTx = 0;
     let layerOffsetTy = 0;
 
@@ -2076,7 +2086,7 @@ Map.prototype = {
     const entityData = this._getEntityData(entity);
     const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
     if (!entityTexture) {
-      alert("Entity '" + entity.name + "' at (" + entity.location.tx + "," + entity.location.ty + ") with image path `" + entityData.image + "` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.");
+      alert(`Entity '${  entity.name  }' at (${  entity.location.tx  },${  entity.location.ty  }) with image path \`${  entityData.image  }\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`);
     }
 
     clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
@@ -2107,7 +2117,7 @@ Map.prototype = {
       [y1, y2] = [y2, y1];
     }
 
-    let arLines = [
+    const arLines = [
       x, -y,
       x+w, -y,
       x+w, -y,
@@ -2158,11 +2168,11 @@ Map.prototype = {
     gl.drawArrays( gl.LINES, 0, arLines.length/2 );
   },
 
-  cleanUpCallbacks: function () {
+  cleanUpCallbacks () {
     this.renderContainer.off(undefined, undefined, this);
   },
 
-  resize: function () {
+  resize () {
     if (!this.renderContainer || !this.gl) { return; }
     const w = this.renderContainer.width();
     const h = this.renderContainer.height();

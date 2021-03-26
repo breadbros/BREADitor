@@ -4,26 +4,26 @@ export const windowMenuTemplate = {
   label: 'Window',
 
   submenu: [
-    { label: 'Map', click: function () { send('map'); } },
-    { label: 'Tools', click: function () { send('tool'); } },
-    { label: 'Info', click: function () { send('info'); } },
-    { label: 'Layers', accelerator: 'L', click: function () { send('layers', 'L'); } },
-    { label: 'Zones', click: function () { send('zones'); } },
-    { label: 'Entities', click: function () { send('entity'); } },
-    { label: 'Tileset Selector', click: function () { send('tileset-selector'); } },
-    { label: 'Screenview Indicator', click: function () { send('screenview-indicator'); } },
+    { label: 'Map', click () { send('map'); } },
+    { label: 'Tools', click () { send('tool'); } },
+    { label: 'Info', click () { send('info'); } },
+    { label: 'Layers', accelerator: 'L', click () { send('layers', 'L'); } },
+    { label: 'Zones', click () { send('zones'); } },
+    { label: 'Entities', click () { send('entity'); } },
+    { label: 'Tileset Selector', click () { send('tileset-selector'); } },
+    { label: 'Screenview Indicator', click () { send('screenview-indicator'); } },
     { type: 'separator' },
     {
       label: 'Collect all visible palettes',
       accelerator: 'CmdOrCtrl+Shift+P',
-      click: function () {
+      click () {
         send('all-collect');
       }
     },
     {
       label: 'Show all palettes',
       accelerator: 'CmdOrCtrl+Shift+Alt+P',
-      click: function () {
+      click () {
         send('all-show');
       }
     }

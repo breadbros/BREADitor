@@ -19,14 +19,14 @@ export const updateMapAndVSPFileInfo = (map) => {
 
   $('#info-mapname').attr('src', map.mapPath);
 
-  var mapMenu = $(function() {
+  const mapMenu = $(function() {
       $.contextMenu({
           selector: `#info-mapname`, 
-          callback: function(key, options) {
+          callback(key, options) {
               switch(key) {
               	case "JSON":
               		shell.openItem(map.mapPath);
-              		return;
+              		
               }
           },
           items: {
@@ -54,7 +54,7 @@ export const updateMapAndVSPFileInfo = (map) => {
     vspMenu = $(function() {
       $.contextMenu({
           selector: `.${className}`, 
-          callback: function(key, options) {
+          callback(key, options) {
               switch(key) {
                 case "JSON":
                   shell.openItem(fullpath);
@@ -67,7 +67,7 @@ export const updateMapAndVSPFileInfo = (map) => {
                   return;
                 case "Copy-Image":
                   clipboard.writeText(map.vspImages[keyName].src, 'clipboard');
-                  return;
+                  
               }
           },
           items: {

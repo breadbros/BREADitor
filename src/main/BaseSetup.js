@@ -3,7 +3,7 @@ import { LOG, INFO } from '../Logging'
 import { TilesetSelectorWidget } from '../js/ui/TilesetSelectorPalette.js';
 import { Map, verifyTileData, verifyMap, cleanEntities } from '../Map.js';
 import { Palettes } from '../Palettes.js';
-import { LayersWidget, visibilityFix, getSelectedLayer,  MAGICAL_ENT_LAYER_ID, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID } from '../js/ui/LayersPalette.js'; //, selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
+import { LayersWidget, visibilityFix, getSelectedLayer,  MAGICAL_ENT_LAYER_ID, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID } from '../js/ui/LayersPalette.js'; // , selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
 import { ZonesWidget } from '../js/ui/ZonesPalette.js';
 import { EntitiesWidget } from '../js/ui/EntityPalette.js';
 import { updateMapAndVSPFileInfo } from '../js/ui/InfoPalette.js';
@@ -12,6 +12,7 @@ import { cut, copy, paste } from '../js/ui/CutCopyPaste';
 import { handleUndo, handleRedo } from '../UndoRedo';
 import { setupNotifications, notify } from '../Notification-Pane';
 import { setSuperCutPasteLayers, superCut, superPaste } from '../js/ui/SuperCutPaste';
+import { BREADPATH } from './FileSystemSetup';
 
 const path = require('path');
 
@@ -23,17 +24,13 @@ const updateScreenview = (map) => {
   $('#screenview-indicator-height').val(map.windowOverlay.viewport.height);  
 }
 
-/// TODO: why have both $$$_BREDITOR_MOST_RECENT.json and $$$_MAPED.json... 🤔
-/// I guess one should be in the appdir to at least point to the project directory...
+// / TODO: why have both $$$_BREDITOR_MOST_RECENT.json and $$$_MAPED.json... 🤔
+// / I guess one should be in the appdir to at least point to the project directory...
 const loadMostRecentFileOption = () => {
-  /// TODO: is there a reason for requiring these in-block like this, or is it just cargo cult copypasta? 
-  const app = require('electron').remote.app;
-  const jetpack = require('fs-jetpack').cwd(app.getAppPath());
-  const dataPath = app.getAppPath();
+  // / TODO: is there a reason for requiring these in-block like this, or is it just cargo cult copypasta? 
+  const jetpack = BREADPATH.getJetpack();
 
-  const options = {};
-
-  const appConfigData = jetpack.read(path.join(dataPath, '$$$_BREDITOR_MOST_RECENT.json'), 'json');
+  const appConfigData = jetpack.read(BREADPATH.getMostRecentFilesJSONPath(), 'json');
   window.$$$_most_recent_options = appConfigData;
 
   return appConfigData;
@@ -60,7 +57,7 @@ const initInfoWidget = (map) => {
 function killAllElementListeners($elem) {
   // first argument of function: "$._data ()" is: "Element" - not jQuery object
   $.each( $._data( $elem, "events" ), function(name) {
-    LOG("body had listener: " + name);
+    LOG(`body had listener: ${  name}`);
     $elem.off( name ); // function off() removes an event handler
   } );
 }
@@ -69,7 +66,7 @@ function killAllDocumentListeners(doc) {
   debugger;
   // first argument of function: "$._data ()" is: "Element" - not jQuery object
   $.each( $._data( $elem, "events" ), function(name) {
-    LOG("body had listener: " + name);
+    LOG(`body had listener: ${  name}`);
     $elem.off( name ); // function off() removes an event handler
   } );
 }
@@ -134,11 +131,11 @@ function setupChording() {
         LOG('super-paste, but the one on the document.  SIGH WINDOWS.');
         window.$$$superpaste();
         return;
-      } else {
+      } 
         LOG('edit-paste, but the one on the document.  SIGH WINDOWS.');
         paste(window.$$$currentMap);
         return;
-      }
+      
     }
 
     if ((e.key === 'x' || e.key === 'X')) {
@@ -146,17 +143,17 @@ function setupChording() {
         LOG('super-cut, but the one on the document.  SIGH WINDOWS.');
         window.$$$supercut();
         return;
-      } else {
+      } 
         LOG('edit-cut, but the one on the document.  SIGH WINDOWS.');
         cut(window.$$$currentMap);
         return;
-      }
+      
     }
 
     if (e.key === 'a' || e.key === 'A') {
       LOG('edit-select-all but the one on the document.  SIGH WINDOWS.');
       selectAll(window.$$$currentMap);
-      return;
+      
     }
   });
 }
@@ -229,7 +226,7 @@ export function autoloadMostRecentMapIfAvailable() {
 export function setupFreshApp() {
 
   killAllElementListeners($( "#body" ));
-  //killAllDocumentListeners(document);
+  // killAllDocumentListeners(document);
 
   setupShiftKeyPressed();
 
@@ -246,7 +243,7 @@ export function setupWindowFunctions() {
     
     const maps = window.$$$_most_recent_options.recent_maps;
 
-    let $template = `
+    const $template = `
       Width  <input id="newmap-width" type="number"><br/>
       Height  <input id="newmap-height" type="number"><br/>
     `;
@@ -262,7 +259,7 @@ export function setupWindowFunctions() {
     const dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
-      title: title,
+      title,
       buttons: {
         'Cancel': function () {
           $('#modal-dialog').dialog( "close" );
@@ -334,7 +331,7 @@ export function setupWindowFunctions() {
           window.$$$show_all_windows();
         }
       },
-      close: function () {
+      close () {
         $('#modal-dialog').html('');
       }
     });
@@ -378,8 +375,7 @@ export function setupWindowFunctions() {
   };
 
   window._save = function (newName, map, reloadAfterSave) {
-    const app = require('electron').remote.app;
-    const jetpack = require('fs-jetpack').cwd(app.getAppPath());
+    const jetpack = BREADPATH.getJetpack();
 
     let mapfile = null;
     let datafile = null;
@@ -426,10 +422,10 @@ export function setupWindowFunctions() {
     let z = 0;
 
     window.$$$palette_registry.map((pal) => {
-      const node_selector = '.' + pal;
+      const node_selector = `.${  pal}`;
       const $node = $(node_selector);
-      $node.css('top', y + 'px');
-      $node.css('left', x + 'px');
+      $node.css('top', `${y  }px`);
+      $node.css('left', `${x  }px`);
       $node.css('z-index', z);
 
       Palettes.correctResizeWidget($node);
@@ -442,9 +438,9 @@ export function setupWindowFunctions() {
     Palettes.savePalettePositions();
   };
 
-  window.$$$show_all_windows = function () {
+  window.$$$show_all_windows = () => {
     window.$$$palette_registry.map((pal) => {
-      const node_selector = '.' + pal;
+      const node_selector = `.${  pal}`;
       const $node = $(node_selector);
       $node.show();
     });
@@ -452,21 +448,16 @@ export function setupWindowFunctions() {
     Palettes.savePalettePositions();
   };
 
-  window.$$$hide_all_windows = function () {
+  window.$$$hide_all_windows = () => {
     window.$$$palette_registry.map((pal) => {
-      const node_selector = '.' + pal;
+      const node_selector = `.${  pal}`;
       const $node = $(node_selector);
       $node.hide();
     });
   };
 
-  window.$$$load = function () {
-    const app = require('electron').remote.app;
+  window.$$$load = () => {
     const { dialog } = require('electron').remote;
-    const dataPath = app.getAppPath();
-    const jetpack = require('fs-jetpack').cwd(dataPath);
-    const path = require('path');
-
 
     const options = {
       filters: [{ name: 'text', extensions: ['map.json'] }]
@@ -479,7 +470,7 @@ export function setupWindowFunctions() {
     dialog.showOpenDialog( options, loadByFilename );
   };
 
-  window.$$$superpaste = function() {
+  window.$$$superpaste = () => {
     const hoverTile = getCurrentHoverTile();
     if (hoverTile === null) {
       console.error('attempted to paste when hovertile was null.  wtf.');
@@ -519,15 +510,15 @@ export function setupWindowFunctions() {
     `;
 
     let layer = null;
-    for (var i = 0; i < map.layers.length; i++) { 
+    for (let i = 0; i < map.layers.length; i++) { 
       layer = map.layers[i];
       $template += `
         <input type=checkbox checked="true" class="supercut-layers" data-layer-id="${i}">${layer.name}<br> 
       `;
     }
 
-    //debugger;
-    //window.$$$currentMap;
+    // debugger;
+    // window.$$$currentMap;
 
     $('#modal-dialog').html('');
     $('#modal-dialog').append($template);
@@ -537,10 +528,10 @@ export function setupWindowFunctions() {
     const dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
-      title: title,
+      title,
       buttons: {
         'Cut': () => {
-          let layers = [];
+          const layers = [];
           $(".supercut-layers:checked").each(function() {
             const me = $(this);
             layers.push($(me[0]).data("layer-id"));
@@ -553,7 +544,7 @@ export function setupWindowFunctions() {
           $('#modal-dialog').dialog( "close" );
         }
       },
-      close: function () {
+      close () {
         $('#modal-dialog').html('');
       }
     });
@@ -577,7 +568,7 @@ export function setupWindowFunctions() {
     $('#modal-dialog').append($template);
 
     for (var i = 0; i < maps.length; i++) {
-      const basePath = maps[i].basePath;
+      const {basePath} = maps[i];
       const file = maps[i].map;
 
       $(`#recent-${i}`).on('click', (evt) => {
@@ -591,13 +582,13 @@ export function setupWindowFunctions() {
     const dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
-      title: title,
+      title,
       buttons: {
         'Cancel': function () {
           $('#modal-dialog').dialog( "close" );
         }
       },
-      close: function () {
+      close () {
         $('#modal-dialog').html('');
       }
     });
@@ -622,17 +613,17 @@ export function setupWindowFunctions() {
     }
 
     let node_selector = '';
-    let node = pal + '-palette';
+    let node = `${pal  }-palette`;
 
     if (window.$$$palette_registry.indexOf(node) >= 0) {
-      node_selector = '.' + node;
+      node_selector = `.${  node}`;
       node = $(node_selector);
 
       if (!node.length) {
-        throw new Error("Invalid palette node selector: '" + node_selector + "'");
+        throw new Error(`Invalid palette node selector: '${  node_selector  }'`);
       }
     } else {
-      throw new Error("Invalid palette name: '" + pal + "'");
+      throw new Error(`Invalid palette name: '${  pal  }'`);
     }
 
     if (node.is(':visible') && forceShow !== true) {
@@ -648,7 +639,7 @@ export function setupWindowFunctions() {
     Palettes.savePalettePositions();
   };
 
-  window.appPath = path.dirname(require.main.filename);
+  window.appPath = path.dirname(require('electron').remote.app.getAppPath());
 }
 
 
@@ -669,11 +660,10 @@ function loadByFilename(fileNames) {
 };
 
 function saveMostRecentMapLocation(filename) {
-  const app = require('electron').remote.app;
-  const jetpack = require('fs-jetpack').cwd(app.getAppPath());
-  const path = require('path');
+  
+  const jetpack = BREADPATH.getJetpack();
+  const appConfigPath = BREADPATH.getMostRecentFilesJSONPath();
 
-  const appConfigPath = path.join(app.getAppPath(), '$$$_BREDITOR_MOST_RECENT.json');
   let appConfigData = jetpack.read(appConfigPath, 'json');
   if( !appConfigData ) { 
     appConfigData = {};
@@ -701,10 +691,10 @@ function saveMostRecentMapLocation(filename) {
 const MAX_RECENT_MAPS = 10;
 
 function dedupeRecentMaps(mapQueue) {
-  var hitList = {};
-  var newQueue = [];
+  const hitList = {};
+  const newQueue = [];
 
-  for (var i = 0; i < mapQueue.length; i++) {
+  for (let i = 0; i < mapQueue.length; i++) {
     const key = mapQueue[i].basePath +  mapQueue[i].map;
     if(!hitList[key]) {
       newQueue.push(mapQueue[i]);
@@ -722,61 +712,67 @@ function dedupeRecentMaps(mapQueue) {
 export function bootstrapMap(mapFile, tiledataFile) {
 
   // replace entire contents of the body with a fresh copy.
-  const $body = $('body');
+  const $body = $('#jquery-ui-base');
   $body.html(baseHTMLTemplate());
   Palettes.setupPaletteRegistry();
   Palettes.setupPaletteListeners();
   setupFreshApp();
   
+  const errorHandler = (e) => {
+    debugger;
+    console.error(e);
+  };
+
   verifyTileData(tiledataFile)
     .then(() => {
       LOG('verify map?');
       verifyMap(mapFile)
         .then(() => {
           LOG('create map?');
-          new Map(
-              mapFile, tiledataFile, (map) => {  updateLocationFunction(map); updateScreenview(map); }
-          ).ready()
-              .then(function (m) {
-                const currentMap = m;
-                m.setCanvas($('.map_canvas'));
 
-                window.$$$currentMap = currentMap;
-
-                for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
-                  if (!m.mapData.entities[i].animation) {
-                    // TODO this is very bad
-                    window.alert('Theres an entity ' + i + ' with unset animation; ALERT GRUE wtf');
-                    // mapData.entities[0].filename
-                    m.mapData.entities[i].animation = 'Idle Down'; // TOD no no no
-                  }
+            new Map(
+                mapFile, tiledataFile, (map) => {  updateLocationFunction(map); updateScreenview(map); }
+            ).ready().then( (m) => {
+              const currentMap = m;
+              m.setCanvas($('.map_canvas'));
+            
+              window.$$$currentMap = currentMap;
+            
+              for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
+                if (!m.mapData.entities[i].animation) {
+                  // TODO this is very bad
+                  window.alert(`Theres an entity ${  i  } with unset animation; ALERT GRUE wtf`);
+                  // mapData.entities[0].filename
+                  m.mapData.entities[i].animation = 'Idle Down'; // TOD no no no
                 }
-
-                if (typeof window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE === 'undefined') {
-                  window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE = true;
-                }
-
-                if (typeof window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE === 'undefined') {
-                  window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE = true;
-                }
-
-                if (typeof window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE === 'undefined') {
-                  window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE = true;
-                }
-
-                LayersWidget.initLayersWidget(currentMap);
-                initInfoWidget(currentMap);
-                initScreen(currentMap);
-                ZonesWidget.initZonesWidget(currentMap);
-                EntitiesWidget.initEntitiesWidget(currentMap);
-
-                initTools($('.map_canvas'), window.$$$currentMap);
-
-                updateRstringInfo();
-
-                // TODO do we need to do this at all?
-                // window.$$$hide_all_windows();
-              });
-        });
-    });
+              }
+            
+              if (typeof window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE === 'undefined') {
+                window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE = true;
+              }
+            
+              if (typeof window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE === 'undefined') {
+                window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE = true;
+              }
+            
+              if (typeof window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE === 'undefined') {
+                window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE = true;
+              }
+            
+              LayersWidget.initLayersWidget(currentMap);
+              initInfoWidget(currentMap);
+              initScreen(currentMap);
+              ZonesWidget.initZonesWidget(currentMap);
+              EntitiesWidget.initEntitiesWidget(currentMap);
+            
+              initTools($('.map_canvas'), window.$$$currentMap);
+            
+              updateRstringInfo();
+            
+              // TODO do we need to do this at all?
+              // window.$$$hide_all_windows();
+            }).catch( (e) => {LOG(e); throw e;} )
+        })
+    })
 };
+

@@ -1,22 +1,27 @@
-const $ = require('jquery');
-const app = require('electron').remote.app;
-const jetpack = require('fs-jetpack').cwd(app.getAppPath());
 import { INFO } from './Logging'
 
-import {setLayerSelectCallback} from './js/ui/LayersPalette';
+const {$} = window;
+
+const init = () => {
+  $('#btn-tool-debugger').on('click', () => {
+    debugSelectedTiles();
+  });
+};
 
 let thisisdumb = false;
 // TODO currently this isn't allowing the multiple-vsp thing to really be "right".
 // TODO need to have virtual palletes per vsp & switch between them when you switch to a layer with a different palette.
 const initializeTileSelectorsForMap = (imageFile, whichvsp) => {
-  imageFile = jetpack.path(window.$$$currentMap.dataPath, imageFile);
-  imageFile = 'file:///' + imageFile.replace(new RegExp('\\\\', 'g'), '/'); // TODO this is incredibly dirty, right?
+  const jetpack = require('fs-jetpack').cwd(__dirname);
+
+  let img = jetpack.path(window.$$$currentMap.dataPath, imageFile);
+  img = `file:///${img.replace(new RegExp('\\\\', 'g'), '/')}`; // TODO this is incredibly dirty, right?
 
   $('#left-palette').removeAttr('style');
   $('#right-palette').removeAttr('style');
 
-  $('#left-palette').css('background-image', 'url(' + imageFile + ')');
-  $('#right-palette').css('background-image', 'url(' + imageFile + ')');
+  $('#left-palette').css('background-image', `url(${img})`);
+  $('#right-palette').css('background-image', `url(${img})`);
 
   $('#left-palette').css('background-position', '0px 0px');
   $('#right-palette').css('background-position', '0px 0px');
@@ -33,16 +38,15 @@ const initializeTileSelectorsForMap = (imageFile, whichvsp) => {
 
 
 const updateInfoWindow = () => {
-  $('#info-selected-tiles').text(leftTile() + ',' + rightTile() + ' (vsp: ' + _last_vsp + ')');
+  $('#info-selected-tiles').text(`${leftTile()  },${  rightTile()  } (vsp: ${  last_vsp  })`);
 };
 
-let selectedTilesPerVSP = {};
-let _last_vsp = null;
-let _last_map = null;
+const selectedTilesPerVSP = {};
+let last_vsp = null;
 
 export const moveSelectedTile = (wasd, map) => {
   if (!(wasd === 'W' || wasd === 'A' || wasd === 'S' || wasd === 'D')) {
-    console.error('wasd was called with non-wasd chr: ' + wasd);
+    console.error(`wasd was called with non-wasd chr: ${  wasd}`);
     return false;
   }
 
@@ -52,20 +56,20 @@ export const moveSelectedTile = (wasd, map) => {
   }
 
   if (!$('#tool-title').text() === 'Draw') {
-    console.error('mode not Draw, was: ' + $('#tool-title').text());
+    console.error(`mode not Draw, was: ${  $('#tool-title').text()}`);
     return false;
   }
 
   let newTile = null;
   switch (wasd) {
     case 'W':
-      newTile = leftTile() - 20;
+      newTile = leftTile() - 20; // TODO calculate this from the per_row value of the actual VSP.
       break;
     case 'A':
       newTile = leftTile() - 1;
       break;
     case 'S':
-      newTile = leftTile() + 20;
+      newTile = leftTile() + 20; // TODO calculate this from the per_row value of the actual VSP.
       break;
     case 'D':
       newTile = leftTile() + 1;
@@ -78,7 +82,7 @@ export const moveSelectedTile = (wasd, map) => {
 
   if (newTile !== null) {
     setCurrentlySelectedTile(newTile);
-    setTileSelectorUI('#left-palette', leftTile(), map, 0, _last_vsp);
+    setTileSelectorUI('#left-palette', leftTile(), map, 0, last_vsp);
     return true;
   }
 
@@ -89,32 +93,28 @@ export const debugSelectedTiles = () => {
   const i = selectedTilesPerVSP;
 };
 
-$('#btn-tool-debugger').on('click', () => {
-  debugSelectedTiles();
-});
-
 const leftTile = (val) => {
-  if (_last_vsp === null) {
+  if (last_vsp === null) {
     return 0;
   }
 
   if (typeof val !== 'undefined') {
-    selectedTilesPerVSP[_last_vsp].leftTile = parseInt(val);
+    selectedTilesPerVSP[last_vsp].leftTile = parseInt(val, 10);
   }
 
-  return selectedTilesPerVSP[_last_vsp].leftTile;
+  return selectedTilesPerVSP[last_vsp].leftTile;
 };
 
 const rightTile = (val) => {
-  if (_last_vsp === null) {
+  if (last_vsp === null) {
     return 0;
   }
 
   if (typeof val !== 'undefined') {
-    selectedTilesPerVSP[_last_vsp].rightTile = parseInt(val);
+    selectedTilesPerVSP[last_vsp].rightTile = parseInt(val);
   }
 
-  return selectedTilesPerVSP[_last_vsp].rightTile;
+  return selectedTilesPerVSP[last_vsp].rightTile;
 };
 
 export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
@@ -133,10 +133,10 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
     };
   }
 
-  if (_last_vsp !== whichVSP) {
-    INFO('_last_vsp !== whichVSP', _last_vsp, whichVSP);
+  if (last_vsp !== whichVSP) {
+    INFO('_last_vsp !== whichVSP', last_vsp, whichVSP);
 
-    _last_vsp = whichVSP;
+    last_vsp = whichVSP;
 
     // setLayerSelectCallback(afterFn); //TODO: sideeffecty :( 
     initializeTileSelectorsForMap(map.vspData[whichVSP].source_image, whichVSP);
@@ -148,7 +148,7 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
   } else if (slotIdx === 1) {
     rightTile(vspIDX);
   } else {
-    throw new Error('Unknwon slotIdx: ' + slotIdx);
+    throw new Error(`Unknwon slotIdx: ${  slotIdx}`);
   }
 
   if (whichOne === '#left-palette') {
@@ -158,13 +158,13 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
   updateInfoWindow();
 
   const loc = map.getVSPTileLocation(whichVSP, vspIDX);
-  $(whichOne).css('background-position', '-' + (loc.x * 2) + 'px -' + (loc.y * 2) + 'px'); // (offset *2)
+  $(whichOne).css('background-position', `-${  loc.x * 2  }px -${  loc.y * 2  }px`); // (offset *2)
 
 };
 
 export const updateTileSelectorPaletteMapAnts = (vspIdx) => { // TODO should this be in the TileSelectorPalette?
-  const tY = parseInt(vspIdx / 20); // TODO calculate this from the per_row value of the actual VSP.
-  const tX = parseInt(vspIdx % 20); // TODO calculate this from the per_row value of the actual VSP.
+  const tY = parseInt(vspIdx / 20, 10); // TODO calculate this from the per_row value of the actual VSP.
+  const tX = parseInt(vspIdx % 20, 10); // TODO calculate this from the per_row value of the actual VSP.
 
   // TODO do not use window.$$$currentTilsesetSelectorMap
   try {
@@ -176,11 +176,11 @@ export const updateTileSelectorPaletteMapAnts = (vspIdx) => { // TODO should thi
 };
 
 export const toggleSelectedTiles = (map) => {
-  const _left = parseInt(leftTile());
-  const _right = parseInt(rightTile());
+  const l = parseInt(leftTile(), 10);
+  const r = parseInt(rightTile(), 10);
 
-  setTileSelectorUI('#left-palette', _right, map, 0, _last_vsp);
-  setTileSelectorUI('#right-palette', _left, map, 1, _last_vsp);
+  setTileSelectorUI('#left-palette', r, map, 0, last_vsp);
+  setTileSelectorUI('#right-palette', l, map, 1, last_vsp);
 };
 
 export const setCurrentlySelectedTile = (idx) => {

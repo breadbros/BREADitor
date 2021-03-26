@@ -2,7 +2,7 @@ import { MakeUndoRedoStack } from '../UndoRedo';
 import { MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID } from '../js/ui/LayersPalette';
 
 export const FakeMap = () => {
-  let _layers = [{dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}, {dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}];
+  let fakeLayers = [{dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}, {dimensions: {X: 3, Y:3}, parallax: {X:1, Y:1}}];
 
   let matrix = [[
     [0, 0, 0],
@@ -27,16 +27,16 @@ export const FakeMap = () => {
   ];
 
   let entities = [
-    { location : {tx:1, ty:2, px: null, py: null} }, //ent 0
-    { location : {tx:null, ty:null, px: 5, py: 6} }, //ent 1
+    { location : {tx:1, ty:2, px: null, py: null} }, // ent 0
+    { location : {tx:null, ty:null, px: 5, py: 6} }, // ent 1
   ];
 
-  let mapSizeInTiles = {
+  const mapSizeInTiles = {
     width: 3,
     height: 3
   };
 
-  let obsLayerData = {
+  const obsLayerData = {
     dimensions: {
       X: 4,
       Y: 4
@@ -45,10 +45,10 @@ export const FakeMap = () => {
 
   const setMatrix = (newMatrix) => {
     matrix = newMatrix;
-    _layers = [];
+    fakeLayers = [];
 
-    for (var i = 0; i<newMatrix.length; i++) {
-      _layers.push({
+    for (let i = 0; i<newMatrix.length; i++) {
+      fakeLayers.push({
         dimensions: {X: newMatrix[i][0].length, Y:newMatrix[i].length},
         parallax: {X:1, Y:1}
       });
@@ -90,8 +90,8 @@ export const FakeMap = () => {
 
   const getTile = (x, y, l) => {
     if( l === MAGICAL_OBS_LAYER_ID ) {
-      return _getObs(x,y); //this is an accurate representation of map.getTile().  I am a hack.
-    } else if( l === MAGICAL_ZONE_LAYER_ID ) {
+      return _getObs(x,y); // this is an accurate representation of map.getTile().  I am a hack.
+    } if( l === MAGICAL_ZONE_LAYER_ID ) {
       return getZone(x,y);
     }
 
@@ -100,9 +100,9 @@ export const FakeMap = () => {
 
   const setTile = (x, y, l, t) => {
     if( l === MAGICAL_OBS_LAYER_ID ) {
-      _setObs(x,y,t); //this is an accurate representation of map.getTile().  I am a hack.
+      _setObs(x,y,t); // this is an accurate representation of map.getTile().  I am a hack.
     } else if( l === MAGICAL_ZONE_LAYER_ID ) {
-      setZone(x,y,t); //this is an accurate representation of map.getTile().  I am a hack.
+      setZone(x,y,t); // this is an accurate representation of map.getTile().  I am a hack.
     } else {
       matrix[l][x][y] = t;
     }
@@ -116,22 +116,31 @@ export const FakeMap = () => {
     return matrix;
   };
 
-  let ret = {
-    layers: _layers,
+  const ret = {
+    layers: fakeLayers,
     mapSizeInTiles,
     obsLayerData,
-    getTile: getTile,
-    setTile: setTile,
-    getZone: getZone,
-    setZone: setZone,
-    getLayerData: getLayerData,
-    getMatrix: getMatrix,
-    setMatrix: setMatrix,
+    dataPath: '',
+    
+    getTile,
+    setTile,
+    getZone,
+    setZone,
+    getLayerData,
+    getMatrix,
+    setMatrix,
     getVSPTileLocation: () => { return 1234567890; },
     mapData: {
       isTileSelectorMap: false,
-      entities: entities
+      entities
     },
+    mapedConfigData: {
+      autoSelectEntityAfterEdit: false,
+    },
+
+    createEntityRenderData: () => {}, 
+    resetEntityData: () => {},
+
     _setZoneMatrix,
     _getZoneMatrix,
     _setObsMatrix,

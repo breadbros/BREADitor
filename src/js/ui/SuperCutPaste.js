@@ -1,6 +1,7 @@
 import { getSelectedLayer, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID, MAGICAL_ENT_LAYER_ID } from './LayersPalette';
 import { getXfromFlat, getYfromFlat } from '../../Map';
 import { getCurrentHoverTile } from '../../Tools';
+
 const _ = require('lodash');
 
 let pasteboard = [];
@@ -49,7 +50,7 @@ const _cut = (map, x1,y1) => {
   const hull_y = y1;
   const cutSet = [];
 
-  for (var i = layers.length - 1; i >= 0; i--) {
+  for (let i = layers.length - 1; i >= 0; i--) {
 
     const curLayer = layers[i];
     const mapWidth = map.mapSizeInTiles.width;
@@ -113,7 +114,7 @@ export const superPaste = (map, newX, newY) => {
 };
 
 export const _paste = (map, tX, tY) => {
-  let layerX, layerY;
+  let layerX; let layerY;
 
   const pasteSet = [];
 
@@ -131,7 +132,7 @@ export const _paste = (map, tX, tY) => {
           layerY = map.mapSizeInTiles.height;
           break;
         default:
-          alert("unknown layer id: " + layerIdx);
+          alert(`unknown layer id: ${  layerIdx}`);
           return;
       }
     } else {

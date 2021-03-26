@@ -7,9 +7,9 @@ import {
 
 import { getXfromFlat, getYfromFlat } from '../../Map';
 import { getCurrentHoverTile } from '../../Tools';
+import { notify } from '../../Notification-Pane';
 
 const { clipboard } = require('electron');
-import { notify } from '../../Notification-Pane';
 
 let pasteboard = [];
 
@@ -85,7 +85,7 @@ export const paste = (map, tX, tY, newLayerIdx) => {
     newLayerIdx = getSelectedLayer().map_tileData_idx;
   }
 
-  let layerX, layerY;
+  let layerX; let layerY;
 
   if(newLayerIdx >= map.layers.length) {
     switch(newLayerIdx) {
@@ -98,7 +98,7 @@ export const paste = (map, tX, tY, newLayerIdx) => {
         layerY = window.$$$currentMap.mapSizeInTiles.height;
         break;
       default:
-        alert("unknown layer id: " + newLayerIdx);
+        alert(`unknown layer id: ${  newLayerIdx}`);
         return;
     }
   } else {
@@ -131,7 +131,7 @@ export const paste = (map, tX, tY, newLayerIdx) => {
   map.UndoRedo.change_many_tiles(pasteSet);
 };
 
-let origin_tx, origin_ty;
+let origin_tx; let origin_ty;
 export const convertPasteboardToCode = (map, tX, tY, newLayerIdx) => {
   
   if( !pasteboard.length ) {
@@ -142,8 +142,8 @@ export const convertPasteboardToCode = (map, tX, tY, newLayerIdx) => {
   const pasteSet = [];
 
   let tmp = "";
-  let tx, ty, layerIndex, tileIndex;
-  //origin_tx, origin_ty
+  let tx; let ty; let layerIndex; let tileIndex;
+  // origin_tx, origin_ty
   for (let i = pasteboard.length - 1; i >= 0; i--) {
     tx = origin_tx + pasteboard[i][0];
     ty = origin_ty + pasteboard[i][1];

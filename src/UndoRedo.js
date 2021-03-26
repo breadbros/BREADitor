@@ -64,13 +64,13 @@ export const MakeUndoRedoStack = (_map) => {
 
   const redostack_add = ( op, data ) => {
     // todo verify the code is correct
-    //const op = get_operation_code(operation);
+    // const op = get_operation_code(operation);
     redoStack.push( {op,data} );
   }
 
-  ///////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////
   // TILE IMPLEMENTATION
-  ///////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////
   const change_one_tile = (
     tileX, tileY,
     layerIdx, tileIdx
@@ -159,9 +159,9 @@ export const MakeUndoRedoStack = (_map) => {
   };
 
 
-  ///////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////
   // ZONE IMPLEMENTATION
-  ///////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////
   const change_one_zone = (
     tileX, tileY, zoneIdx
   ) => {
@@ -216,12 +216,12 @@ export const MakeUndoRedoStack = (_map) => {
     _zone_change(data, undostack_add);
   };
 
-  ///////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////
   // ENTITY IMPLEMENTATION
-  ///////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////
 
   const prepare_one_entloc = (ent_id, _valDict) => {
-    const {tx, ty, px, py} = Object.assign({}, _valDict);
+    const {tx, ty, px, py} = { ..._valDict};
 
     return [ent_id, tx, ty, px, py];
   };
@@ -229,7 +229,7 @@ export const MakeUndoRedoStack = (_map) => {
   const change_one_entity_location = (
     ent_id, valDict
   ) => {
-    const was = Object.assign({}, map.mapData.entities[ent_id].location);
+    const was = { ...map.mapData.entities[ent_id].location};
 
     if (
       was.tx === valDict.tx &&
@@ -296,7 +296,7 @@ export const MakeUndoRedoStack = (_map) => {
       valDict.px = data[i][3];
       valDict.py = data[i][4];
 
-      const was = Object.assign({}, map.mapData.entities[entId].location);
+      const was = { ...map.mapData.entities[entId].location};
 
       if (
         was.tx === valDict.tx &&
@@ -324,20 +324,20 @@ export const MakeUndoRedoStack = (_map) => {
   };
 
   const _debug_UNDOSTACK = () => {
-    console.log("_undoStack.length = " + undoStack.length);
-    for(var i=0; i<undoStack.length; i++){
-      console.log("_undoStack["+i+"]: ", undoStack[i].data);
+    console.log(`_undoStack.length = ${  undoStack.length}`);
+    for(let i=0; i<undoStack.length; i++){
+      console.log(`_undoStack[${i}]: `, undoStack[i].data);
     };
   }
   const _debug_REDOSTACK = () => {
-    console.log("_redoStack.length = " + redoStack.length);
-    for(var i=0; i<redoStack.length; i++){
-      console.log("_redoStack["+i+"]: ", redoStack[i].data);
+    console.log(`_redoStack.length = ${  redoStack.length}`);
+    for(let i=0; i<redoStack.length; i++){
+      console.log(`_redoStack[${i}]: `, redoStack[i].data);
     }
   }
 
 
-  ///////////////////////////////////////////
+  // /////////////////////////////////////////
   // The list of supported undo/redo types?
   const TILE_CHANGE = "tile-change";
   add_handlers(TILE_CHANGE, _undo_tiles, _redo_tiles);
@@ -346,7 +346,7 @@ export const MakeUndoRedoStack = (_map) => {
   const ENT_MOVE = "entity-move";
   add_handlers(ENT_MOVE, _undo_ent_move, _redo_ent_move);
 
-  ///////////////////////////////////////////
+  // /////////////////////////////////////////
   // the "public" interface
 
   const undo = () => {
@@ -368,23 +368,23 @@ export const MakeUndoRedoStack = (_map) => {
   };
 
   const UndoRedo = {
-    undo: undo,
-    redo: redo,
+    undo,
+    redo,
     
-    _undoStack: undoStack, //testing only
-    _redoStack: redoStack, //testing only
-    _debug_UNDOSTACK: _debug_UNDOSTACK, //testing only
-    _debug_REDOSTACK: _debug_REDOSTACK, //testing only
+    _undoStack: undoStack, // testing only
+    _redoStack: redoStack, // testing only
+    _debug_UNDOSTACK, // testing only
+    _debug_REDOSTACK, // testing only
 
-    change_one_tile: change_one_tile,
-    change_many_tiles: change_many_tiles,
-    prepare_one_tile: prepare_one_tile,
+    change_one_tile,
+    change_many_tiles,
+    prepare_one_tile,
 
-    change_one_zone: change_one_zone,
+    change_one_zone,
 
-    change_one_entity_location: change_one_entity_location,
+    change_one_entity_location,
 
-    prepare_supercut_layer: prepare_supercut_layer,
+    prepare_supercut_layer,
   };
 
   return UndoRedo;
