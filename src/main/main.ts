@@ -12,9 +12,9 @@ let win: BrowserWindow | null;
 
 const setApplicationMenu = () => {
     const menus:MenuItemConstructorOptions[] = prodMenuTemplate as MenuItemConstructorOptions[];
-    if (process.env.NODE_ENV !== 'production') {
+    // if (process.env.NODE_ENV !== 'production') {
         menus.push(devMenuTemplate);
-    }
+    // }
     Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
 };
 
@@ -48,7 +48,6 @@ const createWindow = async () => {
         process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1'; // eslint-disable-line require-atomic-updates
         win.loadURL(`http://localhost:2003`);
         win.webContents.openDevTools();
-        
     } else {
         win.loadURL(
             url.format({

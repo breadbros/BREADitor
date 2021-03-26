@@ -13,9 +13,8 @@ let thisisdumb = false;
 // TODO currently this isn't allowing the multiple-vsp thing to really be "right".
 // TODO need to have virtual palletes per vsp & switch between them when you switch to a layer with a different palette.
 const initializeTileSelectorsForMap = (imageFile, whichvsp) => {
-  debugger;
   const app = require('electron').remote.app;
-  const jetpack = require('fs-jetpack').cwd(app.getAppPath());
+  const jetpack = require('fs-jetpack').cwd(__dirname);
 
 
   imageFile = jetpack.path(window.$$$currentMap.dataPath, imageFile);

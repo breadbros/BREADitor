@@ -1,6 +1,8 @@
 'use strict';
 
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -17,5 +19,12 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
+        // new CleanWebpackPlugin({}),
+        new CopyWebpackPlugin({
+            patterns: [
+              { from: "shaders", to: "shaders" },
+              { from: "assets", to: "assets" },
+            ],
+          }),
     ]
 };

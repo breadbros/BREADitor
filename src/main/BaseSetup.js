@@ -438,7 +438,7 @@ export function setupWindowFunctions() {
     Palettes.savePalettePositions();
   };
 
-  window.$$$show_all_windows = function () {
+  window.$$$show_all_windows = () => {
     window.$$$palette_registry.map((pal) => {
       const node_selector = '.' + pal;
       const $node = $(node_selector);
@@ -448,7 +448,7 @@ export function setupWindowFunctions() {
     Palettes.savePalettePositions();
   };
 
-  window.$$$hide_all_windows = function () {
+  window.$$$hide_all_windows = () => {
     window.$$$palette_registry.map((pal) => {
       const node_selector = '.' + pal;
       const $node = $(node_selector);
@@ -456,13 +456,8 @@ export function setupWindowFunctions() {
     });
   };
 
-  window.$$$load = function () {
-    const app = require('electron').remote.app;
+  window.$$$load = () => {
     const { dialog } = require('electron').remote;
-    const dataPath = app.getAppPath();
-    const jetpack = require('fs-jetpack').cwd(dataPath);
-    const path = require('path');
-
 
     const options = {
       filters: [{ name: 'text', extensions: ['map.json'] }]
@@ -475,7 +470,7 @@ export function setupWindowFunctions() {
     dialog.showOpenDialog( options, loadByFilename );
   };
 
-  window.$$$superpaste = function() {
+  window.$$$superpaste = () => {
     const hoverTile = getCurrentHoverTile();
     if (hoverTile === null) {
       console.error('attempted to paste when hovertile was null.  wtf.');

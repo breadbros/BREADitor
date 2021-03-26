@@ -98,7 +98,7 @@ export const verifyTileData = (mapdatafile) => {
 };
 
 const saveData = (mapFile, mapData) => {
-  const jetpack = require('fs-jetpack').cwd(require('electron').remote.app.getAppPath());
+  const jetpack = require('fs-jetpack').cwd(__dirname);
   jetpack.write(mapFile, mapData);
 };
 
@@ -113,7 +113,7 @@ export const verifyMap = (mapfile) => {
     verifyPromiseRejecter = reject;
   });
 
-  const jetpack = require('fs-jetpack').cwd(require('electron').remote.app.getAppPath());
+  const jetpack = require('fs-jetpack').cwd(__dirname);
   const mapData = jetpack.read(mapfile, 'json');
 
   let needsDefault = false;
@@ -293,7 +293,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   }.bind(this));
 
   if (FILELOAD_MODE) {
-    const jetpack = require('fs-jetpack').cwd(require('electron').remote.app.getAppPath());
+    const jetpack = require('fs-jetpack').cwd(__dirname);
     this.mapData = jetpack.read(mapfile, 'json');
     this.mapPath = mapfile;
   } else {
@@ -338,7 +338,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     throw new Error('Invalid layer index "' + idx + '".  Valid range [0, ' + (this.layers.length - 1) + ']');
   };
 
-  const jetpack = require('fs-jetpack').cwd(require('electron').remote.app.getAppPath());
+  const jetpack = require('fs-jetpack').cwd(__dirname);
   this.mapedConfigData = jetpack.read(this.mapedConfigFile, 'json');
 
   this.checkerColorA = checkerColorA;
@@ -421,7 +421,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.camera = [0, 0, 1];
 
   if (FILELOAD_MODE) {
-    const jetpack = require('fs-jetpack').cwd(require('electron').remote.app.getAppPath());
+    const jetpack = require('fs-jetpack').cwd(__dirname);
     this.mapRawTileData = jetpack.read(mapdatafile, 'json'); // zone_data: [{x:x,y:y,z:zIdx}, ...]
   } else {
     this.mapRawTileData = mapdatafile;
@@ -447,7 +447,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   for (const k in this.filenames.vspfiles) {
     const tmppath = path.join(this.dataPath, this.filenames.vspfiles[k]);
     INFO("Loading '" + tmppath + "'...");
-    const jetpack = require('fs-jetpack').cwd(require('electron').remote.app.getAppPath());
+    const jetpack = require('fs-jetpack').cwd(__dirname);
     this.vspData[k] = jetpack.read(tmppath, 'json');
     INFO(k, '->', this.vspData[k]);
   }
@@ -455,7 +455,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     // / "if this.dataPath" as a sentinel for only doing this to "real" maps.  This file is garbage.
   if (this.dataPath && this.mapData.vsp.obstructions) {
     const tmppath = path.join(this.dataPath, this.mapData.vsp.obstructions);
-    const jetpack = require('fs-jetpack').cwd(require('electron').remote.app.getAppPath());
+    const jetpack = require('fs-jetpack').cwd(__dirname);
     this.obsLayerData = jetpack.read(tmppath, 'json');
     if (!this.obsLayerData) {
       debugger;
@@ -756,7 +756,7 @@ Map.prototype = {
   sullyDataHealing(entity) {
     // TODO this section is full of asset-healing code that's super Sully-specific.  Clean it up for general release.
     if (!this.entityData[entity.filename]) {
-      const jetpack = require('fs-jetpack').cwd(require('electron').remote.app.getAppPath());
+      const jetpack = require('fs-jetpack').cwd(__dirname);
       const originalDatafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
       let datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
       let data = null;
@@ -867,7 +867,7 @@ Map.prototype = {
       }
     }
 
-    const jetpack = require('fs-jetpack').cwd(require('electron').remote.app.getAppPath());
+    const jetpack = require('fs-jetpack').cwd(__dirname);
 
     LOG("this.entityTextures["+data.image+"] " + this.entityTextures[data.image])
     if (!this.entityTextures[data.image]) {
