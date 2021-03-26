@@ -20,7 +20,7 @@ import { setSuperCutPasteLayers, superCut, superPaste } from './SuperCutPaste'
 
 import { setVerboseLogging } from '../../Logging'
 
-import { getFlatIdx } from '../../map';
+import { getFlatIdx } from '../../Map';
 
 import { 
   MAGICAL_ENT_LAYER_ID,
