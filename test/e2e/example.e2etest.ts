@@ -2,7 +2,7 @@ import { Application } from 'spectron';
 import * as electronPath from 'electron';
 import * as path from 'path';
 
-jest.setTimeout(1000000);
+jest.setTimeout(10000);
 
 describe('Main window', () => {
     let app: Application;
@@ -18,6 +18,7 @@ describe('Main window', () => {
 
     afterEach(() => {
         if (app.isRunning()) {
+            
             return app.stop();
         }
     });

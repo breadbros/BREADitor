@@ -1,6 +1,6 @@
 {
-  "name": "electron-react-typescript",
-  "version": "0.0.7",
+  "name": "Breaditor",
+  "version": "2.0.1",
   "description": "",
   "main": "./dist/main.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "test": "jest --detectOpenHandles",
     "watch": "jest --detectOpenHandles --watchAll",
     "pretest:e2e": "npm run build",
-    "test:e2e": "jest '(\\/test\\/e2e/).*'",
+    "test:e2e": "jest --testMatch '**/?(*.)+(e2etest).[tj]s?(x)'",
     "pack": "npm run build && electron-builder --dir",
     "dist": "npm run build && electron-builder",
     "postinstall": "electron-builder install-app-deps"
