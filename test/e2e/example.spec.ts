@@ -28,28 +28,7 @@ describe('Main window', () => {
         await client.waitUntilWindowLoaded();
         const title = await browserWindow.getTitle();
 
-        expect(title).toBe('Webpack App');
+        expect(title).toBe('Breaditor');
     });
 
-    it('increments the counter', async () => {
-        const { client } = app;
-
-        await client.waitUntilWindowLoaded();
-        await client.click('#increment');
-
-        const counterText = await client.getText('#counter-value');
-
-        expect(counterText).toBe('Current value: 1');
     });
-
-    it('decrements the counter', async () => {
-        const { client } = app;
-
-        await client.waitUntilWindowLoaded();
-        await client.click('#decrement');
-
-        const counterText = await client.getText('#counter-value');
-
-        expect(counterText).toBe('Current value: -1');
-    });
-});
