@@ -246,6 +246,7 @@ const singleclick_handler = (evt) => {
 
   addEntityToHighlight(ent);
 
+
   const {hitbox} = window.$$$currentMap.entityData[ent.filename];
   // centerMapOnXY(window.$$$currentMap, ent.location.px - hitbox[0], ent.location.py - hitbox[1], hitbox[2], hitbox[3]);
 };

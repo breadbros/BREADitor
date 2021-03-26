@@ -1,19 +1,19 @@
 /* eslint no-undef: 1 */
 import { getCurrentEntities, _update_entity_inner, setCurrentEntities, generate_unique_entity_uuid_for_this_map, _does_uuid_already_exist, delete_entity } from './EntityPalette';
-
-const $ = require('jquery');
+import { FakeMap } from '../../helpers/FakeMap';
 
 jest.mock('./Util.js')
 
 let vals = null;
 let state = null;
+
 beforeEach(() => {
   setCurrentEntities([]);
   vals = {};
   vals.entity_speed = 1234;
 
   state = window.$$$currentMap;
-  window.$$$currentMap = { createEntityRenderData: () => {}, resetEntityData: () => {} }; // STUB
+  window.$$$currentMap = FakeMap();
 });
 
 afterEach(()=>{

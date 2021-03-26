@@ -134,6 +134,13 @@ export const FakeMap = () => {
       isTileSelectorMap: false,
       entities
     },
+    mapedConfigData: {
+      autoSelectEntityAfterEdit: false,
+    },
+
+    createEntityRenderData: () => {}, 
+    resetEntityData: () => {},
+
     _setZoneMatrix,
     _getZoneMatrix,
     _setObsMatrix,
