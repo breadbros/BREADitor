@@ -1,4 +1,6 @@
-const jetpack = require('fs-jetpack').cwd(process.env.HOME);
+const initPath = process.env.HOME || process.env.APPDATA; // TODO: HOME is apparently not set on win dist builds
+
+const jetpack = require('fs-jetpack').cwd(initPath);
 const path = require('path');
 
 const BASE_APPDATA_DIR = process.env.APPDATA || (process.platform === 'darwin' ? `${process.env.HOME}/Library/Preferences` : `${process.env.HOME}/.local/share`);
