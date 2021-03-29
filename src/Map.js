@@ -1136,11 +1136,9 @@ Map.prototype = {
                                                            // don't worry about failing to get a GL context
     this.gl.clearColor(0.5, 0.5, 0.5, 1.0);
 
-    const readShader = (path) => {
-      // const appPath = require('electron').remote.app.getAppPath();
-      // const p = jetpack.path(appPath, 'app', path);
-      const jetpack = require('fs-jetpack');
-      const p = jetpack.path(path);
+    const readShader = (shaderPath) => {
+      const jetpack = process.env.NODE_ENV !== 'production' ? require('fs-jetpack') : require('fs-jetpack').cwd(__dirname);
+      const p = jetpack.path(shaderPath);
       const res = jetpack.read(p);
       return res;
     };
