@@ -135,6 +135,7 @@ export function setupIPCRenderer() {
       case 'zones':
       case 'entity':
       case 'tileset-selector':
+      case 'screenview-indicator':
         window.$$$toggle_pallete(arg);
         break;
       case 'all-collect':
@@ -156,20 +157,14 @@ export function setupIPCRenderer() {
         selectAll(window.$$$currentMap);
         break;
       case 'reset-camera':
-        // TODO: This inline implementation is clearly out of step with the rest of these, but I couldn't find a dedicated camera control section anywhere (and didn't want to build one just for this)
-        const ResetCamera = (map) => {
-          map.camera[0] = 0; // X
-          map.camera[1] = 0; // Y
-          map.camera[2] = 1; // Zoom (1x)
-        };
-        ResetCamera(window.$$$currentMap);
+        window.$$$currentMap.resetCamera();
         break;
       case 'clipboard-tiles-to-sullycode':
         convertPasteboardToCode(window.$$$currentMap);
         break;
-      case 'screenview-indicator':
-        alert('screenview-indicator! Yay1112');
-        break;
+      // case 'screenview-indicator':
+      //   alert('screenview-indicator! Yay1112');
+      //   break;
       case 'cancel-selections':
         handle_esc();
         break;

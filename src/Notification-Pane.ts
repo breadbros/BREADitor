@@ -1,6 +1,6 @@
 const {$} = window;
 
-let $notifyDiv = null; 
+let $notifyDiv:any = null; 
 
 export const setupNotifications = () => {
   $notifyDiv = $("#notifications-window");
@@ -18,20 +18,20 @@ export const setupNotifications = () => {
   $notifyDiv.css('display', 'none');
 }
 
-let fadeOutTimerId = null;
+let fadeOutTimerId:NodeJS.Timeout|null = null;
 const fadeOutTriggerTimeInMs = 1500;
 const fadeOutAnimationTimeInMs = 500;
 
 const fadeoutCallbackFn = () => {};
 
-export const notify = (msg) => {
+export const notify = (msg:string) => {
   const now = new Date();
   const time = `${now.getHours()  }:${  now.getMinutes()  }:${  now.getSeconds()}`;
 
   if($notifyDiv) {
     $notifyDiv.css('display', 'block');
 
-    $notifyDiv.html( `${time  } ${  msg  }<br />${  $notifyDiv.html()}` );
+    $notifyDiv.html( `${time  } ${  msg.replace(/\n/g, '<br>')  }<br />${  $notifyDiv.html()}` );
 
     setFadeOutTimer();
   }
@@ -44,7 +44,7 @@ const setFadeOutTimer = () => {
   }
 
   fadeOutTimerId = setTimeout( () => {
-      $notifyDiv.fadeOut(fadeOutAnimationTimeInMs, "linear", fadeoutCallbackFn );
+      $notifyDiv!.fadeOut(fadeOutAnimationTimeInMs, "linear", fadeoutCallbackFn );
 
   }, fadeOutTriggerTimeInMs);
 };

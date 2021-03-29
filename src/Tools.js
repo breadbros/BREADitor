@@ -235,13 +235,13 @@ export const _toolLogic = {
   'DRAW': drawGenerator()
 };
 
-export const updateRstringInfo = () => {
+export const updateRstringInfo = (nonGlobal) => {
   if (!window.$$$currentMap) {
     LOG('lol, no window.$$$currentMap yet.');
     return;
   }
 
-  $('#info-rstring').text(window.$$$currentMap.layerRenderOrder.join(','));
+  $('#info-rstring').text((nonGlobal || window.$$$currentMap.layerRenderOrder).join(','));
 };
 
 export const clickDragItem = () => {

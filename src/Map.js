@@ -6,7 +6,7 @@ import { ShaderProgram } from './ShaderProgram.js';
 import { updateRstringInfo, updateInfoDims, updateLocationText, updateZoomText } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer, generate_unique_entity_uuid_for_this_map } from './js/ui/EntityPalette.js';
-
+import { notify } from './Notification-Pane';
 
 
 const path = require('path');
@@ -326,7 +326,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       }
     }
 
-    throw new Error(`Invalid rstring code "${  rstringcode  }".  Valid range [1, ${  this.layers.length  }]`);
+    notify(`Cannot get layer ${  rstringcode  }, it doesnt exist on this map!\nValid range [1, ${  this.layers.length  }]`)
+    return {name: false};
   };
 
   this.getLayerByIdx_DANGEROUS = (idx) => {
@@ -388,7 +389,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
     this.mapData.renderstring = this.layerRenderOrder.join(',');
 
-    updateRstringInfo();
+    updateRstringInfo(this.layerRenderOrder);
   };
 
   this.updateRstring(this.mapData.renderstring);
@@ -524,7 +525,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.vspImages = {};
   this.vspAnimations = {};
-  for (const k in this.vspData) {
+  for(const k in this.vspData) {
     const vsp = this.vspData[k];
     if (!vsp) {
       continue;
@@ -718,7 +719,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   // heal uuids into uuid-less maps
   if(has_unset_uuids(this)) {
     heal_uuids_for_this_map(this);
-    alert("Your map lacked entity uuids.  We've added them in.  Please save before using these uuids.");
+    notify("Your map lacked entity uuids.\nWe've added them in.\nPlease save before using these uuids.");
   }
 
   this.doneLoading();
@@ -2177,5 +2178,18 @@ Map.prototype = {
     this.renderContainer.attr('width', w);
     this.renderContainer.attr('height', h);
     this.gl.viewport(0, 0, w, h);
+  },
+
+  resetCamera (x,y,z) {
+
+    if(typeof x === 'undefined') {
+      x = 0;
+      y = 0;
+      z = 1;
+    }
+
+    this.camera[0] = x;
+    this.camera[1] = y;
+    this.camera[2] = z;
   }
 };

@@ -1,9 +1,8 @@
-import { baseHTMLTemplate } from './BaseTemplate';
 import { LOG, INFO } from '../Logging'
 import { TilesetSelectorWidget } from '../js/ui/TilesetSelectorPalette.js';
 import { Map, verifyTileData, verifyMap, cleanEntities } from '../Map.js';
 import { Palettes } from '../Palettes.js';
-import { LayersWidget, visibilityFix, getSelectedLayer,  MAGICAL_ENT_LAYER_ID, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID } from '../js/ui/LayersPalette.js'; // , selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
+import { LayersWidget, selectNumberedLayer, visibilityFix, getSelectedLayer,  MAGICAL_ENT_LAYER_ID, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID } from '../js/ui/LayersPalette.js'; // , selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
 import { ZonesWidget } from '../js/ui/ZonesPalette.js';
 import { EntitiesWidget } from '../js/ui/EntityPalette.js';
 import { updateMapAndVSPFileInfo } from '../js/ui/InfoPalette.js';
@@ -14,6 +13,7 @@ import { setupNotifications, notify } from '../Notification-Pane';
 import { setSuperCutPasteLayers, superCut, superPaste } from '../js/ui/SuperCutPaste';
 import { BREADPATH } from './FileSystemSetup';
 
+const $ = window.$;
 const path = require('path');
 
 const updateScreenview = (map) => {
@@ -63,7 +63,6 @@ function killAllElementListeners($elem) {
 }
 
 function killAllDocumentListeners(doc) {
-  debugger;
   // first argument of function: "$._data ()" is: "Element" - not jQuery object
   $.each( $._data( $elem, "events" ), function(name) {
     LOG(`body had listener: ${  name}`);
@@ -161,7 +160,7 @@ function setupChording() {
 // TODO: jesus pull this apart and clean it up.
 
 const tick = function (timestamp) {
-  if (window.$$$currentMap) {
+  if (window.$$$currentMap && window.$$$currentMap.render) {
     window.$$$currentMap.render();
     TilesetSelectorWidget.renderTilesetSelectorWidget();
   }
@@ -267,6 +266,12 @@ export function setupWindowFunctions() {
           const wid = parseInt($('#newmap-width').val());
           const hig = parseInt($('#newmap-height').val());
 
+          window.$$$currentMap = { 
+            layers: [] 
+          };
+
+          // "legacy_obstruction_data"
+
           window.$$$currentMap.layers.length = 1;
           window.$$$currentMap.layers[0] = {
             "name":"New Layer",
@@ -327,9 +332,53 @@ export function setupWindowFunctions() {
             "MAPED_OBSLAYER_VISIBLE": true
           };
           
-          window.$$$saveAs();
-          window.$$$show_all_windows();
+          window.$$$saveAs(true);
+          
         }
+      },
+      close () {
+        $('#modal-dialog').html('');
+      }
+    });
+  };
+
+  const vspModeDialog = () => {
+    const $template = `
+    `;
+
+    const title = 'New Map: Tile Options';
+
+    $('#modal-dialog').html('');
+    $('#modal-dialog').append($template);
+    $('#modal-dialog').show();
+
+    window.$$$hide_all_windows();
+
+    const dialog = $('#modal-dialog').dialog({
+      width: 500,
+      modal: true,
+      title,
+      buttons: {
+        'Create new tileset': () => {
+          alert('Create new tileset!');
+        },
+        'Choose existing tileset': () => {
+          
+          const { dialog } = require('electron').remote;
+          dialog.showOpenDialog(
+            {
+              title: 'Choose default VSP',
+              filters: [{ name: 'text', extensions: ['vsp.json'] }]
+            },
+            window._newStep1_chooseDefaultVSP
+          );
+        },
+        'This map will not have tiles': () => {
+          alert('Thats insane.');
+        },
+        'Cancel': () => {
+          $('#modal-dialog').dialog( "close" );
+        },
       },
       close () {
         $('#modal-dialog').html('');
@@ -344,6 +393,9 @@ export function setupWindowFunctions() {
   };
 
   window._newStep1_chooseDefaultVSP = function (res) {
+    if(!res) {
+      return;
+    }
     window.newMapData.default_vspfile = res[0];
 
     const { dialog } = require('electron').remote;
@@ -356,22 +408,17 @@ export function setupWindowFunctions() {
     );
   };
 
-  window.$$$new = function () {
+  window.$$$new = () => {
     window.newMapData = {};
 
-    const { dialog } = require('electron').remote;
-    dialog.showOpenDialog(
-      {
-        title: 'Choose default VSP',
-        filters: [{ name: 'text', extensions: ['vsp.json'] }]
-      },
-      window._newStep1_chooseDefaultVSP
-    );
+    vspModeDialog();
   };
 
-  window.$$$save = function (newName, isSaveAs) {
-    window.$$$currentMap.compactifyZones();
-    window._save(newName, window.$$$currentMap, isSaveAs);
+  window.$$$save = function (newName, isSaveAs, reloadAfterSave) {
+    if(window.$$$currentMap.compactifyZones) {
+      window.$$$currentMap.compactifyZones();
+    }
+    window._save(newName, window.$$$currentMap, isSaveAs || reloadAfterSave);
   };
 
   window._save = function (newName, map, reloadAfterSave) {
@@ -404,11 +451,32 @@ export function setupWindowFunctions() {
 
     if(reloadAfterSave) {
       INFO("Reloading map after saveas...");
-      loadByFilename(mapfile);
-    }
-  };
+      window.$$$show_all_windows();
+      $('#modal-dialog').dialog( "close" );
 
-  window.$$$about_breaditor = function () {
+      const doAfterNewMapCreate = () => {
+        selectNumberedLayer(1);
+        visibilityFix();
+        window.$$$currentMap.resetCamera();
+
+        window.$$$showPallete('tileset-selector');
+        window.$$$showPallete('map');
+        window.$$$showPallete('tool');
+        window.$$$showPallete('info');
+        window.$$$showPallete('layers');
+
+        window.$$$hidePallete('zones');
+        window.$$$hidePallete('entity');
+        window.$$$hidePallete('screenview-indicator');
+        
+        window.$$$collect_all_windows();
+      };
+
+      loadByFilename(mapfile, doAfterNewMapCreate);
+    }
+};
+
+  window.$$$about_breaditor = () => {
     window.alert(
       'Breaditor is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.' +
       'TODO: make this better.' + 
@@ -416,7 +484,7 @@ export function setupWindowFunctions() {
     );
   };
 
-  window.$$$collect_all_windows = function () {
+  window.$$$collect_all_windows = () => {
     let x = 0;
     let y = 0;
     let z = 0;
@@ -449,6 +517,7 @@ export function setupWindowFunctions() {
   };
 
   window.$$$hide_all_windows = () => {
+    if(!window.$$$palette_registry) return;
     window.$$$palette_registry.map((pal) => {
       const node_selector = `.${  pal}`;
       const $node = $(node_selector);
@@ -594,20 +663,28 @@ export function setupWindowFunctions() {
     });
   }
 
-  window.$$$saveAs = function () {
+  window.$$$saveAs = function ( isNewMap ) {
     const { dialog } = require('electron').remote;
 
     dialog.showSaveDialog(
       {filters: [{ name: 'text', extensions: ['map.json'] }]},
       (filename) => {
         if (filename) {
-          window.$$$save(filename, true);
+          window.$$$save(filename, true, isNewMap);
         }
       }
     );
   };
 
-  window.$$$toggle_pallete = function (pal, forceShow) {
+  window.$$$hidePallete = (pal) => {
+    window.$$$toggle_pallete(pal, false, true);  
+  }
+
+  window.$$$showPallete = (pal) => {
+    window.$$$toggle_pallete(pal, true);  
+  }
+
+  window.$$$toggle_pallete = (pal, forceShow, forceHide) => {
     if (pal.msg) {
       pal = pal.msg;
     }
@@ -625,8 +702,28 @@ export function setupWindowFunctions() {
     } else {
       throw new Error(`Invalid palette name: '${  pal  }'`);
     }
+    
+    if(forceHide) {
+      node.hide();
 
-    if (node.is(':visible') && forceShow !== true) {
+      Palettes.savePalettePositions();
+      return;
+    }
+
+    if(forceShow) {
+      node.show();
+
+      if (node_selector === '.layers-palette') {
+        visibilityFix();
+      }
+
+      Palettes.savePalettePositions();
+
+      return;
+    }
+
+
+    if (node.is(':visible')) {
       node.hide();
     } else {
       node.show();
@@ -643,7 +740,7 @@ export function setupWindowFunctions() {
 }
 
 
-function loadByFilename(fileNames) {
+function loadByFilename(fileNames, andThenFn) {
   if (fileNames === undefined) {
     return;
   }
@@ -656,7 +753,7 @@ function loadByFilename(fileNames) {
   saveMostRecentMapLocation(fileName);
 
   // TODO: verify that all three of these files, you know... exist?
-  bootstrapMap(fileName, dataName);
+  bootstrapMap(fileName, dataName, andThenFn);
 };
 
 function saveMostRecentMapLocation(filename) {
@@ -709,17 +806,9 @@ function dedupeRecentMaps(mapQueue) {
   return newQueue;
 }
 
-export function bootstrapMap(mapFile, tiledataFile) {
-
-  // replace entire contents of the body with a fresh copy.
-  const $body = $('#jquery-ui-base');
-  $body.html(baseHTMLTemplate());
-  Palettes.setupPaletteRegistry();
-  Palettes.setupPaletteListeners();
-  setupFreshApp();
-  
+export function bootstrapMap(mapFile, tiledataFile, andThen) {
+ 
   const errorHandler = (e) => {
-    debugger;
     console.error(e);
   };
 
@@ -733,9 +822,10 @@ export function bootstrapMap(mapFile, tiledataFile) {
             new Map(
                 mapFile, tiledataFile, (map) => {  updateLocationFunction(map); updateScreenview(map); }
             ).ready().then( (m) => {
+              LOG('Done loading map...');
               const currentMap = m;
               m.setCanvas($('.map_canvas'));
-            
+
               window.$$$currentMap = currentMap;
             
               for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
@@ -768,6 +858,11 @@ export function bootstrapMap(mapFile, tiledataFile) {
               initTools($('.map_canvas'), window.$$$currentMap);
             
               updateRstringInfo();
+
+              // mostly for creating new maps.  FOR NOW.
+              if(andThen) {
+                andThen();
+              }
             
               // TODO do we need to do this at all?
               // window.$$$hide_all_windows();
