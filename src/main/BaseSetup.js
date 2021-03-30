@@ -355,7 +355,12 @@ export function setupWindowFunctions() {
     window.$$$hide_all_windows();
 
     if(!noCancel && !buttonMap.cancel && !buttonMap.Cancel) {
-      buttonMap.Cancel = () => { $('#modal-dialog').dialog( "close" ); }
+      buttonMap.Cancel = {
+        text: "Close",
+        click: () => { $('#modal-dialog').dialog( "close" ); },
+        id: "modal-dialog-close-button",
+        class: "close-button"
+      };
     }
 
     const dialog = $('#modal-dialog').dialog({
@@ -413,6 +418,12 @@ export function setupWindowFunctions() {
     )
   }
 
+  const errorHandler = (val, sel) => {
+    const ret = ( Number.isNaN(val) || val <= 0 );
+    ret ? $(sel).addClass('error') : $(sel).removeClass('error');
+    return !ret;
+  }
+
   const newVspDialogStepFinal = (existingImageFilename, newImageCopyFilename) => {
 
     let w = 256;
@@ -433,12 +444,6 @@ export function setupWindowFunctions() {
       const vh = parseInt($('#vsp-height').val(),10);
       const tw = parseInt($('#tile-width').val(),10);
       const th = parseInt($('#tile-height').val(),10);
-
-      const errorHandler = (val, sel) => {
-        const ret = ( Number.isNaN(val) || val <= 0 );
-        ret ? $(sel).addClass('error') : $(sel).removeClass('error');
-        return !ret;
-      }
 
       let valid = true;
       valid &= errorHandler(vw,'#vsp-width');
@@ -669,6 +674,9 @@ export function setupWindowFunctions() {
           return;
         }
         window.newMapData.default_vspfile = res[0];
+
+        const jetpack = require('fs-jetpack').cwd(__dirname);
+        window.newVspData = jetpack.read(res[0], 'json');
   
         obsModeDialog();
       }
@@ -676,11 +684,99 @@ export function setupWindowFunctions() {
   }
 
   const newObsTilesetDialog = () => {
+
+    const validate = () => {
+      let valid = true;
+
+      const rows = parseInt($('#tiles-per-row').val(),10);
+      const cols = parseInt($('#tiles-per-col').val(),10);
+
+      valid &= errorHandler(rows,'#tiles-per-row');
+      valid &= errorHandler(cols,'#tiles-per-col');
+      valid &= errorHandler($("#obs-image-name").val().length,'#obs-image-name');
+      valid &= errorHandler($("#obs-def-name").val().length,'#obs-def-name');
+
+      if(rows && cols && rows > 0 && cols > 0 ) {
+        $("#tiles-total").text( rows*cols );
+        $("#image-dims").text( `${window.newVspData.tilesize.width*cols} x ${window.newVspData.tilesize.height*rows} (pixels)` );
+      }
+
+      return valid;
+    };
+
     dialoger(
       `Step 3a: Create New Obstruction Tileset`,
-      `<h1>STUFF GO HERE</h1>`,
+      `
+      <p>
+      <p>Obstruction tiles must be the same size as your default tilesize.</p>
+      tile width: <input id="tile-width" value="${window.newVspData.tilesize.width}" READONLY><br>
+      tile height: <input id="tile-height" value="${window.newVspData.tilesize.height}" READONLY><br>
+      
+      Rows: <input id="tiles-per-row" value=""><br>
+      Columns: <input id="tiles-per-col" value=""><br>
+
+      Image calculated dimensions: <span id="image-dims"></span><br>
+      
+      (tiles total): <span id="tiles-total"></span><br>
+      Obstruction Tileset Image File: <input id="obs-image-name" value="" READONLY> <button id="choose-image">Choose...</button> <br>
+      Obstruction Tileset Definition File: <input id="obs-def-name" value="" READONLY> <button id="choose-vsp">Choose...</button> <br>
+      </p>
+      `,
       {
-        'Save': () => {alert('save');},
+        'Continue': () => {
+          if(!validate()) {
+            alert("Please correct any errors in the form before trying again.");
+            return;
+          }
+
+          window.newMapData.obs_vspfile = {
+            "obs-image-name": $("#obs-image-name").val(),
+            "obs-def-name": $("#obs-def-name").val(),
+            rows: parseInt($('#tiles-per-row').val(),10),
+            cols: parseInt($('#tiles-per-col').val(),10),
+          };
+          newMapDialog();
+        }
+      },
+      false,
+      () => {
+        $("#modal-dialog input").on("keyup", validate);
+        
+        let shittyMutex1 = false;
+        let shittyMutex2 = false;
+
+        $("#choose-image").click( () => {
+          if(shittyMutex1) return;
+          shittyMutex1 = true;
+          dialog.showSaveDialog(
+            {
+              title: 'Save new obstruction image data',
+              filters: [{ name: 'image', extensions: ['png'] }]
+            },
+            (filename) => {
+              shittyMutex1 = false;
+              if( filename ) {
+                $("#obs-image-name").val(filename);
+              }
+            }
+        )});
+
+        $("#choose-vsp").click( () => {
+          if(shittyMutex2) return;
+          shittyMutex2 = true;
+          dialog.showSaveDialog(
+            {
+              title: 'Save new obstruction definition file',
+              filters: [{ name: 'text', extensions: ['.vsp.json'] }]
+            },
+            (filename) => {
+              shittyMutex2 = false;
+              if( filename ) {
+                $("#obs-def-name").val(filename);
+              }
+            }
+        )});
+
       }
     );
   };

@@ -362,3 +362,8 @@ textarea:read-only {
 input.error {
   border-color: red;
 }
+
+#modal-dialog-close-button {
+  /* background assets\themes\ui-darkness\images\ */
+  background: #A66 url(images/ui-bg_glass_40_RED_1x400.png) 50% 50% repeat-x;
+}
