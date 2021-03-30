@@ -158,6 +158,7 @@
     "jquery": "^3.6.0",
     "lodash": "^4.17.20",
     "natives": "^1.1.6",
+    "pngjs": "^6.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-panelgroup": "^1.0.12",

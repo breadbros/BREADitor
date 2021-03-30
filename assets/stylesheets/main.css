@@ -337,3 +337,28 @@ textarea:read-only {
   position: absolute;
   left: 20px;
 }
+
+.monospace, .code {
+  font-family: monospace;
+}
+
+.warning {
+  background-color: #444;
+  border-radius: .4em;
+  border: 1px solid red;
+  font-size: 1em;
+  padding: .4em;
+}
+
+.note {
+  background-color: #444;
+  border-radius: .4em;
+  border: 1px solid #888;
+  font-size: 1em;
+  padding: .4em;
+  font-style: italic;
+}
+
+input.error {
+  border-color: red;
+}

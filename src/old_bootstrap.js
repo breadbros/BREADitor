@@ -2,6 +2,7 @@ import { setupFreshApp, setupWindowFunctions, autoloadMostRecentMapIfAvailable }
 import { setupIPCRenderer } from './main/IPCRenderer';
 import { Palettes } from './Palettes.js';
 import { baseHTMLTemplate } from './main/BaseTemplate';
+import { visibilityFix } from './js/ui/LayersPalette.js';
 
 const {$} = window;
 
@@ -21,5 +22,7 @@ function setupHtml() {
     window.$$$hide_all_windows();
     
     setupFreshApp();
+
+    setTimeout(visibilityFix, 1000); // I hate myself for this.
 }
 

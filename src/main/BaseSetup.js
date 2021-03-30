@@ -12,9 +12,13 @@ import { handleUndo, handleRedo } from '../UndoRedo';
 import { setupNotifications, notify } from '../Notification-Pane';
 import { setSuperCutPasteLayers, superCut, superPaste } from '../js/ui/SuperCutPaste';
 import { BREADPATH } from './FileSystemSetup';
+import {PNG} from 'pngjs';
 
 const $ = window.$;
 const path = require('path');
+const { dialog } = require('electron').remote;
+const fs = require('fs');
+
 
 const updateScreenview = (map) => {
   $('#screenview-indicator-switch').prop('checked', map.windowOverlay.on);
@@ -342,76 +346,425 @@ export function setupWindowFunctions() {
     });
   };
 
-  const vspModeDialog = () => {
-    const $template = `
-    `;
 
-    const title = 'New Map: Tile Options';
-
+  const dialoger = (title, template, buttonMap, noCancel, afterDialogOpenFn) => {
     $('#modal-dialog').html('');
-    $('#modal-dialog').append($template);
+    $('#modal-dialog').append(template);
     $('#modal-dialog').show();
 
     window.$$$hide_all_windows();
 
+    if(!noCancel && !buttonMap.cancel && !buttonMap.Cancel) {
+      buttonMap.Cancel = () => { $('#modal-dialog').dialog( "close" ); }
+    }
+
     const dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
-      title,
-      buttons: {
-        'Create new tileset': () => {
-          alert('Create new tileset!');
-        },
-        'Choose existing tileset': () => {
-          
-          const { dialog } = require('electron').remote;
-          dialog.showOpenDialog(
-            {
-              title: 'Choose default VSP',
-              filters: [{ name: 'text', extensions: ['vsp.json'] }]
-            },
-            window._newStep1_chooseDefaultVSP
-          );
-        },
-        'This map will not have tiles': () => {
-          alert('Thats insane.');
-        },
-        'Cancel': () => {
-          $('#modal-dialog').dialog( "close" );
-        },
-      },
-      close () {
-        $('#modal-dialog').html('');
-      }
+      title: title,
+      buttons: buttonMap
     });
+
+    if(afterDialogOpenFn) {
+      afterDialogOpenFn();
+    }
   };
 
+  const newVspDialogPreStepCopyOrRef = (existingVspFilename) => {
+    const relPath = path.relative(path.dirname(window.newMapFilename),path.dirname(existingVspFilename));// + path.basename(existingVspFilename);
+    let shittyMutex4 = false;
+
+    dialoger(
+      'Step 2c: Copy it or reference it?',
+      `
+      <p>You selected:</p>
+      <div class=code>${window.newMapFilename}</div>
+      <hr>
+      <div class=code>${existingVspFilename}</div>
+      <hr>
+      <div class=code>${relPath}</div>
+      <p class=note>Note: this will be saved internally relative to the location of your Tileset's definition file.</p>
+      <p>Would you like your new tileset to COPY that image<br>or would you like your new tileset to REFERENCE that image?</p>
+      <p>Copying means changes you make to it will not be refelected in other tilesets that used the original.</p>
+      <p>Referencing means if you move your image around, it'll likely break things and you'll need to edit the json file to fix it.</p>
+      `,
+      {
+        'Make a new COPY': () => {
+          if(shittyMutex4) return;
+          shittyMutex4 = true;
+          dialog.showSaveDialog(
+            {filters: [{ name: 'image', extensions: ['png'] }]},
+            (filename) => {
+              shittyMutex4 = false;
+              if(existingVspFilename == filename) {
+                alert("You selected to copy over the original image.  Please try again and enter a new filename.");
+                return;
+              }
+
+              if(filename) {
+                newVspDialogStepFinal(existingVspFilename, filename);
+              }
+            });
+        },
+        'Keep the same REFERENCE': () => {
+          newVspDialogStepFinal(existingVspFilename);
+        }
+      }
+    )
+  }
+
+  const newVspDialogStepFinal = (existingImageFilename, newImageCopyFilename) => {
+
+    let w = 256;
+    let h = 256;
+
+    if(existingImageFilename) {
+      const data = fs.readFileSync(existingImageFilename);
+      const png = PNG.sync.read(data);
+      
+      if(png) {
+        w = png.width;
+        h = png.height;
+      }
+    }
+
+    const listener = () => {
+      const vw = parseInt($('#vsp-width').val(),10);
+      const vh = parseInt($('#vsp-height').val(),10);
+      const tw = parseInt($('#tile-width').val(),10);
+      const th = parseInt($('#tile-height').val(),10);
+
+      const errorHandler = (val, sel) => {
+        const ret = ( Number.isNaN(val) || val <= 0 );
+        ret ? $(sel).addClass('error') : $(sel).removeClass('error');
+        return !ret;
+      }
+
+      let valid = true;
+      valid &= errorHandler(vw,'#vsp-width');
+      valid &= errorHandler(vh,'#vsp-height');
+      valid &= errorHandler(tw,'#tile-width');
+      valid &= errorHandler(th,'#tile-height');
+      valid &= errorHandler($("#image-name").val().length,'#image-name');
+      valid &= errorHandler($("#vsp-name").val().length,'#vsp-name');
+
+      if( !valid ) {
+        $("#tiles-per-row").val("-").removeClass("error");
+        $("#tiles-total").val("-").removeClass("error");
+        
+      } else {
+        const perRow = parseInt(vw/tw, 10);
+        const perCol = parseInt(vh/th, 10);
+
+        $("#tiles-per-row").val(perRow);
+        $("#tiles-total").val(perRow*perCol);
+
+        if(perRow <= 0) {
+          $("#tiles-total").addClass("error");
+        } else {
+          $("#tiles-total").removeClass("error");
+        }
+
+        if(perRow*perCol <= 0) {
+          $("#tiles-total").addClass("error");
+        } else {
+          $("#tiles-total").removeClass("error");
+        }
+      }
+    };
+
+    const verify = () => {
+      return $("#modal-dialog input.error").length === 0 && $("#vsp-name").val();
+    };
+
+    let topPart;
+    if(existingImageFilename && newImageCopyFilename) {
+      const imagename = path.basename(existingImageFilename);
+      topPart =  `
+        <p>We will create a new tileset definition by copying an existing file:</p>
+        <div class=code>${existingImageFilename}</div>
+        <p>To a new copy of that file at:</p>
+        <div class=code>${newImageCopyFilename}</div>
+
+        <p>
+        image name: <input id="image-name" value="${imagename}" READONLY><br>
+        image width: <input id="vsp-width" value="${w}" READONLY><br>
+        image height: <input id="vsp-height" value="${h}" READONLY>
+        <p>
+      `;
+    } else if(existingImageFilename === null && newImageCopyFilename === true) {
+      topPart =  `
+      <p>We will create a new tileset definition by creating a brand new image!</p>
+
+      <p class="note">Note: it's usually optimal to have your width and height be the same number (square) and a power of 2.</p>
+
+      <p>
+        imagename: <input id="image-name" value="" READONLY> <button id="choose-image">Choose...</button> <br>
+        image width: <input id="vsp-width" value="${w}"><br>
+        image height: <input id="vsp-height" value="${h}">
+      <p>
+      `;
+
+    } else {
+      const vspname = path.basename(existingImageFilename);
+      topPart =  `
+        <p>We will create a new tileset definition by referencing an existing file:</p>
+        <div class=code>${existingImageFilename}</div>
+        <p>...and storing that as a relative path to the Tileset Definition you are about to save.</p>
+
+        <p>
+        imagename: <input id="image-name" value="${vspname}" READONLY><br>
+        image width: <input id="vsp-width" value="${w}" READONLY><br>
+        image height: <input id="vsp-height" value="${h}" READONLY>
+        <p>
+        `;
+    }
+
+    dialoger(
+      'Step 2d: Define your Tileset',
+      `
+        ${topPart}
+        <p>
+          tile width: <input id="tile-width" value=""><br>
+          tile height: <input id="tile-height" value=""><br>
+          (tiles per row): <input id="tiles-per-row" value="" READONLY><br>
+          (tiles total): <input id="tiles-total" value="" READONLY> <br>
+          Tileset Definition File: <input id="vsp-name" value="" READONLY> <button id="choose-vsp">Choose...</button> <br>
+        <p>
+      `,
+      {
+        'Confirm': () => {
+          listener();
+          if( !verify() ){
+              alert('Please fix any errors before continuing.');
+            return;
+          }
+
+          const vw = parseInt($('#vsp-width').val(),10);
+          const tw = parseInt($('#tile-width').val(),10);
+          const th = parseInt($('#tile-height').val(),10);
+          const tpr = parseInt(vw/tw,10);
+          const imgName = $("#image-name").val();
+          const vspName = $("#vsp-name").val();
+
+          window.newMapData.default_vspfile = vspName;
+          window.newVspData = {
+            "tilesize": {
+              "width": tw,
+              "height": th
+            },
+            "tiles_per_row": tpr,
+            "source_image": {
+              existingImageFilename, 
+              newImageCopyFilename,
+              imgName,
+              vspName
+            }
+          };
+
+          obsModeDialog();
+        },
+      }, false, () => {
+        
+        $("#modal-dialog input").on("keyup", listener);
+        
+        let shittyMutex1 = false;
+        let shittyMutex2 = false;
+
+        $("#choose-vsp").click( () => {
+          if(shittyMutex1) return;
+          shittyMutex1 = true;
+          dialog.showSaveDialog(
+            {
+              title: 'Save new tileset definion',
+              filters: [{ name: 'text', extensions: ['vsp.json'] }]
+            },
+            (filename) => {
+              shittyMutex1 = false;
+              if( filename ) {
+                $("#vsp-name").val(filename);
+              }
+            }
+        )});
+
+        $("#choose-image").click( () => {
+          if(shittyMutex2) return;
+          shittyMutex2 = true;
+          dialog.showSaveDialog(
+            {
+              title: 'Save new tileset image',
+              filters: [{ name: 'img', extensions: ['png'] }]
+            },
+            (filename) => {
+              shittyMutex2 = false;
+              if( filename ) {
+                $("#image-name").val(filename);
+              }
+            }
+        )});
+      }
+    );
+  };
+
+  const newVspDialog = () => {
+
+    let shittyMutex3 = false;
+
+    dialoger(
+      'Step 2b: Tileset Image Asset',
+      `
+        <p>Do you want to create a new tileset from an existing image, or a brand new image?<br>(Note: currently only png is supported.)</p>
+      `,
+      {
+        'Existing Image': () => {
+          if(shittyMutex3) return;
+          shittyMutex3 = true;
+          dialog.showOpenDialog(
+            {
+              title: 'Choose Tileset Image',
+              filters: [{ name: 'image', extensions: ['png'] }]
+            },
+            (res) => {
+              shittyMutex3 = false;
+              if(res) {
+                newVspDialogPreStepCopyOrRef(res[0]);
+              }
+            }
+          );
+        },
+        'Generate a New Image': () => {
+          newVspDialogStepFinal(null, true);
+        },
+      }
+    );
+  };
+
+  const vspModeDialog = () => {
+    window.$$$hide_all_windows();
+    dialoger(
+      'Step 2: Default Tileset Options',
+      ``,
+      {
+        'Create new tileset': () => {
+          newVspDialog();
+        },
+        'Choose existing tileset': () => {
+          _chooseExistingDefaultTileVSP(obsModeDialog);
+        },
+        'This map will not have tiles': () => {
+          alert('Thats insane! (currently unsupported)');
+        },
+      }
+    );
+  };
+
+  function _chooseExistingDefaultTileVSP(obsModeDialog) {
+    dialog.showOpenDialog(
+      {
+        title: 'Choose default VSP',
+        filters: [{ name: 'text', extensions: ['vsp.json'] }]
+      },
+      (res) => {
+        if (!res) {
+          return;
+        }
+        window.newMapData.default_vspfile = res[0];
+  
+        obsModeDialog();
+      }
+    );
+  }
+
+  const newObsTilesetDialog = () => {
+    dialoger(
+      `Step 3a: Create New Obstruction Tileset`,
+      `<h1>STUFF GO HERE</h1>`,
+      {
+        'Save': () => {alert('save');},
+      }
+    );
+  };
+
+  const obsModeDialog = () => {
+
+    dialoger(
+      'Step 3: Default Obstruction Tileset Options',
+      `<p class=note>Breaditor presently only supports tile-based obstructions based on 1-bit pngs.</p>
+       <p class=note>We will be working on adding vector-based obstructions in the future.</p>`,
+      {
+        'Choose Existing Obstruction Tileset': () => {
+          _chooseExistingDefaultObsVSP();
+        },
+        'Create New Obstruction Tileset': () => {
+          newObsTilesetDialog();
+        },
+      }
+    );
+
+
+
+    // window.newMapData.obs_vspfile = res[0];
+
+    // window._chooseExistingDefaultObsVSP
+  };//
+
   window._newStep2_chooseObsVSP = function (res) {
-    window.newMapData.obs_vspfile = res[0];
+    
 
     newMapDialog();
   };
 
-  window._newStep1_chooseDefaultVSP = function (res) {
-    if(!res) {
-      return;
-    }
-    window.newMapData.default_vspfile = res[0];
-
-    const { dialog } = require('electron').remote;
-    dialog.showOpenDialog(
-      {
+  const _chooseExistingDefaultObsVSP = function (res) {
+    dialog.showOpenDialog({
         title: 'Choose Obstruction VSP',
         filters: [{ name: 'text', extensions: ['obsvsp.json'] }]
       },
-      window._newStep2_chooseObsVSP
+      (res)  => {
+        if(res) {
+          window.newMapData.obs_vspfile = res[0];
+          newMapDialog();
+        }
+      }
+    );
+  };
+
+  window._newStep0_chooseSaveLocation = () => {
+    dialog.showSaveDialog(
+      {filters: [{ name: 'text', extensions: ['map.json'] }]},
+      (filename) => {
+        if (filename) {
+          const jetpack = BREADPATH.getJetpack();
+          
+          const warning = !jetpack.exists(filename) ? "" : `<p class=warning>Warning, there is already a map of that name there, and we will overwrite it if you finish this New Map wizard.</p>`;
+
+          dialoger(
+            "Step 1: Verify Save Location", 
+
+            `<p>You want to create a new map file at</p>
+            <p class=monospace>
+            ${filename}
+            </p>
+            <p>
+            Is that correct?
+            </p>
+            ${warning}
+            `, 
+            {
+              'Yes': () => {
+                window.newMapFilename = filename;
+                vspModeDialog();
+              }
+            });
+        }
+      }
     );
   };
 
   window.$$$new = () => {
+    window.newMapFilename = '';
     window.newMapData = {};
 
-    vspModeDialog();
+    window._newStep0_chooseSaveLocation();
   };
 
   window.$$$save = function (newName, isSaveAs, reloadAfterSave) {
@@ -526,8 +879,6 @@ export function setupWindowFunctions() {
   };
 
   window.$$$load = () => {
-    const { dialog } = require('electron').remote;
-
     const options = {
       filters: [{ name: 'text', extensions: ['map.json'] }]
     };
@@ -664,8 +1015,6 @@ export function setupWindowFunctions() {
   }
 
   window.$$$saveAs = function ( isNewMap ) {
-    const { dialog } = require('electron').remote;
-
     dialog.showSaveDialog(
       {filters: [{ name: 'text', extensions: ['map.json'] }]},
       (filename) => {
@@ -737,8 +1086,7 @@ export function setupWindowFunctions() {
   };
 
   window.appPath = path.dirname(require('electron').remote.app.getAppPath());
-}
-
+};
 
 function loadByFilename(fileNames, andThenFn) {
   if (fileNames === undefined) {
