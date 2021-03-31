@@ -1137,6 +1137,10 @@ export const weNeedToCopyATilesetImage = () => {
   return window.newVspData && window.newVspData.source_image && window.newVspData.source_image.existingImageFilename && window.newVspData.source_image.newImageCopyFilename;
 }
 
+export const weNeedToReferenceATilesetImage = () => {
+  return window.newVspData && window.newVspData.source_image && window.newVspData.source_image.existingImageFilename && !window.newVspData.source_image.newImageCopyFilename;
+}
+
 export const doTilesetCreationStuff = () => {
   const i = 4;
   debugger;
@@ -1164,6 +1168,28 @@ export const doTilesetCreationStuff = () => {
         ),
         path.basename(window.newVspData.source_image.newImageCopyFilename)
       );
+
+    jetpack.write(fullPathToVSP, window.newVspData);
+
+  } else if(weNeedToReferenceATilesetImage()) {
+    const fullPathToVSP = window.newVspData.source_image.vspName;
+    window.newMapData.default_vspfile = path.join(
+      path.relative(
+        path.dirname(window.newMapFilename), 
+        path.dirname(window.newVspData.source_image.vspName)
+      ),
+      path.basename(window.newVspData.source_image.vspName)
+    );
+
+    window.newVspData.source_image = path.join(
+      path.relative(
+        path.dirname(fullPathToVSP), 
+        path.dirname(window.newVspData.source_image.existingImageFilename)
+      ),
+      path.basename(window.newVspData.source_image.existingImageFilename)
+    );
+
+    jetpack.write(fullPathToVSP, window.newVspData);
   } else {
     throw "UNIMPLEMENTED";
   }
