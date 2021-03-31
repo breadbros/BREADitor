@@ -11,8 +11,8 @@ const BREADITOR_DIR = "Breaditor";
 
 const MOST_RECENT_FILES_JSON = "$$$_BREDITOR_MOST_RECENT.json";
 
-const APPDATA_DIR = jetpack.path(BASE_APPDATA_DIR, COMPANY_DIR, ENGINE_DIR, BREADITOR_DIR);
-const MOST_RECENT_FILES_JSON_PATH = jetpack.path(APPDATA_DIR, MOST_RECENT_FILES_JSON);
+export const APPDATA_DIR = path.join(BASE_APPDATA_DIR, COMPANY_DIR, ENGINE_DIR, BREADITOR_DIR);
+const MOST_RECENT_FILES_JSON_PATH = path.join(APPDATA_DIR, MOST_RECENT_FILES_JSON);
 
 const createDirectoriesIfNecessary = () => {
     if( jetpack.exists(APPDATA_DIR) ) {
@@ -22,11 +22,11 @@ const createDirectoriesIfNecessary = () => {
     jetpack.write(MOST_RECENT_FILES_JSON_PATH, "{}");
 };
 
-const getJetpack = () => {
-    createDirectoriesIfNecessary();
-    jetpack.cwd(APPDATA_DIR);
-    return jetpack;
-}
+// const getJetpack = () => {
+//     createDirectoriesIfNecessary();
+//     jetpack.cwd(APPDATA_DIR);
+//     return jetpack;
+// }
 
 const getMostRecentFilesJSONPath = () => {
     return MOST_RECENT_FILES_JSON_PATH;
@@ -35,5 +35,4 @@ const getMostRecentFilesJSONPath = () => {
 export const BREADPATH = {
     createDirectoriesIfNecessary,
     getMostRecentFilesJSONPath,
-    getJetpack
 };

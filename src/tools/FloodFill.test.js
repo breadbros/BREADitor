@@ -1,7 +1,7 @@
-/* eslint no-undef: 0 */
 import { MakeUndoRedoStack } from '../UndoRedo';
 import { FakeMap } from '../helpers/FakeMap';
 import { changeSelectedLayer } from '../js/ui/LayersPalette'; // TODO this shouldnt be public?
+
 // TODO this definitely is too much junk that shouldnt be exposed. MOCK
 import { setCurrentlySelectedTile, getCurrentlySelectedTile, setTileSelectorUI } from '../TileSelector';
 
@@ -11,7 +11,9 @@ import floodFillGenerator from './FloodFill';
 
 const {doFloodFill} = floodFillGenerator();
 
-// jest.mock('fs-jetpack');
+import * as jetpack from "fs-jetpack";
+
+jest.mock(jetpack);
 
 let map = null;
 let mouseEvt = null;
@@ -36,17 +38,9 @@ beforeEach(() => {
     source_image: 'this-totally-doesnt-exist.png'
   };
   setTileSelectorUI('#ignore-me', 13083, map, 0, 'a-fake-vsp'); // this is garbage
-
-  // ur = map.UndoRedo;
-  // UNDO_stack = ur._undoStack;
-  // REDO_stack = ur._redoStack;
-
-  // map.setTile(tileX, tileY, layerIdx, tileIdx); // coordinate 1,2 on layer 0 will be tile 99.
-  // oldTile = map.getTile(tileX, tileY, layerIdx);
-  // expect(oldTile).toEqual(42);
 });
 
-test.only('getCurrentlyExpectedTile and setCurrentlySelectedTile', () => {
+test('getCurrentlyExpectedTile and setCurrentlySelectedTile', () => {
   expect(getCurrentlySelectedTile()).toEqual(13083);
 
   setCurrentlySelectedTile(90210);

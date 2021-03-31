@@ -11,8 +11,10 @@ import { cut, copy, paste } from '../js/ui/CutCopyPaste';
 import { handleUndo, handleRedo } from '../UndoRedo';
 import { setupNotifications, notify } from '../Notification-Pane';
 import { setSuperCutPasteLayers, superCut, superPaste } from '../js/ui/SuperCutPaste';
-import { BREADPATH } from './FileSystemSetup';
+import { APPDATA_DIR, BREADPATH } from './FileSystemSetup';
 import {PNG} from 'pngjs';
+
+const jetpack = require('fs-jetpack');
 
 const $ = window.$;
 const path = require('path');
@@ -32,9 +34,9 @@ const updateScreenview = (map) => {
 // / I guess one should be in the appdir to at least point to the project directory...
 const loadMostRecentFileOption = () => {
   // / TODO: is there a reason for requiring these in-block like this, or is it just cargo cult copypasta? 
-  const jetpack = BREADPATH.getJetpack();
+  const jp = jetpack.cwd(APPDATA_DIR);
 
-  const appConfigData = jetpack.read(BREADPATH.getMostRecentFilesJSONPath(), 'json');
+  const appConfigData = jp.read(BREADPATH.getMostRecentFilesJSONPath(), 'json');
   window.$$$_most_recent_options = appConfigData;
 
   return appConfigData;
@@ -241,17 +243,17 @@ export function setupFreshApp() {
 }
 
 export function setupWindowFunctions() {
-  const newMapDialog = () => {
-    const path = require('path');
-    
-    const maps = window.$$$_most_recent_options.recent_maps;
-
+  
+  const newMapDialog = () => {   
     const $template = `
+      <p>Last step: how big (in tiles) do you want the base layer of your new map to be?</p>
       Width  <input id="newmap-width" type="number"><br/>
       Height  <input id="newmap-height" type="number"><br/>
+      <hr>
+      <p class="note">Nothing has yet been altered on your disk.  However: pressing "CREATE ALL NEW FILES" will create and/or overwrite any files you've specified during this process.</p>
     `;
 
-    const title = 'Create new map';
+    const title = 'Step 4: Create new map';
 
     $('#modal-dialog').html('');
     $('#modal-dialog').append($template);
@@ -266,82 +268,16 @@ export function setupWindowFunctions() {
       buttons: {
         'Cancel': function () {
           $('#modal-dialog').dialog( "close" );
-        }, 'Save new map': function () {
-          const wid = parseInt($('#newmap-width').val());
-          const hig = parseInt($('#newmap-height').val());
+        }, 'CREATE ALL NEW FILES': () => {
+          const wid = parseInt($('#newmap-width').val(),10);
+          const hig = parseInt($('#newmap-height').val(),10);
 
-          window.$$$currentMap = { 
-            layers: [] 
-          };
-
-          // "legacy_obstruction_data"
-
-          window.$$$currentMap.layers.length = 1;
-          window.$$$currentMap.layers[0] = {
-            "name":"New Layer",
-            "parallax":{"X":1,"Y":1},
-            "dimensions":{"X":wid,"Y":hig},
-            "alpha":1,
-            "vsp":"default"
-          };
-
-          const oneLayerSize = wid*hig;
-
-          window.$$$currentMap.zoneData = Array(oneLayerSize);
-          window.$$$currentMap.legacyObsData = Array.apply(null, Array(oneLayerSize)).map(Number.prototype.valueOf,0);
-          const blankLayerData = Array.apply(null, Array(oneLayerSize)).map(Number.prototype.valueOf,0);
-          window.$$$currentMap.mapRawTileData = {
-            tile_data: [blankLayerData],
-            legacy_obstruction_data: window.$$$currentMap.legacyObsData,
-            zone_data: []
-          };
-
-          window.$$$currentMap.entities = {}
-          window.$$$currentMap.entityData = {};
-          window.$$$currentMap.entityTextures = {};
-          window.$$$currentMap.mapData = {
-            "notes": [],
-            "name": "",
-            "vsp": {
-              "default": path.basename(window.newMapData.default_vspfile),
-              "obstructions": path.basename(window.newMapData.obs_vspfile)
-            },
-            "music": "",
-            "renderstring": "1,E,R",
-            "initscript": "start",
-            "starting_coordinates": [0, 0],
-            "layers": [{
-              "name": "New Layer",
-              "parallax": {
-                "X": 1,
-                "Y": 1
-              },
-              "dimensions": {
-                "X": wid,
-                "Y": hig
-              },
-              "alpha": 1,
-              "vsp": "default"
-            }],
-            "zones": [{
-              "name": "NULL_ZONE",
-              "activation_script": "",
-              "activation_chance": 0,
-              "can_by_adjacent_activated": false
-            }],
-            "entities": [],
-            "tallentitylayer": "New Layer",
-            "MAPED_ENTLAYER_VISIBLE": true,
-            "MAPED_ZONELAYER_VISIBLE": true,
-            "MAPED_OBSLAYER_VISIBLE": true
-          };
-          
-          window.$$$saveAs(true);
-          
+          if(wid>0 && hig>0) {
+            SaveNewMap();
+          } else {
+            alert("Invalid values.  Please try again.");
+          }
         }
-      },
-      close () {
-        $('#modal-dialog').html('');
       }
     });
   };
@@ -675,8 +611,7 @@ export function setupWindowFunctions() {
         }
         window.newMapData.default_vspfile = res[0];
 
-        const jetpack = require('fs-jetpack').cwd(__dirname);
-        window.newVspData = jetpack.read(res[0], 'json');
+        window.newVspData = require('fs-jetpack').cwd(__dirname).read(res[0], 'json');
   
         obsModeDialog();
       }
@@ -829,9 +764,9 @@ export function setupWindowFunctions() {
       {filters: [{ name: 'text', extensions: ['map.json'] }]},
       (filename) => {
         if (filename) {
-          const jetpack = BREADPATH.getJetpack();
+          const jp = jetpack.cwd(APPDATA_DIR);
           
-          const warning = !jetpack.exists(filename) ? "" : `<p class=warning>Warning, there is already a map of that name there, and we will overwrite it if you finish this New Map wizard.</p>`;
+          const warning = !jp.exists(filename) ? "" : `<p class=warning>Warning, there is already a map of that name there, and we will overwrite it if you finish this New Map wizard.</p>`;
 
           dialoger(
             "Step 1: Verify Save Location", 
@@ -871,7 +806,7 @@ export function setupWindowFunctions() {
   };
 
   window._save = function (newName, map, reloadAfterSave) {
-    const jetpack = BREADPATH.getJetpack();
+    const jp = jetpack.cwd(APPDATA_DIR);
 
     let mapfile = null;
     let datafile = null;
@@ -891,8 +826,8 @@ export function setupWindowFunctions() {
     INFO('saving', mapfile);
     INFO('saving', datafile);
 
-    jetpack.write(mapfile, mapData);
-    jetpack.write(datafile, tileData);
+    jp.write(mapfile, mapData);
+    jp.write(datafile, tileData);
 
     saveMostRecentMapLocation(mapfile);
 
@@ -1184,6 +1119,163 @@ export function setupWindowFunctions() {
   window.appPath = path.dirname(require('electron').remote.app.getAppPath());
 };
 
+const SaveNewMap = () => {
+    const wid = parseInt($('#newmap-width').val(),10);
+    const hig = parseInt($('#newmap-height').val(),10);
+
+
+    debugger;
+
+    doTilesetCreationStuff();
+    doObsCreationStuff();
+    //doMapCreationStuff(wid, hig);
+
+    //window.$$$saveAs(true);
+}
+
+export const weNeedToCopyATilesetImage = () => {
+  return window.newVspData && window.newVspData.source_image && window.newVspData.source_image.existingImageFilename && window.newVspData.source_image.newImageCopyFilename;
+}
+
+export const doTilesetCreationStuff = () => {
+  const i = 4;
+  debugger;
+
+  if(weNeedToCopyATilesetImage()) {
+    const jp = jetpack.cwd(APPDATA_DIR);
+    jp.copy(
+      window.newVspData.source_image.existingImageFilename, // from
+      window.newVspData.source_image.newImageCopyFilename, // to
+      { overwrite: true }
+    );
+    const fullPathToVSP = window.newVspData.source_image.vspName;
+    window.newMapData.default_vspfile = path.join(
+        path.relative(
+          path.dirname(window.newMapFilename), 
+          path.dirname(window.newVspData.source_image.vspName)
+        ),
+        path.basename(window.newVspData.source_image.vspName)
+      );
+
+    window.newVspData.source_image = path.join(
+        path.relative(
+          path.dirname(fullPathToVSP), 
+          path.dirname(window.newVspData.source_image.newImageCopyFilename)
+        ),
+        path.basename(window.newVspData.source_image.newImageCopyFilename)
+      );
+  } else {
+    throw "UNIMPLEMENTED";
+  }
+
+/*
+
+THIS IS A COPY-THE-TILESET-IMAGE-TO-A-NEW-FILE VSP REQUEST
+
+MAKE UNIT TESTS FOR THIS PROCESS FUCK YOU
+
+window.newMapFilename = "C:\Users\benmc\AppData\Roaming\Breadbrothers Games\Crutstation Engine\Breaditor\Starter_Project\111.map.json"
+
+window.newMapData = {
+	"default_vspfile": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\333.vsp.json",
+	"obs_vspfile": {
+		"obs-image-name": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\444.png",
+		"obs-def-name": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\555..vsp.json",
+		"rows": 8,
+		"cols": 8
+	}
+}
+
+window.newVspData = {
+	"tilesize": {
+		"width": 16,
+		"height": 16
+	},
+	"tiles_per_row": 20,
+	"source_image": {
+		"existingImageFilename": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\town.tiles.png",
+		"newImageCopyFilename": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\222.png",
+		"imgName": "town.tiles.png",
+		"vspName": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\333.vsp.json"
+	}
+}
+
+*/
+};
+
+export const doObsCreationStuff = () => {
+  const i = 4;
+  debugger;
+};
+
+export function doMapCreationStuff(wid, hig) {
+  debugger;
+
+  window.$$$currentMap = {
+    layers: []
+  };
+
+  // "legacy_obstruction_data"
+  window.$$$currentMap.layers.length = 1;
+  window.$$$currentMap.layers[0] = {
+    "name": "New Layer",
+    "parallax": { "X": 1, "Y": 1 },
+    "dimensions": { "X": wid, "Y": hig },
+    "alpha": 1,
+    "vsp": "default"
+  };
+
+  const oneLayerSize = wid * hig;
+  window.$$$currentMap.zoneData = Array(oneLayerSize);
+  window.$$$currentMap.legacyObsData = Array.apply(null, Array(oneLayerSize)).map(Number.prototype.valueOf, 0);
+  const blankLayerData = Array.apply(null, Array(oneLayerSize)).map(Number.prototype.valueOf, 0);
+  window.$$$currentMap.mapRawTileData = {
+    tile_data: [blankLayerData],
+    legacy_obstruction_data: window.$$$currentMap.legacyObsData,
+    zone_data: []
+  };
+
+  window.$$$currentMap.entities = {};
+  window.$$$currentMap.entityData = {};
+  window.$$$currentMap.entityTextures = {};
+  window.$$$currentMap.mapData = {
+    "notes": [],
+    "name": "",
+    "vsp": {
+      "default": path.basename(window.newMapData.default_vspfile),
+      "obstructions": path.basename(window.newMapData.obs_vspfile)
+    },
+    "music": "",
+    "renderstring": "1,E,R",
+    "initscript": "start",
+    "starting_coordinates": [0, 0],
+    "layers": [{
+      "name": "New Layer",
+      "parallax": {
+        "X": 1,
+        "Y": 1
+      },
+      "dimensions": {
+        "X": wid,
+        "Y": hig
+      },
+      "alpha": 1,
+      "vsp": "default"
+    }],
+    "zones": [{
+      "name": "NULL_ZONE",
+      "activation_script": "",
+      "activation_chance": 0,
+      "can_by_adjacent_activated": false
+    }],
+    "entities": [],
+    "tallentitylayer": "New Layer",
+    "MAPED_ENTLAYER_VISIBLE": true,
+    "MAPED_ZONELAYER_VISIBLE": true,
+    "MAPED_OBSLAYER_VISIBLE": true
+  };
+}
+
 function loadByFilename(fileNames, andThenFn) {
   if (fileNames === undefined) {
     return;
@@ -1202,10 +1294,10 @@ function loadByFilename(fileNames, andThenFn) {
 
 function saveMostRecentMapLocation(filename) {
   
-  const jetpack = BREADPATH.getJetpack();
+  const jp = jetpack.cwd(APPDATA_DIR);
   const appConfigPath = BREADPATH.getMostRecentFilesJSONPath();
 
-  let appConfigData = jetpack.read(appConfigPath, 'json');
+  let appConfigData = jp.read(appConfigPath, 'json');
   if( !appConfigData ) { 
     appConfigData = {};
   }
@@ -1226,7 +1318,7 @@ function saveMostRecentMapLocation(filename) {
 
   window.$$$_most_recent_options = appConfigData;
 
-  jetpack.write(appConfigPath, appConfigData);
+  jp.write(appConfigPath, appConfigData);
 };
 
 const MAX_RECENT_MAPS = 10;
