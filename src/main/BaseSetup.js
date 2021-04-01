@@ -610,7 +610,7 @@ export function setupWindowFunctions() {
           return;
         }
         window.newMapData.default_vspfile = res[0];
-
+ 
         window.newVspData = require('fs-jetpack').cwd(__dirname).read(res[0], 'json');
   
         obsModeDialog();
@@ -731,17 +731,9 @@ export function setupWindowFunctions() {
         },
       }
     );
-
-
-
-    // window.newMapData.obs_vspfile = res[0];
-
-    // window._chooseExistingDefaultObsVSP
-  };//
+  };
 
   window._newStep2_chooseObsVSP = function (res) {
-    
-
     newMapDialog();
   };
 
@@ -1133,12 +1125,20 @@ const SaveNewMap = () => {
     //window.$$$saveAs(true);
 }
 
+export const weNeedToReferenceATilesetImage = () => {
+  return window.newVspData && window.newVspData.source_image && window.newVspData.source_image.existingImageFilename && !window.newVspData.source_image.newImageCopyFilename;q
+}
+
 export const weNeedToCopyATilesetImage = () => {
   return window.newVspData && window.newVspData.source_image && window.newVspData.source_image.existingImageFilename && window.newVspData.source_image.newImageCopyFilename;
 }
 
-export const weNeedToReferenceATilesetImage = () => {
-  return window.newVspData && window.newVspData.source_image && window.newVspData.source_image.existingImageFilename && !window.newVspData.source_image.newImageCopyFilename;
+export const weAreReferencingATileset = (testUnsetText) => {
+  if(!testUnsetText) {
+    testUnsetText = "";
+  }
+
+  return window.newVspData && typeof window.newVspData.source_image == "string" && window.newVspData.source_image != testUnsetText;
 }
 
 export const doTilesetCreationStuff = () => {
@@ -1173,6 +1173,7 @@ export const doTilesetCreationStuff = () => {
 
   } else if(weNeedToReferenceATilesetImage()) {
     const fullPathToVSP = window.newVspData.source_image.vspName;
+
     window.newMapData.default_vspfile = path.join(
       path.relative(
         path.dirname(window.newMapFilename), 
@@ -1190,43 +1191,17 @@ export const doTilesetCreationStuff = () => {
     );
 
     jetpack.write(fullPathToVSP, window.newVspData);
+  } else if(weAreReferencingATileset()) {
+    window.newMapData.default_vspfile = path.join(
+      path.relative(
+        path.dirname(window.newMapFilename), 
+        path.dirname(window.newMapData.default_vspfile)
+      ),
+      path.basename(window.newMapData.default_vspfile)
+    );
   } else {
     throw "UNIMPLEMENTED";
   }
-
-/*
-
-THIS IS A COPY-THE-TILESET-IMAGE-TO-A-NEW-FILE VSP REQUEST
-
-MAKE UNIT TESTS FOR THIS PROCESS FUCK YOU
-
-window.newMapFilename = "C:\Users\benmc\AppData\Roaming\Breadbrothers Games\Crutstation Engine\Breaditor\Starter_Project\111.map.json"
-
-window.newMapData = {
-	"default_vspfile": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\333.vsp.json",
-	"obs_vspfile": {
-		"obs-image-name": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\444.png",
-		"obs-def-name": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\555..vsp.json",
-		"rows": 8,
-		"cols": 8
-	}
-}
-
-window.newVspData = {
-	"tilesize": {
-		"width": 16,
-		"height": 16
-	},
-	"tiles_per_row": 20,
-	"source_image": {
-		"existingImageFilename": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\town.tiles.png",
-		"newImageCopyFilename": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\222.png",
-		"imgName": "town.tiles.png",
-		"vspName": "C:\\Users\\benmc\\AppData\\Roaming\\Breadbrothers Games\\Crutstation Engine\\Breaditor\\Starter_Project\\333.vsp.json"
-	}
-}
-
-*/
 };
 
 export const doObsCreationStuff = () => {

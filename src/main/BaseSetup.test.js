@@ -1,5 +1,7 @@
 const jetpack = require('fs-jetpack');
-import { doTilesetCreationStuff, doObsCreationStuff, doMapCreationStuff, weNeedToCopyATilesetImage, weNeedToReferenceATilesetImage } from './BaseSetup';
+import { doTilesetCreationStuff, doObsCreationStuff, doMapCreationStuff, weNeedToCopyATilesetImage, weNeedToReferenceATilesetImage, weAreReferencingATileset } from './BaseSetup';
+const path = require('path');
+
 
 jest.mock(jetpack);
 
@@ -34,6 +36,21 @@ const New_Tileset_Existing_Image_CopyReference_Setup = () => {
     };
 }
 
+const Existing_Tileset_Setup = () => {
+    window.newMapFilename = "C:/mygame/maps/map.json"
+    window.newMapData = {
+        default_vspfile: "C:/mygame/tilesets/tileset.json"
+    };
+    window.newVspData = {
+        "tilesize": {
+            "width": 16,
+            "height": 16
+        },
+        "tiles_per_row": 20,
+        "source_image": "town-tiles.png"
+    };
+}
+
 const badSetupDeglobalizeMe = () => {
     window.newMapFilename = null;
     window.newMapData  = null;
@@ -63,16 +80,26 @@ describe('FTUX process', () => {
 
     describe('Base Tileset Generation', () => {
         test('Existing Tileset', () => {
-            // doTilesetCreationStuff();
+            Existing_Tileset_Setup();
 
-            // expect(1).toBe(2);  
+            expect(weNeedToCopyATilesetImage()).not.toBeTruthy();
+            expect(weNeedToReferenceATilesetImage()).not.toBeTruthy();
+            expect(weAreReferencingATileset("UNSET")).toBeTruthy();
+
+            doTilesetCreationStuff();
+
+            expect(window.newMapData.default_vspfile).toBe(`..${path.sep}tilesets${path.sep}tileset.json`);
+
+            expect(jetpack.copy).not.toHaveBeenCalled();
+            expect(jetpack.write).not.toHaveBeenCalled();
         });
 
-        test.only('New Tileset - Existing Image - Copy', () => {
+        test('New Tileset - Existing Image - Copy', () => {
             New_Tileset_Existing_Image_Copy_Setup();
 
             expect(weNeedToCopyATilesetImage()).toBeTruthy();
             expect(weNeedToReferenceATilesetImage()).not.toBeTruthy();
+            expect(weAreReferencingATileset("UNSET")).not.toBeTruthy();
             
             doTilesetCreationStuff();
 
@@ -98,11 +125,12 @@ describe('FTUX process', () => {
             expect(jetpack.write.mock.calls[0][1]).toEqual(expected);
         });
 
-        test('New Tileset - Existing Image - Reference', () => {
+        test.only('New Tileset - Existing Image - Reference', () => {
             New_Tileset_Existing_Image_CopyReference_Setup();
             
             expect(weNeedToCopyATilesetImage()).not.toBeTruthy();
             expect(weNeedToReferenceATilesetImage()).toBeTruthy();
+            expect(weAreReferencingATileset("UNSET")).not.toBeTruthy();
 
             doTilesetCreationStuff();
 
