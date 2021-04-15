@@ -516,7 +516,9 @@ const redraw_palette = (map) => {
           offs_x = map.mapData.obstructions_layer.offset.X;
           offs_y = map.mapData.obstructions_layer.offset.Y;
         } else {
-          [dim_x, dim_y] = map.mapSizeInTiles;
+          dim_x = map.mapSizeInTiles.width;
+          dim_y = map.mapSizeInTiles.height;
+           
           offs_x = 0;
           offs_y = 0;
 

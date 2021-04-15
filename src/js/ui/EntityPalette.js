@@ -154,6 +154,8 @@ const initEntitiesWidget = (map) => {
   $('.entity-palette #entity-spreadsheet').click(() => {
     window.alert('SPREAD THAT SHEET entity SHEIT');
   });
+  
+  init();
 };
 
 const _select_entity_ui_inner = ($node) => {
@@ -619,10 +621,10 @@ export const show_edit_entity_dialog = (id) => {
   _entity_click(evt, id);
 }
 
+let dialog;
+
 function _entity_click(evt, id) {
   evt.stopPropagation();
-
-  let dialog;
 
   const ent = currentEntities[id];
 
@@ -653,8 +655,6 @@ function _entity_click(evt, id) {
 
     assert_pixel_versus_tile_in_editing();
 
-    const { dialog } = require('electron').remote;
-
     dialog = $('#modal-dialog').dialog({
       width: 500,
       modal: true,
@@ -663,7 +663,7 @@ function _entity_click(evt, id) {
         Save: () => {
           const _id = ($.isNumeric(id) && ent) ? id : currentEntities.length;
 
-          update_entity(dialog, _id);
+          update_entity(_id);
 
           hasDirtyArt = false;
         },
@@ -687,7 +687,7 @@ function _entity_click(evt, id) {
   });
 }
 
-export const update_entity = (dialog, ent_id) => {
+export const update_entity = (ent_id) => {
   const entity_name = $('#entity_name').val();
   const entity_filename = $('#entity_filename').val(); // TODO: validate existance
   const entity_uuid = $('#entity_uuid').val();
@@ -758,7 +758,6 @@ export const update_entity = (dialog, ent_id) => {
   };
 
   if (_update_entity_inner(ent_id, vals)) {
-    const { dialog } = require('electron').remote;
     dialog.dialog('close');
     selectEntityByIndex(ent_id);
     scrollEntityPalletteToEntity(ent_id);

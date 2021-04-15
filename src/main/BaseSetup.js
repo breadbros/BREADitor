@@ -1056,6 +1056,7 @@ export function setupWindowFunctions() {
     window.$$$toggle_pallete(pal, true);  
   }
 
+  /** You are not ready */
   window.$$$toggle_pallete = (pal, forceShow, forceHide) => {
     if (pal.msg) {
       pal = pal.msg;
@@ -1141,6 +1142,12 @@ export const weAreReferencingATileset = (testUnsetText) => {
   return window.newVspData && typeof window.newVspData.source_image == "string" && window.newVspData.source_image != testUnsetText;
 }
 
+export const weAreGoingToMakeAnImageOMG = () => {
+  const d = window.newVspData;
+  const si = d.source_image;
+  return d.tilesize.width > 0 && d.tilesize.height > 0 && d.tiles_per_row > 0 && si.existingImageFilename === null && si.newImageCopyFilename === true && typeof si.imgName == "string" && typeof si.vspName == "string";
+}
+
 export const doTilesetCreationStuff = () => {
   const i = 4;
   debugger;
@@ -1199,8 +1206,10 @@ export const doTilesetCreationStuff = () => {
       ),
       path.basename(window.newMapData.default_vspfile)
     );
+  } else if(weAreGoingToMakeAnImageOMG()) {
+
   } else {
-    throw "UNIMPLEMENTED";
+    throw "doTilesetCreationStuff for New Map FTUX has apparently fallen through to a state before thought to be impossible!  OH NO!";
   }
 };
 

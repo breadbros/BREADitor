@@ -1,5 +1,7 @@
 const jetpack = require('fs-jetpack');
-import { doTilesetCreationStuff, doObsCreationStuff, doMapCreationStuff, weNeedToCopyATilesetImage, weNeedToReferenceATilesetImage, weAreReferencingATileset } from './BaseSetup';
+import { doTilesetCreationStuff, doObsCreationStuff, doMapCreationStuff, 
+    weNeedToCopyATilesetImage, weNeedToReferenceATilesetImage, weAreReferencingATileset, 
+    weAreGoingToMakeAnImageOMG } from './BaseSetup';
 const path = require('path');
 
 
@@ -49,6 +51,28 @@ const Existing_Tileset_Setup = () => {
         "tiles_per_row": 20,
         "source_image": "town-tiles.png"
     };
+}
+
+const Create_New_Tileset_Image_Flow = () => {
+
+    window.newMapFilename = "C:/mygame/maps/map.json"
+    
+    window.newMapData = {
+        "default_vspfile" : "c:/mygame/art/tilesets/shiny-new-australia.vsp.json"
+    }
+    window.newVspData = {
+        "tilesize": {
+            "width": 18,
+            "height": 19
+        },
+        "tiles_per_row": 14,
+        "source_image": {
+            "existingImageFilename": null,
+            "newImageCopyFilename": true,
+            "imgName": "c:/mygame/art/tile-images/brand-new-day.png",
+            "vspName": "c:/mygame/art/tilesets/shiny-new-australia.vsp.json"
+        }
+    }
 }
 
 const badSetupDeglobalizeMe = () => {
