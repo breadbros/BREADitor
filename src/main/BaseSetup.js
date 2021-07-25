@@ -12,7 +12,8 @@ import { handleUndo, handleRedo } from '../UndoRedo';
 import { setupNotifications, notify } from '../Notification-Pane';
 import { setSuperCutPasteLayers, superCut, superPaste } from '../js/ui/SuperCutPaste';
 import { APPDATA_DIR, BREADPATH } from './FileSystemSetup';
-import {PNG} from 'pngjs';
+import { PNG } from 'pngjs';
+import { loadPlugins } from '../Plugins';
 
 const jetpack = require('fs-jetpack');
 
@@ -20,7 +21,6 @@ const $ = window.$;
 const path = require('path');
 const { dialog } = require('electron').remote;
 const fs = require('fs');
-
 
 const updateScreenview = (map) => {
   $('#screenview-indicator-switch').prop('checked', map.windowOverlay.on);
@@ -240,6 +240,8 @@ export function setupFreshApp() {
   setupTheRestOfTheApp();
 
   setupNotifications();
+
+  loadPlugins();
 }
 
 export function setupWindowFunctions() {
