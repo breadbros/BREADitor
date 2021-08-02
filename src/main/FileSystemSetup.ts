@@ -6,7 +6,7 @@ const path = require('path');
 const BASE_APPDATA_DIR = process.env.APPDATA || (process.platform === 'darwin' ? `${process.env.HOME}/Library/Preferences` : `${process.env.HOME}/.local/share`);
 
 const COMPANY_DIR = "Breadbrothers Games";
-const ENGINE_DIR = "Crutstation Engine";
+const ENGINE_DIR = "Crustation Engine";
 const BREADITOR_DIR = "Breaditor";
 
 const MOST_RECENT_FILES_JSON = "$$$_BREDITOR_MOST_RECENT.json";
