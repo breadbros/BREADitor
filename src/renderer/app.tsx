@@ -7,7 +7,7 @@ import Application from './components/Application';
 import store from './store';
 import { oldBootstrap } from '../old_bootstrap.js';
 
-oldBootstrap();
+// oldBootstrap();
 
 // Create main element
 const mainElement = document.createElement('div');
