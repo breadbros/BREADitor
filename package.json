@@ -160,6 +160,7 @@
     "natives": "^1.1.6",
     "pngjs": "^6.0.0",
     "react": "^16.8.6",
+    "react-dockable": "git+https://github.com/DanFessler/react-dockable.git",
     "react-dom": "^16.8.6",
     "react-panelgroup": "^1.0.12",
     "react-redux": "^7.0.3",
