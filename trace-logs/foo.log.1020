@@ -1,0 +1,395 @@
+set_robust_list(0x7fb729fb09e0, 24)     = 0
+futex(0x7fffe3c73380, FUTEX_WAKE_PRIVATE, 1) = 1
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/UndoRedo.js", {st_mode=S_IFREG|0777, st_size=9646, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/tools/Eyedropper.js", {st_mode=S_IFREG|0777, st_size=3684, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/js/ui/Util.js", {st_mode=S_IFREG|0777, st_size=1796, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/base.d.ts", {st_mode=S_IFREG|0777, st_size=905, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/async_hooks.d.ts", {st_mode=S_IFREG|0777, st_size=20821, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/console.d.ts", {st_mode=S_IFREG|0777, st_size=18165, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/diagnostics_channel.d.ts", {st_mode=S_IFREG|0777, st_size=4491, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/events.d.ts", {st_mode=S_IFREG|0777, st_size=21037, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/http2.d.ts", {st_mode=S_IFREG|0777, st_size=112341, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/net.d.ts", {st_mode=S_IFREG|0777, st_size=36089, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/process.d.ts", {st_mode=S_IFREG|0777, st_size=70169, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/repl.d.ts", {st_mode=S_IFREG|0777, st_size=19463, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/timers.d.ts", {st_mode=S_IFREG|0777, st_size=4532, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/tty.d.ts", {st_mode=S_IFREG|0777, st_size=9880, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/vm.d.ts", {st_mode=S_IFREG|0777, st_size=20810, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/wasi.d.ts", {st_mode=S_IFREG|0777, st_size=7420, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2015.d.ts", {st_mode=S_IFREG|0777, st_size=1254, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2015.iterable.d.ts", {st_mode=S_IFREG|0777, st_size=15708, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2015.proxy.d.ts", {st_mode=S_IFREG|0777, st_size=1977, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2017.object.d.ts", {st_mode=S_IFREG|0777, st_size=2485, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2017.typedarrays.d.ts", {st_mode=S_IFREG|0777, st_size=1463, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2018.regexp.d.ts", {st_mode=S_IFREG|0777, st_size=1248, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/assert.d.ts", {st_mode=S_IFREG|0777, st_size=55442, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/tools/FloodFill.js", {st_mode=S_IFREG|0777, st_size=2639, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/ShaderProgram.js", {st_mode=S_IFREG|0777, st_size=1588, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/Tools.UndoRedo.test.js", {st_mode=S_IFREG|0777, st_size=7493, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/main/BaseSetup.js", {st_mode=S_IFREG|0777, st_size=44079, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/main/IPCRenderer.js", {st_mode=S_IFREG|0777, st_size=5661, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/__mocks__/Tools.js", {st_mode=S_IFREG|0777, st_size=423, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/helpers/window.js", {st_mode=S_IFREG|0777, st_size=2532, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/main/BaseSetup.test.js", {st_mode=S_IFREG|0777, st_size=6142, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/source-map-support/register.d.ts", {st_mode=S_IFREG|0777, st_size=207, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/menu/edit_menu_template.js", {st_mode=S_IFREG|0777, st_size=2809, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/react/index.d.ts", {st_mode=S_IFREG|0777, st_size=150728, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/scheduler/tracing.d.ts", {st_mode=S_IFREG|0777, st_size=4122, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/react-redux/node_modules/@types/react/global.d.ts", {st_mode=S_IFREG|0777, st_size=7176, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/react-hot-loader/index.d.ts", {st_mode=S_IFREG|0777, st_size=3806, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@testing-library/dom/types/get-queries-for-element.d.ts", {st_mode=S_IFREG|0777, st_size=946, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@testing-library/dom/types/query-helpers.d.ts", {st_mode=S_IFREG|0777, st_size=1943, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/pretty-format/build/types.d.ts", {st_mode=S_IFREG|0777, st_size=2667, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@testing-library/dom/types/pretty-dom.d.ts", {st_mode=S_IFREG|0777, st_size=593, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/react-dom/test-utils/index.d.ts", {st_mode=S_IFREG|0777, st_size=11675, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/redux-devtools-extension/index.d.ts", {st_mode=S_IFREG|0777, st_size=6563, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/renderer/actions/index.ts", {st_mode=S_IFREG|0777, st_size=116, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/spectron/lib/spectron.d.ts", {st_mode=S_IFREG|0777, st_size=9052, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/babel__core/index.d.ts", {st_mode=S_IFREG|0777, st_size=27200, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/babel__template/index.d.ts", {st_mode=S_IFREG|0777, st_size=3600, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/electron-devtools-installer/index.d.ts", {st_mode=S_IFREG|0777, st_size=1298, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/minimatch/index.d.ts", {st_mode=S_IFREG|0777, st_size=5570, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/jest/index.d.ts", {st_mode=S_IFREG|0777, st_size=77621, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/jquery/JQueryStatic.d.ts", {st_mode=S_IFREG|0777, st_size=452897, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/sizzle/index.d.ts", {st_mode=S_IFREG|0777, st_size=2755, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/react-panelgroup/index.d.ts", {st_mode=S_IFREG|0777, st_size=1031, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/source-list-map/index.d.ts", {st_mode=S_IFREG|0777, st_size=2334, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/tapable/index.d.ts", {st_mode=S_IFREG|0777, st_size=15293, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/index.d.ts", {st_mode=S_IFREG|0777, st_size=1116, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/lib/CompatSource.d.ts", {st_mode=S_IFREG|0777, st_size=245, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/lib/PrefixSource.d.ts", {st_mode=S_IFREG|0777, st_size=342, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/lib/SourceMapSource.d.ts", {st_mode=S_IFREG|0777, st_size=634, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.dom.d.ts", {st_mode=S_IFREG|0777, st_size=833758, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/tsconfig.json", {st_mode=S_IFREG|0777, st_size=5097, ...}) = 0
+write(17, "\1\0\0\0\0\0\0\0", 8)        = 8
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/Notification-Pane.ts", {st_mode=S_IFREG|0777, st_size=1440, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/tools/Eyedropper.js", {st_mode=S_IFREG|0777, st_size=3684, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/electron/electron.d.ts", {st_mode=S_IFREG|0777, st_size=385438, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/assert/strict.d.ts", {st_mode=S_IFREG|0777, st_size=201, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/globals.d.ts", {st_mode=S_IFREG|0777, st_size=8366, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/buffer.d.ts", {st_mode=S_IFREG|0777, st_size=83832, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/dns/promises.d.ts", {st_mode=S_IFREG|0777, st_size=14968, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/domain.d.ts", {st_mode=S_IFREG|0777, st_size=7805, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/http.d.ts", {st_mode=S_IFREG|0777, st_size=54632, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/perf_hooks.d.ts", {st_mode=S_IFREG|0777, st_size=20904, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/readline.d.ts", {st_mode=S_IFREG|0777, st_size=23246, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/tls.d.ts", {st_mode=S_IFREG|0777, st_size=50632, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/v8.d.ts", {st_mode=S_IFREG|0777, st_size=15248, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2015.d.ts", {st_mode=S_IFREG|0777, st_size=1254, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es5.d.ts", {st_mode=S_IFREG|0777, st_size=209362, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2015.generator.d.ts", {st_mode=S_IFREG|0777, st_size=2614, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2016.array.include.d.ts", {st_mode=S_IFREG|0777, st_size=4961, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2018.regexp.d.ts", {st_mode=S_IFREG|0777, st_size=1248, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2018.intl.d.ts", {st_mode=S_IFREG|0777, st_size=2286, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/assert.d.ts", {st_mode=S_IFREG|0777, st_size=55442, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/ShaderProgram.js", {st_mode=S_IFREG|0777, st_size=1588, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/Map.test.js", {st_mode=S_IFREG|0777, st_size=4216, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/env.js", {st_mode=S_IFREG|0777, st_size=267, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/js/ui/CutCopyPaste.js", {st_mode=S_IFREG|0777, st_size=4366, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/__mocks__/fs-jetpack.js", {st_mode=S_IFREG|0777, st_size=754, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/js/ui/EntityPalette.test.js", {st_mode=S_IFREG|0777, st_size=6817, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/menu/prod_menu_template.js", {st_mode=S_IFREG|0777, st_size=369, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/menu/window_menu_template.js", {st_mode=S_IFREG|0777, st_size=978, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/react-redux/index.d.ts", {st_mode=S_IFREG|0777, st_size=28972, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/renderer/components/App.tsx", {st_mode=S_IFREG|0777, st_size=2678, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@testing-library/dom/types/wait-for.d.ts", {st_mode=S_IFREG|0777, st_size=293, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@testing-library/dom/types/events.d.ts", {st_mode=S_IFREG|0777, st_size=1993, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@testing-library/dom/types/suggestions.d.ts", {st_mode=S_IFREG|0777, st_size=755, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/renderer/reducers/counterReducer.ts", {st_mode=S_IFREG|0777, st_size=707, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webdriverio/index.d.ts", {st_mode=S_IFREG|0777, st_size=58674, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/mocks/fileMock.js", {st_mode=S_IFREG|0777, st_size=36, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@babel/parser/typings/babel-parser.d.ts", {st_mode=S_IFREG|0777, st_size=4937, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/babel__template/index.d.ts", {st_mode=S_IFREG|0777, st_size=3600, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/debug/index.d.ts", {st_mode=S_IFREG|0777, st_size=1717, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/minimatch/index.d.ts", {st_mode=S_IFREG|0777, st_size=5570, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/jquery/JQueryStatic.d.ts", {st_mode=S_IFREG|0777, st_size=452897, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 1
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/sizzle/index.d.ts", {st_mode=S_IFREG|0777, st_size=2755, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/json-schema/index.d.ts", {st_mode=S_IFREG|0777, st_size=28937, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/react-panelgroup/node_modules/@types/react/index.d.ts", {st_mode=S_IFREG|0777, st_size=150752, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/tapable/index.d.ts", {st_mode=S_IFREG|0777, st_size=15293, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/lib/index.d.ts", {st_mode=S_IFREG|0777, st_size=2030, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/lib/ReplaceSource.d.ts", {st_mode=S_IFREG|0777, st_size=1037, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/lib/SizeOnlySource.d.ts", {st_mode=S_IFREG|0777, st_size=143, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-env/index.d.ts", {st_mode=S_IFREG|0777, st_size=14344, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+write(17, "\1\0\0\0\0\0\0\0", 8)        = 8
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 1
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/Logging.js", {st_mode=S_IFREG|0777, st_size=691, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/Tools.js", {st_mode=S_IFREG|0777, st_size=16699, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/tools/SmartEyedropper.js", {st_mode=S_IFREG|0777, st_size=7516, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/base.d.ts", {st_mode=S_IFREG|0777, st_size=905, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/async_hooks.d.ts", {st_mode=S_IFREG|0777, st_size=20821, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/index.d.ts", {st_mode=S_IFREG|0777, st_size=4909, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/console.d.ts", {st_mode=S_IFREG|0777, st_size=18165, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/domain.d.ts", {st_mode=S_IFREG|0777, st_size=7805, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/fs/promises.d.ts", {st_mode=S_IFREG|0777, st_size=43779, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/punycode.d.ts", {st_mode=S_IFREG|0777, st_size=5484, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/stream/promises.d.ts", {st_mode=S_IFREG|0777, st_size=2374, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/vm.d.ts", {st_mode=S_IFREG|0777, st_size=20810, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/node/zlib.d.ts", {st_mode=S_IFREG|0777, st_size=19520, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2018.d.ts", {st_mode=S_IFREG|0777, st_size=1097, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2015.iterable.d.ts", {st_mode=S_IFREG|0777, st_size=15708, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2015.reflect.d.ts", {st_mode=S_IFREG|0777, st_size=1922, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2018.regexp.d.ts", {st_mode=S_IFREG|0777, st_size=1248, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.es2018.promise.d.ts", {st_mode=S_IFREG|0777, st_size=1367, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/typescript/lib/lib.esnext.intl.d.ts", {st_mode=S_IFREG|0777, st_size=1259, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/ShaderProgram.js", {st_mode=S_IFREG|0777, st_size=1588, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/Map.test.js", {st_mode=S_IFREG|0777, st_size=4216, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/env.js", {st_mode=S_IFREG|0777, st_size=267, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/helpers/FakeMap.js", {st_mode=S_IFREG|0777, st_size=3539, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/js/ui/InfoPalette.js", {st_mode=S_IFREG|0777, st_size=2538, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/__mocks__/fs-jetpack.js", {st_mode=S_IFREG|0777, st_size=754, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/helpers/window.js", {st_mode=S_IFREG|0777, st_size=2532, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/js/ui/EntityPalette.test.js", {st_mode=S_IFREG|0777, st_size=6817, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/main/SendMsgToMainWindow.js", {st_mode=S_IFREG|0777, st_size=339, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/menu/file_menu_template.js", {st_mode=S_IFREG|0777, st_size=1013, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/menu/window_menu_template.js", {st_mode=S_IFREG|0777, st_size=978, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/react-redux/index.d.ts", {st_mode=S_IFREG|0777, st_size=28972, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/renderer/components/App.tsx", {st_mode=S_IFREG|0777, st_size=2678, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@testing-library/dom/types/screen.d.ts", {st_mode=S_IFREG|0777, st_size=692, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@testing-library/dom/types/pretty-dom.d.ts", {st_mode=S_IFREG|0777, st_size=593, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/renderer/components/MenuBar.tsx", {st_mode=S_IFREG|0777, st_size=8030, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/renderer/reducers/counterReducer.ts", {st_mode=S_IFREG|0777, st_size=707, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/src/tools/FloodFill.test.js", {st_mode=S_IFREG|0777, st_size=2515, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/mocks/fileMock.js", {st_mode=S_IFREG|0777, st_size=36, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/babel__template/index.d.ts", {st_mode=S_IFREG|0777, st_size=3600, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/glob/index.d.ts", {st_mode=S_IFREG|0777, st_size=3409, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/jquery/JQueryStatic.d.ts", {st_mode=S_IFREG|0777, st_size=452897, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/parse-json/index.d.ts", {st_mode=S_IFREG|0777, st_size=434, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/q/index.d.ts", {st_mode=S_IFREG|0777, st_size=28986, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/source-list-map/index.d.ts", {st_mode=S_IFREG|0777, st_size=2334, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack/index.d.ts", {st_mode=S_IFREG|0777, st_size=101379, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 1
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/lib/CompatSource.d.ts", {st_mode=S_IFREG|0777, st_size=245, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/lib/index.d.ts", {st_mode=S_IFREG|0777, st_size=2030, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/lib/PrefixSource.d.ts", {st_mode=S_IFREG|0777, st_size=342, ...}) = 0
+futex(0x446c848, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c848, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/webpack-sources/lib/SourceMapSource.d.ts", {st_mode=S_IFREG|0777, st_size=634, ...}) = 0
+stat("/mnt/d/dev/grue/BREADitor/node_modules/@types/yargs-parser/index.d.ts", {st_mode=S_IFREG|0777, st_size=6207, ...}) = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = ?
++++ killed by SIGTERM +++

@@ -1,0 +1,46 @@
+set_robust_list(0x7f21e97a09e0, 24)     = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+openat(AT_FDCWD, "/home/grue/.nvm/versions/node/v14.15.3/lib/node_modules/npm/npmrc", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+write(17, "\1\0\0\0\0\0\0\0", 8)        = 8
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+openat(AT_FDCWD, "/home/grue/.nvm/versions/node/v14.15.3/etc/npmrc", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+write(17, "\1\0\0\0\0\0\0\0", 8)        = 8
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+mkdir("/mnt/d/dev/grue/BREADitor", 0777) = -1 EEXIST (File exists)
+write(17, "\1\0\0\0\0\0\0\0", 8)        = 8
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+fstat(21, {st_mode=S_IFREG|0777, st_size=5667, ...}) = 0
+write(17, "\1\0\0\0\0\0\0\0", 8)        = 8
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+openat(AT_FDCWD, "/mnt/d/dev/grue/BREADitor/AUTHORS", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+fstat(21, {st_mode=S_IFREG|0777, st_size=25, ...}) = 0
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+close(21)                               = 0
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c720, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+read(22, "# electron-react-typescript\r\n\r\n### A Boilerplate for an Easy Start with TypeScript, React, and Electron.\r\n\r\n[![React](docs/img/react.png)](https://reactjs.org/)\r\n[![Webpack](docs/img/webpack.png)](https://webpack.js.org/)\r\n[![TypeScript](docs/img/ts.png)](https://www.typescriptlang.org/)\r\n[![Electron](docs/img/electron.png)](https://electronjs.org/)\r\n[![Redux](docs/img/redux.png)](https://redux.js.org/)\r\n[![Jest](docs/img/jest.png)](https://facebook.github.io/jest/)\r\n\r\n[Electron](https://electronjs.org/) application boilerplate based on [React](https://reactjs.org/), [Redux](https://redux.js.org/), and [Webpack](https://webpack.js.org/) for rapid application development using [TypeScript](https://www.typescriptlang.org/).\r\n\r\n## Install\r\nClone the repository with Git:\r\n\r\n```bash\r\ngit clone --depth=1 git@github.com:Robinfr/electron-react-typescript.git <your-project-name>\r\n```\r\n\r\nAnd then install the dependencies:\r\n\r\n```bash\r\ncd <your-project-name>\r\nnpm install\r\n```\r\n\r\n## Usage\r\nBoth processes have to be started **simultaneously** in different console tabs:\r\n\r\n```bash\r\nnpm run start-renderer-dev\r\nnpm run start-main-dev\r\n```\r\n\r\nThis will start the application with hot-reload so you can instantly start developing your application.\r\n\r\nYou can also run do the following to start both in a single process:\r\n\r\n```bash\r\nnpm run start-dev\r\n```\r\n\r\n## Packaging\r\nWe use [Electron builder](https://www.electron.build/) to build and package the application. By default you can run the following to package for your current platform:\r\n\r\n```bash\r\nnpm run dist\r\n```\r\n\r\nThis will create a installer for your platform in the `releases` folder.\r\n\r\nYou can make builds for specific platforms (or multiple platforms) by using the options found [here](https://www.electron.build/cli). E.g. building for all platforms (Windows, Mac, Linux):\r\n\r\n```bash\r\nnpm run dist -- -mwl\r\n```\r\n\r\n## Husky and Prettier\r\nThis project comes with both Husky and Prettier setup to ensure a consistent code style. \r\n\r\nTo change the code style, you can change the configuration in `.prettierrc`. \r\n\r\nIn case you want to get rid of this, you can removing the following from `package.json`:\r\n\r\n1. Remove `precommit` from the `scripts` section\r\n1. Remove the `lint-staged` section\r\n1. Remove `lint-staged`, `prettier`, `eslint-config-prettier`, and `husky` from the `devDependencies`\r\n\r\nAlso remove all mentions of Prettier from the `extends` section in `.eslintrc.json`.\r\n\r\n## About this project\r\nThis project was set up from scratch but is heavily influenced by the [Electron React Boilerplate project](https://github.com/chentsulin/electron-react-boilerplate) and [React Redux TypeScript guide](https://github.com/piotrwitek/react-redux-typescript-guide).\r\n\r\n## License\r\nMIT \302\251 [R. Franken](https://github.com/Robinfr)\r\n", 2795) = 2795
+write(17, "\1\0\0\0\0\0\0\0", 8)        = 8
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+read(21, "68eb960f9fc8bfdb95f52a2419be391a534262b0\n", 41) = 41
+write(17, "\1\0\0\0\0\0\0\0", 8)        = 8
+futex(0x446c78c, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+stat("/mnt/d/dev/grue/BREADitor", {st_mode=S_IFDIR|0777, st_size=512, ...}) = 0
+write(17, "\1\0\0\0\0\0\0\0", 8)        = 8
+futex(0x446c788, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x446c720, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x446c788, FUTEX_WAKE_PRIVATE, 1) = 1
+futex(0x446c720, FUTEX_WAKE_PRIVATE, 1) = 0
+madvise(0x7f21e8fa0000, 8368128, MADV_DONTNEED) = 0
+exit(0)                                 = ?
++++ exited with 0 +++

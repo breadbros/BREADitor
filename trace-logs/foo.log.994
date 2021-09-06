@@ -1,0 +1,131 @@
+close(10)                               = 0
+close(3)                                = 0
+dup2(4, 1)                              = 1
+close(4)                                = 0
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f742ccf1690) = 995
+close(4)                                = 0
+read(3, "/mnt/d/dev/grue/BREADitor/node_modules/.bin/webpack\n", 128) = 52
+read(3, "", 128)                        = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=995, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+rt_sigreturn({mask=[]})                 = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 995
+stat("/home/grue/.nvm/versions/node/v14.15.3/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin/dirname", 0x7fffe123f5d0) = -1 ENOENT (No such file or directory)
+stat("/mnt/d/dev/grue/BREADitor/node_modules/.bin/dirname", 0x7fffe123f5d0) = -1 ENOENT (No such file or directory)
+stat("/home/grue/.nvm/versions/node/v14.15.3/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin/dirname", 0x7fffe123f5d0) = -1 ENOENT (No such file or directory)
+stat("/mnt/d/dev/grue/BREADitor/node_modules/.bin/dirname", 0x7fffe123f5d0) = -1 ENOENT (No such file or directory)
+stat("/home/grue/.nvm/versions/node/v14.15.3/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin/dirname", 0x7fffe123f5d0) = -1 ENOENT (No such file or directory)
+stat("/mnt/d/dev/grue/BREADitor/node_modules/.bin/dirname", 0x7fffe123f5d0) = -1 ENOENT (No such file or directory)
+stat("/home/grue/.nvm/versions/node/v14.15.3/bin/dirname", 0x7fffe123f5d0) = -1 ENOENT (No such file or directory)
+stat("/usr/local/sbin/dirname", 0x7fffe123f5d0) = -1 ENOENT (No such file or directory)
+stat("/usr/local/bin/dirname", 0x7fffe123f5d0) = -1 ENOENT (No such file or directory)
+stat("/usr/sbin/dirname", 0x7fffe123f5d0) = -1 ENOENT (No such file or directory)
+stat("/usr/bin/dirname", {st_mode=S_IFREG|0755, st_size=39256, ...}) = 0
+execve("/usr/bin/dirname", ["dirname", "/mnt/d/dev/grue/BREADitor/node_modules/.bin/webpack"], 0x7fffd96f3d88 /* 295 vars */) = 0
+brk(NULL)                               = 0x7fffc0a7b000
+arch_prctl(0x3001 /* ARCH_??? */, 0x7fffc782b6d0) = -1 EINVAL (Invalid argument)
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=30634, ...}) = 0
+mmap(NULL, 30634, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa667368000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360q\2\0\0\0\0\0@\0\0\0\0\0\0\0h\345\36\0\0\0\0\0\0\0\0\0@\08\0\16\0@\0E\0D\0\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0\20\3\0\0\0\0\0\0\20\3\0\0\0\0\0\0\10\0\0\0\0\0\0\0\3\0\0\0\4\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\34\0\0\0\0\0\0\0\34\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@I\2\0\0\0\0\0@I\2\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\5\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\264u\27\0\0\0\0\0\264u\27\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0e\235\4\0\0\0\0\0e\235\4\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\6\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20P\0\0\0\0\0\0\330\216\0\0\0\0\0\0\0\20\0\0\0\0\0\0\2\0\0\0\6\0\0\0\200\233\36\0\0\0\0\0\200\253\36\0\0\0\0\0\200\253\36\0\0\0\0\0\340\1\0\0\0\0\0\0\340\1\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0D\0\0\0\0\0\0\0D\0\0\0\0\0\0\0\4\0\0\0\0\0\0\0\7\0\0\0\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20\0\0\0\0\0\0\0\220\0\0\0\0\0\0\0\10\0\0\0\0\0\0\0S\345td\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0P\345td\4\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\304^\0\0\0\0\0\0\304^\0\0\0\0\0\0\4\0\0\0\0\0\0\0Q\345td\6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0R\345td\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0*\0\0\0\0\0\0", 832) = 832
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0\20\3\0\0\0\0\0\0\20\3\0\0\0\0\0\0\10\0\0\0\0\0\0\0\3\0\0\0\4\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\34\0\0\0\0\0\0\0\34\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@I\2\0\0\0\0\0@I\2\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\5\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\264u\27\0\0\0\0\0\264u\27\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0e\235\4\0\0\0\0\0e\235\4\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\6\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20P\0\0\0\0\0\0\330\216\0\0\0\0\0\0\0\20\0\0\0\0\0\0\2\0\0\0\6\0\0\0\200\233\36\0\0\0\0\0\200\253\36\0\0\0\0\0\200\253\36\0\0\0\0\0\340\1\0\0\0\0\0\0\340\1\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0D\0\0\0\0\0\0\0D\0\0\0\0\0\0\0\4\0\0\0\0\0\0\0\7\0\0\0\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20\0\0\0\0\0\0\0\220\0\0\0\0\0\0\0\10\0\0\0\0\0\0\0S\345td\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0P\345td\4\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\304^\0\0\0\0\0\0\304^\0\0\0\0\0\0\4\0\0\0\0\0\0\0Q\345td\6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0R\345td\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0*\0\0\0\0\0\0\0*\0\0\0\0\0\0\1\0\0\0\0\0\0\0", 784, 64) = 784
+pread64(3, "\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0", 32, 848) = 32
+pread64(3, "\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\t\233\222%\274\260\320\31\331\326\10\204\276X>\263\33\265\364N\4\0\0\0\20\0\0\0\1\0\0\0GNU\0\0\0\0\0\3\0\0\0\2\0\0\0\0\0\0\0", 68, 880) = 68
+fstat(3, {st_mode=S_IFREG|0755, st_size=2029224, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fa6673a0000
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0\20\3\0\0\0\0\0\0\20\3\0\0\0\0\0\0\10\0\0\0\0\0\0\0\3\0\0\0\4\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\34\0\0\0\0\0\0\0\34\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@I\2\0\0\0\0\0@I\2\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\5\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\264u\27\0\0\0\0\0\264u\27\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0e\235\4\0\0\0\0\0e\235\4\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\6\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20P\0\0\0\0\0\0\330\216\0\0\0\0\0\0\0\20\0\0\0\0\0\0\2\0\0\0\6\0\0\0\200\233\36\0\0\0\0\0\200\253\36\0\0\0\0\0\200\253\36\0\0\0\0\0\340\1\0\0\0\0\0\0\340\1\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0D\0\0\0\0\0\0\0D\0\0\0\0\0\0\0\4\0\0\0\0\0\0\0\7\0\0\0\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20\0\0\0\0\0\0\0\220\0\0\0\0\0\0\0\10\0\0\0\0\0\0\0S\345td\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0P\345td\4\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\304^\0\0\0\0\0\0\304^\0\0\0\0\0\0\4\0\0\0\0\0\0\0Q\345td\6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0R\345td\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0*\0\0\0\0\0\0\0*\0\0\0\0\0\0\1\0\0\0\0\0\0\0", 784, 64) = 784
+pread64(3, "\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0", 32, 848) = 32
+pread64(3, "\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\t\233\222%\274\260\320\31\331\326\10\204\276X>\263\33\265\364N\4\0\0\0\20\0\0\0\1\0\0\0GNU\0\0\0\0\0\3\0\0\0\2\0\0\0\0\0\0\0", 68, 880) = 68
+mmap(NULL, 2036952, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fa667170000
+mprotect(0x7fa667195000, 1847296, PROT_NONE) = 0
+mmap(0x7fa667195000, 1540096, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x25000) = 0x7fa667195000
+mmap(0x7fa66730d000, 303104, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19d000) = 0x7fa66730d000
+mmap(0x7fa667358000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e7000) = 0x7fa667358000
+mmap(0x7fa66735e000, 13528, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fa66735e000
+close(3)                                = 0
+arch_prctl(ARCH_SET_FS, 0x7fa6673a13c0) = 0
+mprotect(0x7fa667358000, 12288, PROT_READ) = 0
+mprotect(0x7fa6673ad000, 4096, PROT_READ) = 0
+mprotect(0x7fa66739d000, 4096, PROT_READ) = 0
+munmap(0x7fa667368000, 30634)           = 0
+brk(NULL)                               = 0x7fffc0a7b000
+brk(0x7fffc0a9c000)                     = 0x7fffc0a9c000
+openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=3035952, ...}) = 0
+mmap(NULL, 3035952, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa666e8a000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/share/locale/locale.alias", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=2996, ...}) = 0
+read(3, "# Locale name alias data base.\n# Copyright (C) 1996-2020 Free Software Foundation, Inc.\n#\n# This program is free software; you can redistribute it and/or modify\n# it under the terms of the GNU General Public License as published by\n# the Free Software Foundation; either version 2, or (at your option)\n# any later version.\n#\n# This program is distributed in the hope that it will be useful,\n# but WITHOUT ANY WARRANTY; without even the implied warranty of\n# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  ", 512) = 512
+read(3, "See the\n# GNU General Public License for more details.\n#\n# You should have received a copy of the GNU General Public License\n# along with this program; if not, see <https://www.gnu.org/licenses/>.\n\n# The format of this file is the same as for the corresponding file of\n# the X Window System, which normally can be found in\n#\t/usr/lib/X11/locale/locale.alias\n# A single line contains two fields: an alias and a substitution value.\n# All entries are case independent.\n\n# Note: This file is obsolete and is kept aro", 512) = 512
+read(3, "und for the time being for\n# backward compatibility.  Nobody should rely on the names defined here.\n# Locales should always be specified by their full name.\n\n# Note: This file used to contain the following lines:\n#\tbokmaal\t\tnb_NO.ISO-8859-1\n#\tfranc,ais\tfr_FR.ISO-8859-1\n# except that the \"aa\" was actually the byte '\\0xE5' (the Latin-1\n# encoding for U+00E5 LATIN SMALL LETTER A WITH RING ABOVE) and the\n# \"c,\" was actually the byte '\\xE7' (the Latin-1 encoding for U+00E7\n# LATIN SMALL LETTER C WITH CEDILLA).  ", 512) = 512
+read(3, "These lines were removed\n# because they caused 'locale -a' to output text encoded in Latin-1,\n# which broke applications in UTF-8 locales.  See:\n# https://sourceware.org/bugzilla/show_bug.cgi?id=18412\n\nbokmal\t\tnb_NO.ISO-8859-1\ncatalan\t\tca_ES.ISO-8859-1\ncroatian\thr_HR.ISO-8859-2\nczech\t\tcs_CZ.ISO-8859-2\ndanish          da_DK.ISO-8859-1\ndansk\t\tda_DK.ISO-8859-1\ndeutsch\t\tde_DE.ISO-8859-1\ndutch\t\tnl_NL.ISO-8859-1\neesti\t\tet_EE.ISO-8859-15\nestonian\tet_EE.ISO-8859-15\nfinnish         fi_FI.ISO-8859-1\nfrench\t\tfr_FR.ISO", 512) = 512
+read(3, "-8859-1\ngalego\t\tgl_ES.ISO-8859-1\ngalician\tgl_ES.ISO-8859-1\ngerman\t\tde_DE.ISO-8859-1\ngreek           el_GR.ISO-8859-7\nhebrew          he_IL.ISO-8859-8\nhrvatski\thr_HR.ISO-8859-2\nhungarian       hu_HU.ISO-8859-2\nicelandic       is_IS.ISO-8859-1\nitalian         it_IT.ISO-8859-1\njapanese\tja_JP.eucJP\njapanese.euc\tja_JP.eucJP\nja_JP\t\tja_JP.eucJP\nja_JP.ujis\tja_JP.eucJP\njapanese.sjis\tja_JP.SJIS\nkorean\t\tko_KR.eucKR\nkorean.euc \tko_KR.eucKR\nko_KR\t\tko_KR.eucKR\nlithuanian      lt_LT.ISO-8859-13\nno_NO\t\tnb_NO.ISO-8859-1\nno_", 512) = 512
+read(3, "NO.ISO-8859-1 nb_NO.ISO-8859-1\nnorwegian       nb_NO.ISO-8859-1\nnynorsk\t\tnn_NO.ISO-8859-1\npolish          pl_PL.ISO-8859-2\nportuguese      pt_PT.ISO-8859-1\nromanian        ro_RO.ISO-8859-2\nrussian         ru_RU.KOI8-R\nslovak          sk_SK.ISO-8859-2\nslovene         sl_SI.ISO-8859-2\nslovenian       sl_SI.ISO-8859-2\nspanish         es_ES.ISO-8859-1\nswedish         sv_SE.ISO-8859-1\nthai\t\tth_TH.TIS-620\nturkish         tr_TR.ISO-8859-9\n", 512) = 436
+read(3, "", 512)                        = 0
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_IDENTIFICATION", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=252, ...}) = 0
+mmap(NULL, 252, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa6673a3000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache", O_RDONLY) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=27002, ...}) = 0
+mmap(NULL, 27002, PROT_READ, MAP_SHARED, 3, 0) = 0x7fa667369000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_MEASUREMENT", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=23, ...}) = 0
+mmap(NULL, 23, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa6673a2000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_TELEPHONE", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=47, ...}) = 0
+mmap(NULL, 47, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa66739c000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_ADDRESS", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=131, ...}) = 0
+mmap(NULL, 131, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa667368000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_NAME", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=62, ...}) = 0
+mmap(NULL, 62, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa667367000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_PAPER", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=34, ...}) = 0
+mmap(NULL, 34, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa667366000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_MESSAGES", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFDIR|0755, st_size=512, ...}) = 0
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_MESSAGES/SYS_LC_MESSAGES", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=48, ...}) = 0
+mmap(NULL, 48, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa667365000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_MONETARY", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=270, ...}) = 0
+mmap(NULL, 270, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa667364000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_COLLATE", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=1518110, ...}) = 0
+mmap(NULL, 1518110, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa666d17000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_TIME", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=3360, ...}) = 0
+mmap(NULL, 3360, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa667363000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_NUMERIC", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=50, ...}) = 0
+mmap(NULL, 50, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa667362000
+close(3)                                = 0
+openat(AT_FDCWD, "/usr/lib/locale/C.UTF-8/LC_CTYPE", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=201272, ...}) = 0
+mmap(NULL, 201272, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fa666ce5000
+close(3)                                = 0
+fstat(1, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+write(1, "/mnt/d/dev/grue/BREADitor/node_modules/.bin\n", 44) = 44
+close(1)                                = 0
+close(2)                                = 0
+exit_group(0)                           = ?
++++ exited with 0 +++

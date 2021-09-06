@@ -11,13 +11,13 @@ module.exports = {
         filename: '[name].js'
     },
     node: {
-        __dirname: false,
+        __dirname: true,
         __filename: false
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.json']
     },
-    devtool: 'source-map',
+    devtool : 'inline-source-map',
     plugins: [
         // new CleanWebpackPlugin({}),
         new CopyWebpackPlugin({

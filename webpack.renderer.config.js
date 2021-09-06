@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const baseConfig = require('./webpack.base.config');
+const path = require('path');
 
 module.exports = merge.smart(baseConfig, {
     target: 'electron-renderer',
@@ -60,11 +61,13 @@ module.exports = merge.smart(baseConfig, {
             }
         ]
     },
+    optimization: {
+        namedModules: true
+    },
     plugins: [
         new ForkTsCheckerWebpackPlugin({
             reportFiles: ['src/renderer/**/*']
         }),
-        new webpack.NamedModulesPlugin(),
 
         // https://github.com/jantimon/html-webpack-plugin#options
         new HtmlWebpackPlugin({
@@ -75,5 +78,11 @@ module.exports = merge.smart(baseConfig, {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
         })
-    ]
+    ],
+    resolve: {
+        alias: {
+          'react-dockable': path.resolve(__dirname, '../react-dockable'),
+          'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+        }
+    },
 });

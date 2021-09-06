@@ -1,0 +1,129 @@
+set_robust_list(0x7fb189b809e0, 24)     = 0
+futex(0x7fffef5bcad0, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x7fffef5bcad0, FUTEX_WAKE_PRIVATE, 1) = 1
+futex(0x5862450, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1219, tv_nsec=564613100}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1219, tv_nsec=565109300}) = 0
+mmap(0x7fb180000000, 67108864, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE, -1, 0) = 0x7fb180000000
+mprotect(0x7fb180000000, 135168, PROT_READ|PROT_WRITE) = 0
+futex(0x5862454, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1219, tv_nsec=665004200}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1219, tv_nsec=665353600}) = 0
+futex(0x5862450, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=801979100}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=802336600}) = 0
+futex(0x58cd8d8, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=803928900}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=804430000}) = 0
+futex(0x5862454, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x5862400, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=855638800}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=855854100}) = 0
+futex(0x58cd630, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=856359800}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=856551800}) = 0
+futex(0x58cd630, FUTEX_WAKE_PRIVATE, 1) = 1
+futex(0x5862450, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862438, FUTEX_WAKE_PRIVATE, 2147483647) = 0
+futex(0x5862400, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x5862400, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=860573800}) = 0
+madvise(0x173226481000, 61440, MADV_DONTNEED) = 0
+madvise(0x173226499000, 4096, MADV_DONTNEED) = 0
+madvise(0x23b3528bb000, 20480, MADV_DONTNEED) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=861948000}) = 0
+futex(0x5862450, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=863327000}) = 0
+mprotect(0x216b683c0000, 262144, PROT_NONE) = 0
+madvise(0x216b683c0000, 262144, MADV_DONTNEED) = 0
+mprotect(0x34cd0fd40000, 262144, PROT_NONE) = 0
+madvise(0x34cd0fd40000, 262144, MADV_DONTNEED) = 0
+mprotect(0x12c1c8400000, 262144, PROT_NONE) = 0
+madvise(0x12c1c8400000, 262144, MADV_DONTNEED) = 0
+mprotect(0x164bcf380000, 262144, PROT_NONE) = 0
+madvise(0x164bcf380000, 262144, MADV_DONTNEED) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1227, tv_nsec=866322100}) = 0
+futex(0x5862454, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=878185000}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=878502500}) = 0
+futex(0x58cd8d8, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x58cd8d8, FUTEX_WAKE_PRIVATE, 1) = 0
+futex(0x58cd8d8, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=879834900}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=880126900}) = 0
+futex(0x5862450, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x5862400, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+futex(0x5862454, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x5862400, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=888793100}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=889322100}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=889644700}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=889984900}) = 0
+futex(0x5862450, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=893779200}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=894031900}) = 0
+madvise(0x23b3528bb000, 20480, MADV_DONTNEED) = 0
+futex(0x58fa790, FUTEX_WAIT_PRIVATE, 2, NULL) = 0
+futex(0x58fa790, FUTEX_WAKE_PRIVATE, 1) = 0
+mmap(0x31b11c8c0000, 520192, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE, -1, 0) = 0x31b11c8c0000
+munmap(0x31b11c900000, 258048)          = 0
+mprotect(0x31b11c8c0000, 262144, PROT_READ|PROT_WRITE) = 0
+futex(0x58fa790, FUTEX_WAKE_PRIVATE, 1) = 1
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=896035500}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=896254200}) = 0
+mmap(0xe92dc6c0000, 520192, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE, -1, 0) = 0xe92dc6c0000
+munmap(0xe92dc700000, 258048)           = 0
+mprotect(0xe92dc6c0000, 262144, PROT_READ|PROT_WRITE) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=897205000}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=897298600}) = 0
+futex(0x58cd630, FUTEX_WAKE_PRIVATE, 1) = 1
+futex(0x5862454, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=899081200}) = 0
+futex(0x7fb18adbbb80, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=899668100}) = 0
+futex(0x58cd630, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=900169700}) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=900467700}) = 0
+futex(0x58cd630, FUTEX_WAKE_PRIVATE, 1) = 0
+futex(0x5862450, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=902811900}) = 0
+munmap(0xcba43500000, 262144)           = 0
+munmap(0x185642740000, 262144)          = 0
+munmap(0xf2d2c140000, 262144)           = 0
+munmap(0xf37f4540000, 262144)           = 0
+munmap(0xbee127c0000, 262144)           = 0
+munmap(0x173226480000, 262144)          = 0
+munmap(0xa6309780000, 262144)           = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=904725800}) = 0
+futex(0x5862450, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=906901900}) = 0
+mprotect(0x359d6bcc0000, 262144, PROT_NONE) = 0
+madvise(0x359d6bcc0000, 262144, MADV_DONTNEED) = 0
+mprotect(0x3bf626640000, 262144, PROT_NONE) = 0
+madvise(0x3bf626640000, 262144, MADV_DONTNEED) = 0
+mprotect(0x3d2e9f340000, 262144, PROT_NONE) = 0
+madvise(0x3d2e9f340000, 262144, MADV_DONTNEED) = 0
+mprotect(0x277b63340000, 262144, PROT_NONE) = 0
+madvise(0x277b63340000, 262144, MADV_DONTNEED) = 0
+clock_gettime(CLOCK_MONOTONIC, {tv_sec=1260, tv_nsec=908879900}) = 0
+futex(0x5862454, FUTEX_WAIT_PRIVATE, 0, NULL) = 0
+futex(0x5862400, FUTEX_WAKE_PRIVATE, 1) = 1
+madvise(0x7fb189380000, 8368128, MADV_DONTNEED) = 0
+exit(0)                                 = ?
++++ exited with 0 +++

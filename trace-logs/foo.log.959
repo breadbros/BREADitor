@@ -1,0 +1,23 @@
+set_robust_list(0x7fa73dde09e0, 24)     = 0
+mmap(NULL, 134217728, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE, -1, 0) = 0x7fa7355e0000
+munmap(0x7fa7355e0000, 44171264)        = 0
+munmap(0x7fa73c000000, 22937600)        = 0
+mprotect(0x7fa738000000, 135168, PROT_READ|PROT_WRITE) = 0
+clock_gettime(CLOCK_MONOTONIC_COARSE, {tv_sec=1157, tv_nsec=625677200}) = 0
+epoll_create1(EPOLL_CLOEXEC)            = 9
+pipe2([10, 11], O_NONBLOCK|O_CLOEXEC)   = 0
+eventfd2(0, EFD_CLOEXEC|EFD_NONBLOCK)   = 12
+futex(0x5099850, FUTEX_WAKE_PRIVATE, 1) = 1
+clock_gettime(CLOCK_MONOTONIC_COARSE, {tv_sec=1157, tv_nsec=626099600}) = 0
+epoll_ctl(9, EPOLL_CTL_ADD, 10, {EPOLLIN, {u32=10, u64=10}}) = 0
+epoll_ctl(9, EPOLL_CTL_ADD, 12, {EPOLLIN, {u32=12, u64=12}}) = 0
+epoll_wait(9, [{EPOLLIN, {u32=12, u64=12}}], 1024, -1) = 1
+clock_gettime(CLOCK_MONOTONIC_COARSE, {tv_sec=1294, tv_nsec=754494200}) = 0
+read(12, "\1\0\0\0\0\0\0\0", 1024)      = 8
+close(10)                               = 0
+close(11)                               = 0
+close(12)                               = 0
+close(9)                                = 0
+madvise(0x7fa73d5e0000, 8368128, MADV_DONTNEED) = 0
+exit(0)                                 = ?
++++ exited with 0 +++

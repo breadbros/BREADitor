@@ -1,0 +1,2 @@
+execve("trace-logs/foo.log", ["trace-logs/foo.log", "./start.sh"], 0x7fffc32eb938 /* 28 vars */) = -1 ENOEXEC (Exec format error)
++++ exited with 1 +++

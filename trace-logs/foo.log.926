@@ -1,0 +1,107 @@
+set_robust_list(0x7f21f0d40a60, 24)     = 0
+close(5)                                = 0
+close(6)                                = 0
+pipe2([5, 6], O_CLOEXEC)                = 0
+write(6, "*", 1)                        = 1
+fcntl(0, F_GETFD)                       = 0x1 (flags FD_CLOEXEC)
+fcntl(0, F_SETFD, 0)                    = 0
+fcntl(0, F_GETFL)                       = 0x402 (flags O_RDWR|O_APPEND)
+fcntl(1, F_GETFD)                       = 0x1 (flags FD_CLOEXEC)
+fcntl(1, F_SETFD, 0)                    = 0
+fcntl(1, F_GETFL)                       = 0x2 (flags O_RDWR)
+fcntl(2, F_GETFD)                       = 0x1 (flags FD_CLOEXEC)
+fcntl(2, F_SETFD, 0)                    = 0
+fcntl(2, F_GETFL)                       = 0x2 (flags O_RDWR)
+chdir("/mnt/d/dev/grue/BREADitor")      = 0
+rt_sigaction(SIGHUP, {sa_handler=SIG_DFL, sa_mask=[HUP], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[INT], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[QUIT], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGILL, {sa_handler=SIG_DFL, sa_mask=[ILL], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGTRAP, {sa_handler=SIG_DFL, sa_mask=[TRAP], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGABRT, {sa_handler=SIG_DFL, sa_mask=[ABRT], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGBUS, {sa_handler=SIG_DFL, sa_mask=[BUS], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGFPE, {sa_handler=SIG_DFL, sa_mask=[FPE], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGUSR1, {sa_handler=SIG_DFL, sa_mask=[USR1], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=0xaf4020, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGSEGV, {sa_handler=SIG_DFL, sa_mask=[SEGV], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=0x9ce120, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGUSR2, {sa_handler=SIG_DFL, sa_mask=[USR2], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGPIPE, {sa_handler=SIG_DFL, sa_mask=[PIPE], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGALRM, {sa_handler=SIG_DFL, sa_mask=[ALRM], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGTERM, {sa_handler=SIG_DFL, sa_mask=[TERM], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGSTKFLT, {sa_handler=SIG_DFL, sa_mask=[STKFLT], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGCHLD, {sa_handler=SIG_DFL, sa_mask=[CHLD], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=0x1384790, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGCONT, {sa_handler=SIG_DFL, sa_mask=[CONT], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGTSTP, {sa_handler=SIG_DFL, sa_mask=[TSTP], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGTTIN, {sa_handler=SIG_DFL, sa_mask=[TTIN], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGTTOU, {sa_handler=SIG_DFL, sa_mask=[TTOU], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGURG, {sa_handler=SIG_DFL, sa_mask=[URG], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGXCPU, {sa_handler=SIG_DFL, sa_mask=[XCPU], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGXFSZ, {sa_handler=SIG_DFL, sa_mask=[XFSZ], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGVTALRM, {sa_handler=SIG_DFL, sa_mask=[VTALRM], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGPROF, {sa_handler=SIG_DFL, sa_mask=[PROF], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGWINCH, {sa_handler=SIG_DFL, sa_mask=[WINCH], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=0x1384790, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGIO, {sa_handler=SIG_DFL, sa_mask=[IO], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGPWR, {sa_handler=SIG_DFL, sa_mask=[PWR], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigaction(SIGSYS, {sa_handler=SIG_DFL, sa_mask=[SYS], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f21f0f723c0}, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+execve("/home/grue/.nvm/versions/node/v14.15.3/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin/sh", ["sh", "-c", "cross-env NODE_ENV=test START_HOT=1 npm run start-renderer-dev"], 0x49e7120 /* 292 vars */) = -1 ENOENT (No such file or directory)
+execve("/mnt/d/dev/grue/BREADitor/node_modules/.bin/sh", ["sh", "-c", "cross-env NODE_ENV=test START_HOT=1 npm run start-renderer-dev"], 0x49e7120 /* 292 vars */) = -1 ENOENT (No such file or directory)
+execve("/home/grue/.nvm/versions/node/v14.15.3/bin/sh", ["sh", "-c", "cross-env NODE_ENV=test START_HOT=1 npm run start-renderer-dev"], 0x49e7120 /* 292 vars */) = -1 ENOENT (No such file or directory)
+execve("/usr/local/sbin/sh", ["sh", "-c", "cross-env NODE_ENV=test START_HOT=1 npm run start-renderer-dev"], 0x49e7120 /* 292 vars */) = -1 ENOENT (No such file or directory)
+execve("/usr/local/bin/sh", ["sh", "-c", "cross-env NODE_ENV=test START_HOT=1 npm run start-renderer-dev"], 0x49e7120 /* 292 vars */) = -1 ENOENT (No such file or directory)
+execve("/usr/sbin/sh", ["sh", "-c", "cross-env NODE_ENV=test START_HOT=1 npm run start-renderer-dev"], 0x49e7120 /* 292 vars */) = -1 ENOENT (No such file or directory)
+execve("/usr/bin/sh", ["sh", "-c", "cross-env NODE_ENV=test START_HOT=1 npm run start-renderer-dev"], 0x49e7120 /* 292 vars */) = 0
+brk(NULL)                               = 0x7fffef41d000
+arch_prctl(0x3001 /* ARCH_??? */, 0x7ffff75cc550) = -1 EINVAL (Invalid argument)
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=30634, ...}) = 0
+mmap(NULL, 30634, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f83c9138000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360q\2\0\0\0\0\0@\0\0\0\0\0\0\0h\345\36\0\0\0\0\0\0\0\0\0@\08\0\16\0@\0E\0D\0\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0\20\3\0\0\0\0\0\0\20\3\0\0\0\0\0\0\10\0\0\0\0\0\0\0\3\0\0\0\4\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\34\0\0\0\0\0\0\0\34\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@I\2\0\0\0\0\0@I\2\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\5\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\264u\27\0\0\0\0\0\264u\27\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0e\235\4\0\0\0\0\0e\235\4\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\6\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20P\0\0\0\0\0\0\330\216\0\0\0\0\0\0\0\20\0\0\0\0\0\0\2\0\0\0\6\0\0\0\200\233\36\0\0\0\0\0\200\253\36\0\0\0\0\0\200\253\36\0\0\0\0\0\340\1\0\0\0\0\0\0\340\1\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0D\0\0\0\0\0\0\0D\0\0\0\0\0\0\0\4\0\0\0\0\0\0\0\7\0\0\0\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20\0\0\0\0\0\0\0\220\0\0\0\0\0\0\0\10\0\0\0\0\0\0\0S\345td\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0P\345td\4\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\304^\0\0\0\0\0\0\304^\0\0\0\0\0\0\4\0\0\0\0\0\0\0Q\345td\6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0R\345td\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0*\0\0\0\0\0\0", 832) = 832
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0\20\3\0\0\0\0\0\0\20\3\0\0\0\0\0\0\10\0\0\0\0\0\0\0\3\0\0\0\4\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\34\0\0\0\0\0\0\0\34\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@I\2\0\0\0\0\0@I\2\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\5\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\264u\27\0\0\0\0\0\264u\27\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0e\235\4\0\0\0\0\0e\235\4\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\6\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20P\0\0\0\0\0\0\330\216\0\0\0\0\0\0\0\20\0\0\0\0\0\0\2\0\0\0\6\0\0\0\200\233\36\0\0\0\0\0\200\253\36\0\0\0\0\0\200\253\36\0\0\0\0\0\340\1\0\0\0\0\0\0\340\1\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0D\0\0\0\0\0\0\0D\0\0\0\0\0\0\0\4\0\0\0\0\0\0\0\7\0\0\0\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20\0\0\0\0\0\0\0\220\0\0\0\0\0\0\0\10\0\0\0\0\0\0\0S\345td\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0P\345td\4\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\304^\0\0\0\0\0\0\304^\0\0\0\0\0\0\4\0\0\0\0\0\0\0Q\345td\6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0R\345td\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0*\0\0\0\0\0\0\0*\0\0\0\0\0\0\1\0\0\0\0\0\0\0", 784, 64) = 784
+pread64(3, "\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0", 32, 848) = 32
+pread64(3, "\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\t\233\222%\274\260\320\31\331\326\10\204\276X>\263\33\265\364N\4\0\0\0\20\0\0\0\1\0\0\0GNU\0\0\0\0\0\3\0\0\0\2\0\0\0\0\0\0\0", 68, 880) = 68
+fstat(3, {st_mode=S_IFREG|0755, st_size=2029224, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f83c9170000
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0\20\3\0\0\0\0\0\0\20\3\0\0\0\0\0\0\10\0\0\0\0\0\0\0\3\0\0\0\4\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\240\26\34\0\0\0\0\0\34\0\0\0\0\0\0\0\34\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@I\2\0\0\0\0\0@I\2\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\5\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\0P\2\0\0\0\0\0\264u\27\0\0\0\0\0\264u\27\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\4\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0\0\320\31\0\0\0\0\0e\235\4\0\0\0\0\0e\235\4\0\0\0\0\0\0\20\0\0\0\0\0\0\1\0\0\0\6\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20P\0\0\0\0\0\0\330\216\0\0\0\0\0\0\0\20\0\0\0\0\0\0\2\0\0\0\6\0\0\0\200\233\36\0\0\0\0\0\200\253\36\0\0\0\0\0\200\253\36\0\0\0\0\0\340\1\0\0\0\0\0\0\340\1\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0p\3\0\0\0\0\0\0D\0\0\0\0\0\0\0D\0\0\0\0\0\0\0\4\0\0\0\0\0\0\0\7\0\0\0\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\20\0\0\0\0\0\0\0\220\0\0\0\0\0\0\0\10\0\0\0\0\0\0\0S\345td\4\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0P\3\0\0\0\0\0\0 \0\0\0\0\0\0\0 \0\0\0\0\0\0\0\10\0\0\0\0\0\0\0P\345td\4\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\274\26\34\0\0\0\0\0\304^\0\0\0\0\0\0\304^\0\0\0\0\0\0\4\0\0\0\0\0\0\0Q\345td\6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\20\0\0\0\0\0\0\0R\345td\4\0\0\0\0v\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0\206\36\0\0\0\0\0\0*\0\0\0\0\0\0\0*\0\0\0\0\0\0\1\0\0\0\0\0\0\0", 784, 64) = 784
+pread64(3, "\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0", 32, 848) = 32
+pread64(3, "\4\0\0\0\24\0\0\0\3\0\0\0GNU\0\t\233\222%\274\260\320\31\331\326\10\204\276X>\263\33\265\364N\4\0\0\0\20\0\0\0\1\0\0\0GNU\0\0\0\0\0\3\0\0\0\2\0\0\0\0\0\0\0", 68, 880) = 68
+mmap(NULL, 2036952, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f83c8f40000
+mprotect(0x7f83c8f65000, 1847296, PROT_NONE) = 0
+mmap(0x7f83c8f65000, 1540096, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x25000) = 0x7f83c8f65000
+mmap(0x7f83c90dd000, 303104, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19d000) = 0x7f83c90dd000
+mmap(0x7f83c9128000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e7000) = 0x7f83c9128000
+mmap(0x7f83c912e000, 13528, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f83c912e000
+close(3)                                = 0
+arch_prctl(ARCH_SET_FS, 0x7f83c91713c0) = 0
+mprotect(0x7f83c9128000, 12288, PROT_READ) = 0
+mprotect(0x7f83c9195000, 8192, PROT_READ) = 0
+mprotect(0x7f83c916d000, 4096, PROT_READ) = 0
+munmap(0x7f83c9138000, 30634)           = 0
+getuid()                                = 1000
+getgid()                                = 1000
+getpid()                                = 926
+rt_sigaction(SIGCHLD, {sa_handler=0x7f83c918ac30, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x7f83c8f86210}, NULL, 8) = 0
+geteuid()                               = 1000
+brk(NULL)                               = 0x7fffef41d000
+brk(0x7fffef43e000)                     = 0x7fffef43e000
+getppid()                               = 915
+stat("/mnt/d/dev/grue/BREADitor", {st_mode=S_IFDIR|0777, st_size=512, ...}) = 0
+stat(".", {st_mode=S_IFDIR|0777, st_size=512, ...}) = 0
+geteuid()                               = 1000
+getegid()                               = 1000
+rt_sigaction(SIGINT, NULL, {sa_handler=SIG_DFL, sa_mask=[INT], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, 8) = 0
+rt_sigaction(SIGINT, {sa_handler=0x7f83c918ac30, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x7f83c8f86210}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, NULL, {sa_handler=SIG_DFL, sa_mask=[QUIT], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x7f83c8f86210}, NULL, 8) = 0
+rt_sigaction(SIGTERM, NULL, {sa_handler=SIG_DFL, sa_mask=[TERM], sa_flags=SA_RESTORER|SA_RESTART, sa_restorer=0x7f21f0da6210}, 8) = 0
+rt_sigaction(SIGTERM, {sa_handler=SIG_DFL, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x7f83c8f86210}, NULL, 8) = 0
+stat("/home/grue/.nvm/versions/node/v14.15.3/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin/cross-env", 0x7ffff75cc1e0) = -1 ENOENT (No such file or directory)
+stat("/mnt/d/dev/grue/BREADitor/node_modules/.bin/cross-env", {st_mode=S_IFREG|0777, st_size=348, ...}) = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f83c9171690) = 927
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 927
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=927, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+rt_sigreturn({mask=[]})                 = 927
+exit_group(0)                           = ?
++++ exited with 0 +++
