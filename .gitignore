@@ -1,5 +1,6 @@
 node_modules/
 dist/
 release/
+react-dockable/
 
 workspace.code-workspace

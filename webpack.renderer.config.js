@@ -35,11 +35,11 @@ module.exports = merge.smart(baseConfig, {
             },
             {
                 test: /\.scss$/,
-                loaders: ['style-loader', 'css-loader', 'sass-loader']
+                loader: 'sass-loader',
             },
             {
                 test: /\.css$/,
-                loaders: ['style-loader', 'css-loader']
+                use: ['style-loader', 'css-loader'],
             },
             {
                 test: /\.(gif|png|jpe?g|svg)$/,
@@ -62,7 +62,7 @@ module.exports = merge.smart(baseConfig, {
         ]
     },
     optimization: {
-        namedModules: true
+        moduleIds: "named",
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin({
@@ -75,14 +75,18 @@ module.exports = merge.smart(baseConfig, {
             template: 'src/main/base_template.html',
             favicon: 'assets/favicon.ico'
         }),
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-        })
+        // new webpack.DefinePlugin({
+        //     'process.env.NODE_ENV': 'development'
+        // })
     ],
     resolve: {
         alias: {
-          'react-dockable': path.resolve(__dirname, '../react-dockable'),
-          'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+            // 'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+            'react-dockable': path.resolve(__dirname, 'react-dockable'),
+            'react': path.resolve('./node_modules/react'),
         }
+    },
+    stats: {
+        errorDetails: true,
     },
 });
