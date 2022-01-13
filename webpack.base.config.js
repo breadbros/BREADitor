@@ -18,6 +18,13 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js', '.json']
     },
     devtool : 'inline-source-map',
+    module: {
+        rules: {
+            css: {
+                modules: { auto: true },
+            },
+        },
+    },
     plugins: [
         // new CleanWebpackPlugin({}),
         new CopyWebpackPlugin({
