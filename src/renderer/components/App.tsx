@@ -1,5 +1,5 @@
 import React from "react";
-import Dockable from "../../../react-dockable/lib/dockable";
+import Dockable from '../../../react-dockable/';
 
 class App extends React.Component {
   state = {

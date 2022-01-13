@@ -17,14 +17,7 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.json']
     },
-    devtool : 'inline-source-map',
-    module: {
-        rules: {
-            css: {
-                modules: { auto: true },
-            },
-        },
-    },
+    devtool: 'inline-source-map',
     plugins: [
         // new CleanWebpackPlugin({}),
         new CopyWebpackPlugin({
