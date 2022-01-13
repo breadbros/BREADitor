@@ -101,7 +101,7 @@ export default App;
 */
 
 import React from "react";
-import Dockable from "../../../react-dockable/dist/dockable";
+import Dockable from "../../../react-dockable/es/dockable";
 import "./App.css";
 
 class App extends React.Component {
