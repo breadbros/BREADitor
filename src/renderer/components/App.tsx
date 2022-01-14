@@ -1,5 +1,5 @@
 import React from 'react';
-import Dockable from '../../../react-dockable/';
+import Dockable from '../../../../react-dockable/';
 import './css/App.css';
 
 class App extends React.Component {
