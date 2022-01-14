@@ -20,7 +20,7 @@ module.exports = merge.smart(baseConfig, {
                 },
             },
             {
-                test: /\.tsx?$/,
+                test: /\.(tsx|js|jsx)?$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 options: {
