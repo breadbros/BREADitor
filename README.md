@@ -12,6 +12,15 @@ Base project: https://github.com/szwacz/electron-boilerplate
 End-to-end testing: https://github.com/electron/spectron
 App packaging: https://github.com/electron-userland/electron-builder
 
+<<<<<<< HEAD
+=======
+
+
+### REQUIRES danfessler/react-dockable as a peer dependency atm
+
+
+
+>>>>>>> 9bbea52 (update readme)
 (just npm start after the first time.)
 
 (Edit this if this is wrong. Need to install fresh.)
