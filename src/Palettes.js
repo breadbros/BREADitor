@@ -168,7 +168,6 @@ function setupPaletteRegistry() {
     'entity-palette',
     'info-palette',
     'tileset-selector-palette',
-    
   ];
 }
 

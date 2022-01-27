@@ -1,19 +1,22 @@
 import * as React from 'react';
 import Dockable from '../../../../react-dockable/src';
 import './css/App.css';
+import { oldBootstrap } from '../../old_bootstrap.js';
+
+oldBootstrap();
+
 
 // hiddel element to contain non-react UI
 const hiddenEl = document.createElement('div');
 hiddenEl.style.display = 'none';
 document.body.appendChild(hiddenEl);
 
-// test non-react UI to later mount into react components
-const TestUI_A = document.createElement('div');
-const TestUI_B = document.createElement('div');
-TestUI_A.innerHTML = 'hello world';
-TestUI_B.innerHTML = 'cheese poop';
-hiddenEl.appendChild(TestUI_A);
-hiddenEl.appendChild(TestUI_B);
+
+const toolPallete = document.getElementsByClassName('tool-palette')[0];
+const layersPallete = document.getElementsByClassName('layers-palette')[0];
+const zonesPallete = document.getElementsByClassName('zones-palette')[0];
+const mapPallete = document.getElementsByClassName('map-palette')[0];
+const infoPallete = document.getElementsByClassName('info-palette')[0];
 
 class App extends React.Component {
   state = {
@@ -22,7 +25,7 @@ class App extends React.Component {
         windows: [
           {
             selected: 0,
-            widgets: ['TestA', 'TestB']
+            widgets: ['TestA', 'TestB', 'TestC', 'MapDocument', 'TestD']
           }
         ]
       }
@@ -44,6 +47,9 @@ class App extends React.Component {
         >
           <ComponentA id="TestA" title="Test A" />
           <ComponentB id="TestB" title="Test B" />
+          <ComponentC id="TestC" title="Test C" />
+          <ComponentMap id="MapDocument" title="Definitly a map!" />
+          <ComponentD id="TestD" title="Test D" />
         </Dockable>
       </div>
     );
@@ -59,11 +65,11 @@ class ComponentA extends React.Component<MyProps> {
   containerRef = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
-    this.containerRef.current?.appendChild(TestUI_A);
+    this.containerRef.current?.appendChild(toolPallete);
   }
 
   componentWillUnmount() {
-    hiddenEl.appendChild(TestUI_A);
+    hiddenEl.appendChild(toolPallete);
   }
 
   render() {
@@ -72,19 +78,67 @@ class ComponentA extends React.Component<MyProps> {
 }
 
 class ComponentB extends React.Component<MyProps> {
-  containerRef = React.createRef<HTMLDivElement>();
+    containerRef = React.createRef<HTMLDivElement>();
 
-  componentDidMount() {
-    this.containerRef.current?.appendChild(TestUI_B);
-  }
+    componentDidMount() {
+        this.containerRef.current?.appendChild(layersPallete);
+    }
 
-  componentWillUnmount() {
-    hiddenEl.appendChild(TestUI_B);
-  }
+    componentWillUnmount() {
+        hiddenEl.appendChild(layersPallete);
+    }
 
-  render() {
-    return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
-  }
+    render() {
+        return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
+    }
+}
+
+class ComponentC extends React.Component<MyProps> {
+    containerRef = React.createRef<HTMLDivElement>();
+
+    componentDidMount() {
+        this.containerRef.current?.appendChild(zonesPallete);
+    }
+
+    componentWillUnmount() {
+        hiddenEl.appendChild(zonesPallete);
+    }
+
+    render() {
+        return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
+    }
+}
+
+class ComponentMap extends React.Component<MyProps> {
+    containerRef = React.createRef<HTMLDivElement>();
+
+    componentDidMount() {
+        this.containerRef.current?.appendChild(mapPallete);
+    }
+
+    componentWillUnmount() {
+        hiddenEl.appendChild(mapPallete);
+    }
+
+    render() {
+        return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
+    }
+}
+
+class ComponentD extends React.Component<MyProps> {
+    containerRef = React.createRef<HTMLDivElement>();
+
+    componentDidMount() {
+        this.containerRef.current?.appendChild(infoPallete);
+    }
+
+    componentWillUnmount() {
+        hiddenEl.appendChild(infoPallete);
+    }
+
+    render() {
+        return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
+    }
 }
 
 export default App;

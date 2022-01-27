@@ -6,9 +6,6 @@ import { AppContainer } from 'react-hot-loader';
 import Dockable from 'react-dockable';
 import App from './components/App';
 import store from './store';
-import { oldBootstrap } from '../old_bootstrap.js';
-
-// oldBootstrap();
 
 // Create main element
 const mainElement = document.createElement('div');

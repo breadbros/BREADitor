@@ -17,6 +17,7 @@ export const oldBootstrap = () => {
 function setupHtml() {
     const $body = $('#jquery-ui-base');
     $body.html(baseHTMLTemplate());
+    
     Palettes.setupPaletteRegistry();
     Palettes.setupPaletteListeners();
     window.$$$hide_all_windows();
