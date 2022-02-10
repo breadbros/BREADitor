@@ -24,11 +24,6 @@
     "dist": "npm run build && electron-builder",
     "postinstall": "electron-builder install-app-deps"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "{src,test,mocks}/**/*.{json,css,scss,md}": [
       "prettier --config ./.prettierrc --write"

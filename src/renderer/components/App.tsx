@@ -5,140 +5,134 @@ import { oldBootstrap } from '../../old_bootstrap.js';
 
 oldBootstrap();
 
-
-// hiddel element to contain non-react UI
-const hiddenEl = document.createElement('div');
-hiddenEl.style.display = 'none';
-document.body.appendChild(hiddenEl);
-
-
-const toolPallete = document.getElementsByClassName('tool-palette')[0];
-const layersPallete = document.getElementsByClassName('layers-palette')[0];
-const zonesPallete = document.getElementsByClassName('zones-palette')[0];
-const mapPallete = document.getElementsByClassName('map-palette')[0];
-const infoPallete = document.getElementsByClassName('info-palette')[0];
-
-class App extends React.Component {
-  state = {
+function App() {
+  const hiddenRef = React.useRef<HTMLDivElement>(null);
+  const [state, setState] = React.useState({
     panels: [
       {
         windows: [
           {
             selected: 0,
-            widgets: ['TestA', 'TestB', 'TestC', 'MapDocument', 'TestD']
+            widgets: ['tool-palette'],
+            minSize: 34
           }
-        ]
+        ],
+        size: 137.5,
+        minSize: 48,
+        maxSize: 0,
+        resize: 'stretch'
+      },
+      {
+        windows: [
+          {
+            selected: 0,
+            widgets: ['map-palette'],
+            minSize: 34,
+            size: 1357,
+            maxSize: 0,
+            resize: 'stretch'
+          }
+        ],
+        size: 2046,
+        minSize: 48,
+        maxSize: 0,
+        resize: 'stretch'
+      },
+      {
+        windows: [
+          {
+            selected: 0,
+            widgets: ['info-palette'],
+            minSize: 34,
+            size: 422.5,
+            maxSize: 0,
+            resize: 'stretch'
+          },
+          {
+            selected: 0,
+            widgets: ['zones-palette'],
+            minSize: 34,
+            size: 360.40625,
+            maxSize: 0,
+            resize: 'stretch'
+          },
+          {
+            selected: 0,
+            widgets: ['layers-palette'],
+            size: 568.09375,
+            minSize: 34,
+            maxSize: 0,
+            resize: 'stretch'
+          }
+        ],
+        size: 370.5,
+        minSize: 48,
+        maxSize: 0,
+        resize: 'stretch'
       }
     ]
-  };
+  });
 
-  render() {
-    return (
-      <div
-        style={{
-          width: '100vw',
-          height: '100vh'
-        }}
+  return (
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh'
+      }}
+    >
+      <div style={{ display: 'none' }} ref={hiddenRef}></div>
+      <Dockable
+        initialState={state.panels}
+        onUpdate={workspace => setState({ panels: workspace })}
+        spacing={3}
       >
-        <Dockable
-          initialState={this.state.panels}
-          onUpdate={workspace => this.setState({ panels: workspace })}
-          spacing={3}
-        >
-          <ComponentA id="TestA" title="Test A" />
-          <ComponentB id="TestB" title="Test B" />
-          <ComponentC id="TestC" title="Test C" />
-          <ComponentMap id="MapDocument" title="Definitly a map!" />
-          <ComponentD id="TestD" title="Test D" />
-        </Dockable>
-      </div>
-    );
-  }
+        {[
+          { id: 'tool-palette', name: 'Tools' },
+          { id: 'layers-palette', name: 'Layers' },
+          { id: 'zones-palette', name: 'Zones' },
+          { id: 'map-palette', name: 'Map Document' },
+          { id: 'info-palette', name: 'Info' }
+        ].map(el => (
+          <UIWrapper
+            id={el.id}
+            key={el.id}
+            title={el.name}
+            element={document.getElementsByClassName(el.id)[0]}
+            hiddenEl={hiddenRef.current}
+          />
+        ))}
+      </Dockable>
+    </div>
+  );
 }
 
-type MyProps = {
+type UIWrapperPropTypes = {
   id: string;
-  title: string;
+  title?: string;
+  element: Element;
+  hiddenEl: HTMLDivElement | null;
 };
 
-class ComponentA extends React.Component<MyProps> {
-  containerRef = React.createRef<HTMLDivElement>();
-
-  componentDidMount() {
-    this.containerRef.current?.appendChild(toolPallete);
-  }
-
-  componentWillUnmount() {
-    hiddenEl.appendChild(toolPallete);
-  }
-
-  render() {
-    return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
-  }
+function UIWrapper({ element, hiddenEl }: UIWrapperPropTypes) {
+  return useMountable(element, hiddenEl)();
 }
 
-class ComponentB extends React.Component<MyProps> {
-    containerRef = React.createRef<HTMLDivElement>();
+// Takes in an DOM element and returns it wrapped in a React Component
+function useMountable(element: Element, hiddenEl: HTMLDivElement | null) {
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
-    componentDidMount() {
-        this.containerRef.current?.appendChild(layersPallete);
+  React.useEffect(() => {
+    if (containerRef.current && hiddenEl) {
+      containerRef.current.appendChild(element);
+      return () => {
+        hiddenEl.appendChild(element);
+      };
     }
+  }, [containerRef, hiddenEl]);
 
-    componentWillUnmount() {
-        hiddenEl.appendChild(layersPallete);
-    }
-
-    render() {
-        return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
-    }
-}
-
-class ComponentC extends React.Component<MyProps> {
-    containerRef = React.createRef<HTMLDivElement>();
-
-    componentDidMount() {
-        this.containerRef.current?.appendChild(zonesPallete);
-    }
-
-    componentWillUnmount() {
-        hiddenEl.appendChild(zonesPallete);
-    }
-
-    render() {
-        return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
-    }
-}
-
-class ComponentMap extends React.Component<MyProps> {
-    containerRef = React.createRef<HTMLDivElement>();
-
-    componentDidMount() {
-        this.containerRef.current?.appendChild(mapPallete);
-    }
-
-    componentWillUnmount() {
-        hiddenEl.appendChild(mapPallete);
-    }
-
-    render() {
-        return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
-    }
-}
-
-class ComponentD extends React.Component<MyProps> {
-    containerRef = React.createRef<HTMLDivElement>();
-
-    componentDidMount() {
-        this.containerRef.current?.appendChild(infoPallete);
-    }
-
-    componentWillUnmount() {
-        hiddenEl.appendChild(infoPallete);
-    }
-
-    render() {
-        return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
-    }
+  return () => (
+    <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }} ref={containerRef}></div>
+  );
 }
 
 export default App;
