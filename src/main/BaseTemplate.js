@@ -141,8 +141,6 @@ export function baseHTMLTemplate() {
         </div>
 
         <div id="notifications-window"></div>
-
-
 `;
 
         

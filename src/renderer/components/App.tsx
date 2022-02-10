@@ -11,12 +11,15 @@ const hiddenEl = document.createElement('div');
 hiddenEl.style.display = 'none';
 document.body.appendChild(hiddenEl);
 
-
 const toolPallete = document.getElementsByClassName('tool-palette')[0];
 const layersPallete = document.getElementsByClassName('layers-palette')[0];
 const zonesPallete = document.getElementsByClassName('zones-palette')[0];
 const mapPallete = document.getElementsByClassName('map-palette')[0];
 const infoPallete = document.getElementsByClassName('info-palette')[0];
+const entityPallete = document.getElementsByClassName('entity-palette')[0];
+const screenviewToolPallete = document.getElementsByClassName('screenview-indicator-palette')[0];
+const tilesetViewPallete = document.getElementsByClassName('tileset-selector-palette')[0];
+
 
 class App extends React.Component {
   state = {
@@ -25,7 +28,7 @@ class App extends React.Component {
         windows: [
           {
             selected: 0,
-            widgets: ['TestA', 'TestB', 'TestC', 'MapDocument', 'TestD']
+            widgets: ['ToolPanel', 'LayerPanel', 'ZonePanel', 'MapDocument_0', 'MapInfoPanel', 'EntityPanel', 'ScreenviewIndicatorPanel', 'TilesetSelectorPalette']
           }
         ]
       }
@@ -45,11 +48,15 @@ class App extends React.Component {
           onUpdate={workspace => this.setState({ panels: workspace })}
           spacing={3}
         >
-          <ComponentA id="TestA" title="Test A" />
-          <ComponentB id="TestB" title="Test B" />
-          <ComponentC id="TestC" title="Test C" />
-          <ComponentMap id="MapDocument" title="Definitly a map!" />
-          <ComponentD id="TestD" title="Test D" />
+          <ComponentA id="ToolPanel" title="Tools" />
+          <ComponentB id="LayerPanel" title="Layers" />
+          <ComponentC id="ZonePanel" title="Zones" />
+          <ComponentMap id="MapDocument_0" title="" />
+          <ComponentD id="MapInfoPanel" title="Map Info" />
+          
+          <ComponentE id="EntityPanel" title="Entities" />
+          <ComponentF id="ScreenviewIndicatorPanel" title="Screenview Tool" />
+          <ComponentG id="TilesetSelectorPalette" title="Tileset Viewer" />
         </Dockable>
       </div>
     );
@@ -60,6 +67,56 @@ type MyProps = {
   id: string;
   title: string;
 };
+
+
+class ComponentG extends React.Component<MyProps> {
+  containerRef = React.createRef<HTMLDivElement>();
+
+  componentDidMount() {
+      this.containerRef.current?.appendChild(tilesetViewPallete);
+  }
+
+  componentWillUnmount() {
+      hiddenEl.appendChild(tilesetViewPallete);
+  }
+
+  render() {
+      return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
+  }
+}
+
+class ComponentF extends React.Component<MyProps> {
+  containerRef = React.createRef<HTMLDivElement>();
+
+  componentDidMount() {
+      this.containerRef.current?.appendChild(screenviewToolPallete);
+  }
+
+  componentWillUnmount() {
+      hiddenEl.appendChild(screenviewToolPallete);
+  }
+
+  render() {
+      return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
+  }
+}
+
+class ComponentE extends React.Component<MyProps> {
+    containerRef = React.createRef<HTMLDivElement>();
+
+    componentDidMount() {
+        this.containerRef.current?.appendChild(entityPallete);
+    }
+
+    componentWillUnmount() {
+        hiddenEl.appendChild(entityPallete);
+    }
+
+    render() {
+        return <div style={{ padding: 8 }} ref={this.containerRef}></div>;
+    }
+}
+
 
 class ComponentA extends React.Component<MyProps> {
   containerRef = React.createRef<HTMLDivElement>();

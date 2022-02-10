@@ -4,7 +4,7 @@
 
 How to install:
 
-1. install node version 14.15.0
+1. install node version 14.15.3
 2. npm install
 3. npm start
 
