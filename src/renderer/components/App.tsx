@@ -5,73 +5,75 @@ import { oldBootstrap } from '../../old_bootstrap.js';
 
 oldBootstrap();
 
+const initialState = {
+  panels: [
+    {
+      windows: [
+        {
+          selected: 0,
+          widgets: ['tool-palette'],
+          minSize: 34
+        }
+      ],
+      size: 137.5,
+      minSize: 48,
+      maxSize: 0,
+      resize: 'stretch'
+    },
+    {
+      windows: [
+        {
+          selected: 0,
+          widgets: ['map-palette'],
+          minSize: 34,
+          size: 1357,
+          maxSize: 0,
+          resize: 'stretch'
+        }
+      ],
+      size: 2046,
+      minSize: 48,
+      maxSize: 0,
+      resize: 'stretch'
+    },
+    {
+      windows: [
+        {
+          selected: 0,
+          widgets: ['info-palette'],
+          minSize: 34,
+          size: 422.5,
+          maxSize: 0,
+          resize: 'stretch'
+        },
+        {
+          selected: 0,
+          widgets: ['zones-palette'],
+          minSize: 34,
+          size: 360.40625,
+          maxSize: 0,
+          resize: 'stretch'
+        },
+        {
+          selected: 0,
+          widgets: ['layers-palette'],
+          size: 568.09375,
+          minSize: 34,
+          maxSize: 0,
+          resize: 'stretch'
+        }
+      ],
+      size: 370.5,
+      minSize: 48,
+      maxSize: 0,
+      resize: 'stretch'
+    }
+  ]
+};
+
 function App() {
   const hiddenRef = React.useRef<HTMLDivElement>(null);
-  const [state, setState] = React.useState({
-    panels: [
-      {
-        windows: [
-          {
-            selected: 0,
-            widgets: ['tool-palette'],
-            minSize: 34
-          }
-        ],
-        size: 137.5,
-        minSize: 48,
-        maxSize: 0,
-        resize: 'stretch'
-      },
-      {
-        windows: [
-          {
-            selected: 0,
-            widgets: ['map-palette'],
-            minSize: 34,
-            size: 1357,
-            maxSize: 0,
-            resize: 'stretch'
-          }
-        ],
-        size: 2046,
-        minSize: 48,
-        maxSize: 0,
-        resize: 'stretch'
-      },
-      {
-        windows: [
-          {
-            selected: 0,
-            widgets: ['info-palette'],
-            minSize: 34,
-            size: 422.5,
-            maxSize: 0,
-            resize: 'stretch'
-          },
-          {
-            selected: 0,
-            widgets: ['zones-palette'],
-            minSize: 34,
-            size: 360.40625,
-            maxSize: 0,
-            resize: 'stretch'
-          },
-          {
-            selected: 0,
-            widgets: ['layers-palette'],
-            size: 568.09375,
-            minSize: 34,
-            maxSize: 0,
-            resize: 'stretch'
-          }
-        ],
-        size: 370.5,
-        minSize: 48,
-        maxSize: 0,
-        resize: 'stretch'
-      }
-    ]
-  });
+  const [state, setState] = React.useState(initialState);
 
   return (
     <div
@@ -114,10 +116,14 @@ type UIWrapperPropTypes = {
 };
 
 function UIWrapper({ element, hiddenEl }: UIWrapperPropTypes) {
-  return useMountable(element, hiddenEl)();
+  const mountRef = useMountable(element, hiddenEl);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }} ref={mountRef}></div>
+  );
 }
 
-// Takes in an DOM element and returns it wrapped in a React Component
+// Takes in an DOM element and returns a ref for assigning to the mount location
 function useMountable(element: Element, hiddenEl: HTMLDivElement | null) {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -130,9 +136,7 @@ function useMountable(element: Element, hiddenEl: HTMLDivElement | null) {
     }
   }, [containerRef, hiddenEl]);
 
-  return () => (
-    <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }} ref={containerRef}></div>
-  );
+  return containerRef;
 }
 
 export default App;
