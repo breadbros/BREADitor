@@ -14,6 +14,7 @@ import { setSuperCutPasteLayers, superCut, superPaste } from '../js/ui/SuperCutP
 import { APPDATA_DIR, BREADPATH } from './FileSystemSetup';
 import { PNG } from 'pngjs';
 import { loadPlugins } from '../Plugins';
+import { setActiveDocument } from '../renderer/components/App';
 
 const jetpack = require('fs-jetpack');
 
@@ -1362,19 +1363,24 @@ export function bootstrapMap(mapFile, tiledataFile, andThen) {
 
   verifyTileData(tiledataFile)
     .then(() => {
+
       LOG('verify map?');
+
       verifyMap(mapFile)
         .then(() => {
+
           LOG('create map?');
 
             new Map(
                 mapFile, tiledataFile, (map) => {  updateLocationFunction(map); updateScreenview(map); }
             ).ready().then( (m) => {
+
               LOG('Done loading map...');
               const currentMap = m;
               m.setCanvas($('.map_canvas'));
 
-              window.$$$currentMap = currentMap;
+              window.$$$currentMap = currentMap; // TODO: kill all window.$$$currentMap ;D
+              setActiveDocument(currentMap);
             
               for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
                 if (!m.mapData.entities[i].animation) {

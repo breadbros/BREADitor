@@ -6,6 +6,13 @@ import initialState from './initialState.js';
 
 oldBootstrap();
 
+let activeDocument = null;
+
+export const setActiveDocument = (doc:any) => {
+  activeDocument = doc;
+  debugger;
+};
+
 function App() {
   const hiddenRef = React.useRef<HTMLDivElement>(null);
   const [state, setState] = React.useState(initialState);
@@ -29,7 +36,7 @@ function App() {
           { id: 'zones-palette', name: 'Zones' },
           { id: 'entity-palette', name: 'Entity' },
           { id: 'map-palette', name: 'Map Document' },
-          { id: 'info-palette', name: 'Info' },
+//          { id: 'info-palette', name: 'Info' },
           { id: 'screenview-indicator-palette', name: 'Screenview Indicator' },
           { id: 'tileset-selector-palette', name: 'Tileset Selector' },
         ].map(el => (
@@ -41,6 +48,7 @@ function App() {
             hiddenEl={hiddenRef.current}
           />
         ))}
+{/* <InfoPalette name="Info" id="info-palette" /> */}
       </Dockable>
     </div>
   );

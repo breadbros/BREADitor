@@ -1,5 +1,5 @@
 import { MakeUndoRedoStack } from './UndoRedo';
-import { LOG, INFO, WARN} from './Logging';
+import { LOG, INFO, WARN } from './Logging';
 import { getObsVisibility, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID , getSelectedLayer } from './js/ui/LayersPalette';
 
 import { ShaderProgram } from './ShaderProgram.js';
@@ -945,6 +945,7 @@ Map.prototype = {
       entity.animation = 'Idle Down'; // / m-m-m-magick (__default__ has this)
     }
   },
+
   addEntity (filename, location) {
     this.addEntityWithoutSort(filename, location);
     this.entities[location.layer].sort(this.entitySortFn);
@@ -1144,24 +1145,15 @@ Map.prototype = {
       return res;
     };
 
-    this.checkerShader = new ShaderProgram(
-      this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/check-frag.glsl'));
-    this.tilemapShader = new ShaderProgram(
-      this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemap-frag.glsl'));
-    this.spriteShader = new ShaderProgram(
-      this.gl, readShader('shaders/sprite-vert.glsl'), readShader('shaders/sprite-frag.glsl'));
-    this.obstructionmapShader = new ShaderProgram(
-      this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemapObs-frag.glsl'));
-    this.zonemapShader = new ShaderProgram(
-      this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/tilemap-frag.glsl'));
-    this.selectionShader = new ShaderProgram(
-      this.gl, readShader('shaders/selection-vert.glsl'), readShader('shaders/selection-frag.glsl'));
-    this.screenviewShader = new ShaderProgram(
-      this.gl, readShader('shaders/screenview-vert.glsl'), readShader('shaders/screenview-frag.glsl'));
-    this.layerBorderShader = new ShaderProgram(
-      this.gl, readShader('shaders/tilemap-vert.glsl'), readShader('shaders/layerborder-frag.glsl'));
-    this.entityBoundsShader = new ShaderProgram(
-      this.gl, readShader('shaders/sprite-vert.glsl'), readShader('shaders/entitybounds-frag.glsl'));
+    this.checkerShader =        new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'),   readShader('shaders/check-frag.glsl'));
+    this.tilemapShader =        new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'),   readShader('shaders/tilemap-frag.glsl'));
+    this.spriteShader =         new ShaderProgram(this.gl, readShader('shaders/sprite-vert.glsl'),    readShader('shaders/sprite-frag.glsl'));
+    this.obstructionmapShader = new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'),   readShader('shaders/tilemapObs-frag.glsl'));
+    this.zonemapShader =        new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'),   readShader('shaders/tilemap-frag.glsl'));
+    this.selectionShader =      new ShaderProgram(this.gl, readShader('shaders/selection-vert.glsl'), readShader('shaders/selection-frag.glsl'));
+    this.screenviewShader =     new ShaderProgram(this.gl, readShader('shaders/screenview-vert.glsl'),readShader('shaders/screenview-frag.glsl'));
+    this.layerBorderShader =    new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'),   readShader('shaders/layerborder-frag.glsl'));
+    this.entityBoundsShader =   new ShaderProgram(this.gl, readShader('shaders/sprite-vert.glsl'),    readShader('shaders/entitybounds-frag.glsl'));
 
     this.tileLibraryTextures = {};
     for (const k in this.vspImages) {
@@ -2181,7 +2173,6 @@ Map.prototype = {
   },
 
   resetCamera (x,y,z) {
-
     if(typeof x === 'undefined') {
       x = 0;
       y = 0;
