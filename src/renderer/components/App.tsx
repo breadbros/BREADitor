@@ -25,15 +25,93 @@ class App extends React.Component {
   state = {
     panels: [
       {
-        windows: [
+        "windows": [
           {
-            selected: 0,
-            widgets: ['ToolPanel', 'LayerPanel', 'ZonePanel', 'MapDocument_0', 'MapInfoPanel', 'EntityPanel', 'ScreenviewIndicatorPanel', 'TilesetSelectorPalette']
+            "selected": 0,
+            "widgets": [
+              "ToolPanel"
+            ],
+            "minSize": 34
           }
-        ]
+        ],
+        "size": 95.5,
+        "minSize": 48,
+        "maxSize": 0,
+        "resize": "stretch"
+      },
+      {
+        "windows": [
+          {
+            "selected": 0,
+            "widgets": [
+              "MapDocument_0"
+            ],
+            "minSize": 34,
+            "size": 1177,
+            "maxSize": 0,
+            "resize": "stretch"
+          }
+        ],
+        "size": 1093.4375,
+        "minSize": 48,
+        "maxSize": 0,
+        "resize": "stretch"
+      },
+      {
+        "windows": [
+          {
+            "selected": 0,
+            "widgets": [
+              "LayerPanel",
+              "EntityPanel",
+              "ZonePanel"
+            ],
+            "minSize": 34,
+            "size": 329.71875,
+            "maxSize": 0,
+            "resize": "stretch"
+          },
+          {
+            "selected": 0,
+            "widgets": [
+              "TilesetSelectorPalette"
+            ],
+            "minSize": 34,
+            "size": 340.78125,
+            "maxSize": 0,
+            "resize": "stretch"
+          },
+          {
+            "selected": 0,
+            "widgets": [
+              "MapInfoPanel",
+              "ScreenviewIndicatorPanel"
+            ],
+            "size": 245.5,
+            "minSize": 34,
+            "maxSize": 0,
+            "resize": "stretch"
+          }
+        ],
+        "size": 328.0625,
+        "minSize": 48,
+        "maxSize": 0,
+        "resize": "stretch"
       }
     ]
   };
+
+  /*panels: [
+    {
+      windows: [
+        {
+          selected: 0,
+          widgets: ['ToolPanel', 'LayerPanel', 'ZonePanel', 'MapDocument_0', 'MapInfoPanel', 'EntityPanel', 'ScreenviewIndicatorPanel', 'TilesetSelectorPalette']
+        }
+      ]
+    }
+  ]
+  */
 
   render() {
     return (

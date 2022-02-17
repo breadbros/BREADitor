@@ -32,9 +32,14 @@ const createWindow = async () => {
 
     setApplicationMenu();
 
+    console.log("Are we gonna install extensions?");
     if (process.env.NODE_ENV !== 'production') {
+        console.log("Yes?");
         await installExtensions();
+    } else {
+        console.log("No?");
     }
+    console.log("We are done thinking about extensions?");
 
     win = new BrowserWindow({ 
         width: 1000, 
