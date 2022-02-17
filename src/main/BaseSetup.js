@@ -917,12 +917,14 @@ export function setupWindowFunctions() {
   };
 
   window.$$$superpaste = () => {
-    const hoverTile = getCurrentHoverTile();
+    const map = window.$$$currentMap;
+    
+    const hoverTile = getCurrentHoverTile(map);
     if (hoverTile === null) {
       console.error('attempted to paste when hovertile was null.  wtf.');
       return;
     }
-    const map = window.$$$currentMap;
+    
     const tX = hoverTile[0];
     const tY = hoverTile[1];
 

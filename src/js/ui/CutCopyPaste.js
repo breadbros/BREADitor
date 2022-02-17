@@ -75,7 +75,7 @@ const _cut_or_copy = (map, isCut) => {
 
 export const paste = (map, tX, tY, newLayerIdx) => {
   if (typeof tX === 'undefined' || typeof tY === 'undefined') {
-    const hoverTile = getCurrentHoverTile();
+    const hoverTile = getCurrentHoverTile(map);
     if (hoverTile === null) {
       console.error('attempted to paste when hovertile was null.  wtf.');
       return;

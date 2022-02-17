@@ -3,6 +3,8 @@ import Dockable from '../../../../react-dockable/src';
 import './css/App.css';
 import { oldBootstrap } from '../../old_bootstrap.js';
 import initialState from './initialState.js';
+import { getCurrentHoverTile } from '../../Tools';
+import { getSelectedTileInfo } from '../../TileSelector';
 
 const path = require('path');
 
@@ -22,7 +24,7 @@ const LineItem = (props:any) => {
   return (
     <div className="line-item">
       <label htmlFor={id}>{labelName}</label>
-      <input type="text" name={id} id={id} value={value} />
+      <span name={id} id={id}>{value}</span>
     </div>
   )
 }
@@ -47,7 +49,30 @@ function InfoPalette({map} : any ) {
     }
   );
 
+  // const curTile = getCurrentHoverTile(map) || [0,0];
+  // this._currentHoverTile = [-1,-1];
+  // this._lastHoverTile = [-2,-2];
 /*
+
+export const updateInfoDims = (map) => {
+  $('#info-dims').text(`${map.mapSizeInTiles.width  }x${  map.mapSizeInTiles.height}`);
+};
+
+export const updateLocationText = (map) => {
+  $('#info-location').text(`${map.camera[0]  },${  map.camera[1]}`);
+}
+
+export const updateZoomText = (map) => {
+  if(!map) {
+    map = window.$$$currentMap;
+  }
+
+  const txt = `${100 / map.camera[2]  }%`;
+  
+  $('#info-zoom').text(txt);
+};
+
+
 Object.keys(map.mapData.vsp).forEach( (keyName) => { 
   const vspPath = map.mapData.vsp[keyName];
   const className = `vsp-info-${keyName}`;
@@ -88,18 +113,19 @@ Object.keys(map.mapData.vsp).forEach( (keyName) => {
   mapAndFileMenus.push(vspMenu);
 } );
 */
+const selTile = getSelectedTileInfo();
 
   return (
     <>
       <LineItem id="info-map-name" labelName="Map Name" value={displayPath}  />
       <LineItem id="info-vsp-list" labelName="VSP List" value={vspList.join(',')}  />
-      <LineItem id="info-current-hover" labelName="Current Hover" value={3}  />
-      <LineItem id="info-dimensions" labelName="Dimensions" value={4}  />
-      <LineItem id="info-location" labelName="Location" value={5}  />
-      <LineItem id="info-zoom" labelName="Zoom" value={6}  />
-      <LineItem id="info-selected-tiles" labelName="Selected Tiles" value={7}  />
-      <LineItem id="info-rstring" labelName="Renderstring" value={8}  />
-      <LineItem id="info-current-tool" labelName="Current Tool" value={9}  />
+      <LineItem id="info-current-hover" labelName="Current Hover" value={map._currentHoverTile.join(',')}  />
+      <LineItem id="info-dimensions" labelName="Dimensions" value={`${map.mapSizeInTiles.width  }x${  map.mapSizeInTiles.height}`}  />
+      <LineItem id="info-location" labelName="Location" value={`${map.camera[0]  },${  map.camera[1]}`}  />
+      <LineItem id="info-zoom" labelName="Zoom" value={`${100 / map.camera[2]  }%`}  />
+      <LineItem id="info-selected-tiles" labelName="Selected Tiles" value={`${selTile.left}, ${selTile.right} (${selTile.vsp}) `}  />
+      <LineItem id="info-rstring" labelName="Renderstring" value={map.layerRenderOrder.join(',')}  />
+      <LineItem id="info-current-tool" labelName="Current Tool" value={map.TOOLMODE}  />
     </>
   );
 }

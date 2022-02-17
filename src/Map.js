@@ -225,6 +225,10 @@ export const verifyMap = (mapfile) => {
 
 // todo all of this.mapData should be obfuscated
 export function Map(mapfile, mapdatafile, updateLocationFunction) {
+
+  this._currentHoverTile = [-1,-1];
+  this._lastHoverTile = [-2,-2];
+
   let i;
   INFO('Loading map', mapfile);
 

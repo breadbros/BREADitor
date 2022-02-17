@@ -83,7 +83,7 @@ export const superPaste = (map, newX, newY) => {
   let tX = null;
   let tY = null;
   if (typeof newX === 'undefined' || typeof newY === 'undefined') {
-    const hoverTile = getCurrentHoverTile();
+    const hoverTile = getCurrentHoverTile(map);
     if (hoverTile === null) {
       console.error('attempted to paste when hovertile was null.  wtf.');
       return;

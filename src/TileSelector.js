@@ -37,8 +37,12 @@ const initializeTileSelectorsForMap = (imageFile, whichvsp) => {
 };
 
 
-const updateInfoWindow = () => {
-  $('#info-selected-tiles').text(`${leftTile()  },${  rightTile()  } (vsp: ${  last_vsp  })`);
+export const getSelectedTileInfo = () => {
+  return {
+    'left': leftTile(),
+    'right': rightTile(),
+    'vsp': last_vsp
+  }
 };
 
 const selectedTilesPerVSP = {};
@@ -155,11 +159,8 @@ export const setTileSelectorUI = (whichOne, vspIDX, map, slotIdx, whichVSP) => {
     updateTileSelectorPaletteMapAnts(vspIDX);
   }
 
-  updateInfoWindow();
-
   const loc = map.getVSPTileLocation(whichVSP, vspIDX);
   $(whichOne).css('background-position', `-${  loc.x * 2  }px -${  loc.y * 2  }px`); // (offset *2)
-
 };
 
 export const updateTileSelectorPaletteMapAnts = (vspIdx) => { // TODO should this be in the TileSelectorPalette?

@@ -54,31 +54,34 @@ export const updateZoomText = (map) => {
   $('#info-zoom').text(txt);
 };
 
-let _currentHoverTile = null;
-let _lastHoverTile = null;
-export const getCurrentHoverTile = () => {
-  return _currentHoverTile;
+export const getCurrentHoverTile = (map) => {
+  return map._currentHoverTile;
 };
 
 const setCurrentHoverTile = (map, mouseEvt) => {
+  console.log("setCurrentHoverTile...");
+
   if (mouseEvt) {
-    _currentHoverTile = getXYFromMouse(map, mouseEvt);
+    map._currentHoverTile = getXYFromMouse(map, mouseEvt);
   } else {
-    _currentHoverTile = null;
+    map._currentHoverTile = null;
   }
 
-  if (_lastHoverTile !== _currentHoverTile) {
+  if (map._lastHoverTile !== _currentHoverTile) {
     map.visibleHoverTile.deselect();
 
-    if (_currentHoverTile) {
-      $('#info-current-hover-tile').text(`${_currentHoverTile[0]  },${  _currentHoverTile[1]}`);
-      map.visibleHoverTile.add(_currentHoverTile[0], _currentHoverTile[1], 1, 1);
+    if (map._currentHoverTile) {
+      //$('#info-current-hover-tile').text(`${_currentHoverTile[0]  },${  _currentHoverTile[1]}`);
+
+      map.visibleHoverTile.add(map._currentHoverTile[0], map._currentHoverTile[1], 1, 1);
     } else {
       $('#info-current-hover-tile').text('-');
     }
 
-    _lastHoverTile = _currentHoverTile;
+    map._lastHoverTile = map._currentHoverTile;
   }
+
+  console.log("map._currentHoverTile: ", map._currentHoverTile);
 };
 
 export const zoomLevels = [0.125, 0.25, 0.5, 1, 2, 4, 8, 16];
@@ -285,8 +288,7 @@ const setupToolClick = (toolObj, toolName) => {
 
     $(this).addClass('selected');
 
-    window.TOOLMODE = toolName;
-    $('#info-curTool').text(window.TOOLMODE); // TODO we should use react already, dammit. 
+    window.$$$currentMap.TOOLMODE = toolName;
 
     if (toolObj.init_fn) {
       toolObj.init_fn(e, toolName, toolObj);
@@ -303,7 +305,7 @@ const setupTools = () => {
 };
 
 const tools = (action, map, evt) => {
-  const mode = window.TOOLMODE;
+  const mode = map.TOOLMODE;
 
   if (_toolLogic.hasOwnProperty(mode) && _toolLogic[mode].hasOwnProperty(action)) {
     // TODO make a proper 'beforeAll: event' maybe?
@@ -323,10 +325,10 @@ export const initTools = (renderContainer, map) => {
   renderContainer.on('mousedown', function (e) {
     tools('mousedown', map, e);
   });
-  renderContainer.on('mousemove', function (e) {
+  window.on('mousemove', function (e) {
     tools('mousemove', map, e);
   });
-  renderContainer.on('mouseup', function (e) {
+  window.on('mouseup', function (e) {
     tools('mouseup', map, e);
   });
   renderContainer.on('dblclick', function (e) {
@@ -358,7 +360,7 @@ const hackToolsInit = () => {
 
   $('#btn-add-tree').off('click');
   $('#btn-add-tree').on('click', (e) => {
-    window.TOOLMODE = 'TREE';
+    window.$$$currentMap.TOOLMODE = 'TREE';
     window.$$$currentMap.entityPreview = {
       location: { tx: 0, ty: 0 },
       animation: 'Idle Down',
@@ -369,13 +371,13 @@ const hackToolsInit = () => {
       mousemove: (map, evt) => {
         if (!getSelectedLayer()) {
           window.alert('select a layer first.');
-          window.TOOLMODE = 'MOVE-VIEWPORT';
+          map.TOOLMODE = 'MOVE-VIEWPORT';
           return;
         }
 
         if (!currentLayerCanHaveEntityOnIt()) {
           window.alert('invalid layer for entity placement.');
-          window.TOOLMODE = 'MOVE-VIEWPORT';
+          map.TOOLMODE = 'MOVE-VIEWPORT';
           return;
         }
 
@@ -394,7 +396,7 @@ const hackToolsInit = () => {
         map.entityPreview.location.layer = getSelectedLayer().layer.name;
         map.addEntity(map.entityPreview, map.entityPreview.location);
         map.entityPreview = null;
-        window.TOOLMODE = 'MOVE-VIEWPORT';
+        map.TOOLMODE = 'MOVE-VIEWPORT';
       },
       mousedown: () => {},
       wheel: () => {}
