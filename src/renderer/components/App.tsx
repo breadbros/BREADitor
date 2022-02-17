@@ -27,8 +27,11 @@ function App() {
           { id: 'tool-palette', name: 'Tools' },
           { id: 'layers-palette', name: 'Layers' },
           { id: 'zones-palette', name: 'Zones' },
+          { id: 'entity-palette', name: 'Entity' },
           { id: 'map-palette', name: 'Map Document' },
-          { id: 'info-palette', name: 'Info' }
+          { id: 'info-palette', name: 'Info' },
+          { id: 'screenview-indicator-palette', name: 'Screenview Indicator' },
+          { id: 'tileset-selector-palette', name: 'Tileset Selector' },
         ].map(el => (
           <UIWrapper
             id={el.id}

@@ -33,7 +33,7 @@ export default {
       windows: [
         {
           selected: 0,
-          widgets: ['info-palette'],
+          widgets: ['info-palette', 'zones-palette', 'layers-palette'],
           minSize: 34,
           size: 422.5,
           maxSize: 0,
@@ -41,7 +41,7 @@ export default {
         },
         {
           selected: 0,
-          widgets: ['zones-palette'],
+          widgets: ['tileset-selector-palette'],
           minSize: 34,
           size: 360.40625,
           maxSize: 0,
@@ -49,7 +49,7 @@ export default {
         },
         {
           selected: 0,
-          widgets: ['layers-palette'],
+          widgets: ['info-palette', 'screenview-indicator-palette'],
           size: 568.09375,
           minSize: 34,
           maxSize: 0,
