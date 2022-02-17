@@ -33,7 +33,7 @@ export default {
       windows: [
         {
           selected: 0,
-          widgets: ['info-palette', 'zones-palette', 'layers-palette'],
+          widgets: ['entity-palette', 'zones-palette', 'layers-palette'],
           minSize: 34,
           size: 422.5,
           maxSize: 0,
