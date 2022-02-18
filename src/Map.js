@@ -8,6 +8,7 @@ import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
 import { getNormalEntityVisibility, shouldShowEntitiesForLayer, generate_unique_entity_uuid_for_this_map } from './js/ui/EntityPalette.js';
 import { notify } from './Notification-Pane';
 
+import { EventBus } from './EventBus';
 
 const path = require('path');
 const {sprintf} = require('sprintf-js');
@@ -226,8 +227,31 @@ export const verifyMap = (mapfile) => {
 // todo all of this.mapData should be obfuscated
 export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
-  this._currentHoverTile = [-1,-1];
-  this._lastHoverTile = [-2,-2];
+  const _cur_hover_tile = [null, null];
+  const _last_hover_tile = [null, null];
+
+  this.setCurrentHoverTile = (tile) => {
+    if( _cur_hover_tile != tile ) {
+      EventBus.$emit('MAP_UPDATE');
+      _cur_hover_tile = tile;
+    }
+  };
+  this.setLastHoverTile = (tile) => {
+    if( _last_hover_tile != tile ) {
+      EventBus.$emit('MAP_UPDATE');
+      _last_hover_tile = tile;
+    }
+  };
+
+  this.getLastHoverTile = () => {
+    return _last_hover_tile;
+  };
+
+  this.getCurrentHoverTile = () => {
+    return _cur_hover_tile;
+  };
+
+  
 
   let i;
   INFO('Loading map', mapfile);

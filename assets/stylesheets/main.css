@@ -77,21 +77,7 @@ button:disabled {
 .entity-palette .window-container {
   overflow: scroll;
 }
-.info-palette {
-  width: 200px;
-  height: 300px;
-  position: absolute;
-  right: 220px;
-  bottom: 10px;
-}
-.info-palette li {
-  list-style-type: none;
-}
-.info-palette ul {
-  padding: 0;
-  padding-left: 10px;
-  margin: 0;
-}
+
 .map-palette .map_canvas_container,
 .tileset-selector-palette .tileset_selector_canvas_container {
   left: 0;

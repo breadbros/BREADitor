@@ -55,30 +55,28 @@ export const updateZoomText = (map) => {
 };
 
 export const getCurrentHoverTile = (map) => {
-  return map._currentHoverTile;
+  return map.getCurrentHoverTile();
 };
 
 const setCurrentHoverTile = (map, mouseEvt) => {
   console.log("setCurrentHoverTile...");
 
   if (mouseEvt) {
-    map._currentHoverTile = getXYFromMouse(map, mouseEvt);
+    map.setCurrentHoverTile(getXYFromMouse(map, mouseEvt));
   } else {
-    map._currentHoverTile = null;
+    map.setCurrentHoverTile([null,null]);
   }
 
-  if (map._lastHoverTile !== _currentHoverTile) {
+  if (map.getCurrentHoverTile() !== map.getLastHoverTile()) {
     map.visibleHoverTile.deselect();
 
-    if (map._currentHoverTile) {
-      //$('#info-current-hover-tile').text(`${_currentHoverTile[0]  },${  _currentHoverTile[1]}`);
-
-      map.visibleHoverTile.add(map._currentHoverTile[0], map._currentHoverTile[1], 1, 1);
+    if (map.getCurrentHoverTile()) {
+      map.visibleHoverTile.add(map.getCurrentHoverTile()[0], map.getCurrentHoverTile()[1], 1, 1);
     } else {
       $('#info-current-hover-tile').text('-');
     }
 
-    map._lastHoverTile = map._currentHoverTile;
+    map.setLastHoverTile(map.getCurrentHoverTile());
   }
 
   console.log("map._currentHoverTile: ", map._currentHoverTile);

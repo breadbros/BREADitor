@@ -3,9 +3,11 @@ import Dockable from '../../../../react-dockable/src';
 import './css/App.css';
 import { oldBootstrap } from '../../old_bootstrap.js';
 import initialState from './initialState.js';
-import { getCurrentHoverTile } from '../../Tools';
 import { getSelectedTileInfo } from '../../TileSelector';
 
+import * as EventBus from '../../EventBus';
+
+// const [nonce, setNonce] = React.useState(0);
 const path = require('path');
 
 oldBootstrap();
@@ -24,10 +26,11 @@ const LineItem = (props:any) => {
   return (
     <div className="line-item">
       <label htmlFor={id}>{labelName}</label>
-      <span name={id} id={id}>{value}</span>
+      <span id={id}>{value}</span>
     </div>
   )
 }
+
 
 function InfoPalette({map} : any ) {
 
@@ -35,23 +38,27 @@ function InfoPalette({map} : any ) {
     return <h1>uninitialized!</h1>
   }
 
-//$('#info-mapname').attr('src', map.mapPath);
+  // React.useEffect(()=>{
+  //   EventBus.$on("MAP_UPDATE", () => {
+  //     console.log("MAP_UPDATE");
+  //     setNonce((oldNonce)=>oldNonce+1)
+  //   });
+  // },[])
 
   const _path = map.mapPath;
-  const pathParts = map.mapPath.split(_path.sep);
+  const pathParts = map.mapPath.split(path.sep);
   const displayPath = pathParts[pathParts.length - 1];
 
-  const vspList: any[] = [];
+  const vspList: any = {};
   Object.keys(map.mapData.vsp).forEach( (keyName) => { 
       const vspPath = map.mapData.vsp[keyName];
-      const fullpath = path.dirname(map.mapPath) + path.sep + vspPath;
-      vspList.push(fullpath);
+      // const fullpath = path.dirname(map.mapPath) + path.sep + vspPath;
+      vspList[keyName] = vspPath;
     }
   );
 
   // const curTile = getCurrentHoverTile(map) || [0,0];
-  // this._currentHoverTile = [-1,-1];
-  // this._lastHoverTile = [-2,-2];
+
 /*
 
 export const updateInfoDims = (map) => {
@@ -72,17 +79,16 @@ export const updateZoomText = (map) => {
   $('#info-zoom').text(txt);
 };
 
-
 Object.keys(map.mapData.vsp).forEach( (keyName) => { 
   const vspPath = map.mapData.vsp[keyName];
   const className = `vsp-info-${keyName}`;
   const $node = $(`<li class="${className}">${keyName}: ${vspPath}</li>`);
 
-  const fullpath = path.dirname($$$currentMap.mapPath) + path.sep + vspPath;
+  const fullpath = path.dirname(map.mapPath) + path.sep + vspPath;
 
   $('#info-vsp-list').append( $node );  
 
-  vspMenu = $(function() {
+  const vspMenu = $(function() {
     $.contextMenu({
         selector: `.${className}`, 
         callback(key, options) {
@@ -98,7 +104,6 @@ Object.keys(map.mapData.vsp).forEach( (keyName) => {
                 return;
               case "Copy-Image":
                 clipboard.writeText(map.vspImages[keyName].src, 'clipboard');
-                
             }
         },
         items: {
@@ -113,20 +118,55 @@ Object.keys(map.mapData.vsp).forEach( (keyName) => {
   mapAndFileMenus.push(vspMenu);
 } );
 */
+
+
 const selTile = getSelectedTileInfo();
 
   return (
-    <>
-      <LineItem id="info-map-name" labelName="Map Name" value={displayPath}  />
-      <LineItem id="info-vsp-list" labelName="VSP List" value={vspList.join(',')}  />
-      <LineItem id="info-current-hover" labelName="Current Hover" value={map._currentHoverTile.join(',')}  />
+    <div className="info-palette">
+      <style>{`
+        div.info-palette {
+          padding: 4px;
+
+          display: grid;
+          grid-template-columns: 1fr 3fr;
+          gap: 2px;
+        }
+
+        div.line-item {
+          display: contents;
+        }
+
+        div.line-item > label {
+          white-space: nowrap;
+          font-weight: bold;
+        }
+
+        div.line-item > span {
+          font-family: monospace;
+        }
+
+      `}</style>
+      <LineItem id="info-map-name" labelName="Map" value={displayPath}  />
+
+      { Object.keys(vspList).map( (key) => {
+
+        const val = vspList[key];
+
+        return (
+          <LineItem id="info-vsp-list" labelName={`VSP [${key}]`} value={val}  />
+        );
+      } )}
+    
+      
+      <LineItem id="info-current-hover" labelName="Current Hover" value={map.getCurrentHoverTile().join(',')}  />
       <LineItem id="info-dimensions" labelName="Dimensions" value={`${map.mapSizeInTiles.width  }x${  map.mapSizeInTiles.height}`}  />
       <LineItem id="info-location" labelName="Location" value={`${map.camera[0]  },${  map.camera[1]}`}  />
       <LineItem id="info-zoom" labelName="Zoom" value={`${100 / map.camera[2]  }%`}  />
       <LineItem id="info-selected-tiles" labelName="Selected Tiles" value={`${selTile.left}, ${selTile.right} (${selTile.vsp}) `}  />
       <LineItem id="info-rstring" labelName="Renderstring" value={map.layerRenderOrder.join(',')}  />
       <LineItem id="info-current-tool" labelName="Current Tool" value={map.TOOLMODE}  />
-    </>
+    </div>
   );
 }
 
@@ -187,7 +227,7 @@ function UIWrapper({ element, hiddenEl }: UIWrapperPropTypes) {
   );
 }
 
-// Takes in an DOM element and returns a ref for assigning to the mount location
+// // Takes in an DOM element and returns a ref for assigning to the mount location
 function useMountable(element: Element, hiddenEl: HTMLDivElement | null) {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
