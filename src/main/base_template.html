@@ -1,40 +1,21 @@
 <!doctype html>
   <head>
-    <script>
-        console.log("Hi dan!");
-        /// Seriously we need to kill the jquery usage 
-        module.paths.push(__dirname.substr( 0, __dirname.indexOf('node_modules') ) + "node_modules");
-        window.jQuery = window.$ = require('jquery');
-    </script>
+    <title>Breaditor</title>
   </head>
   <body>
-    <script src="assets/js/jquery-ui/jquery-ui-min.js"></script>
     <link href="assets/stylesheets/jquery-ui.1.12.1.css" rel="stylesheet" type="text/css">
     <link href="assets/stylesheets/main.css" rel="stylesheet" type="text/css">
     <link href="assets/stylesheets/jquery-ui-fixes.css" rel="stylesheet" type="text/css">
     <link href="assets/themes/ui-darkness/jquery-ui.min.css" rel="stylesheet" type="text/css">
-
-    <script src="assets/js/jquery-ui/jquery-ui-min.js"></script>
-    <script type="text/javascript">
-        $(document).keypress(function(event) {
-            if( event.charCode === 32 ) { // let's not scroll down on spacebar presses?
-
-                // but only if we're not trying to change a value.
-                $focused = $(':focus');
-                if($focused.is('textarea') || $focused.is('input')) {
-                    return;
-                }
-                
-                event.preventDefault();
-            }
-        });
-    </script>
     <link rel="stylesheet" href="assets/js/jquery-context-menu-2.7.1/jquery.contextMenu.min.css">
-    <script src="assets/js/jquery-context-menu-2.7.1/jquery.contextMenu.min.js"></script>
-    <script src="assets/js/jquery-context-menu-2.7.1/jquery.ui.position.js"></script>
-
     <link rel="stylesheet" href="assets/spectrum-1.8/spectrum.css">
-    <script src="assets/spectrum-1.8/spectrum.js"></script>
+
+    <script type="text/javascript">
+      console.error("Did you remember to prevent scolling on spacebar presses yet, Ben?");    
+      global = globalThis; //<- this should be enough    
+      debugger;
+      // require = alert;
+    </script>
 
     <img src='assets/images/defaultsprite.png' id='default_sprite' style="display: none;">
     <img src='assets/images/zones.png' id='zones_tileset' style="display: none;">

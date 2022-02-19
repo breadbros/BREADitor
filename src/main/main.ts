@@ -14,6 +14,10 @@ const contextMenu = require('electron-context-menu');
 const {shell} = require('electron');
 const {ipcMain} = require('electron');
 
+console.log( "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" );
+console.log( "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" );
+
+
 const testContextMenu = () => {
     contextMenu({
         prepend: (defaultActions:any, parameters:any, browserWindow:any) => [
@@ -70,6 +74,13 @@ const createWindow = async () => {
         }
     });
 
+    const events = require("events");
+
+    console.log(events);
+    console.log( "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" );
+    console.log( "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" );
+
+    
     if (process.env.NODE_ENV !== 'production') {
         process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1'; // eslint-disable-line require-atomic-updates
         win.loadURL(`http://localhost:2003`);

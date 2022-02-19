@@ -74,9 +74,7 @@ module.exports = merge.smart(baseConfig, {
     moduleIds: 'named'
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin({
-      reportFiles: ['src/renderer/**/*']
-    }),
+    new ForkTsCheckerWebpackPlugin(), //{ reportFiles: ['src/renderer/**/*'] }
 
     // https://github.com/jantimon/html-webpack-plugin#options
     new HtmlWebpackPlugin({

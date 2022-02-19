@@ -15,7 +15,13 @@ module.exports = {
         __filename: false
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js', '.json']
+        extensions: ['.tsx', '.ts', '.js', '.json'],
+        alias: {
+            events: require.resolve('events')
+        },
+        fallback: {
+            events: require.resolve('events')
+        }
     },
     devtool: 'inline-source-map',
     plugins: [

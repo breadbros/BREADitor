@@ -7,7 +7,6 @@ import { getSelectedTileInfo } from '../../TileSelector';
 
 import {ipcRenderer} from 'electron';
 
-
 import * as EventBus from '../../EventBus';
 
 // const [nonce, setNonce] = React.useState(0);
@@ -190,7 +189,7 @@ function App() {
       <div style={{ display: 'none' }} ref={hiddenRef}></div>
       <Dockable
         initialState={state.panels}
-        onUpdate={workspace => setState({ panels: workspace })}
+        onUpdate={ (workspace:any) => setState({ panels: workspace })}
         spacing={3}
       >
         {[
