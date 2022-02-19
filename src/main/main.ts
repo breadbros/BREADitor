@@ -10,6 +10,31 @@ import { prodMenuTemplate } from '../menu/prod_menu_template';
 
 let win: BrowserWindow | null;
 
+const contextMenu = require('electron-context-menu');
+const {shell} = require('electron');
+const {ipcMain} = require('electron');
+
+const testContextMenu = () => {
+    contextMenu({
+        prepend: (defaultActions:any, parameters:any, browserWindow:any) => [
+            {
+                label: 'Rainbow',
+                // Only show it when right-clicking images
+                visible: parameters.mediaType === 'image'
+            },
+            {
+                label: 'Search Google for “{selection}”',
+                // Only show it when right-clicking text
+                visible: parameters.selectionText.trim().length > 0,
+                click: () => {
+                    shell.openExternal(`https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`);
+                }
+            }
+        ]
+    });
+}
+ipcMain.on('testContextMenu', testContextMenu);
+
 const setApplicationMenu = () => {
     const menus:MenuItemConstructorOptions[] = prodMenuTemplate as MenuItemConstructorOptions[];
     // if (process.env.NODE_ENV !== 'production') {

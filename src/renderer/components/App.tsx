@@ -5,6 +5,9 @@ import { oldBootstrap } from '../../old_bootstrap.js';
 import initialState from './initialState.js';
 import { getSelectedTileInfo } from '../../TileSelector';
 
+import {ipcRenderer} from 'electron';
+
+
 import * as EventBus from '../../EventBus';
 
 // const [nonce, setNonce] = React.useState(0);
@@ -37,6 +40,9 @@ function InfoPalette({map} : any ) {
   if(!map) {
     return <h1>uninitialized!</h1>
   }
+  
+  debugger;
+  ipcRenderer.send('testContextMenu');
 
   // React.useEffect(()=>{
   //   EventBus.$on("MAP_UPDATE", () => {
@@ -158,7 +164,6 @@ const selTile = getSelectedTileInfo();
         );
       } )}
     
-      
       <LineItem id="info-current-hover" labelName="Current Hover" value={map.getCurrentHoverTile().join(',')}  />
       <LineItem id="info-dimensions" labelName="Dimensions" value={`${map.mapSizeInTiles.width  }x${  map.mapSizeInTiles.height}`}  />
       <LineItem id="info-location" labelName="Location" value={`${map.camera[0]  },${  map.camera[1]}`}  />
