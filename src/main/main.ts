@@ -11,9 +11,9 @@ import { prodMenuTemplate } from '../menu/prod_menu_template';
 let win: BrowserWindow | null;
 
 const setApplicationMenu = () => {
-    const menus:MenuItemConstructorOptions[] = prodMenuTemplate as MenuItemConstructorOptions[];
+    const menus: MenuItemConstructorOptions[] = prodMenuTemplate as MenuItemConstructorOptions[];
     // if (process.env.NODE_ENV !== 'production') {
-        menus.push(devMenuTemplate);
+    menus.push(devMenuTemplate);
     // }
     Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
 };
@@ -35,8 +35,8 @@ const createWindow = async () => {
         await installExtensions();
     }
 
-    win = new BrowserWindow({ 
-        width: 1000, 
+    win = new BrowserWindow({
+        width: 1000,
         height: 600,
         webPreferences: {
             webSecurity: false,
