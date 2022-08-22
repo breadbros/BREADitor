@@ -916,11 +916,6 @@ Map.prototype = {
         this._maybeAddEntityTexture(data, false, filename);
     },
 
-    maybeAddEntityTexture(data, entity) {
-        alert('KILL THIS, USE _maybeAddEntityTexture');
-        this._maybeAddEntityTexture(data, entity);
-    },
-
     _maybeAddEntityTexture(data, entity, filename) {
         try {
             let imageFilename = '';
