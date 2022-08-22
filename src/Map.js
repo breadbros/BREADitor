@@ -6,7 +6,7 @@ import {
     MAGICAL_ZONE_LAYER_ID,
     getSelectedLayer
 } from './js/ui/LayersPalette';
-
+import { v4 as uuidv4 } from 'uuid';
 import { ShaderProgram } from './ShaderProgram.js';
 import { updateRstringInfo, updateInfoDims, updateLocationText, updateZoomText } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
@@ -572,6 +572,22 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     }
 
     this.toLoad++;
+    this.entityTexturesKeynameInEntityData = 'MAPED_ENTITYTEXTURE_KEY';
+
+    // sets entityData, returns the key for the corresponding this.entityTexture
+    this.setEntityDataEntry = function(key, data) {
+        // entityData's filename-based key SHOULD be fine for now.
+        // TODO: make this not based on filename
+        this.entityData[key] = data;
+
+        let uuid = this.entityData[key][this.entityTexturesKeynameInEntityData];
+        if (!uuid) {
+            uuid = uuidv4();
+            this.entityData[key][this.entityTexturesKeynameInEntityData] = uuid;
+        }
+        return uuid;
+    };
+
     this.entityTextures = {
         __default__: { img: new window.Image() }
     };
@@ -966,7 +982,7 @@ Map.prototype = {
                 throw Error(msg);
             }
 
-            this.entityData[filename] = data;
+            const textureKey = this.setEntityDataEntry(filename, data);
 
             for (const name in data.animations) {
                 // convert short-hand to useful-hand
@@ -983,8 +999,8 @@ Map.prototype = {
 
             /// TODO: for gods sake put this all under test dammit
             /// TODO: this is a bad scheme for storing entity textures.  If there's the same filename but different paths, there'll be a colission.  Change to full normalized path maybe?
-            LOG(`this.entityTextures[${data.image}] ${this.entityTextures[data.image]}`);
-            if (!this.entityTextures[data.image]) {
+            LOG(`this.entityTextures[${textureKey}] ${this.entityTextures[textureKey]}`);
+            if (!this.entityTextures[textureKey]) {
                 // TODO maybe make this definable in this.mapedConfigData too?
                 let imagePath = imageFilename;
 
@@ -1005,13 +1021,13 @@ Map.prototype = {
 
                 INFO(`Adding '${imagePath}' to entityTextures cache...`);
                 this.toLoad++;
-                this.entityTextures[data.image] = {};
-                this.entityTextures[data.image].img = new window.Image();
+                this.entityTextures[textureKey] = {};
+                this.entityTextures[textureKey].img = new window.Image();
                 const fn = this.doneLoading;
-                this.entityTextures[data.image].img.onload = function() {
+                this.entityTextures[textureKey].img.onload = function() {
                     fn(data.image);
                 };
-                this.entityTextures[data.image].img.src = imagePath;
+                this.entityTextures[textureKey].img.src = imagePath;
             }
 
             if (entity) {
@@ -1019,6 +1035,8 @@ Map.prototype = {
             }
             LOG('NOT USING DEFAULT ENTITY FOR ', data.image);
         } catch (e) {
+            alert(e);
+
             debugger;
         }
     },
@@ -2170,7 +2188,9 @@ Map.prototype = {
         }
 
         const entityData = this._getEntityData(entity);
-        const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
+        const entityTexture = this.entityTextures[
+            entityData[this.entityTexturesKeynameInEntityData]
+        ]; // || this.entityTextures["__default__"];
         if (!entityTexture) {
             alert(
                 `Entity '${entity.name}' at (TX(${entity.location.tx},${entity.location.ty}) PX(${entity.location.px},${entity.location.py})) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
@@ -2345,7 +2365,9 @@ Map.prototype = {
         }
 
         const entityData = this._getEntityData(entity);
-        const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
+        const entityTexture = this.entityTextures[
+            entityData[this.entityTexturesKeynameInEntityData]
+        ]; // || this.entityTextures["__default__"];
         if (!entityTexture) {
             alert(
                 `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
@@ -2437,7 +2459,9 @@ Map.prototype = {
         }
 
         const entityData = this._getEntityData(entity);
-        const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
+        const entityTexture = this.entityTextures[
+            entityData[this.entityTexturesKeynameInEntityData]
+        ]; // || this.entityTextures["__default__"];
         if (!entityTexture) {
             alert(
                 `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
@@ -2524,7 +2548,9 @@ Map.prototype = {
             layerOffsetTy = layer.offset.Y / tilesize.height;
         }
         const entityData = this._getEntityData(entity);
-        const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
+        const entityTexture = this.entityTextures[
+            entityData[this.entityTexturesKeynameInEntityData]
+        ]; // || this.entityTextures["__default__"];
         if (!entityTexture) {
             alert(
                 `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
