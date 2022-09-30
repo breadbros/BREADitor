@@ -2127,6 +2127,11 @@ Map.prototype = {
     const tw = clip[2] / tilesize.width;
     const th = clip[3] / tilesize.height;
 
+    if (entityTexture == undefined || entityTexture.img == undefined) {
+      console.warn(`entityTexture missing for ${entity.name}`);
+      return;
+    }
+
     let fx = (entityData.outer_pad + clip[0]) / entityTexture.img.width;
     let fy = (entityData.outer_pad + clip[1]) / entityTexture.img.height;
     const fw = clip[2] / entityTexture.img.width;

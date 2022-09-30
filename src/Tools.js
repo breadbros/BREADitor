@@ -1,18 +1,18 @@
 import jetpack from 'fs-jetpack';
 import { getSelectedLayer, MAGICAL_ENT_LAYER_ID } from './js/ui/LayersPalette';
-import { LOG } from './Logging'
+import { LOG } from './Logging';
 import eyedropperGenerator from './tools/Eyedropper';
 import smartEyedropperGenerator from './tools/SmartEyedropper';
 import drawGenerator from './tools/Draw';
 import selectGenerator from './tools/Select';
 import floodFillGenerator from './tools/FloodFill';
 import moveViewportGenerator from './tools/MoveViewport';
-import dragItemGenerator from './tools/DragItem'
+import dragItemGenerator from './tools/DragItem';
 
 import { clearAllEntitysFromHighlight } from './js/ui/EntityPalette';
 
-const {$} = window;
-const {sprintf} = require('sprintf-js');
+const { $ } = window;
+const { sprintf } = require('sprintf-js');
 
 const canvasBuffer = require('electron-canvas-to-buffer');
 const fs = require('fs');
@@ -21,36 +21,36 @@ const fs = require('fs');
 
 export const handle_esc = () => {
   clearAllEntitysFromHighlight();
-}
+};
 
 export const updateLocationFunction = (map) => {
   const x = map.camera[0];
   const y = map.camera[1];
   const z = map.camera[2];
-  const key = `map-${  map.mapData.name}`;
+  const key = `map-${map.mapData.name}`;
 
   updateLocationText(map);
 
-  window.localStorage[`${key  }-mapx`] = x;
-  window.localStorage[`${key  }-mapy`] = y;
-  window.localStorage[`${key  }-mapzoom`] = z;
+  window.localStorage[`${key}-mapx`] = x;
+  window.localStorage[`${key}-mapy`] = y;
+  window.localStorage[`${key}-mapzoom`] = z;
 };
 
 export const updateInfoDims = (map) => {
-  $('#info-dims').text(`${map.mapSizeInTiles.width  }x${  map.mapSizeInTiles.height}`);
+  $('#info-dims').text(`${map.mapSizeInTiles.width}x${map.mapSizeInTiles.height}`);
 };
 
 export const updateLocationText = (map) => {
-  $('#info-location').text(`${map.camera[0]  },${  map.camera[1]}`);
-}
+  $('#info-location').text(`${map.camera[0]},${map.camera[1]}`);
+};
 
 export const updateZoomText = (map) => {
-  if(!map) {
+  if (!map) {
     map = window.$$$currentMap;
   }
 
-  const txt = `${100 / map.camera[2]  }%`;
-  
+  const txt = `${100 / map.camera[2]}%`;
+
   $('#info-zoom').text(txt);
 };
 
@@ -59,12 +59,12 @@ export const getCurrentHoverTile = (map) => {
 };
 
 const setCurrentHoverTile = (map, mouseEvt) => {
-  console.log("setCurrentHoverTile...");
+  console.log('setCurrentHoverTile...');
 
   if (mouseEvt) {
     map.setCurrentHoverTile(getXYFromMouse(map, mouseEvt));
   } else {
-    map.setCurrentHoverTile([null,null]);
+    map.setCurrentHoverTile([null, null]);
   }
 
   if (map.getCurrentHoverTile() !== map.getLastHoverTile()) {
@@ -79,7 +79,7 @@ const setCurrentHoverTile = (map, mouseEvt) => {
     map.setLastHoverTile(map.getCurrentHoverTile());
   }
 
-  console.log("map._currentHoverTile: ", map._currentHoverTile);
+  console.log('map._currentHoverTile: ', map._currentHoverTile);
 };
 
 export const zoomLevels = [0.125, 0.25, 0.5, 1, 2, 4, 8, 16];
@@ -114,9 +114,13 @@ export const two_zoom_seriously_all_zoom_functions_suck_kill_them_all = (map) =>
 };
 
 const zoomFn = function (map, e, zoomout) {
-  if (!map.camera[0] && map.camera[0] !== 0) { map.camera[0] = 0; } // If camera's X position is invalid, reset it.
-  if (!map.camera[1] && map.camera[1] !== 0) { map.camera[1] = 0; } // If camera's Y position is invalid, reset it.
-  
+  if (!map.camera[0] && map.camera[0] !== 0) {
+    map.camera[0] = 0;
+  } // If camera's X position is invalid, reset it.
+  if (!map.camera[1] && map.camera[1] !== 0) {
+    map.camera[1] = 0;
+  } // If camera's Y position is invalid, reset it.
+
   const mouseX = map.camera[0] + (e.offsetX ? e.offsetX : e.clientX) / map.camera[2];
   const mouseY = map.camera[1] + (e.offsetY ? e.offsetY : e.clientY) / map.camera[2];
 
@@ -124,25 +128,28 @@ const zoomFn = function (map, e, zoomout) {
     if (zoomLevels.indexOf(map.camera[2]) === -1) {
       zero_zoom(map);
       return;
-    } 
-      map.zoom_level = baseZoomIndex;
-    
+    }
+    map.zoom_level = baseZoomIndex;
   }
 
   if (!zoomout) {
     map.zoom_level++;
-    if (map.zoom_level < 0) { map.zoom_level = 0; }
+    if (map.zoom_level < 0) {
+      map.zoom_level = 0;
+    }
   } else {
     map.zoom_level--;
-    if (map.zoom_level === zoomLevels.length) { map.zoom_level = zoomLevels.length - 1; }
+    if (map.zoom_level === zoomLevels.length) {
+      map.zoom_level = zoomLevels.length - 1;
+    }
   }
 
   LOG('map.zoom_level', map.zoom_level);
 
   map.camera[2] = zoomLevels[map.zoom_level];
 
-  map.camera[0] = mouseX - ((e.offsetX ? e.offsetX : e.clientX) / map.camera[2]);
-  map.camera[1] = mouseY - ((e.offsetY ? e.offsetY : e.clientY) / map.camera[2]);
+  map.camera[0] = mouseX - (e.offsetX ? e.offsetX : e.clientX) / map.camera[2];
+  map.camera[1] = mouseY - (e.offsetY ? e.offsetY : e.clientY) / map.camera[2];
 
   LOG('map.zoom coords', map.camera[0], map.camera[1], map.camera[2]);
 };
@@ -185,19 +192,20 @@ export const getXYFromMouse = (map, evt) => {
   const mouseOffsetX = evt.offsetX;
   const mouseOffsetY = evt.offsetY;
   const selectedLayer = getSelectedLayer();
-  const parallax = (selectedLayer != null) ? selectedLayer.layer.parallax : {X:1.0, Y:1.0}; // If no layer is selected, assume parallax (1.0, 1.0)
+  const parallax = selectedLayer != null ? selectedLayer.layer.parallax : { X: 1.0, Y: 1.0 }; // If no layer is selected, assume parallax (1.0, 1.0)
 
-  const appliedOffset = (!map.mapData.isTileSelectorMap && (selectedLayer != null && selectedLayer.layer.offset != null)) ? // If a real layer (not tileset's "map") and has an offset defined
-    selectedLayer.layer.offset :
-    {X:0, Y:0};
+  const appliedOffset =
+    !map.mapData.isTileSelectorMap && selectedLayer != null && selectedLayer.layer.offset != null // If a real layer (not tileset's "map") and has an offset defined
+      ? selectedLayer.layer.offset
+      : { X: 0, Y: 0 };
 
-  const vpX = (map.windowOverlay.on) ? map.windowOverlay.viewport.x : 0;
-  const vpY = (map.windowOverlay.on) ? map.windowOverlay.viewport.y : 0;
+  const vpX = map.windowOverlay.on ? map.windowOverlay.viewport.x : 0;
+  const vpY = map.windowOverlay.on ? map.windowOverlay.viewport.y : 0;
 
   const layerCamX = (mapOffsetX - appliedOffset.X + vpX) * parallax.X;
   const layerCamY = (mapOffsetY - appliedOffset.Y + vpY) * parallax.Y;
-  const adjustedMouseX = (mouseOffsetX / mapZoom) - vpX; // Because the mouse position uses the rendered/scaled value, we need to divide by zoom to bring its scale in line with "internal" values
-  const adjustedMouseY = (mouseOffsetY / mapZoom) - vpY;
+  const adjustedMouseX = mouseOffsetX / mapZoom - vpX; // Because the mouse position uses the rendered/scaled value, we need to divide by zoom to bring its scale in line with "internal" values
+  const adjustedMouseY = mouseOffsetY / mapZoom - vpY;
   const pX = layerCamX + adjustedMouseX;
   const pY = layerCamY + adjustedMouseY;
 
@@ -225,15 +233,15 @@ export const selectAll = (map) => {
 export const _toolLogic = {
   'DRAG-ITEM': dragItemGenerator(),
   'MOVE-VIEWPORT': moveViewportGenerator(),
-  'FLOOD': floodFillGenerator(),
+  FLOOD: floodFillGenerator(),
   'SMART-EYEDROPPER': smartEyedropperGenerator(),
 
   // TODO add hold-shift to add selection and hold-alt to subtract
   // TODO clamp SELECT to the bounds of the layer and/or map
-  'SELECT': selectGenerator(),
+  SELECT: selectGenerator(),
 
-  'EYEDROPPER': eyedropperGenerator(),
-  'DRAW': drawGenerator()
+  EYEDROPPER: eyedropperGenerator(),
+  DRAW: drawGenerator(),
 };
 
 export const updateRstringInfo = (nonGlobal) => {
@@ -276,7 +284,7 @@ export const clickDrawBrush = () => {
 const setupToolClick = (toolObj, toolName) => {
   const $node = $(toolObj.button_element);
   $node.off('click'); // kill old ones...
-  
+
   // LOG("setting up toolClick for", toolName, $node);
 
   $node.click(function (e) {
@@ -320,25 +328,28 @@ export const initTools = (renderContainer, map) => {
   setupTools();
   hackToolsInit();
 
-  renderContainer.on('mousedown', function (e) {
+  $(renderContainer).on('mousedown', function (e) {
     tools('mousedown', map, e);
   });
-  window.on('mousemove', function (e) {
+  $(window).on('mousemove', function (e) {
     tools('mousemove', map, e);
   });
-  window.on('mouseup', function (e) {
+  $(window).on('mouseup', function (e) {
     tools('mouseup', map, e);
   });
-  renderContainer.on('dblclick', function (e) {
+  $(renderContainer).on('dblclick', function (e) {
     tools('dblclick', map, e);
   });
-  renderContainer.on('wheel', function (e) {
+  $(renderContainer).on('wheel', function (e) {
     tools('wheel', map, e);
   });
 };
 
 const currentLayerCanHaveEntityOnIt = () => {
-  return getSelectedLayer().map_tileData_idx < 900 || getSelectedLayer().map_tileData_idx === MAGICAL_ENT_LAYER_ID;
+  return (
+    getSelectedLayer().map_tileData_idx < 900 ||
+    getSelectedLayer().map_tileData_idx === MAGICAL_ENT_LAYER_ID
+  );
 };
 
 const hackToolsInit = () => {
@@ -362,7 +373,7 @@ const hackToolsInit = () => {
     window.$$$currentMap.entityPreview = {
       location: { tx: 0, ty: 0 },
       animation: 'Idle Down',
-      filename: 'chrs_json/object_tree2.json'
+      filename: 'chrs_json/object_tree2.json',
     };
 
     _toolLogic.TREE = {
@@ -385,10 +396,14 @@ const hackToolsInit = () => {
         const mapOffsetY = map.camera[1];
         const mouseOffsetX = evt.offsetX;
         const mouseOffsetY = evt.offsetY;
-        const {tilesize} = map.vspData[vsp];
+        const { tilesize } = map.vspData[vsp];
 
-        map.entityPreview.location.tx = Math.floor((mapOffsetX + (mouseOffsetX / map.camera[2])) / tilesize.width);
-        map.entityPreview.location.ty = Math.floor((mapOffsetY + (mouseOffsetY / map.camera[2])) / tilesize.height);
+        map.entityPreview.location.tx = Math.floor(
+          (mapOffsetX + mouseOffsetX / map.camera[2]) / tilesize.width
+        );
+        map.entityPreview.location.ty = Math.floor(
+          (mapOffsetY + mouseOffsetY / map.camera[2]) / tilesize.height
+        );
       },
       mouseup: (map, evt) => {
         map.entityPreview.location.layer = getSelectedLayer().layer.name;
@@ -397,7 +412,7 @@ const hackToolsInit = () => {
         map.TOOLMODE = 'MOVE-VIEWPORT';
       },
       mousedown: () => {},
-      wheel: () => {}
+      wheel: () => {},
     };
   });
 
@@ -437,7 +452,6 @@ const hackToolsInit = () => {
       });
     };
   });
-
 };
 
 /*
@@ -450,35 +464,33 @@ export const isTileSelectorMap = (map) => {
     return map.isTileSelectorMap;
   }
 
-  return (map.layers.length === 1 && map.layers[0].name === 'Dynamic Tileselector VspMap Layer xTreem 7');
+  return (
+    map.layers.length === 1 && map.layers[0].name === 'Dynamic Tileselector VspMap Layer xTreem 7'
+  );
 };
 
-
-
 export const auditSullyMaps = () => {
-
-  const path = require('path')
+  const path = require('path');
   const mapFiles = [];
 
-  function fromDir(startPath,filter){
-      if (!fs.existsSync(startPath)){
-          LOG("no dir ",startPath);
-          return;
-      }
+  function fromDir(startPath, filter) {
+    if (!fs.existsSync(startPath)) {
+      LOG('no dir ', startPath);
+      return;
+    }
 
-      const files=fs.readdirSync(startPath);
-      for(let i=0; i<files.length; i++){
-          const filename=path.join(startPath,files[i]);
-          const stat = fs.lstatSync(filename);
-          if (stat.isDirectory()){
-              fromDir(filename,filter); // recurse
-          }
-          else if (filename.indexOf(filter)>=0) {
-              // LOG('-- found: ',filename);
-              mapFiles.push(filename);
-          };
-      };
-  };
+    const files = fs.readdirSync(startPath);
+    for (let i = 0; i < files.length; i++) {
+      const filename = path.join(startPath, files[i]);
+      const stat = fs.lstatSync(filename);
+      if (stat.isDirectory()) {
+        fromDir(filename, filter); // recurse
+      } else if (filename.indexOf(filter) >= 0) {
+        // LOG('-- found: ',filename);
+        mapFiles.push(filename);
+      }
+    }
+  }
 
   fromDir('c:\\tmp', '.map.json');
 
@@ -504,19 +516,20 @@ export const auditSullyMaps = () => {
         } else {
           debugger; // SHOUNT HAPPEN AFAIK
         }
-      } else { // no folder
+      } else {
+        // no folder
         if (name.endsWith('.json')) {
           debugger; // idk wtf
         } else if (name.endsWith('.chr')) {
-          name = `chrs/${  name  }.json`;
+          name = `chrs/${name}.json`;
         } else if (name.indexOf('.') === -1) {
-          name = `chrs/${  name  }.chr.json`;
+          name = `chrs/${name}.chr.json`;
         } else {
           debugger; // SHOUNT HAPPEN AFAIK
         }
       }
 
-      LOG( 'changing', m.entities[j].filename, 'to', name );
+      LOG('changing', m.entities[j].filename, 'to', name);
       m.entities[j].filename = name;
     }
 
@@ -527,7 +540,7 @@ export const auditSullyMaps = () => {
 
 // auditSullyMaps();
 
-// TODO: this is probably not the most efficient way to calculate the topleftmost of 
+// TODO: this is probably not the most efficient way to calculate the topleftmost of
 //       two points and the offset between...
 export const getTopLeftmostCoordinatesAndOffsets = (x1, y1, x2, y2) => {
   let ret = null;
@@ -555,5 +568,5 @@ export const getTopLeftmostCoordinatesAndOffsets = (x1, y1, x2, y2) => {
 };
 
 export const Tools = {
-  grue_zoom
+  grue_zoom,
 };
