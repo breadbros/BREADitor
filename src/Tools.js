@@ -54,32 +54,31 @@ export const updateZoomText = (map) => {
   $('#info-zoom').text(txt);
 };
 
-export const getCurrentHoverTile = (map) => {
-  return map.getCurrentHoverTile();
+let _currentHoverTile = null;
+let _lastHoverTile = null;
+export const getCurrentHoverTile = () => {
+  return _currentHoverTile;
 };
 
 const setCurrentHoverTile = (map, mouseEvt) => {
-  console.log('setCurrentHoverTile...');
-
   if (mouseEvt) {
-    map.setCurrentHoverTile(getXYFromMouse(map, mouseEvt));
+    _currentHoverTile = getXYFromMouse(map, mouseEvt);
   } else {
-    map.setCurrentHoverTile([null, null]);
+    _currentHoverTile = null;
   }
 
-  if (map.getCurrentHoverTile() !== map.getLastHoverTile()) {
+  if (_lastHoverTile !== _currentHoverTile) {
     map.visibleHoverTile.deselect();
 
-    if (map.getCurrentHoverTile()) {
-      map.visibleHoverTile.add(map.getCurrentHoverTile()[0], map.getCurrentHoverTile()[1], 1, 1);
+    if (_currentHoverTile) {
+      $('#info-current-hover-tile').text(`${_currentHoverTile[0]},${_currentHoverTile[1]}`);
+      map.visibleHoverTile.add(_currentHoverTile[0], _currentHoverTile[1], 1, 1);
     } else {
       $('#info-current-hover-tile').text('-');
     }
 
-    map.setLastHoverTile(map.getCurrentHoverTile());
+    _lastHoverTile = _currentHoverTile;
   }
-
-  console.log('map._currentHoverTile: ', map._currentHoverTile);
 };
 
 export const zoomLevels = [0.125, 0.25, 0.5, 1, 2, 4, 8, 16];

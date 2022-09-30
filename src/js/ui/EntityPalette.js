@@ -311,7 +311,10 @@ export const init = () => {
       },
       items: {
         copy_scriptnames: { name: 'Copy useful entity data to clipboard', icon: 'copy' },
-        generate_functions: { name: 'Autogenerate activation scripts from name', icon: 'gear' },
+        generate_functions: {
+          name: 'Autogenerate activation scripts from name',
+          icon: 'gear',
+        },
       },
     });
 
@@ -465,8 +468,9 @@ const setup_template = (ent, id) => {
         if (ent) {
           oldData = get_entity_data(ent.filename);
           oldEnt = ent;
-          window.$$$currentMap.maybeAddEntityTexture(data, ent);
+          window.$$$currentMap._maybeAddEntityTexture(data, ent, ent.filename);
         } else {
+          // TODO: is this used?
           window.$$$currentMap.maybeAddEntityTextureFromFilename(data, path);
         }
       }
@@ -674,6 +678,7 @@ function _entity_click(evt, id) {
         Cancel: function () {
           if (hasDirtyArt) {
             // / put it back!
+            alert('This will blow up yell at grue.');
             window.$$$currentMap.maybeAddEntityTexture(oldData, oldEnt);
             oldData = null;
             oldEnt = null;

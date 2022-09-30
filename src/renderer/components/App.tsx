@@ -6,6 +6,8 @@ import { oldBootstrap } from '../../old_bootstrap.js';
 import initialState from './initialState.js';
 import { getSelectedTileInfo } from '../../TileSelector';
 
+import { getCurrentHoverTile } from '../../Tools';
+
 import { ipcRenderer } from 'electron';
 
 import * as EventBus from '../../EventBus';
@@ -37,7 +39,6 @@ function InfoPalette({ map }: any) {
     return <h1>uninitialized!</h1>;
   }
 
-  debugger;
   ipcRenderer.send('testContextMenu');
 
   // React.useEffect(()=>{
@@ -155,11 +156,13 @@ Object.keys(map.mapData.vsp).forEach( (keyName) => {
         return <LineItem id="info-vsp-list" labelName={`VSP [${key}]`} value={val} />;
       })}
 
+      {/*
       <LineItem
         id="info-current-hover"
         labelName="Current Hover"
-        value={map.getCurrentHoverTile().join(',')}
+        value={1}  getCurrentHoverTile().join(',') 
       />
+*/}
       <LineItem
         id="info-dimensions"
         labelName="Dimensions"

@@ -6,7 +6,7 @@ import {
   MAGICAL_ZONE_LAYER_ID,
   getSelectedLayer,
 } from './js/ui/LayersPalette';
-
+import { v4 as uuidv4 } from 'uuid';
 import { ShaderProgram } from './ShaderProgram.js';
 import { updateRstringInfo, updateInfoDims, updateLocationText, updateZoomText } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
@@ -16,8 +16,6 @@ import {
   generate_unique_entity_uuid_for_this_map,
 } from './js/ui/EntityPalette.js';
 import { notify } from './Notification-Pane';
-
-import { EventBus } from './EventBus';
 
 const path = require('path');
 const { sprintf } = require('sprintf-js');
@@ -239,30 +237,6 @@ export const verifyMap = (mapfile) => {
 
 // todo all of this.mapData should be obfuscated
 export function Map(mapfile, mapdatafile, updateLocationFunction) {
-  const _cur_hover_tile = [null, null];
-  const _last_hover_tile = [null, null];
-
-  this.setCurrentHoverTile = (tile) => {
-    if (_cur_hover_tile != tile) {
-      EventBus.$emit('MAP_UPDATE');
-      _cur_hover_tile = tile;
-    }
-  };
-  this.setLastHoverTile = (tile) => {
-    if (_last_hover_tile != tile) {
-      EventBus.$emit('MAP_UPDATE');
-      _last_hover_tile = tile;
-    }
-  };
-
-  this.getLastHoverTile = () => {
-    return _last_hover_tile;
-  };
-
-  this.getCurrentHoverTile = () => {
-    return _cur_hover_tile;
-  };
-
   let i;
   INFO('Loading map', mapfile);
 
@@ -596,6 +570,22 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   }
 
   this.toLoad++;
+  this.entityTexturesKeynameInEntityData = 'MAPED_ENTITYTEXTURE_KEY';
+
+  // sets entityData, returns the key for the corresponding this.entityTexture
+  this.setEntityDataEntry = function (key, data) {
+    // entityData's filename-based key SHOULD be fine for now.
+    // TODO: make this not based on filename
+    this.entityData[key] = data;
+
+    let uuid = this.entityData[key][this.entityTexturesKeynameInEntityData];
+    if (!uuid) {
+      uuid = uuidv4();
+      this.entityData[key][this.entityTexturesKeynameInEntityData] = uuid;
+    }
+    return uuid;
+  };
+
   this.entityTextures = {
     __default__: { img: new window.Image() },
   };
@@ -916,7 +906,7 @@ Map.prototype = {
       }
 
       if (data) {
-        this.maybeAddEntityTexture(data, entity);
+        this._maybeAddEntityTexture(data, entity, datafile);
       } else {
         console.warn(`Could not find '${entity.filename}', using the default. Path: `, datafile);
         // debugger;
@@ -929,64 +919,113 @@ Map.prototype = {
     this._maybeAddEntityTexture(data, false, filename);
   },
 
-  maybeAddEntityTexture(data, entity) {
-    this._maybeAddEntityTexture(data, entity);
-  },
-
   _maybeAddEntityTexture(data, entity, filename) {
-    if (entity) {
-      filename = entity.filename;
-    }
+    try {
+      let imageFilename = '';
+      const jetpack = require('fs-jetpack').cwd(__dirname);
 
-    this.entityData[filename] = data;
+      const projectBasePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs);
+      const jsonDirPath = path.dirname(jetpack.path(filename));
 
-    for (const name in data.animations) {
-      // convert short-hand to useful-hand
-      if (typeof data.animations[name][0] === 'string') {
-        const chunks = data.animations[name][0].split(' ');
-        const t = parseInt(chunks.shift().substring(1), 10);
-
-        data.animations[name][0] = [];
-        for (let f = 0; f < chunks.length; f++) {
-          data.animations[name][0].push([parseInt(chunks[f], 10), t]);
-        }
+      if (entity) {
+        filename = entity.filename;
+        //debugger;
       }
-    }
 
-    const jetpack = require('fs-jetpack').cwd(__dirname);
-
-    LOG(`this.entityTextures[${data.image}] ${this.entityTextures[data.image]}`);
-    if (!this.entityTextures[data.image]) {
-      // TODO maybe make this definable in this.mapedConfigData too?
-      let imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image);
-      if (!jetpack.inspect(imagePath)) {
-        imagePath += '.png'; // TODO this is stupid and bad and wrong.
+      function _isIllegalPath(path) {
+        return !(path.indexOf('../') == -1 && path.indexOf('..\\') == -1);
       }
-      if (!jetpack.inspect(imagePath)) {
-        console.warn("Couldn't load image", data.image, 'for entity', filename, '; falling back.');
-        // this.entityData[filename].image = '__default__';
-        if (entity) {
-          entity.MAPED_USEDEFAULT = false;
+
+      function _isProjectRelative(path) {
+        return path.startsWith('~/') || path.startsWith('~\\');
+      }
+
+      function _isDatafileRelative(path) {
+        if (_isProjectRelative(path)) {
+          return false;
         }
 
-        return;
+        let validFilenameStart = (str) => {
+          const regexp = new RegExp('^[a-z0-9_-]', 'i'); // TODO: this is almost certainly wrong; different filesystems will have different allowed things.  Let's only accept the intersection of win/mac/linux/ps4-5/xbox/switch tho
+          return regexp.test(str);
+        };
+
+        return path.startsWith('./') || path.startsWith('.\\') || validFilenameStart(path);
       }
 
-      INFO(`Adding '${imagePath}' to entityTextures cache...`);
-      this.toLoad++;
-      this.entityTextures[data.image] = {};
-      this.entityTextures[data.image].img = new window.Image();
-      const fn = this.doneLoading;
-      this.entityTextures[data.image].img.onload = function () {
-        fn(data.image);
-      };
-      this.entityTextures[data.image].img.src = imagePath;
-    }
+      if (_isIllegalPath(data.image)) {
+        const msg = `Illegal imagefile path in chr json '${filename}'.  field 'image' had value '${data.image}', and we do not allow 'walking up' the dirtree.`;
+        alert(msg);
+        throw Error(msg);
+      } else if (_isProjectRelative(data.image)) {
+        const tmp = data.image.substr(2);
+        imageFilename = jetpack.path(projectBasePath, tmp);
+      } else if (_isDatafileRelative(data.image)) {
+        imageFilename = jetpack.path(jsonDirPath, data.image);
+      } else {
+        const msg = `Illegal imagefile path in chr json '${filename}'.  field 'image' had value '${data.image}' is neither project-relative (starts with '~/') nor datafile-relative (is a naked filename or is a path in a subdir from the json file)...`;
 
-    if (entity) {
-      entity.MAPED_USEDEFAULT = false;
+        alert(msg);
+        throw Error(msg);
+      }
+
+      const textureKey = this.setEntityDataEntry(filename, data);
+
+      for (const name in data.animations) {
+        // convert short-hand to useful-hand
+        if (typeof data.animations[name][0] === 'string') {
+          const chunks = data.animations[name][0].split(' ');
+          const t = parseInt(chunks.shift().substring(1), 10);
+
+          data.animations[name][0] = [];
+          for (let f = 0; f < chunks.length; f++) {
+            data.animations[name][0].push([parseInt(chunks[f], 10), t]);
+          }
+        }
+      }
+
+      /// TODO: for gods sake put this all under test dammit
+      /// TODO: this is a bad scheme for storing entity textures.  If there's the same filename but different paths, there'll be a colission.  Change to full normalized path maybe?
+      LOG(`this.entityTextures[${textureKey}] ${this.entityTextures[textureKey]}`);
+      if (!this.entityTextures[textureKey]) {
+        // TODO maybe make this definable in this.mapedConfigData too?
+        let imagePath = imageFilename;
+
+        if (!jetpack.inspect(imagePath)) {
+          imagePath += '.png'; // TODO this is stupid and bad and wrong.
+        }
+        if (!jetpack.inspect(imagePath)) {
+          console.warn(
+            `Couldnt load image (${data.image}) for entity ({filename}); falling back...`
+          );
+          // this.entityData[filename].image = '__default__';
+          if (entity) {
+            entity.MAPED_USEDEFAULT = false;
+          }
+
+          return;
+        }
+
+        INFO(`Adding '${imagePath}' to entityTextures cache...`);
+        this.toLoad++;
+        this.entityTextures[textureKey] = {};
+        this.entityTextures[textureKey].img = new window.Image();
+        const fn = this.doneLoading;
+        this.entityTextures[textureKey].img.onload = function () {
+          fn(data.image);
+        };
+        this.entityTextures[textureKey].img.src = imagePath;
+      }
+
+      if (entity) {
+        entity.MAPED_USEDEFAULT = false;
+      }
+      LOG('NOT USING DEFAULT ENTITY FOR ', data.image);
+    } catch (e) {
+      alert(e);
+
+      debugger;
     }
-    LOG('NOT USING DEFAULT ENTITY FOR ', data.image);
   },
 
   addEntityWithoutSort(entity, location) {
@@ -1016,23 +1055,27 @@ Map.prototype = {
     }
 
     if (!entity.MAPED_USEDEFAULT) {
-      if (
-        this.entityData[entity.filename].regions &&
-        this.entityData[entity.filename].regions.Tall_Redraw &&
-        !this.getEntityTallRedrawLayer()
-      ) {
-        window.alert(
-          `ERROR: Loading tall entity ${entity.filename} with no tallentitylayer in map!`
-        );
-      }
+      try {
+        if (
+          this.entityData[entity.filename].regions &&
+          this.entityData[entity.filename].regions.Tall_Redraw &&
+          !this.getEntityTallRedrawLayer()
+        ) {
+          window.alert(
+            `ERROR: Loading tall entity ${entity.filename} with no tallentitylayer in map!`
+          );
+        }
 
-      entity.animation =
-        entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
+        entity.animation =
+          entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
+      } catch (e) {
+        debugger;
+        throw e;
+      }
     } else {
       entity.animation = 'Idle Down'; // / m-m-m-magick (__default__ has this)
     }
   },
-
   addEntity(filename, location) {
     this.addEntityWithoutSort(filename, location);
     this.entities[location.layer].sort(this.entitySortFn);
@@ -2059,6 +2102,8 @@ Map.prototype = {
       debugger;
     }
 
+    e.___filename = entity.MAPED_USEDEFAULT ? 'DEFAULT' : entity.filename;
+
     return e;
   },
 
@@ -2090,10 +2135,10 @@ Map.prototype = {
     }
 
     const entityData = this._getEntityData(entity);
-    const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
+    const entityTexture = this.entityTextures[entityData[this.entityTexturesKeynameInEntityData]]; // || this.entityTextures["__default__"];
     if (!entityTexture) {
       alert(
-        `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
+        `Entity '${entity.name}' at (TX(${entity.location.tx},${entity.location.ty}) PX(${entity.location.px},${entity.location.py})) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
       );
     }
 
@@ -2126,11 +2171,6 @@ Map.prototype = {
 
     const tw = clip[2] / tilesize.width;
     const th = clip[3] / tilesize.height;
-
-    if (entityTexture == undefined || entityTexture.img == undefined) {
-      console.warn(`entityTexture missing for ${entity.name}`);
-      return;
-    }
 
     let fx = (entityData.outer_pad + clip[0]) / entityTexture.img.width;
     let fy = (entityData.outer_pad + clip[1]) / entityTexture.img.height;
@@ -2260,7 +2300,7 @@ Map.prototype = {
     }
 
     const entityData = this._getEntityData(entity);
-    const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
+    const entityTexture = this.entityTextures[entityData[this.entityTexturesKeynameInEntityData]]; // || this.entityTextures["__default__"];
     if (!entityTexture) {
       alert(
         `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
@@ -2350,7 +2390,7 @@ Map.prototype = {
     }
 
     const entityData = this._getEntityData(entity);
-    const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
+    const entityTexture = this.entityTextures[entityData[this.entityTexturesKeynameInEntityData]]; // || this.entityTextures["__default__"];
     if (!entityTexture) {
       alert(
         `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
@@ -2435,7 +2475,7 @@ Map.prototype = {
       layerOffsetTy = layer.offset.Y / tilesize.height;
     }
     const entityData = this._getEntityData(entity);
-    const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
+    const entityTexture = this.entityTextures[entityData[this.entityTexturesKeynameInEntityData]]; // || this.entityTextures["__default__"];
     if (!entityTexture) {
       alert(
         `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`

@@ -1,12 +1,23 @@
 import { getXYFromMouse, isTileSelectorMap, _toolLogic } from '../Tools';
 import { selectLayer, getObsVisibility, MAGICAL_OBS_LAYER_ID } from '../js/ui/LayersPalette';
 import { setTileSelectorUI } from '../TileSelector';
-import { setActiveZone, scrollZonePalletteToZone, getZoneVisibility, show_edit_zone_dialog } from '../js/ui/ZonesPalette';
-import { getNormalEntityVisibility, selectEntityByIndex, scrollEntityPalletteToEntity, addEntityToHighlight,
-         clearAllEntitysFromHighlight, show_edit_entity_dialog } from '../js/ui/EntityPalette';
+import {
+  setActiveZone,
+  scrollZonePalletteToZone,
+  getZoneVisibility,
+  show_edit_zone_dialog,
+} from '../js/ui/ZonesPalette';
+import {
+  getNormalEntityVisibility,
+  selectEntityByIndex,
+  scrollEntityPalletteToEntity,
+  addEntityToHighlight,
+  clearAllEntitysFromHighlight,
+  show_edit_entity_dialog,
+} from '../js/ui/EntityPalette';
 import { LOG } from '../Logging';
 
-const {$} = window;
+const { $ } = window;
 
 export const checkEntities = (ents, layer, map, click) => {
   const tileSize = layer ? map.vspData[layer.vsp].tilesize : map.vspData.default.tilesize;
@@ -18,7 +29,7 @@ export const checkEntities = (ents, layer, map, click) => {
         layerName: layer ? layer.name : 'E',
         layer,
         ent: ents[i],
-        eIdx: map.mapData.entities.indexOf(ents[i]) // todo man, map.mapData.entities vs map.entities is rough...
+        eIdx: map.mapData.entities.indexOf(ents[i]), // todo man, map.mapData.entities vs map.entities is rough...
       };
     }
   }
@@ -27,7 +38,6 @@ export const checkEntities = (ents, layer, map, click) => {
 };
 
 export const doEntitySelection = (ret) => {
-
   clearAllEntitysFromHighlight();
   selectLayer(ret.layerName);
   window.$$$toggle_pallete('entity', true);
@@ -35,8 +45,7 @@ export const doEntitySelection = (ret) => {
   scrollEntityPalletteToEntity(ret.eIdx);
   ret.ent.INDEX = ret.eIdx;
   addEntityToHighlight(ret.ent);
-}
-
+};
 
 const checkTiles = (map, layer, click) => {
   const tX = click[0];
@@ -49,7 +58,7 @@ const checkTiles = (map, layer, click) => {
     return {
       type: 'TILE',
       tIdx,
-      layer
+      layer,
     };
   }
 
@@ -81,48 +90,48 @@ const determineEntityCollision = (ent, clickSet, map, tileSize) => {
     py -= 16;
 
     return isInRectangle(clickSet[2], clickSet[3], px, py, w, h);
-  } 
-    const data = map.entityData[ent.filename];
-    const {dims} = data;
-    const {hitbox} = data;
+  }
+  const data = map.entityData[ent.filename];
+  const { dims } = data;
+  const { hitbox } = data;
 
-    // todo THIS is the lazy rect way, without calculating for empty pixels and things underneath.  FIX.
-    if (isInRectangle(clickSet[2], clickSet[3], px - hitbox[0], py - hitbox[1], dims[0], dims[1])) {
-      const gl = map.renderContainer[0].getContext('webgl');
-      const img = map.entityTextures[data.image];
+  // todo THIS is the lazy rect way, without calculating for empty pixels and things underneath.  FIX.
+  if (isInRectangle(clickSet[2], clickSet[3], px - hitbox[0], py - hitbox[1], dims[0], dims[1])) {
+    const gl = map.renderContainer[0].getContext('webgl');
+    const img = map.entityTextures[data[this.entityTexturesKeynameInEntityData]];
 
-      const fb = gl.createFramebuffer();
-      gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, img.tex, 0);
-      // const canRead = (gl.checkFramebufferStatus(gl.FRAMEBUFFER) == gl.FRAMEBUFFER_COMPLETE);
+    const fb = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, img.tex, 0);
+    // const canRead = (gl.checkFramebufferStatus(gl.FRAMEBUFFER) == gl.FRAMEBUFFER_COMPLETE);
 
-      // one pixel and one pixel only
-      const pixel = new Uint8Array(4);
+    // one pixel and one pixel only
+    const pixel = new Uint8Array(4);
 
-      // pixels should now be [137,96,40,1];
-      gl.readPixels(
-        data.hitbox[0] + clickSet[2] - ent.location.px,
-        data.hitbox[1] + clickSet[3] - ent.location.py,
-        1, 1,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        pixel
-      );
+    // pixels should now be [137,96,40,1];
+    gl.readPixels(
+      data.hitbox[0] + clickSet[2] - ent.location.px,
+      data.hitbox[1] + clickSet[3] - ent.location.py,
+      1,
+      1,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      pixel
+    );
 
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-      if (pixel[3] === 0) {
-        return false;
-      // TODO make "transparent" color configurable
-      } if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
-        return false;
-      }
-
-      return true;
-    } 
+    if (pixel[3] === 0) {
       return false;
-    
-  
+      // TODO make "transparent" color configurable
+    }
+    if (pixel[0] === 255 && pixel[1] === 255 && pixel[2] === 255) {
+      return false;
+    }
+
+    return true;
+  }
+  return false;
 };
 
 const seekResultFromLayers = (map, clickSet) => {
@@ -169,19 +178,17 @@ const seekResultFromLayers = (map, clickSet) => {
       continue;
     }
 
-    throw new Error(`Unknown rstring layercode: ${  layerCode}`);
+    throw new Error(`Unknown rstring layercode: ${layerCode}`);
   }
 };
 
 export default () => {
-
   let curThing = {};
 
   return {
-    'mousemove': () => {},
-    'dblclick': function (map, e) {
-
-      switch(curThing.type) {
+    mousemove: () => {},
+    dblclick: function (map, e) {
+      switch (curThing.type) {
         case 'entity':
           show_edit_entity_dialog(curThing.id);
           return;
@@ -191,10 +198,10 @@ export default () => {
           return;
 
         default:
-          LOG( `dblckick smartdropper, unknown item type: ${  curThing.type}` );
+          LOG(`dblckick smartdropper, unknown item type: ${curThing.type}`);
       }
     },
-    'mousedown': function (map, e) {
+    mousedown: function (map, e) {
       if (isTileSelectorMap(map)) {
         _toolLogic.EYEDROPPER.mousedown(map, e);
         return;
@@ -205,7 +212,7 @@ export default () => {
       LOG('EYEDROPPER->mousedown...');
 
       if (!(e.button === 0)) {
-        LOG(`Unknown eyedropper button: we know left/right (0/2), got: '${  e.button  }'.`);
+        LOG(`Unknown eyedropper button: we know left/right (0/2), got: '${e.button}'.`);
         return;
       }
 
@@ -253,11 +260,10 @@ export default () => {
           curThing = { type: 'entity', id: ret.eIdx };
           // selectLayer(ret.layer.name);
           // setTileSelectorUI('#left-palette', ret.tIdx, map, 0, ret.layer.vsp);
-          
         }
       }
     },
-    'button_element': '#btn-tool-smart-eyedropper',
-    'human_name': 'iDrop +'
+    button_element: '#btn-tool-smart-eyedropper',
+    human_name: 'iDrop +',
   };
 };
