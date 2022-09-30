@@ -138,6 +138,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@electron/remote": "^2.0.8",
     "@sphinxxxx/color-conversion": "^2.2.2",
     "@testing-library/react": "^13.4.0",
     "acorn": "^8.8.0",
@@ -150,6 +151,7 @@
     "is-electron": "^2.2.1",
     "jquery": "^3.6.1",
     "jquery-ui": "^1.13.2",
+    "jquery-ui-dist": "^1.13.2",
     "lodash": "^4.17.21",
     "natives": "^1.1.6",
     "pngjs": "^6.0.0",

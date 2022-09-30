@@ -1,12 +1,27 @@
-import { LOG, INFO } from '../Logging'
+import { LOG, INFO } from '../Logging';
 import { TilesetSelectorWidget } from '../js/ui/TilesetSelectorPalette.js';
 import { Map, verifyTileData, verifyMap, cleanEntities } from '../Map.js';
 import { Palettes } from '../Palettes.js';
-import { LayersWidget, selectNumberedLayer, visibilityFix, getSelectedLayer,  MAGICAL_ENT_LAYER_ID, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID } from '../js/ui/LayersPalette.js'; // , selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
+import {
+  LayersWidget,
+  selectNumberedLayer,
+  visibilityFix,
+  getSelectedLayer,
+  MAGICAL_ENT_LAYER_ID,
+  MAGICAL_OBS_LAYER_ID,
+  MAGICAL_ZONE_LAYER_ID,
+} from '../js/ui/LayersPalette.js'; // , selectZoneLayer, selectObstructionLayer, selectNumberedLayer, newLayerOnNewMap
 import { ZonesWidget } from '../js/ui/ZonesPalette.js';
 import { EntitiesWidget } from '../js/ui/EntityPalette.js';
 import { updateMapAndVSPFileInfo } from '../js/ui/InfoPalette.js';
-import { getCurrentHoverTile, initTools, updateRstringInfo, updateLocationFunction, selectAll, updateInfoDims } from '../Tools.js';
+import {
+  getCurrentHoverTile,
+  initTools,
+  updateRstringInfo,
+  updateLocationFunction,
+  selectAll,
+  updateInfoDims,
+} from '../Tools.js';
 import { cut, copy, paste } from '../js/ui/CutCopyPaste';
 import { handleUndo, handleRedo } from '../UndoRedo';
 import { setupNotifications, notify } from '../Notification-Pane';
@@ -20,7 +35,7 @@ const jetpack = require('fs-jetpack');
 
 const $ = window.$;
 const path = require('path');
-const { dialog } = require('electron').remote;
+const { dialog } = require('electron');
 const fs = require('fs');
 
 const updateScreenview = (map) => {
@@ -28,34 +43,45 @@ const updateScreenview = (map) => {
   $('#screenview-indicator-x').val(map.windowOverlay.viewport.x);
   $('#screenview-indicator-y').val(map.windowOverlay.viewport.y);
   $('#screenview-indicator-width').val(map.windowOverlay.viewport.width);
-  $('#screenview-indicator-height').val(map.windowOverlay.viewport.height);  
-}
+  $('#screenview-indicator-height').val(map.windowOverlay.viewport.height);
+};
 
 // / TODO: why have both $$$_BREDITOR_MOST_RECENT.json and $$$_MAPED.json... 🤔
 // / I guess one should be in the appdir to at least point to the project directory...
 const loadMostRecentFileOption = () => {
-  // / TODO: is there a reason for requiring these in-block like this, or is it just cargo cult copypasta? 
+  // / TODO: is there a reason for requiring these in-block like this, or is it just cargo cult copypasta?
   const jp = jetpack.cwd(APPDATA_DIR);
 
   const appConfigData = jp.read(BREADPATH.getMostRecentFilesJSONPath(), 'json');
   window.$$$_most_recent_options = appConfigData;
 
   return appConfigData;
-}
+};
 
 const initScreen = (map) => {
-
   updateScreenview(map);
 
-  $('#screenview-indicator-switch').click( () => {
+  $('#screenview-indicator-switch').click(() => {
     map.windowOverlay.on = $('#screenview-indicator-switch').prop('checked');
-  } );
+  });
 
-  $('#screenview-indicator-x').on('change', (ev) => map.windowOverlay.viewport.x = parseInt($(ev.target).val(), 10));
-  $('#screenview-indicator-y').on('change', (ev) => map.windowOverlay.viewport.y = parseInt($(ev.target).val(), 10));
-  $('#screenview-indicator-width').on('change', (ev) => map.windowOverlay.viewport.width = parseInt($(ev.target).val(), 10));
-  $('#screenview-indicator-height').on('change', (ev) => map.windowOverlay.viewport.height = parseInt($(ev.target).val(), 10));
-}
+  $('#screenview-indicator-x').on(
+    'change',
+    (ev) => (map.windowOverlay.viewport.x = parseInt($(ev.target).val(), 10))
+  );
+  $('#screenview-indicator-y').on(
+    'change',
+    (ev) => (map.windowOverlay.viewport.y = parseInt($(ev.target).val(), 10))
+  );
+  $('#screenview-indicator-width').on(
+    'change',
+    (ev) => (map.windowOverlay.viewport.width = parseInt($(ev.target).val(), 10))
+  );
+  $('#screenview-indicator-height').on(
+    'change',
+    (ev) => (map.windowOverlay.viewport.height = parseInt($(ev.target).val(), 10))
+  );
+};
 
 const initInfoWidget = (map) => {
   updateMapAndVSPFileInfo(map);
@@ -63,26 +89,25 @@ const initInfoWidget = (map) => {
 
 function killAllElementListeners($elem) {
   // first argument of function: "$._data ()" is: "Element" - not jQuery object
-  $.each( $._data( $elem, "events" ), function(name) {
-    LOG(`body had listener: ${  name}`);
-    $elem.off( name ); // function off() removes an event handler
-  } );
+  $.each($._data($elem, 'events'), function (name) {
+    LOG(`body had listener: ${name}`);
+    $elem.off(name); // function off() removes an event handler
+  });
 }
 
 function killAllDocumentListeners(doc) {
   // first argument of function: "$._data ()" is: "Element" - not jQuery object
-  $.each( $._data( $elem, "events" ), function(name) {
-    LOG(`body had listener: ${  name}`);
-    $elem.off( name ); // function off() removes an event handler
-  } );
+  $.each($._data($elem, 'events'), function (name) {
+    LOG(`body had listener: ${name}`);
+    $elem.off(name); // function off() removes an event handler
+  });
 }
-
 
 function setupShiftKeyPressed() {
   // TODO this are evil.
   window.isShiftKeyPressed = false;
-  $(document).on('keyup keydown', function(e){
-    window.isShiftKeyPressed = e.shiftKey; 
+  $(document).on('keyup keydown', function (e) {
+    window.isShiftKeyPressed = e.shiftKey;
   });
 }
 
@@ -90,7 +115,7 @@ let __setupChording_once = false;
 
 // TODO: verify all this cannot be done with accelerators
 function setupChording() {
-  if(__setupChording_once) {
+  if (__setupChording_once) {
     return;
   }
 
@@ -98,7 +123,8 @@ function setupChording() {
   __setupChording_once = true;
 
   $('body').on('keydown', (e) => {
-    if (!(e.ctrlKey || e.cmdKey)) { // TODO verify this on mac, cmdKey is a guess.
+    if (!(e.ctrlKey || e.cmdKey)) {
+      // TODO verify this on mac, cmdKey is a guess.
       return;
     }
 
@@ -120,7 +146,7 @@ function setupChording() {
       if (window.$$$currentMap.selection.tiles && window.$$$currentMap.selection.tiles.length) {
         copy(window.$$$currentMap);
       } else if (
-        window.$$$currentTilsesetSelectorMap && 
+        window.$$$currentTilsesetSelectorMap &&
         window.$$$currentTilsesetSelectorMap.selection.tiles &&
         window.$$$currentTilsesetSelectorMap.selection.tiles.length
       ) {
@@ -132,34 +158,31 @@ function setupChording() {
       return;
     }
 
-    if ((e.key === 'v' || e.key === 'V')) {
-      if( e.shiftKey ) {
+    if (e.key === 'v' || e.key === 'V') {
+      if (e.shiftKey) {
         LOG('super-paste, but the one on the document.  SIGH WINDOWS.');
         window.$$$superpaste();
         return;
-      } 
-        LOG('edit-paste, but the one on the document.  SIGH WINDOWS.');
-        paste(window.$$$currentMap);
-        return;
-      
+      }
+      LOG('edit-paste, but the one on the document.  SIGH WINDOWS.');
+      paste(window.$$$currentMap);
+      return;
     }
 
-    if ((e.key === 'x' || e.key === 'X')) {
-      if(e.shiftKey) {
+    if (e.key === 'x' || e.key === 'X') {
+      if (e.shiftKey) {
         LOG('super-cut, but the one on the document.  SIGH WINDOWS.');
         window.$$$supercut();
         return;
-      } 
-        LOG('edit-cut, but the one on the document.  SIGH WINDOWS.');
-        cut(window.$$$currentMap);
-        return;
-      
+      }
+      LOG('edit-cut, but the one on the document.  SIGH WINDOWS.');
+      cut(window.$$$currentMap);
+      return;
     }
 
     if (e.key === 'a' || e.key === 'A') {
       LOG('edit-select-all but the one on the document.  SIGH WINDOWS.');
       selectAll(window.$$$currentMap);
-      
     }
   });
 }
@@ -180,20 +203,18 @@ const tick = function (timestamp) {
   window.requestAnimationFrame(tick);
 };
 
-
-
 /**
  * Setup the rest of the app ;D
  */
 function setupTheRestOfTheApp() {
   Palettes.setupPaletteRegistry();
 
-  if(window.$$$currentMap) {
+  if (window.$$$currentMap) {
     window.$$$currentMap.selfDestruct();
   }
   window.$$$currentMap = null;
 
-  if(!window.$$$RAF_INIT) {
+  if (!window.$$$RAF_INIT) {
     window.$$$RAF_INIT = true;
     window.requestAnimationFrame(tick);
   }
@@ -209,29 +230,27 @@ function setupTheRestOfTheApp() {
 export function autoloadMostRecentMapIfAvailable() {
   const fs = require('fs');
 
-  const opts = loadMostRecentFileOption(); 
+  const opts = loadMostRecentFileOption();
 
-  if(opts && opts.abs_path_to_maps && opts.most_recent_map) {
+  if (opts && opts.abs_path_to_maps && opts.most_recent_map) {
     const filepath = path.join(opts.abs_path_to_maps, opts.most_recent_map);
 
-    if( fs.existsSync(filepath) ) {
+    if (fs.existsSync(filepath)) {
       INFO(`${filepath} specified to autoload...`);
       loadByFilename(filepath);
     } else {
       INFO(`${filepath} specified to autoload... but it wasn't there.`);
     }
-    
   } else {
     INFO('No map specified to autoload.');
   }
 }
 
 /**
-* Necesary to setup a freshly loaded map.
-*/
+ * Necesary to setup a freshly loaded map.
+ */
 export function setupFreshApp() {
-
-  killAllElementListeners($( "#body" ));
+  killAllElementListeners($('#body'));
   // killAllDocumentListeners(document);
 
   setupShiftKeyPressed();
@@ -246,8 +265,7 @@ export function setupFreshApp() {
 }
 
 export function setupWindowFunctions() {
-  
-  const newMapDialog = () => {   
+  const newMapDialog = () => {
     const $template = `
       <p>Last step: how big (in tiles) do you want the base layer of your new map to be?</p>
       Width  <input id="newmap-width" type="number"><br/>
@@ -269,22 +287,22 @@ export function setupWindowFunctions() {
       modal: true,
       title,
       buttons: {
-        'Cancel': function () {
-          $('#modal-dialog').dialog( "close" );
-        }, 'CREATE ALL NEW FILES': () => {
-          const wid = parseInt($('#newmap-width').val(),10);
-          const hig = parseInt($('#newmap-height').val(),10);
+        Cancel: function () {
+          $('#modal-dialog').dialog('close');
+        },
+        'CREATE ALL NEW FILES': () => {
+          const wid = parseInt($('#newmap-width').val(), 10);
+          const hig = parseInt($('#newmap-height').val(), 10);
 
-          if(wid>0 && hig>0) {
+          if (wid > 0 && hig > 0) {
             SaveNewMap();
           } else {
-            alert("Invalid values.  Please try again.");
+            alert('Invalid values.  Please try again.');
           }
-        }
-      }
+        },
+      },
     });
   };
-
 
   const dialoger = (title, template, buttonMap, noCancel, afterDialogOpenFn) => {
     $('#modal-dialog').html('');
@@ -293,12 +311,14 @@ export function setupWindowFunctions() {
 
     window.$$$hide_all_windows();
 
-    if(!noCancel && !buttonMap.cancel && !buttonMap.Cancel) {
+    if (!noCancel && !buttonMap.cancel && !buttonMap.Cancel) {
       buttonMap.Cancel = {
-        text: "Close",
-        click: () => { $('#modal-dialog').dialog( "close" ); },
-        id: "modal-dialog-close-button",
-        class: "close-button"
+        text: 'Close',
+        click: () => {
+          $('#modal-dialog').dialog('close');
+        },
+        id: 'modal-dialog-close-button',
+        class: 'close-button',
       };
     }
 
@@ -306,16 +326,19 @@ export function setupWindowFunctions() {
       width: 500,
       modal: true,
       title: title,
-      buttons: buttonMap
+      buttons: buttonMap,
     });
 
-    if(afterDialogOpenFn) {
+    if (afterDialogOpenFn) {
       afterDialogOpenFn();
     }
   };
 
   const newVspDialogPreStepCopyOrRef = (existingVspFilename) => {
-    const relPath = path.relative(path.dirname(window.newMapFilename),path.dirname(existingVspFilename));// + path.basename(existingVspFilename);
+    const relPath = path.relative(
+      path.dirname(window.newMapFilename),
+      path.dirname(existingVspFilename)
+    ); // + path.basename(existingVspFilename);
     let shittyMutex4 = false;
 
     dialoger(
@@ -334,97 +357,98 @@ export function setupWindowFunctions() {
       `,
       {
         'Make a new COPY': () => {
-          if(shittyMutex4) return;
+          if (shittyMutex4) return;
           shittyMutex4 = true;
           dialog.showSaveDialog(
-            {filters: [{ name: 'image', extensions: ['png'] }]},
+            { filters: [{ name: 'image', extensions: ['png'] }] },
             (filename) => {
               shittyMutex4 = false;
-              if(existingVspFilename == filename) {
-                alert("You selected to copy over the original image.  Please try again and enter a new filename.");
+              if (existingVspFilename == filename) {
+                alert(
+                  'You selected to copy over the original image.  Please try again and enter a new filename.'
+                );
                 return;
               }
 
-              if(filename) {
+              if (filename) {
                 newVspDialogStepFinal(existingVspFilename, filename);
               }
-            });
+            }
+          );
         },
         'Keep the same REFERENCE': () => {
           newVspDialogStepFinal(existingVspFilename);
-        }
+        },
       }
-    )
-  }
+    );
+  };
 
   const errorHandler = (val, sel) => {
-    const ret = ( Number.isNaN(val) || val <= 0 );
+    const ret = Number.isNaN(val) || val <= 0;
     ret ? $(sel).addClass('error') : $(sel).removeClass('error');
     return !ret;
-  }
+  };
 
   const newVspDialogStepFinal = (existingImageFilename, newImageCopyFilename) => {
-
     let w = 256;
     let h = 256;
 
-    if(existingImageFilename) {
+    if (existingImageFilename) {
       const data = fs.readFileSync(existingImageFilename);
       const png = PNG.sync.read(data);
-      
-      if(png) {
+
+      if (png) {
         w = png.width;
         h = png.height;
       }
     }
 
     const listener = () => {
-      const vw = parseInt($('#vsp-width').val(),10);
-      const vh = parseInt($('#vsp-height').val(),10);
-      const tw = parseInt($('#tile-width').val(),10);
-      const th = parseInt($('#tile-height').val(),10);
+      const vw = parseInt($('#vsp-width').val(), 10);
+      const vh = parseInt($('#vsp-height').val(), 10);
+      const tw = parseInt($('#tile-width').val(), 10);
+      const th = parseInt($('#tile-height').val(), 10);
 
       let valid = true;
-      valid &= errorHandler(vw,'#vsp-width');
-      valid &= errorHandler(vh,'#vsp-height');
-      valid &= errorHandler(tw,'#tile-width');
-      valid &= errorHandler(th,'#tile-height');
-      valid &= errorHandler($("#image-name").val().length,'#image-name');
-      valid &= errorHandler($("#vsp-name").val().length,'#vsp-name');
+      valid &= errorHandler(vw, '#vsp-width');
+      valid &= errorHandler(vh, '#vsp-height');
+      valid &= errorHandler(tw, '#tile-width');
+      valid &= errorHandler(th, '#tile-height');
+      valid &= errorHandler($('#image-name').val().length, '#image-name');
+      valid &= errorHandler($('#vsp-name').val().length, '#vsp-name');
 
-      if( !valid ) {
-        $("#tiles-per-row").val("-").removeClass("error");
-        $("#tiles-total").val("-").removeClass("error");
-        
+      if (!valid) {
+        $('#tiles-per-row').val('-').removeClass('error');
+        $('#tiles-total').val('-').removeClass('error');
       } else {
-        const perRow = parseInt(vw/tw, 10);
-        const perCol = parseInt(vh/th, 10);
+        const perRow = parseInt(vw / tw, 10);
+        const perCol = parseInt(vh / th, 10);
 
-        $("#tiles-per-row").val(perRow);
-        $("#tiles-total").val(perRow*perCol);
+        $('#tiles-per-row').val(perRow);
+        $('#tiles-total').val(perRow * perCol);
 
-        if(perRow <= 0) {
-          $("#tiles-total").addClass("error");
+        if (perRow <= 0) {
+          $('#tiles-total').addClass('error');
         } else {
-          $("#tiles-total").removeClass("error");
+          $('#tiles-total').removeClass('error');
         }
 
-        if(perRow*perCol <= 0) {
-          $("#tiles-total").addClass("error");
+        if (perRow * perCol <= 0) {
+          $('#tiles-total').addClass('error');
         } else {
-          $("#tiles-total").removeClass("error");
+          $('#tiles-total').removeClass('error');
         }
       }
     };
 
     const verify = () => {
-      return $("#modal-dialog input.error").length === 0 && $("#vsp-name").val();
+      return $('#modal-dialog input.error').length === 0 && $('#vsp-name').val();
     };
 
     let topPart;
-    if(existingImageFilename && newImageCopyFilename) {
+    if (existingImageFilename && newImageCopyFilename) {
       const imagename = path.basename(existingImageFilename);
-      topPart =  `
+      topPart = `
         <p>We will create a new tileset definition by copying an existing file:</p>
         <div class=code>${existingImageFilename}</div>
         <p>To a new copy of that file at:</p>
@@ -436,8 +460,8 @@ export function setupWindowFunctions() {
         image height: <input id="vsp-height" value="${h}" READONLY>
         <p>
       `;
-    } else if(existingImageFilename === null && newImageCopyFilename === true) {
-      topPart =  `
+    } else if (existingImageFilename === null && newImageCopyFilename === true) {
+      topPart = `
       <p>We will create a new tileset definition by creating a brand new image!</p>
 
       <p class="note">Note: it's usually optimal to have your width and height be the same number (square) and a power of 2.</p>
@@ -448,10 +472,9 @@ export function setupWindowFunctions() {
         image height: <input id="vsp-height" value="${h}">
       <p>
       `;
-
     } else {
       const vspname = path.basename(existingImageFilename);
-      topPart =  `
+      topPart = `
         <p>We will create a new tileset definition by referencing an existing file:</p>
         <div class=code>${existingImageFilename}</div>
         <p>...and storing that as a relative path to the Tileset Definition you are about to save.</p>
@@ -477,81 +500,83 @@ export function setupWindowFunctions() {
         <p>
       `,
       {
-        'Confirm': () => {
+        Confirm: () => {
           listener();
-          if( !verify() ){
-              alert('Please fix any errors before continuing.');
+          if (!verify()) {
+            alert('Please fix any errors before continuing.');
             return;
           }
 
-          const vw = parseInt($('#vsp-width').val(),10);
-          const tw = parseInt($('#tile-width').val(),10);
-          const th = parseInt($('#tile-height').val(),10);
-          const tpr = parseInt(vw/tw,10);
-          const imgName = $("#image-name").val();
-          const vspName = $("#vsp-name").val();
+          const vw = parseInt($('#vsp-width').val(), 10);
+          const tw = parseInt($('#tile-width').val(), 10);
+          const th = parseInt($('#tile-height').val(), 10);
+          const tpr = parseInt(vw / tw, 10);
+          const imgName = $('#image-name').val();
+          const vspName = $('#vsp-name').val();
 
           window.newMapData.default_vspfile = vspName;
           window.newVspData = {
-            "tilesize": {
-              "width": tw,
-              "height": th
+            tilesize: {
+              width: tw,
+              height: th,
             },
-            "tiles_per_row": tpr,
-            "source_image": {
-              existingImageFilename, 
+            tiles_per_row: tpr,
+            source_image: {
+              existingImageFilename,
               newImageCopyFilename,
               imgName,
-              vspName
-            }
+              vspName,
+            },
           };
 
           obsModeDialog();
         },
-      }, false, () => {
-        
-        $("#modal-dialog input").on("keyup", listener);
-        
+      },
+      false,
+      () => {
+        $('#modal-dialog input').on('keyup', listener);
+
         let shittyMutex1 = false;
         let shittyMutex2 = false;
 
-        $("#choose-vsp").click( () => {
-          if(shittyMutex1) return;
+        $('#choose-vsp').click(() => {
+          if (shittyMutex1) return;
           shittyMutex1 = true;
           dialog.showSaveDialog(
             {
               title: 'Save new tileset definion',
-              filters: [{ name: 'text', extensions: ['vsp.json'] }]
+              filters: [{ name: 'text', extensions: ['vsp.json'] }],
             },
             (filename) => {
               shittyMutex1 = false;
-              if( filename ) {
-                $("#vsp-name").val(filename);
+              if (filename) {
+                $('#vsp-name').val(filename);
               }
             }
-        )});
+          );
+        });
 
-        $("#choose-image").click( () => {
-          if(shittyMutex2) return;
+        $('#choose-image').click(() => {
+          if (shittyMutex2) return;
           shittyMutex2 = true;
           dialog.showSaveDialog(
             {
               title: 'Save new tileset image',
-              filters: [{ name: 'img', extensions: ['png'] }]
+              filters: [{ name: 'img', extensions: ['png'] }],
             },
             (filename) => {
               shittyMutex2 = false;
-              if( filename ) {
-                $("#image-name").val(filename);
+              if (filename) {
+                $('#image-name').val(filename);
               }
             }
-        )});
+          );
+        });
       }
     );
   };
 
   const newVspDialog = () => {
-
     let shittyMutex3 = false;
 
     dialoger(
@@ -561,16 +586,16 @@ export function setupWindowFunctions() {
       `,
       {
         'Existing Image': () => {
-          if(shittyMutex3) return;
+          if (shittyMutex3) return;
           shittyMutex3 = true;
           dialog.showOpenDialog(
             {
               title: 'Choose Tileset Image',
-              filters: [{ name: 'image', extensions: ['png'] }]
+              filters: [{ name: 'image', extensions: ['png'] }],
             },
             (res) => {
               shittyMutex3 = false;
-              if(res) {
+              if (res) {
                 newVspDialogPreStepCopyOrRef(res[0]);
               }
             }
@@ -585,58 +610,57 @@ export function setupWindowFunctions() {
 
   const vspModeDialog = () => {
     window.$$$hide_all_windows();
-    dialoger(
-      'Step 2: Default Tileset Options',
-      ``,
-      {
-        'Create new tileset': () => {
-          newVspDialog();
-        },
-        'Choose existing tileset': () => {
-          _chooseExistingDefaultTileVSP(obsModeDialog);
-        },
-        'This map will not have tiles': () => {
-          alert('Thats insane! (currently unsupported)');
-        },
-      }
-    );
+    dialoger('Step 2: Default Tileset Options', ``, {
+      'Create new tileset': () => {
+        newVspDialog();
+      },
+      'Choose existing tileset': () => {
+        _chooseExistingDefaultTileVSP(obsModeDialog);
+      },
+      'This map will not have tiles': () => {
+        alert('Thats insane! (currently unsupported)');
+      },
+    });
   };
 
   function _chooseExistingDefaultTileVSP(obsModeDialog) {
     dialog.showOpenDialog(
       {
         title: 'Choose default VSP',
-        filters: [{ name: 'text', extensions: ['vsp.json'] }]
+        filters: [{ name: 'text', extensions: ['vsp.json'] }],
       },
       (res) => {
         if (!res) {
           return;
         }
         window.newMapData.default_vspfile = res[0];
- 
+
         window.newVspData = require('fs-jetpack').cwd(__dirname).read(res[0], 'json');
-  
+
         obsModeDialog();
       }
     );
   }
 
   const newObsTilesetDialog = () => {
-
     const validate = () => {
       let valid = true;
 
-      const rows = parseInt($('#tiles-per-row').val(),10);
-      const cols = parseInt($('#tiles-per-col').val(),10);
+      const rows = parseInt($('#tiles-per-row').val(), 10);
+      const cols = parseInt($('#tiles-per-col').val(), 10);
 
-      valid &= errorHandler(rows,'#tiles-per-row');
-      valid &= errorHandler(cols,'#tiles-per-col');
-      valid &= errorHandler($("#obs-image-name").val().length,'#obs-image-name');
-      valid &= errorHandler($("#obs-def-name").val().length,'#obs-def-name');
+      valid &= errorHandler(rows, '#tiles-per-row');
+      valid &= errorHandler(cols, '#tiles-per-col');
+      valid &= errorHandler($('#obs-image-name').val().length, '#obs-image-name');
+      valid &= errorHandler($('#obs-def-name').val().length, '#obs-def-name');
 
-      if(rows && cols && rows > 0 && cols > 0 ) {
-        $("#tiles-total").text( rows*cols );
-        $("#image-dims").text( `${window.newVspData.tilesize.width*cols} x ${window.newVspData.tilesize.height*rows} (pixels)` );
+      if (rows && cols && rows > 0 && cols > 0) {
+        $('#tiles-total').text(rows * cols);
+        $('#image-dims').text(
+          `${window.newVspData.tilesize.width * cols} x ${
+            window.newVspData.tilesize.height * rows
+          } (pixels)`
+        );
       }
 
       return valid;
@@ -661,66 +685,66 @@ export function setupWindowFunctions() {
       </p>
       `,
       {
-        'Continue': () => {
-          if(!validate()) {
-            alert("Please correct any errors in the form before trying again.");
+        Continue: () => {
+          if (!validate()) {
+            alert('Please correct any errors in the form before trying again.');
             return;
           }
 
           window.newMapData.obs_vspfile = {
-            "obs-image-name": $("#obs-image-name").val(),
-            "obs-def-name": $("#obs-def-name").val(),
-            rows: parseInt($('#tiles-per-row').val(),10),
-            cols: parseInt($('#tiles-per-col').val(),10),
+            'obs-image-name': $('#obs-image-name').val(),
+            'obs-def-name': $('#obs-def-name').val(),
+            rows: parseInt($('#tiles-per-row').val(), 10),
+            cols: parseInt($('#tiles-per-col').val(), 10),
           };
           newMapDialog();
-        }
+        },
       },
       false,
       () => {
-        $("#modal-dialog input").on("keyup", validate);
-        
+        $('#modal-dialog input').on('keyup', validate);
+
         let shittyMutex1 = false;
         let shittyMutex2 = false;
 
-        $("#choose-image").click( () => {
-          if(shittyMutex1) return;
+        $('#choose-image').click(() => {
+          if (shittyMutex1) return;
           shittyMutex1 = true;
           dialog.showSaveDialog(
             {
               title: 'Save new obstruction image data',
-              filters: [{ name: 'image', extensions: ['png'] }]
+              filters: [{ name: 'image', extensions: ['png'] }],
             },
             (filename) => {
               shittyMutex1 = false;
-              if( filename ) {
-                $("#obs-image-name").val(filename);
+              if (filename) {
+                $('#obs-image-name').val(filename);
               }
             }
-        )});
+          );
+        });
 
-        $("#choose-vsp").click( () => {
-          if(shittyMutex2) return;
+        $('#choose-vsp').click(() => {
+          if (shittyMutex2) return;
           shittyMutex2 = true;
           dialog.showSaveDialog(
             {
               title: 'Save new obstruction definition file',
-              filters: [{ name: 'text', extensions: ['.vsp.json'] }]
+              filters: [{ name: 'text', extensions: ['.vsp.json'] }],
             },
             (filename) => {
               shittyMutex2 = false;
-              if( filename ) {
-                $("#obs-def-name").val(filename);
+              if (filename) {
+                $('#obs-def-name').val(filename);
               }
             }
-        )});
-
+          );
+        });
       }
     );
   };
 
   const obsModeDialog = () => {
-
     dialoger(
       'Step 3: Default Obstruction Tileset Options',
       `<p class=note>Breaditor presently only supports tile-based obstructions based on 1-bit pngs.</p>
@@ -741,12 +765,13 @@ export function setupWindowFunctions() {
   };
 
   const _chooseExistingDefaultObsVSP = function (res) {
-    dialog.showOpenDialog({
+    dialog.showOpenDialog(
+      {
         title: 'Choose Obstruction VSP',
-        filters: [{ name: 'text', extensions: ['obsvsp.json'] }]
+        filters: [{ name: 'text', extensions: ['obsvsp.json'] }],
       },
-      (res)  => {
-        if(res) {
+      (res) => {
+        if (res) {
           window.newMapData.obs_vspfile = res[0];
           newMapDialog();
         }
@@ -755,18 +780,18 @@ export function setupWindowFunctions() {
   };
 
   window._newStep0_chooseSaveLocation = () => {
-    dialog.showSaveDialog(
-      {filters: [{ name: 'text', extensions: ['map.json'] }]},
-      (filename) => {
-        if (filename) {
-          const jp = jetpack.cwd(APPDATA_DIR);
-          
-          const warning = !jp.exists(filename) ? "" : `<p class=warning>Warning, there is already a map of that name there, and we will overwrite it if you finish this New Map wizard.</p>`;
+    dialog.showSaveDialog({ filters: [{ name: 'text', extensions: ['map.json'] }] }, (filename) => {
+      if (filename) {
+        const jp = jetpack.cwd(APPDATA_DIR);
 
-          dialoger(
-            "Step 1: Verify Save Location", 
+        const warning = !jp.exists(filename)
+          ? ''
+          : `<p class=warning>Warning, there is already a map of that name there, and we will overwrite it if you finish this New Map wizard.</p>`;
 
-            `<p>You want to create a new map file at</p>
+        dialoger(
+          'Step 1: Verify Save Location',
+
+          `<p>You want to create a new map file at</p>
             <p class=monospace>
             ${filename}
             </p>
@@ -774,16 +799,16 @@ export function setupWindowFunctions() {
             Is that correct?
             </p>
             ${warning}
-            `, 
-            {
-              'Yes': () => {
-                window.newMapFilename = filename;
-                vspModeDialog();
-              }
-            });
-        }
+            `,
+          {
+            Yes: () => {
+              window.newMapFilename = filename;
+              vspModeDialog();
+            },
+          }
+        );
       }
-    );
+    });
   };
 
   window.$$$new = () => {
@@ -794,7 +819,7 @@ export function setupWindowFunctions() {
   };
 
   window.$$$save = function (newName, isSaveAs, reloadAfterSave) {
-    if(window.$$$currentMap.compactifyZones) {
+    if (window.$$$currentMap.compactifyZones) {
       window.$$$currentMap.compactifyZones();
     }
     window._save(newName, window.$$$currentMap, isSaveAs || reloadAfterSave);
@@ -826,12 +851,12 @@ export function setupWindowFunctions() {
 
     saveMostRecentMapLocation(mapfile);
 
-    notify("Saved map.");
+    notify('Saved map.');
 
-    if(reloadAfterSave) {
-      INFO("Reloading map after saveas...");
+    if (reloadAfterSave) {
+      INFO('Reloading map after saveas...');
       window.$$$show_all_windows();
-      $('#modal-dialog').dialog( "close" );
+      $('#modal-dialog').dialog('close');
 
       const doAfterNewMapCreate = () => {
         selectNumberedLayer(1);
@@ -847,19 +872,19 @@ export function setupWindowFunctions() {
         window.$$$hidePallete('zones');
         window.$$$hidePallete('entity');
         window.$$$hidePallete('screenview-indicator');
-        
+
         window.$$$collect_all_windows();
       };
 
       loadByFilename(mapfile, doAfterNewMapCreate);
     }
-};
+  };
 
   window.$$$about_breaditor = () => {
     window.alert(
       'Breaditor is a pile of junk made mostly by @bengrue and a little by Shamus Peveril.' +
-      'TODO: make this better.' + 
-      'TODO: add the licenses jeez.'
+        'TODO: make this better.' +
+        'TODO: add the licenses jeez.'
     );
   };
 
@@ -869,10 +894,10 @@ export function setupWindowFunctions() {
     let z = 0;
 
     window.$$$palette_registry.map((pal) => {
-      const node_selector = `.${  pal}`;
+      const node_selector = `.${pal}`;
       const $node = $(node_selector);
-      $node.css('top', `${y  }px`);
-      $node.css('left', `${x  }px`);
+      $node.css('top', `${y}px`);
+      $node.css('left', `${x}px`);
       $node.css('z-index', z);
 
       Palettes.correctResizeWidget($node);
@@ -887,7 +912,7 @@ export function setupWindowFunctions() {
 
   window.$$$show_all_windows = () => {
     window.$$$palette_registry.map((pal) => {
-      const node_selector = `.${  pal}`;
+      const node_selector = `.${pal}`;
       const $node = $(node_selector);
       $node.show();
     });
@@ -896,9 +921,9 @@ export function setupWindowFunctions() {
   };
 
   window.$$$hide_all_windows = () => {
-    if(!window.$$$palette_registry) return;
+    if (!window.$$$palette_registry) return;
     window.$$$palette_registry.map((pal) => {
-      const node_selector = `.${  pal}`;
+      const node_selector = `.${pal}`;
       const $node = $(node_selector);
       $node.hide();
     });
@@ -906,36 +931,36 @@ export function setupWindowFunctions() {
 
   window.$$$load = () => {
     const options = {
-      filters: [{ name: 'text', extensions: ['map.json'] }]
+      filters: [{ name: 'text', extensions: ['map.json'] }],
     };
 
-    if( window.$$$_most_recent_options && window.$$$_most_recent_options.abs_path_to_maps ) {
+    if (window.$$$_most_recent_options && window.$$$_most_recent_options.abs_path_to_maps) {
       options.defaultPath = window.$$$_most_recent_options.abs_path_to_maps;
     }
 
-    dialog.showOpenDialog( options, loadByFilename );
+    dialog.showOpenDialog(options, loadByFilename);
   };
 
   window.$$$superpaste = () => {
     const map = window.$$$currentMap;
-    
+
     const hoverTile = getCurrentHoverTile(map);
     if (hoverTile === null) {
       console.error('attempted to paste when hovertile was null.  wtf.');
       return;
     }
-    
+
     const tX = hoverTile[0];
     const tY = hoverTile[1];
 
     superPaste(map, tX, tY);
-  }
+  };
 
-  window.$$$supercut = function() {
+  window.$$$supercut = function () {
     const map = window.$$$currentMap;
 
-    if( getSelectedLayer() === null ) {
-      alert("Supercut: Please select a layer first.");
+    if (getSelectedLayer() === null) {
+      alert('Supercut: Please select a layer first.');
       return;
     }
 
@@ -947,8 +972,15 @@ export function setupWindowFunctions() {
     const title = 'Supercut Setup';
 
     let $template = `
-      <h2>Selection: (${map.selection.hull.x},${map.selection.hull.y}) through (${map.selection.hull.w-1},${map.selection.hull.h-1})</h2>
-      <h3>${map.selection.hull.w-1-map.selection.hull.x}x${map.selection.hull.h-1-map.selection.hull.y}, ${(map.selection.hull.w-1-map.selection.hull.x)*(map.selection.hull.h-1-map.selection.hull.y)} tiles </h2>
+      <h2>Selection: (${map.selection.hull.x},${map.selection.hull.y}) through (${
+      map.selection.hull.w - 1
+    },${map.selection.hull.h - 1})</h2>
+      <h3>${map.selection.hull.w - 1 - map.selection.hull.x}x${
+      map.selection.hull.h - 1 - map.selection.hull.y
+    }, ${
+      (map.selection.hull.w - 1 - map.selection.hull.x) *
+      (map.selection.hull.h - 1 - map.selection.hull.y)
+    } tiles </h2>
       <h3>Select layers to supercut from:</h3>
 
       <input type=checkbox checked="true" class="supercut-layers" data-layer-id="${MAGICAL_ZONE_LAYER_ID}">Zones<br> 
@@ -958,7 +990,7 @@ export function setupWindowFunctions() {
     `;
 
     let layer = null;
-    for (let i = 0; i < map.layers.length; i++) { 
+    for (let i = 0; i < map.layers.length; i++) {
       layer = map.layers[i];
       $template += `
         <input type=checkbox checked="true" class="supercut-layers" data-layer-id="${i}">${layer.name}<br> 
@@ -978,29 +1010,29 @@ export function setupWindowFunctions() {
       modal: true,
       title,
       buttons: {
-        'Cut': () => {
+        Cut: () => {
           const layers = [];
-          $(".supercut-layers:checked").each(function() {
+          $('.supercut-layers:checked').each(function () {
             const me = $(this);
-            layers.push($(me[0]).data("layer-id"));
+            layers.push($(me[0]).data('layer-id'));
           });
           setSuperCutPasteLayers(layers);
           superCut(window.$$$currentMap);
-          $('#modal-dialog').dialog( "close" );
+          $('#modal-dialog').dialog('close');
         },
-        'Cancel': function () {
-          $('#modal-dialog').dialog( "close" );
-        }
+        Cancel: function () {
+          $('#modal-dialog').dialog('close');
+        },
       },
-      close () {
+      close() {
         $('#modal-dialog').html('');
-      }
+      },
     });
-  }
+  };
 
-  window.$$$openRecent = function() {
+  window.$$$openRecent = function () {
     const path = require('path');
-    
+
     const maps = window.$$$_most_recent_options.recent_maps;
 
     let $template = '';
@@ -1016,11 +1048,11 @@ export function setupWindowFunctions() {
     $('#modal-dialog').append($template);
 
     for (var i = 0; i < maps.length; i++) {
-      const {basePath} = maps[i];
+      const { basePath } = maps[i];
       const file = maps[i].map;
 
       $(`#recent-${i}`).on('click', (evt) => {
-        $('#modal-dialog').dialog( "close" );
+        $('#modal-dialog').dialog('close');
         loadByFilename(path.join(basePath, file));
       });
     }
@@ -1032,34 +1064,31 @@ export function setupWindowFunctions() {
       modal: true,
       title,
       buttons: {
-        'Cancel': function () {
-          $('#modal-dialog').dialog( "close" );
-        }
+        Cancel: function () {
+          $('#modal-dialog').dialog('close');
+        },
       },
-      close () {
+      close() {
         $('#modal-dialog').html('');
+      },
+    });
+  };
+
+  window.$$$saveAs = function (isNewMap) {
+    dialog.showSaveDialog({ filters: [{ name: 'text', extensions: ['map.json'] }] }, (filename) => {
+      if (filename) {
+        window.$$$save(filename, true, isNewMap);
       }
     });
-  }
-
-  window.$$$saveAs = function ( isNewMap ) {
-    dialog.showSaveDialog(
-      {filters: [{ name: 'text', extensions: ['map.json'] }]},
-      (filename) => {
-        if (filename) {
-          window.$$$save(filename, true, isNewMap);
-        }
-      }
-    );
   };
 
   window.$$$hidePallete = (pal) => {
-    window.$$$toggle_pallete(pal, false, true);  
-  }
+    window.$$$toggle_pallete(pal, false, true);
+  };
 
   window.$$$showPallete = (pal) => {
-    window.$$$toggle_pallete(pal, true);  
-  }
+    window.$$$toggle_pallete(pal, true);
+  };
 
   /** You are not ready */
   window.$$$toggle_pallete = (pal, forceShow, forceHide) => {
@@ -1068,27 +1097,27 @@ export function setupWindowFunctions() {
     }
 
     let node_selector = '';
-    let node = `${pal  }-palette`;
+    let node = `${pal}-palette`;
 
     if (window.$$$palette_registry.indexOf(node) >= 0) {
-      node_selector = `.${  node}`;
+      node_selector = `.${node}`;
       node = $(node_selector);
 
       if (!node.length) {
-        throw new Error(`Invalid palette node selector: '${  node_selector  }'`);
+        throw new Error(`Invalid palette node selector: '${node_selector}'`);
       }
     } else {
-      throw new Error(`Invalid palette name: '${  pal  }'`);
+      throw new Error(`Invalid palette name: '${pal}'`);
     }
-    
-    if(forceHide) {
+
+    if (forceHide) {
       node.hide();
 
       Palettes.savePalettePositions();
       return;
     }
 
-    if(forceShow) {
+    if (forceShow) {
       node.show();
 
       if (node_selector === '.layers-palette') {
@@ -1099,7 +1128,6 @@ export function setupWindowFunctions() {
 
       return;
     }
-
 
     if (node.is(':visible')) {
       node.hide();
@@ -1114,50 +1142,72 @@ export function setupWindowFunctions() {
     Palettes.savePalettePositions();
   };
 
-  window.appPath = path.dirname(require('electron').remote.app.getAppPath());
-};
+  // window.appPath = path.dirname(require('electron').remote.app.getAppPath());
+}
 
 const SaveNewMap = () => {
-    const wid = parseInt($('#newmap-width').val(),10);
-    const hig = parseInt($('#newmap-height').val(),10);
+  const wid = parseInt($('#newmap-width').val(), 10);
+  const hig = parseInt($('#newmap-height').val(), 10);
 
+  debugger;
 
-    debugger;
+  doTilesetCreationStuff();
+  doObsCreationStuff();
+  //doMapCreationStuff(wid, hig);
 
-    doTilesetCreationStuff();
-    doObsCreationStuff();
-    //doMapCreationStuff(wid, hig);
-
-    //window.$$$saveAs(true);
-}
+  //window.$$$saveAs(true);
+};
 
 export const weNeedToReferenceATilesetImage = () => {
-  return window.newVspData && window.newVspData.source_image && window.newVspData.source_image.existingImageFilename && !window.newVspData.source_image.newImageCopyFilename;q
-}
+  return (
+    window.newVspData &&
+    window.newVspData.source_image &&
+    window.newVspData.source_image.existingImageFilename &&
+    !window.newVspData.source_image.newImageCopyFilename
+  );
+  q;
+};
 
 export const weNeedToCopyATilesetImage = () => {
-  return window.newVspData && window.newVspData.source_image && window.newVspData.source_image.existingImageFilename && window.newVspData.source_image.newImageCopyFilename;
-}
+  return (
+    window.newVspData &&
+    window.newVspData.source_image &&
+    window.newVspData.source_image.existingImageFilename &&
+    window.newVspData.source_image.newImageCopyFilename
+  );
+};
 
 export const weAreReferencingATileset = (testUnsetText) => {
-  if(!testUnsetText) {
-    testUnsetText = "";
+  if (!testUnsetText) {
+    testUnsetText = '';
   }
 
-  return window.newVspData && typeof window.newVspData.source_image == "string" && window.newVspData.source_image != testUnsetText;
-}
+  return (
+    window.newVspData &&
+    typeof window.newVspData.source_image == 'string' &&
+    window.newVspData.source_image != testUnsetText
+  );
+};
 
 export const weAreGoingToMakeAnImageOMG = () => {
   const d = window.newVspData;
   const si = d.source_image;
-  return d.tilesize.width > 0 && d.tilesize.height > 0 && d.tiles_per_row > 0 && si.existingImageFilename === null && si.newImageCopyFilename === true && typeof si.imgName == "string" && typeof si.vspName == "string";
-}
+  return (
+    d.tilesize.width > 0 &&
+    d.tilesize.height > 0 &&
+    d.tiles_per_row > 0 &&
+    si.existingImageFilename === null &&
+    si.newImageCopyFilename === true &&
+    typeof si.imgName == 'string' &&
+    typeof si.vspName == 'string'
+  );
+};
 
 export const doTilesetCreationStuff = () => {
   const i = 4;
   debugger;
 
-  if(weNeedToCopyATilesetImage()) {
+  if (weNeedToCopyATilesetImage()) {
     const jp = jetpack.cwd(APPDATA_DIR);
     jp.copy(
       window.newVspData.source_image.existingImageFilename, // from
@@ -1166,29 +1216,8 @@ export const doTilesetCreationStuff = () => {
     );
     const fullPathToVSP = window.newVspData.source_image.vspName;
     window.newMapData.default_vspfile = path.join(
-        path.relative(
-          path.dirname(window.newMapFilename), 
-          path.dirname(window.newVspData.source_image.vspName)
-        ),
-        path.basename(window.newVspData.source_image.vspName)
-      );
-
-    window.newVspData.source_image = path.join(
-        path.relative(
-          path.dirname(fullPathToVSP), 
-          path.dirname(window.newVspData.source_image.newImageCopyFilename)
-        ),
-        path.basename(window.newVspData.source_image.newImageCopyFilename)
-      );
-
-    jetpack.write(fullPathToVSP, window.newVspData);
-
-  } else if(weNeedToReferenceATilesetImage()) {
-    const fullPathToVSP = window.newVspData.source_image.vspName;
-
-    window.newMapData.default_vspfile = path.join(
       path.relative(
-        path.dirname(window.newMapFilename), 
+        path.dirname(window.newMapFilename),
         path.dirname(window.newVspData.source_image.vspName)
       ),
       path.basename(window.newVspData.source_image.vspName)
@@ -1196,25 +1225,44 @@ export const doTilesetCreationStuff = () => {
 
     window.newVspData.source_image = path.join(
       path.relative(
-        path.dirname(fullPathToVSP), 
+        path.dirname(fullPathToVSP),
+        path.dirname(window.newVspData.source_image.newImageCopyFilename)
+      ),
+      path.basename(window.newVspData.source_image.newImageCopyFilename)
+    );
+
+    jetpack.write(fullPathToVSP, window.newVspData);
+  } else if (weNeedToReferenceATilesetImage()) {
+    const fullPathToVSP = window.newVspData.source_image.vspName;
+
+    window.newMapData.default_vspfile = path.join(
+      path.relative(
+        path.dirname(window.newMapFilename),
+        path.dirname(window.newVspData.source_image.vspName)
+      ),
+      path.basename(window.newVspData.source_image.vspName)
+    );
+
+    window.newVspData.source_image = path.join(
+      path.relative(
+        path.dirname(fullPathToVSP),
         path.dirname(window.newVspData.source_image.existingImageFilename)
       ),
       path.basename(window.newVspData.source_image.existingImageFilename)
     );
 
     jetpack.write(fullPathToVSP, window.newVspData);
-  } else if(weAreReferencingATileset()) {
+  } else if (weAreReferencingATileset()) {
     window.newMapData.default_vspfile = path.join(
       path.relative(
-        path.dirname(window.newMapFilename), 
+        path.dirname(window.newMapFilename),
         path.dirname(window.newMapData.default_vspfile)
       ),
       path.basename(window.newMapData.default_vspfile)
     );
-  } else if(weAreGoingToMakeAnImageOMG()) {
-
+  } else if (weAreGoingToMakeAnImageOMG()) {
   } else {
-    throw "doTilesetCreationStuff for New Map FTUX has apparently fallen through to a state before thought to be impossible!  OH NO!";
+    throw 'doTilesetCreationStuff for New Map FTUX has apparently fallen through to a state before thought to be impossible!  OH NO!';
   }
 };
 
@@ -1227,67 +1275,74 @@ export function doMapCreationStuff(wid, hig) {
   debugger;
 
   window.$$$currentMap = {
-    layers: []
+    layers: [],
   };
 
   // "legacy_obstruction_data"
   window.$$$currentMap.layers.length = 1;
   window.$$$currentMap.layers[0] = {
-    "name": "New Layer",
-    "parallax": { "X": 1, "Y": 1 },
-    "dimensions": { "X": wid, "Y": hig },
-    "alpha": 1,
-    "vsp": "default"
+    name: 'New Layer',
+    parallax: { X: 1, Y: 1 },
+    dimensions: { X: wid, Y: hig },
+    alpha: 1,
+    vsp: 'default',
   };
 
   const oneLayerSize = wid * hig;
   window.$$$currentMap.zoneData = Array(oneLayerSize);
-  window.$$$currentMap.legacyObsData = Array.apply(null, Array(oneLayerSize)).map(Number.prototype.valueOf, 0);
+  window.$$$currentMap.legacyObsData = Array.apply(null, Array(oneLayerSize)).map(
+    Number.prototype.valueOf,
+    0
+  );
   const blankLayerData = Array.apply(null, Array(oneLayerSize)).map(Number.prototype.valueOf, 0);
   window.$$$currentMap.mapRawTileData = {
     tile_data: [blankLayerData],
     legacy_obstruction_data: window.$$$currentMap.legacyObsData,
-    zone_data: []
+    zone_data: [],
   };
 
   window.$$$currentMap.entities = {};
   window.$$$currentMap.entityData = {};
   window.$$$currentMap.entityTextures = {};
   window.$$$currentMap.mapData = {
-    "notes": [],
-    "name": "",
-    "vsp": {
-      "default": path.basename(window.newMapData.default_vspfile),
-      "obstructions": path.basename(window.newMapData.obs_vspfile)
+    notes: [],
+    name: '',
+    vsp: {
+      default: path.basename(window.newMapData.default_vspfile),
+      obstructions: path.basename(window.newMapData.obs_vspfile),
     },
-    "music": "",
-    "renderstring": "1,E,R",
-    "initscript": "start",
-    "starting_coordinates": [0, 0],
-    "layers": [{
-      "name": "New Layer",
-      "parallax": {
-        "X": 1,
-        "Y": 1
+    music: '',
+    renderstring: '1,E,R',
+    initscript: 'start',
+    starting_coordinates: [0, 0],
+    layers: [
+      {
+        name: 'New Layer',
+        parallax: {
+          X: 1,
+          Y: 1,
+        },
+        dimensions: {
+          X: wid,
+          Y: hig,
+        },
+        alpha: 1,
+        vsp: 'default',
       },
-      "dimensions": {
-        "X": wid,
-        "Y": hig
+    ],
+    zones: [
+      {
+        name: 'NULL_ZONE',
+        activation_script: '',
+        activation_chance: 0,
+        can_by_adjacent_activated: false,
       },
-      "alpha": 1,
-      "vsp": "default"
-    }],
-    "zones": [{
-      "name": "NULL_ZONE",
-      "activation_script": "",
-      "activation_chance": 0,
-      "can_by_adjacent_activated": false
-    }],
-    "entities": [],
-    "tallentitylayer": "New Layer",
-    "MAPED_ENTLAYER_VISIBLE": true,
-    "MAPED_ZONELAYER_VISIBLE": true,
-    "MAPED_OBSLAYER_VISIBLE": true
+    ],
+    entities: [],
+    tallentitylayer: 'New Layer',
+    MAPED_ENTLAYER_VISIBLE: true,
+    MAPED_ZONELAYER_VISIBLE: true,
+    MAPED_OBSLAYER_VISIBLE: true,
   };
 }
 
@@ -1297,7 +1352,7 @@ function loadByFilename(fileNames, andThenFn) {
   }
 
   const fileName = Array.isArray(fileNames) ? fileNames[0] : fileNames;
-  
+
   const dataName = fileName.replace('.map.json', '.map.data.json');
   // const vspName = fileName.replace('.map.json', '.vsp.json');
 
@@ -1305,28 +1360,27 @@ function loadByFilename(fileNames, andThenFn) {
 
   // TODO: verify that all three of these files, you know... exist?
   bootstrapMap(fileName, dataName, andThenFn);
-};
+}
 
 function saveMostRecentMapLocation(filename) {
-  
   const jp = jetpack.cwd(APPDATA_DIR);
   const appConfigPath = BREADPATH.getMostRecentFilesJSONPath();
 
   let appConfigData = jp.read(appConfigPath, 'json');
-  if( !appConfigData ) { 
+  if (!appConfigData) {
     appConfigData = {};
   }
 
   appConfigData.abs_path_to_maps = path.dirname(filename);
   appConfigData.most_recent_map = path.basename(filename);
 
-  if(!appConfigData.recent_maps) {
+  if (!appConfigData.recent_maps) {
     appConfigData.recent_maps = [];
   }
 
   appConfigData.recent_maps.unshift({
     basePath: appConfigData.abs_path_to_maps,
-    map: appConfigData.most_recent_map    
+    map: appConfigData.most_recent_map,
   });
 
   appConfigData.recent_maps = dedupeRecentMaps(appConfigData.recent_maps);
@@ -1334,7 +1388,7 @@ function saveMostRecentMapLocation(filename) {
   window.$$$_most_recent_options = appConfigData;
 
   jp.write(appConfigPath, appConfigData);
-};
+}
 
 const MAX_RECENT_MAPS = 10;
 
@@ -1343,13 +1397,13 @@ function dedupeRecentMaps(mapQueue) {
   const newQueue = [];
 
   for (let i = 0; i < mapQueue.length; i++) {
-    const key = mapQueue[i].basePath +  mapQueue[i].map;
-    if(!hitList[key]) {
+    const key = mapQueue[i].basePath + mapQueue[i].map;
+    if (!hitList[key]) {
       newQueue.push(mapQueue[i]);
       hitList[key] = true;
     }
-    
-    if(newQueue.length >= MAX_RECENT_MAPS) {
+
+    if (newQueue.length >= MAX_RECENT_MAPS) {
       return newQueue;
     }
   }
@@ -1358,72 +1412,72 @@ function dedupeRecentMaps(mapQueue) {
 }
 
 export function bootstrapMap(mapFile, tiledataFile, andThen) {
- 
   const errorHandler = (e) => {
     console.error(e);
   };
 
-  verifyTileData(tiledataFile)
-    .then(() => {
+  verifyTileData(tiledataFile).then(() => {
+    LOG('verify map?');
 
-      LOG('verify map?');
+    verifyMap(mapFile).then(() => {
+      LOG('create map?');
 
-      verifyMap(mapFile)
-        .then(() => {
+      new Map(mapFile, tiledataFile, (map) => {
+        updateLocationFunction(map);
+        updateScreenview(map);
+      })
+        .ready()
+        .then((m) => {
+          LOG('Done loading map...');
+          const currentMap = m;
+          m.setCanvas($('.map_canvas'));
 
-          LOG('create map?');
+          window.$$$currentMap = currentMap; // TODO: kill all window.$$$currentMap ;D
+          setActiveDocument(currentMap);
 
-            new Map(
-                mapFile, tiledataFile, (map) => {  updateLocationFunction(map); updateScreenview(map); }
-            ).ready().then( (m) => {
+          for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
+            if (!m.mapData.entities[i].animation) {
+              // TODO this is very bad
+              window.alert(`Theres an entity ${i} with unset animation; ALERT GRUE wtf`);
+              // mapData.entities[0].filename
+              m.mapData.entities[i].animation = 'Idle Down'; // TOD no no no
+            }
+          }
 
-              LOG('Done loading map...');
-              const currentMap = m;
-              m.setCanvas($('.map_canvas'));
+          if (typeof window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE === 'undefined') {
+            window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE = true;
+          }
 
-              window.$$$currentMap = currentMap; // TODO: kill all window.$$$currentMap ;D
-              setActiveDocument(currentMap);
-            
-              for (let i = m.mapData.entities.length - 1; i >= 0; i--) {
-                if (!m.mapData.entities[i].animation) {
-                  // TODO this is very bad
-                  window.alert(`Theres an entity ${  i  } with unset animation; ALERT GRUE wtf`);
-                  // mapData.entities[0].filename
-                  m.mapData.entities[i].animation = 'Idle Down'; // TOD no no no
-                }
-              }
-            
-              if (typeof window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE === 'undefined') {
-                window.$$$currentMap.mapData.MAPED_ENTLAYER_VISIBLE = true;
-              }
-            
-              if (typeof window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE === 'undefined') {
-                window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE = true;
-              }
-            
-              if (typeof window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE === 'undefined') {
-                window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE = true;
-              }
-            
-              LayersWidget.initLayersWidget(currentMap);
-              initInfoWidget(currentMap);
-              initScreen(currentMap);
-              ZonesWidget.initZonesWidget(currentMap);
-              EntitiesWidget.initEntitiesWidget(currentMap);
-            
-              initTools($('.map_canvas'), window.$$$currentMap);
-            
-              updateRstringInfo();
+          if (typeof window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE === 'undefined') {
+            window.$$$currentMap.mapData.MAPED_ZONELAYER_VISIBLE = true;
+          }
 
-              // mostly for creating new maps.  FOR NOW.
-              if(andThen) {
-                andThen();
-              }
-            
-              // TODO do we need to do this at all?
-              // window.$$$hide_all_windows();
-            }).catch( (e) => {LOG(e); throw e;} )
+          if (typeof window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE === 'undefined') {
+            window.$$$currentMap.mapData.MAPED_OBSLAYER_VISIBLE = true;
+          }
+
+          LayersWidget.initLayersWidget(currentMap);
+          initInfoWidget(currentMap);
+          initScreen(currentMap);
+          ZonesWidget.initZonesWidget(currentMap);
+          EntitiesWidget.initEntitiesWidget(currentMap);
+
+          initTools($('.map_canvas'), window.$$$currentMap);
+
+          updateRstringInfo();
+
+          // mostly for creating new maps.  FOR NOW.
+          if (andThen) {
+            andThen();
+          }
+
+          // TODO do we need to do this at all?
+          // window.$$$hide_all_windows();
         })
-    })
-};
-
+        .catch((e) => {
+          LOG(e);
+          throw e;
+        });
+    });
+  });
+}

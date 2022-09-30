@@ -1,19 +1,28 @@
 import { MakeUndoRedoStack } from './UndoRedo';
 import { LOG, INFO, WARN } from './Logging';
-import { getObsVisibility, MAGICAL_OBS_LAYER_ID, MAGICAL_ZONE_LAYER_ID , getSelectedLayer } from './js/ui/LayersPalette';
+import {
+  getObsVisibility,
+  MAGICAL_OBS_LAYER_ID,
+  MAGICAL_ZONE_LAYER_ID,
+  getSelectedLayer,
+} from './js/ui/LayersPalette';
 
 import { ShaderProgram } from './ShaderProgram.js';
 import { updateRstringInfo, updateInfoDims, updateLocationText, updateZoomText } from './Tools.js';
 import { getZoneVisibility, getZoneAlpha } from './js/ui/ZonesPalette';
-import { getNormalEntityVisibility, shouldShowEntitiesForLayer, generate_unique_entity_uuid_for_this_map } from './js/ui/EntityPalette.js';
+import {
+  getNormalEntityVisibility,
+  shouldShowEntitiesForLayer,
+  generate_unique_entity_uuid_for_this_map,
+} from './js/ui/EntityPalette.js';
 import { notify } from './Notification-Pane';
 
 import { EventBus } from './EventBus';
 
 const path = require('path');
-const {sprintf} = require('sprintf-js');
+const { sprintf } = require('sprintf-js');
 
-const {$} = window;
+const { $ } = window;
 
 const ENTITY_PREVIEW_ALPHA = 0.75;
 const ANIMATE_TILES = true; // TODO hook this up to a toggle in the UI
@@ -35,7 +44,7 @@ let lastKnownPath = '';
 export const heal_uuids_for_this_map = (map) => {
   const currentEntities = map.mapData.entities;
   for (let i = currentEntities.length - 1; i >= 0; i--) {
-    if( !currentEntities[i].uuid ) {
+    if (!currentEntities[i].uuid) {
       currentEntities[i].uuid = generate_unique_entity_uuid_for_this_map(map);
     }
   }
@@ -108,7 +117,7 @@ let verifyPromiseResolver = null;
 let verifyPromiseRejecter = null;
 
 export const verifyMap = (mapfile) => {
-  const { dialog } = require('electron').remote;
+  const { dialog } = require('electron');
 
   const readyPromise = new Promise(function (resolve, reject) {
     verifyPromiseResolver = resolve;
@@ -123,8 +132,9 @@ export const verifyMap = (mapfile) => {
 
   if (typeof mapData.vsp === 'string') {
     window.alert(
-      `Detected old format vsps: '${  mapData.vsp  }'.\n\nPlease select a json vsp for the map's default and` +
-      ` a second one for the obstructions.`);
+      `Detected old format vsps: '${mapData.vsp}'.\n\nPlease select a json vsp for the map's default and` +
+        ` a second one for the obstructions.`
+    );
     needsDefault = true;
     needsObstructions = true;
   } else {
@@ -144,7 +154,9 @@ export const verifyMap = (mapfile) => {
     });
 
     if (!truth.has(true)) {
-      throw new Error(`looking for mapData.tallentitylayer "${  mapData.tallentitylayer  }", but could not find it`);
+      throw new Error(
+        `looking for mapData.tallentitylayer "${mapData.tallentitylayer}", but could not find it`
+      );
     }
   }
 
@@ -165,7 +177,7 @@ export const verifyMap = (mapfile) => {
         continue;
       }
 
-      mapData.tallentitylayer = mapData.layers[(parseInt(rCode) - 1)].name;
+      mapData.tallentitylayer = mapData.layers[parseInt(rCode) - 1].name;
     }
 
     if (!mapData.tallentitylayer) {
@@ -173,7 +185,7 @@ export const verifyMap = (mapfile) => {
     }
   }
 
-  INFO(`mapData.tallentitylayer verified as ${  mapData.tallentitylayer}`);
+  INFO(`mapData.tallentitylayer verified as ${mapData.tallentitylayer}`);
 
   if (typeof mapData.vsp !== 'object') {
     mapData.vsp = {};
@@ -183,12 +195,14 @@ export const verifyMap = (mapfile) => {
   let filename;
 
   if (needsDefault) {
-    window.alert('Due to sins (surely on your part) you do not have a default tile vsp set.' +
-                 'Please select the correct one.');
+    window.alert(
+      'Due to sins (surely on your part) you do not have a default tile vsp set.' +
+        'Please select the correct one.'
+    );
 
     filenames = dialog.showOpenDialog({
       title: 'Choose a default tileset',
-      filters: [{ name: 'tileset', extensions: ['vsp.json'] }]
+      filters: [{ name: 'tileset', extensions: ['vsp.json'] }],
     });
 
     filename = filenames[0].replace(path.dirname(mapfile) + path.sep, '');
@@ -201,7 +215,7 @@ export const verifyMap = (mapfile) => {
 
     filenames = dialog.showOpenDialog({
       title: 'Choose an obstruction tileset',
-      filters: [{ name: 'tileset', extensions: ['obsvsp.json'] }]
+      filters: [{ name: 'tileset', extensions: ['obsvsp.json'] }],
     });
 
     filename = filenames[0].replace(path.dirname(mapfile) + path.sep, '');
@@ -211,7 +225,7 @@ export const verifyMap = (mapfile) => {
 
   for (let i = mapData.layers.length - 1; i >= 0; i--) {
     if (!mapData.layers[i].vsp) {
-      LOG(`setting layer[${  i  }]s vsp to default...`);
+      LOG(`setting layer[${i}]s vsp to default...`);
       mapData.layers[i].vsp = 'default';
     }
   }
@@ -223,21 +237,19 @@ export const verifyMap = (mapfile) => {
   return readyPromise;
 };
 
-
 // todo all of this.mapData should be obfuscated
 export function Map(mapfile, mapdatafile, updateLocationFunction) {
-
   const _cur_hover_tile = [null, null];
   const _last_hover_tile = [null, null];
 
   this.setCurrentHoverTile = (tile) => {
-    if( _cur_hover_tile != tile ) {
+    if (_cur_hover_tile != tile) {
       EventBus.$emit('MAP_UPDATE');
       _cur_hover_tile = tile;
     }
   };
   this.setLastHoverTile = (tile) => {
-    if( _last_hover_tile != tile ) {
+    if (_last_hover_tile != tile) {
       EventBus.$emit('MAP_UPDATE');
       _last_hover_tile = tile;
     }
@@ -251,8 +263,6 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     return _cur_hover_tile;
   };
 
-  
-
   let i;
   INFO('Loading map', mapfile);
 
@@ -260,20 +270,21 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     throw new Error(
       sprintf(
         "type mismatch on mapfile and mapdatafile.  both must be object or string. got: '%s', '%s'",
-        typeof mapfile, typeof mapdatafile
+        typeof mapfile,
+        typeof mapdatafile
       )
     );
   }
 
   this.selfDestruct = () => {
     for (let i = this.vspImages.length - 1; i >= 0; i--) {
-      LOG("deleting vspImages",i,this.vspImages[i]);
+      LOG('deleting vspImages', i, this.vspImages[i]);
       delete this.vspImages[i];
     }
 
-    for ( const key in this.entityTextures ) {
+    for (const key in this.entityTextures) {
       if (this.entityTextures.hasOwnProperty(key)) {
-        LOG("deleting entityTextures",key,this.entityTextures[key].img);
+        LOG('deleting entityTextures', key, this.entityTextures[key].img);
         delete this.entityTextures[key].img;
       }
     }
@@ -292,10 +303,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       return tallentitylayer_layerref;
     }
 
-    throw new Error(`Unknown layer name: "${  name  }"`);
+    throw new Error(`Unknown layer name: "${name}"`);
   };
 
-  const FILELOAD_MODE = (typeof mapfile === 'string');
+  const FILELOAD_MODE = typeof mapfile === 'string';
 
   this.filenames = {};
 
@@ -305,23 +316,24 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
     this.dataPath = path.dirname(mapdatafile);
     lastKnownPath = this.dataPath;
-    
+
     // TODO probably need a better concept of project management
     this.mapedConfigFile = path.join(this.dataPath, '$$$_MAPED.json');
   } else {
     this.dataPath = '';
-    
+
     // TODO probably need a better concept of project management
     this.mapedConfigFile = path.join(lastKnownPath, '$$$_MAPED.json');
   }
 
   this.updateLocationFn = updateLocationFunction;
 
-  this.readyPromise = new Promise(function (resolve, reject) {
-    
-    this.promiseResolver = resolve;
-    this.promiseRejecter = reject;
-  }.bind(this));
+  this.readyPromise = new Promise(
+    function (resolve, reject) {
+      this.promiseResolver = resolve;
+      this.promiseRejecter = reject;
+    }.bind(this)
+  );
 
   if (FILELOAD_MODE) {
     const jetpack = require('fs-jetpack').cwd(__dirname);
@@ -342,7 +354,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       }
     }
 
-    throw new Error(`Unknown layer by name of "${  name  }"`);
+    throw new Error(`Unknown layer by name of "${name}"`);
   };
 
   this.getLayerByRStringCode = (rstringcode) => {
@@ -354,8 +366,10 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       }
     }
 
-    notify(`Cannot get layer ${  rstringcode  }, it doesnt exist on this map!\nValid range [1, ${  this.layers.length  }]`)
-    return {name: false};
+    notify(
+      `Cannot get layer ${rstringcode}, it doesnt exist on this map!\nValid range [1, ${this.layers.length}]`
+    );
+    return { name: false };
   };
 
   this.getLayerByIdx_DANGEROUS = (idx) => {
@@ -367,7 +381,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       }
     }
 
-    throw new Error(`Invalid layer index "${  idx  }".  Valid range [0, ${  this.layers.length - 1  }]`);
+    throw new Error(`Invalid layer index "${idx}".  Valid range [0, ${this.layers.length - 1}]`);
   };
 
   const jetpack = require('fs-jetpack').cwd(__dirname);
@@ -376,14 +390,14 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.checkerColorA = checkerColorA;
   this.checkerColorB = checkerColorB;
 
-  if(this.mapedConfigData) {
-    if( this.mapedConfigData.checkerColorA && !this.mapData.isTileSelectorMap ) {
+  if (this.mapedConfigData) {
+    if (this.mapedConfigData.checkerColorA && !this.mapData.isTileSelectorMap) {
       this.checkerColorA = this.mapedConfigData.checkerColorA;
     }
 
-    if( this.mapedConfigData.checkerColorB && !this.mapData.isTileSelectorMap  ) {
+    if (this.mapedConfigData.checkerColorB && !this.mapData.isTileSelectorMap) {
       this.checkerColorB = this.mapedConfigData.checkerColorB;
-    }    
+    }
   } else {
     alert(`Failed to read config file expected at ${this.mapedConfigFile}`);
   }
@@ -393,23 +407,23 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   // Initialize an undo/redostack just for this map!
   this.UndoRedo = MakeUndoRedoStack(this);
 
-    // for "E" layer rendering
+  // for "E" layer rendering
   this.fakeEntityLayer = {
     name: 'Entity Layer (E)',
     parallax: {
       X: 1,
-      Y: 1
+      Y: 1,
     },
-    vsp: 'default'
+    vsp: 'default',
   };
 
   this.updateRstring = (rstring) => {
     if (typeof rstring === 'string') {
-      LOG(`Setting new rstring: '${  rstring  }'`);
+      LOG(`Setting new rstring: '${rstring}'`);
       this.layerRenderOrder = rstring.split(',');
     } else if (typeof rstring.length === 'number') {
       LOG("Setting new rstring: '");
-      this.layerRenderOrder = rstring.map( (r) => `${r}` );
+      this.layerRenderOrder = rstring.map((r) => `${r}`);
       LOG(this.layerRenderOrder);
     } else {
       throw new Error('What fresh hell is this.  What are you throwing at updateRstring?!');
@@ -423,7 +437,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.updateRstring(this.mapData.renderstring);
   this.mapSizeInTiles = {
     width: 0,
-    height: 0
+    height: 0,
   };
 
   // YOU BIG FAT PHONY
@@ -442,7 +456,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
       this.mapData.layers[i].name = layerName; // clean up the non unique name if necessary
       this.layerLookup[layerName] = this.mapData.layers[i];
     }
-  }
+  };
   this.regenerateLayerLookup();
 
   // TODO: this branch-code is bad
@@ -467,7 +481,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.zoneData = new Array(this.mapSizeInTiles.width * this.mapSizeInTiles.height);
 
     $.each(tmpZones, (idx) => {
-      this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles.width)] = tmpZones[idx].z;
+      this.zoneData[getFlatIdx(tmpZones[idx].x, tmpZones[idx].y, this.mapSizeInTiles.width)] =
+        tmpZones[idx].z;
     });
   };
 
@@ -475,16 +490,16 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.vspData = {};
 
-    // if( FILELOAD_MODE ) {
+  // if( FILELOAD_MODE ) {
   for (const k in this.filenames.vspfiles) {
     const tmppath = path.join(this.dataPath, this.filenames.vspfiles[k]);
-    INFO(`Loading '${  tmppath  }'...`);
+    INFO(`Loading '${tmppath}'...`);
     const jetpack = require('fs-jetpack').cwd(__dirname);
     this.vspData[k] = jetpack.read(tmppath, 'json');
     INFO(k, '->', this.vspData[k]);
   }
 
-    // / "if this.dataPath" as a sentinel for only doing this to "real" maps.  This file is garbage.
+  // / "if this.dataPath" as a sentinel for only doing this to "real" maps.  This file is garbage.
   if (this.dataPath && this.mapData.vsp.obstructions) {
     const tmppath = path.join(this.dataPath, this.mapData.vsp.obstructions);
     const jetpack = require('fs-jetpack').cwd(__dirname);
@@ -495,7 +510,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     if (!this.obsLayerData.vsp) {
       this.obsLayerData.vsp = 'obstructions';
     }
-    INFO(`loaded obsLayerData from ${  tmppath}`);
+    INFO(`loaded obsLayerData from ${tmppath}`);
   }
 
   // todo: stop being evil
@@ -506,7 +521,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.compactifyZones = () => {
     // zone_data: [{x,y,z}, ...]
     const tmpZones = [];
-    const mapWidth = this.mapSizeInTiles.width; 
+    const mapWidth = this.mapSizeInTiles.width;
 
     // walk the in-memory zoneData layer, anything with zone >0, add.
     $.each(this.zoneData, (idx) => {
@@ -514,7 +529,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         const x = getXfromFlat(idx, mapWidth);
         const y = getYfromFlat(idx, mapWidth);
 
-        const zone = {x, y, z: this.zoneData[idx]};
+        const zone = { x, y, z: this.zoneData[idx] };
 
         LOG('saving out flatzone', zone);
 
@@ -529,31 +544,31 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     const entityDataA = this._getEntityData(a);
     const entityDataB = this._getEntityData(b);
 
-    // Entities should Z-sort (within their layers) by the bottom of their hitbox (PY + hitbox.H), not the top. 
+    // Entities should Z-sort (within their layers) by the bottom of their hitbox (PY + hitbox.H), not the top.
     if (a.location.py && b.location.py) {
-      return (a.location.py+entityDataA.hitbox[3]) - (b.location.py+entityDataB.hitbox[3]);
+      return a.location.py + entityDataA.hitbox[3] - (b.location.py + entityDataB.hitbox[3]);
     }
 
-    WARN("Entity sorting is being done without px/py or hitbox calculations.  WARNING!");
+    WARN('Entity sorting is being done without px/py or hitbox calculations.  WARNING!');
     return a.location.ty - b.location.ty;
-  }
+  };
 
   this.toLoad = 0;
   this.doneLoading = function (name) {
     this.toLoad--;
     LOG(`done loading ${name}`);
-    LOG(`${this.toLoad} left...`)
+    LOG(`${this.toLoad} left...`);
     if (this.toLoad === 0) {
       this.promiseResolver(this);
-    } 
-    if(this.toLoad < 0) {
-      throw new Error("Someone done fucked up")
+    }
+    if (this.toLoad < 0) {
+      throw new Error('Someone done fucked up');
     }
   }.bind(this);
 
   this.vspImages = {};
   this.vspAnimations = {};
-  for(const k in this.vspData) {
+  for (const k in this.vspData) {
     const vsp = this.vspData[k];
     if (!vsp) {
       continue;
@@ -564,8 +579,9 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.vspImages[k] = new window.Image();
     this.vspImages[k].onload = this.doneLoading;
 
-    if (k !== 'zones') { // TODO: a better solution to map-relative assets versus app-relative assets.
-                         // THIS IS SAD AND PATHETIC AND SADTHETIC
+    if (k !== 'zones') {
+      // TODO: a better solution to map-relative assets versus app-relative assets.
+      // THIS IS SAD AND PATHETIC AND SADTHETIC
       this.vspImages[k].src = path.join(this.dataPath, this.vspData[k].source_image);
     } else {
       this.vspImages[k].src = this.vspData[k].source_image;
@@ -581,7 +597,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.toLoad++;
   this.entityTextures = {
-    '__default__': { img: new window.Image() }
+    __default__: { img: new window.Image() },
   };
   this.entityTextures.__default__.img.onload = this.doneLoading;
   this.entityTextures.__default__.img.src = $('#default_sprite').src; // path.join(window.appPath, 'assets/images/defaultsprite.png');
@@ -590,23 +606,23 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.resetEntityData = () => {
     this.entityData = {
-      '__default__': {
-        animations: { 
-          'Idle Down': [ [ [ 0, 100 ] ], 'Looping' ],
-          'Idle Up': [ [ [ 0, 100 ] ], 'Looping' ],
-          'Idle Left': [ [ [ 0, 100 ] ], 'Looping' ],
-          'Idle Right': [ [ [ 0, 100 ] ], 'Looping' ]
+      __default__: {
+        animations: {
+          'Idle Down': [[[0, 100]], 'Looping'],
+          'Idle Up': [[[0, 100]], 'Looping'],
+          'Idle Left': [[[0, 100]], 'Looping'],
+          'Idle Right': [[[0, 100]], 'Looping'],
         },
         animation: 'Idle Down',
-        dims: [ 16, 32 ],
-        hitbox: [ 0, 16, 16, 16 ],
+        dims: [16, 32],
+        hitbox: [0, 16, 16, 16],
         regions: {},
         frames: 1,
         image: '__default__',
         inner_pad: 0,
         outer_pad: 0,
-        per_row: 1
-      }
+        per_row: 1,
+      },
     };
   };
 
@@ -635,7 +651,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
     for (const i in this.entities) {
       if (this.entities[i]) {
-          INFO('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
+        INFO('Sorting entities on layer', i, ', ', this.entities[i].length, 'entities to sort');
         this.entities[i].sort(this.entitySortFn);
       }
     }
@@ -647,11 +663,19 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
   this.selectionMaker = function () {
     return {
-      add (x, y, w, h) {
-        if (x < this.hull.x || this.hull.x === null) { this.hull.x = x; }
-        if (y < this.hull.y || this.hull.y === null) { this.hull.y = y; }
-        if (x + w > this.hull.x + this.hull.w) { this.hull.w = x + w; }
-        if (y + h > this.hull.y + this.hull.h) { this.hull.h = y + h; }
+      add(x, y, w, h) {
+        if (x < this.hull.x || this.hull.x === null) {
+          this.hull.x = x;
+        }
+        if (y < this.hull.y || this.hull.y === null) {
+          this.hull.y = y;
+        }
+        if (x + w > this.hull.x + this.hull.w) {
+          this.hull.w = x + w;
+        }
+        if (y + h > this.hull.y + this.hull.h) {
+          this.hull.h = y + h;
+        }
 
         let ix = null;
         let iy = null;
@@ -665,7 +689,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
         this.recalculateLines();
       },
-      remove (x, y, w, h) {
+      remove(x, y, w, h) {
         // TODO update hull -- it's much harder to recalc the hull on subtraction
         let ix = null;
         let iy = null;
@@ -679,7 +703,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
         this.recalculateLines();
       },
-      deselect () {
+      deselect() {
         this.hull.x = null;
         this.hull.y = null;
         this.hull.w = 0;
@@ -689,8 +713,8 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         this.lines = [];
       },
 
-          // "private"
-      recalculateLines () {
+      // "private"
+      recalculateLines() {
         this.lines = [];
 
         const mapWidth = this.map.mapSizeInTiles.width;
@@ -700,8 +724,12 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         for (y = this.hull.y; y < this.hull.y + this.hull.h; y++) {
           for (x = this.hull.x; x < this.hull.x + this.hull.w; x++) {
             i = getFlatIdx(x, y, mapWidth);
-            if (this.tiles[i] !== this.tiles[i - 1]) { this.lines.push(x, y, x, y + 1); }
-            if (this.tiles[i] !== this.tiles[i - mapWidth]) { this.lines.push(x, y, x + 1, y); }
+            if (this.tiles[i] !== this.tiles[i - 1]) {
+              this.lines.push(x, y, x, y + 1);
+            }
+            if (this.tiles[i] !== this.tiles[i - mapWidth]) {
+              this.lines.push(x, y, x + 1, y);
+            }
           }
         }
 
@@ -713,11 +741,11 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
 
       hull: { x: null, y: null, w: 0, h: 0 }, // TODO: it's not w/x at least in mark mode.  It's x2,y2 (non-inclusive)
       tiles: [],
-      lines: []
+      lines: [],
     };
   };
 
-  this.windowOverlayMaker = function() {
+  this.windowOverlayMaker = function () {
     return {
       map: null,
       on: false,
@@ -726,12 +754,12 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         x: 0,
         y: 0,
         width: 320,
-        height: 180
+        height: 180,
       },
       shade: {
-        color: [.5,.5,0],
-        opacity: .5
-      }
+        color: [0.5, 0.5, 0],
+        opacity: 0.5,
+      },
     };
   };
 
@@ -745,17 +773,19 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
   this.visibleHoverTile.map = this;
 
   // heal uuids into uuid-less maps
-  if(has_unset_uuids(this)) {
+  if (has_unset_uuids(this)) {
     heal_uuids_for_this_map(this);
-    notify("Your map lacked entity uuids.\nWe've added them in.\nPlease save before using these uuids.");
+    notify(
+      "Your map lacked entity uuids.\nWe've added them in.\nPlease save before using these uuids."
+    );
   }
 
   this.doneLoading();
-};
+}
 
 const has_unset_uuids = (map) => {
   for (let i = map.mapData.entities.length - 1; i >= 0; i--) {
-    if( !map.mapData.entities[i].uuid ) {
+    if (!map.mapData.entities[i].uuid) {
       return true;
     }
   }
@@ -784,25 +814,38 @@ export const getYfromFlat = (idx, numColumns) => {
   return parseInt(flatval / numColumns, 10);
 };
 
-Map.prototype = {  
+Map.prototype = {
   sullyDataHealing(entity) {
     // TODO this section is full of asset-healing code that's super Sully-specific.  Clean it up for general release.
     if (!this.entityData[entity.filename]) {
       const jetpack = require('fs-jetpack').cwd(__dirname);
-      const originalDatafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
-      let datafile = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, entity.filename);
+      const originalDatafile = jetpack.path(
+        this.dataPath,
+        this.mapedConfigData.path_to_chrs,
+        entity.filename
+      );
+      let datafile = jetpack.path(
+        this.dataPath,
+        this.mapedConfigData.path_to_chrs,
+        entity.filename
+      );
       let data = null;
 
       if (entity.filename.endsWith('chr')) {
-        if (jetpack.exists(`${datafile  }.json`)) {
+        if (jetpack.exists(`${datafile}.json`)) {
           entity.filename += '.json';
           datafile += '.json';
         } else {
-          const lastDitch = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename);
+          const lastDitch = jetpack.path(
+            this.dataPath,
+            this.mapedConfigData.path_to_chrs,
+            'chrs',
+            entity.filename
+          );
 
           if (jetpack.exists(lastDitch)) {
-            entity.filename = `${'chrs' + '/'}${  entity.filename  }.json`;
-            datafile = `${lastDitch  }.json`;
+            entity.filename = `${'chrs' + '/'}${entity.filename}.json`;
+            datafile = `${lastDitch}.json`;
           } else {
             datafile = null;
           }
@@ -811,11 +854,13 @@ Map.prototype = {
 
       if (datafile === null && !entity.filename.endsWith('json')) {
         const lastDitch = jetpack.path(
-          this.dataPath, this.mapedConfigData.path_to_chrs, `${entity.filename  }.chr.json`
+          this.dataPath,
+          this.mapedConfigData.path_to_chrs,
+          `${entity.filename}.chr.json`
         );
 
         if (jetpack.exists(lastDitch)) {
-          entity.filename = jetpack.path(`${entity.filename  }.chr.json`);
+          entity.filename = jetpack.path(`${entity.filename}.chr.json`);
           datafile = lastDitch;
         } else {
           datafile = null;
@@ -824,7 +869,10 @@ Map.prototype = {
 
       if (datafile === null && !entity.filename.startsWith('chr')) {
         const lastDitch = jetpack.path(
-          this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', entity.filename
+          this.dataPath,
+          this.mapedConfigData.path_to_chrs,
+          'chrs',
+          entity.filename
         );
 
         if (jetpack.exists(lastDitch)) {
@@ -835,13 +883,20 @@ Map.prototype = {
         }
       }
 
-      if (datafile === null && !entity.filename.startsWith('chr') && !entity.filename.endsWith('json')) {
+      if (
+        datafile === null &&
+        !entity.filename.startsWith('chr') &&
+        !entity.filename.endsWith('json')
+      ) {
         const lastDitch = jetpack.path(
-          this.dataPath, this.mapedConfigData.path_to_chrs, 'chrs', `${entity.filename  }.chr.json`
+          this.dataPath,
+          this.mapedConfigData.path_to_chrs,
+          'chrs',
+          `${entity.filename}.chr.json`
         );
 
         if (jetpack.exists(lastDitch)) {
-          entity.filename = jetpack.path('chrs', `${entity.filename  }.chr.json`);
+          entity.filename = jetpack.path('chrs', `${entity.filename}.chr.json`);
           datafile = lastDitch;
         } else {
           datafile = null;
@@ -852,18 +907,18 @@ Map.prototype = {
         // TODO: use aen's loaders in MAPPO and convert binary chrs to images and json files, motherfucker!
         data = jetpack.read(datafile, 'json');
       } catch (e) {
-        window.alert(`Failure while attempting to parse json for ${  datafile  }\nReason: \n${  e}` );
+        window.alert(`Failure while attempting to parse json for ${datafile}\nReason: \n${e}`);
         if (entity.filename.endsWith('json')) {
           console.error('Couldnt read a json entity file:', entity.filename);
         }
-        console.warn(`Totally couldnt read datafile: '${  datafile  }'`);
+        console.warn(`Totally couldnt read datafile: '${datafile}'`);
         data = null;
       }
 
       if (data) {
         this.maybeAddEntityTexture(data, entity);
       } else {
-        console.warn(`Could not find '${  entity.filename  }', using the default. Path: `, datafile);
+        console.warn(`Could not find '${entity.filename}', using the default. Path: `, datafile);
         // debugger;
         entity.MAPED_USEDEFAULT = true;
       }
@@ -879,8 +934,7 @@ Map.prototype = {
   },
 
   _maybeAddEntityTexture(data, entity, filename) {
-
-    if(entity) {
+    if (entity) {
       filename = entity.filename;
     }
 
@@ -901,7 +955,7 @@ Map.prototype = {
 
     const jetpack = require('fs-jetpack').cwd(__dirname);
 
-    LOG(`this.entityTextures[${data.image}] ${  this.entityTextures[data.image]}`)
+    LOG(`this.entityTextures[${data.image}] ${this.entityTextures[data.image]}`);
     if (!this.entityTextures[data.image]) {
       // TODO maybe make this definable in this.mapedConfigData too?
       let imagePath = jetpack.path(this.dataPath, this.mapedConfigData.path_to_chrs, data.image);
@@ -910,24 +964,26 @@ Map.prototype = {
       }
       if (!jetpack.inspect(imagePath)) {
         console.warn("Couldn't load image", data.image, 'for entity', filename, '; falling back.');
-                    // this.entityData[filename].image = '__default__';
-        if(entity) {
+        // this.entityData[filename].image = '__default__';
+        if (entity) {
           entity.MAPED_USEDEFAULT = false;
         }
-        
+
         return;
       }
 
-      INFO(`Adding '${  imagePath  }' to entityTextures cache...`);
+      INFO(`Adding '${imagePath}' to entityTextures cache...`);
       this.toLoad++;
       this.entityTextures[data.image] = {};
       this.entityTextures[data.image].img = new window.Image();
       const fn = this.doneLoading;
-      this.entityTextures[data.image].img.onload = function() { fn(data.image); }
-      this.entityTextures[data.image].img.src = imagePath;  
+      this.entityTextures[data.image].img.onload = function () {
+        fn(data.image);
+      };
+      this.entityTextures[data.image].img.src = imagePath;
     }
 
-    if(entity) {
+    if (entity) {
       entity.MAPED_USEDEFAULT = false;
     }
     LOG('NOT USING DEFAULT ENTITY FOR ', data.image);
@@ -948,13 +1004,13 @@ Map.prototype = {
     this.sullyDataHealing(entity);
 
     if (entity.filename.endsWith('chr')) {
-      console.warn(`entity ('${  entity.filename  }') is binary in format.  Skipping for now.`);
+      console.warn(`entity ('${entity.filename}') is binary in format.  Skipping for now.`);
       entity.MAPED_USEDEFAULT = true;
       return;
     }
 
     if (!entity.filename.endsWith('chr') && !entity.filename.endsWith('json')) {
-      console.warn(`entity ('${  entity.filename  }') has an unknown format.  Skipping for now. (2)`);
+      console.warn(`entity ('${entity.filename}') has an unknown format.  Skipping for now. (2)`);
       entity.MAPED_USEDEFAULT = true;
       return;
     }
@@ -965,21 +1021,24 @@ Map.prototype = {
         this.entityData[entity.filename].regions.Tall_Redraw &&
         !this.getEntityTallRedrawLayer()
       ) {
-        window.alert(`ERROR: Loading tall entity ${  entity.filename  } with no tallentitylayer in map!`);
+        window.alert(
+          `ERROR: Loading tall entity ${entity.filename} with no tallentitylayer in map!`
+        );
       }
 
-      entity.animation = entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
+      entity.animation =
+        entity.animation || Object.keys(this.entityData[entity.filename].animations)[0];
     } else {
       entity.animation = 'Idle Down'; // / m-m-m-magick (__default__ has this)
     }
   },
 
-  addEntity (filename, location) {
+  addEntity(filename, location) {
     this.addEntityWithoutSort(filename, location);
     this.entities[location.layer].sort(this.entitySortFn);
   },
 
-  getVSPTileLocation (vsp, idx) {
+  getVSPTileLocation(vsp, idx) {
     let x = null;
     let y = null;
 
@@ -991,89 +1050,96 @@ Map.prototype = {
 
     return {
       x,
-      y
+      y,
     };
   },
 
-  getZone (tileX, tileY) {
+  getZone(tileX, tileY) {
     const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
 
     return this.zoneData[idx];
   },
 
-  setZone (tileX, tileY, zoneIdx) {
+  setZone(tileX, tileY, zoneIdx) {
     const idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
 
     this.zoneData[idx] = zoneIdx;
   },
 
-  getTile (tileX, tileY, layerIdx) {
+  getTile(tileX, tileY, layerIdx) {
     let idx;
 
-    if (layerIdx === MAGICAL_OBS_LAYER_ID) { // TODO the obs sentinel is the WORST
+    if (layerIdx === MAGICAL_OBS_LAYER_ID) {
+      // TODO the obs sentinel is the WORST
       idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
-      if (this.legacyObsData) { // we are in the main map.
+      if (this.legacyObsData) {
+        // we are in the main map.
         return this.legacyObsData[idx];
-      } if (this.tileData && this.tileData.length === 1) { // we are in the obs map
+      }
+      if (this.tileData && this.tileData.length === 1) {
+        // we are in the obs map
         layerIdx = 0;
       } else {
         throw new Error(
           'Something very strange happened where you were trying to access obs data when there was both no obs ' +
-          'tiledata and multiple non-obs tile layers.');
+            'tiledata and multiple non-obs tile layers.'
+        );
       }
-    } else if (layerIdx === MAGICAL_ZONE_LAYER_ID) { // TODO the obs sentinel is the WORST
+    } else if (layerIdx === MAGICAL_ZONE_LAYER_ID) {
+      // TODO the obs sentinel is the WORST
       idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
 
       try {
         return this.zoneData[idx];
-      } catch(ig) {
+      } catch (ig) {
         return 0;
       }
-    } else { // we are on a normal  layer
+    } else {
+      // we are on a normal  layer
       idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
     }
 
     return this.tileData[layerIdx][idx];
   },
 
-  setTile (tileX, tileY, layerIdx, tileIdx) {
+  setTile(tileX, tileY, layerIdx, tileIdx) {
     let idx;
 
     // / jesus, right?  One day this won't be a thing, he lied to himself.
-    if( layerIdx !== MAGICAL_OBS_LAYER_ID && layerIdx !== MAGICAL_ZONE_LAYER_ID ) {
-      if( tileX < 0 || tileY < 0 || tileX >= this.layers[layerIdx].dimensions.X || tileY >= this.layers[layerIdx].dimensions.Y ) {
+    if (layerIdx !== MAGICAL_OBS_LAYER_ID && layerIdx !== MAGICAL_ZONE_LAYER_ID) {
+      if (
+        tileX < 0 ||
+        tileY < 0 ||
+        tileX >= this.layers[layerIdx].dimensions.X ||
+        tileY >= this.layers[layerIdx].dimensions.Y
+      ) {
         console.warn(`attempted to set a tile out of layer bounds. (${tileX},${tileY})`);
-        INFO(`layerIdx: ${  layerIdx}`);
-        INFO(this.layers[layerIdx].dimensions)
+        INFO(`layerIdx: ${layerIdx}`);
+        INFO(this.layers[layerIdx].dimensions);
         return;
       }
 
       idx = getFlatIdx(tileX, tileY, this.layers[layerIdx].dimensions.X);
-
     } else {
       idx = getFlatIdx(tileX, tileY, this.mapSizeInTiles.width);
     }
 
-     
-
-    if (layerIdx === MAGICAL_OBS_LAYER_ID) { // TODO the obs sentinel is the WORST
+    if (layerIdx === MAGICAL_OBS_LAYER_ID) {
+      // TODO the obs sentinel is the WORST
       this.legacyObsData[idx] = tileIdx;
-    } else if(layerIdx === MAGICAL_ZONE_LAYER_ID) {
-
-      if( !tileIdx ) {
-        delete this.zoneData[idx]
+    } else if (layerIdx === MAGICAL_ZONE_LAYER_ID) {
+      if (!tileIdx) {
+        delete this.zoneData[idx];
       } else {
         this.zoneData[idx] = tileIdx;
       }
-
     } else {
       this.tileData[layerIdx][idx] = tileIdx;
     }
   },
 
-  ready () {
-
-    const key = `map-${  this.mapData.name}`;
+  ready() {
+    const key = `map-${this.mapData.name}`;
     const $cont = $('.map-palette');
 
     const setPaletteLocations = function (paletteDict) {
@@ -1082,8 +1148,8 @@ Map.prototype = {
 
       for (const k in paletteDict) {
         // INFO('paletteDict.' + k);
-        configVar = `${k  } settings`; // this should be CONST'd somewhere and referenced in both places
-        const $pal = $(`.${  k}`);
+        configVar = `${k} settings`; // this should be CONST'd somewhere and referenced in both places
+        const $pal = $(`.${k}`);
 
         // INFO('configVar: ' + configVar);
         // INFO('$pal: ' + $pal);
@@ -1092,10 +1158,18 @@ Map.prototype = {
         if (localStorage[configVar] && $pal) {
           obj = JSON.parse(localStorage[configVar]);
 
-          if (obj.w) { $pal.width(obj.w); }
-          if (obj.h) { $pal.height(obj.h); }
-          if (obj.x) { $pal.css('left', obj.x); }
-          if (obj.y) { $pal.css('top', obj.y); }
+          if (obj.w) {
+            $pal.width(obj.w);
+          }
+          if (obj.h) {
+            $pal.height(obj.h);
+          }
+          if (obj.x) {
+            $pal.css('left', obj.x);
+          }
+          if (obj.y) {
+            $pal.css('top', obj.y);
+          }
           obj.hide ? $pal.hide() : $pal.show();
         } else {
           INFO('lol, no');
@@ -1103,21 +1177,37 @@ Map.prototype = {
       }
     };
 
-    const {localStorage} = window;
+    const { localStorage } = window;
 
-    if (`${localStorage[key]  }-mapx`) {
-      if (localStorage[`${key  }-width`]) { $cont.width(localStorage[`${key  }-width`]); }
-      if (localStorage[`${key  }-height`]) { $cont.height(localStorage[`${key  }-height`]); }
-      if (localStorage[`${key  }-top`]) { $cont.css('top', localStorage[`${key  }-top`]); }
-      if (localStorage[`${key  }-left`]) { $cont.css('left', localStorage[`${key  }-left`]); }
-      if (localStorage[`${key  }-mapx`]) { this.camera[0] = parseInt(localStorage[`${key  }-mapx`]); }
-      if (localStorage[`${key  }-mapy`]) { this.camera[1] = parseInt(localStorage[`${key  }-mapy`]); }
-      if (localStorage[`${key  }-mapzoom`]) { this.camera[2] = parseInt(localStorage[`${key  }-mapzoom`]); }
-      if( !this.camera[2] ) {
+    if (`${localStorage[key]}-mapx`) {
+      if (localStorage[`${key}-width`]) {
+        $cont.width(localStorage[`${key}-width`]);
+      }
+      if (localStorage[`${key}-height`]) {
+        $cont.height(localStorage[`${key}-height`]);
+      }
+      if (localStorage[`${key}-top`]) {
+        $cont.css('top', localStorage[`${key}-top`]);
+      }
+      if (localStorage[`${key}-left`]) {
+        $cont.css('left', localStorage[`${key}-left`]);
+      }
+      if (localStorage[`${key}-mapx`]) {
+        this.camera[0] = parseInt(localStorage[`${key}-mapx`]);
+      }
+      if (localStorage[`${key}-mapy`]) {
+        this.camera[1] = parseInt(localStorage[`${key}-mapy`]);
+      }
+      if (localStorage[`${key}-mapzoom`]) {
+        this.camera[2] = parseInt(localStorage[`${key}-mapzoom`]);
+      }
+      if (!this.camera[2]) {
         this.camera[2] = 1;
       }
 
-      if (localStorage[`${key  }-layerspallete`]) { this.camera[1] = parseInt(localStorage[`${key  }-layerspallete`]); }
+      if (localStorage[`${key}-layerspallete`]) {
+        this.camera[1] = parseInt(localStorage[`${key}-layerspallete`]);
+      }
 
       if (localStorage.palettes) {
         INFO('palletes found...');
@@ -1134,9 +1224,13 @@ Map.prototype = {
     return this.readyPromise;
   },
 
-  uniqueLayerName (like) {
-    if (like && !this.layerLookup[like]) { return like; }
-    if (!like) { like = 'Layer 0'; } // will have 1 added to the 0 so unnamed layers will be Layer 1, Layer 2, etc.
+  uniqueLayerName(like) {
+    if (like && !this.layerLookup[like]) {
+      return like;
+    }
+    if (!like) {
+      like = 'Layer 0';
+    } // will have 1 added to the 0 so unnamed layers will be Layer 1, Layer 2, etc.
 
     let name = '';
     let num = parseInt(like.match(/\d*$/)[0], 10) || 1; // || 1 so that two layers named "Foo" become "Foo" and "Foo 2"
@@ -1153,9 +1247,11 @@ Map.prototype = {
     return name;
   },
 
-  setCanvas ($canvas) {
+  setCanvas($canvas) {
     INFO('Setting canvas on map');
-    if (this.renderContainer) { this.cleanUpCallbacks(); }
+    if (this.renderContainer) {
+      this.cleanUpCallbacks();
+    }
 
     // set up callbacks
     $(window).on('resize', this.resize.bind(this));
@@ -1163,36 +1259,84 @@ Map.prototype = {
     // set up context
     this.renderContainer = $canvas;
     this.gl = this.renderContainer[0].getContext('webgl'); // we're targeting Electron not the Internet at large so
-                                                           // don't worry about failing to get a GL context
+    // don't worry about failing to get a GL context
     this.gl.clearColor(0.5, 0.5, 0.5, 1.0);
 
     const readShader = (shaderPath) => {
-      const jetpack = process.env.NODE_ENV !== 'production' ? require('fs-jetpack') : require('fs-jetpack').cwd(__dirname);
+      const jetpack =
+        process.env.NODE_ENV !== 'production'
+          ? require('fs-jetpack')
+          : require('fs-jetpack').cwd(__dirname);
       const p = jetpack.path(shaderPath);
       const res = jetpack.read(p);
       return res;
     };
 
-    this.checkerShader =        new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'),   readShader('shaders/check-frag.glsl'));
-    this.tilemapShader =        new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'),   readShader('shaders/tilemap-frag.glsl'));
-    this.spriteShader =         new ShaderProgram(this.gl, readShader('shaders/sprite-vert.glsl'),    readShader('shaders/sprite-frag.glsl'));
-    this.obstructionmapShader = new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'),   readShader('shaders/tilemapObs-frag.glsl'));
-    this.zonemapShader =        new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'),   readShader('shaders/tilemap-frag.glsl'));
-    this.selectionShader =      new ShaderProgram(this.gl, readShader('shaders/selection-vert.glsl'), readShader('shaders/selection-frag.glsl'));
-    this.screenviewShader =     new ShaderProgram(this.gl, readShader('shaders/screenview-vert.glsl'),readShader('shaders/screenview-frag.glsl'));
-    this.layerBorderShader =    new ShaderProgram(this.gl, readShader('shaders/tilemap-vert.glsl'),   readShader('shaders/layerborder-frag.glsl'));
-    this.entityBoundsShader =   new ShaderProgram(this.gl, readShader('shaders/sprite-vert.glsl'),    readShader('shaders/entitybounds-frag.glsl'));
+    this.checkerShader = new ShaderProgram(
+      this.gl,
+      readShader('shaders/tilemap-vert.glsl'),
+      readShader('shaders/check-frag.glsl')
+    );
+    this.tilemapShader = new ShaderProgram(
+      this.gl,
+      readShader('shaders/tilemap-vert.glsl'),
+      readShader('shaders/tilemap-frag.glsl')
+    );
+    this.spriteShader = new ShaderProgram(
+      this.gl,
+      readShader('shaders/sprite-vert.glsl'),
+      readShader('shaders/sprite-frag.glsl')
+    );
+    this.obstructionmapShader = new ShaderProgram(
+      this.gl,
+      readShader('shaders/tilemap-vert.glsl'),
+      readShader('shaders/tilemapObs-frag.glsl')
+    );
+    this.zonemapShader = new ShaderProgram(
+      this.gl,
+      readShader('shaders/tilemap-vert.glsl'),
+      readShader('shaders/tilemap-frag.glsl')
+    );
+    this.selectionShader = new ShaderProgram(
+      this.gl,
+      readShader('shaders/selection-vert.glsl'),
+      readShader('shaders/selection-frag.glsl')
+    );
+    this.screenviewShader = new ShaderProgram(
+      this.gl,
+      readShader('shaders/screenview-vert.glsl'),
+      readShader('shaders/screenview-frag.glsl')
+    );
+    this.layerBorderShader = new ShaderProgram(
+      this.gl,
+      readShader('shaders/tilemap-vert.glsl'),
+      readShader('shaders/layerborder-frag.glsl')
+    );
+    this.entityBoundsShader = new ShaderProgram(
+      this.gl,
+      readShader('shaders/sprite-vert.glsl'),
+      readShader('shaders/entitybounds-frag.glsl')
+    );
 
     this.tileLibraryTextures = {};
     for (const k in this.vspImages) {
-      if (!this.vspImages[k]) { return; }
+      if (!this.vspImages[k]) {
+        return;
+      }
       this.tileLibraryTextures[k] = this.gl.createTexture();
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.tileLibraryTextures[k]);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
-      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.vspImages[k]);
+      this.gl.texImage2D(
+        this.gl.TEXTURE_2D,
+        0,
+        this.gl.RGBA,
+        this.gl.RGBA,
+        this.gl.UNSIGNED_BYTE,
+        this.vspImages[k]
+      );
     }
 
     this.tileLayoutTexture = this.gl.createTexture();
@@ -1202,8 +1346,15 @@ Map.prototype = {
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
     this.gl.texImage2D(
-      this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.mapData.layers[0].dimensions.X, this.mapData.layers[0].dimensions.Y,
-      0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[0])
+      this.gl.TEXTURE_2D,
+      0,
+      this.gl.RGBA,
+      this.mapData.layers[0].dimensions.X,
+      this.mapData.layers[0].dimensions.Y,
+      0,
+      this.gl.RGBA,
+      this.gl.UNSIGNED_BYTE,
+      buildTileDataTexture(this.tileData[0])
     );
 
     this.gl.enable(this.gl.BLEND);
@@ -1216,14 +1367,11 @@ Map.prototype = {
 
     this.calculateSize();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.screenviewVertexBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-      -1.0, -1.0,
-       1.0,  1.0,
-       1.0, -1.0,
-       1.0,  1.0,
-      -1.0, -1.0,
-      -1.0,  1.0
-    ]), this.gl.STATIC_DRAW);
+    this.gl.bufferData(
+      this.gl.ARRAY_BUFFER,
+      new Float32Array([-1.0, -1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 1.0]),
+      this.gl.STATIC_DRAW
+    );
 
     for (const k in this.entityTextures) {
       const texture = this.entityTextures[k];
@@ -1234,7 +1382,14 @@ Map.prototype = {
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
       this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
-      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, texture.img);
+      this.gl.texImage2D(
+        this.gl.TEXTURE_2D,
+        0,
+        this.gl.RGBA,
+        this.gl.RGBA,
+        this.gl.UNSIGNED_BYTE,
+        texture.img
+      );
     }
 
     // make sure the size is right
@@ -1248,7 +1403,7 @@ Map.prototype = {
   calculateSize() {
     this.mapSizeInTiles = {
       width: 0,
-      height: 0
+      height: 0,
     };
     for (let i = 0; i < this.mapData.layers.length; i++) {
       if (this.mapData.layers[i].dimensions.X > this.mapSizeInTiles.width) {
@@ -1265,44 +1420,75 @@ Map.prototype = {
     // if that's the case
     if (this.gl) {
       this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexbuffer);
-      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
-        0.0, 0.0,
-        this.mapSizeInTiles.width, 0.0,
-        0.0, -this.mapSizeInTiles.height,
-        0.0, -this.mapSizeInTiles.height,
-        this.mapSizeInTiles.width, 0.0,
-        this.mapSizeInTiles.width, -this.mapSizeInTiles.height
-      ]), this.gl.STATIC_DRAW);
+      this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array([
+          0.0,
+          0.0,
+          this.mapSizeInTiles.width,
+          0.0,
+          0.0,
+          -this.mapSizeInTiles.height,
+          0.0,
+          -this.mapSizeInTiles.height,
+          this.mapSizeInTiles.width,
+          0.0,
+          this.mapSizeInTiles.width,
+          -this.mapSizeInTiles.height,
+        ]),
+        this.gl.STATIC_DRAW
+      );
     }
   },
 
-  drawEntities (i, map, layer, tallEntities, tick) {
+  drawEntities(i, map, layer, tallEntities, tick) {
     if (!map.entities) {
       return;
     }
 
     // Layered Entities
     if (getNormalEntityVisibility()) {
-      if (map.entities[layer.name] && map.entities[layer.name].length > 0 && shouldShowEntitiesForLayer(layer.name)) {
+      if (
+        map.entities[layer.name] &&
+        map.entities[layer.name].length > 0 &&
+        shouldShowEntitiesForLayer(layer.name)
+      ) {
         const entities = map.entities[layer.name];
 
-        const showEntityPreview = (getSelectedLayer() && layer === getSelectedLayer().layer && map.entityPreview);
+        const showEntityPreview =
+          getSelectedLayer() && layer === getSelectedLayer().layer && map.entityPreview;
         map.spriteShader.use();
 
         for (let e = 0; e < entities.length; e++) {
-          const mask = (!entities[e].MAPED_USEDEFAULT && map.entityData[entities[e].filename].regions &&
-                         map.entityData[entities[e].filename].regions.Tall_Redraw ?
-                         map.entityData[entities[e].filename].regions.Tall_Redraw : null);
+          const mask =
+            !entities[e].MAPED_USEDEFAULT &&
+            map.entityData[entities[e].filename].regions &&
+            map.entityData[entities[e].filename].regions.Tall_Redraw
+              ? map.entityData[entities[e].filename].regions.Tall_Redraw
+              : null;
 
-          if (showEntityPreview &&
-              map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
-              (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
+          if (
+            showEntityPreview &&
+            map.entityPreview.location.ty < entities[e].location.ty && // TODO this whole check should favor py.
+            (e === 0 || map.entityPreview.location.ty >= entities[e - 1].location.ty)
           ) {
-            map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA], null, mask, false);
+            map.renderEntity(
+              map.entityPreview,
+              layer,
+              [1, 1, 1, ENTITY_PREVIEW_ALPHA],
+              null,
+              mask,
+              false
+            );
           }
           if (entities[e].MAPED_HIGHLIGHTED) {
             map.renderEntity(
-              entities[e], layer, [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)], null, mask, false
+              entities[e],
+              layer,
+              [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)],
+              null,
+              mask,
+              false
             );
           } else {
             map.renderEntity(entities[e], layer, [1, 1, 1, 1], null, mask, false);
@@ -1312,7 +1498,14 @@ Map.prototype = {
           }
         }
       } else if (map.entityPreview) {
-        map.renderEntity(map.entityPreview, layer, [1, 1, 1, ENTITY_PREVIEW_ALPHA], null, null, false);
+        map.renderEntity(
+          map.entityPreview,
+          layer,
+          [1, 1, 1, ENTITY_PREVIEW_ALPHA],
+          null,
+          null,
+          false
+        );
       }
 
       if (map.getEntityTallRedrawLayer() === layer) {
@@ -1321,18 +1514,20 @@ Map.prototype = {
 
           if (entity.MAPED_HIGHLIGHTED) {
             map.renderEntity(
-              entity, layer,
+              entity,
+              layer,
               [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)],
               map.entityData[entity.filename].regions.Tall_Redraw,
-              null, 
+              null,
               true
             );
           } else {
             map.renderEntity(
-              entity, layer,
+              entity,
+              layer,
               [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A],
               map.entityData[entity.filename].regions.Tall_Redraw,
-              null, 
+              null,
               true
             );
           }
@@ -1341,32 +1536,36 @@ Map.prototype = {
     }
   },
 
-  maybeRenderZones (gl) {
+  maybeRenderZones(gl) {
     // ZONES
     if (getZoneVisibility() && this.zoneData.length > 1) {
       const vsp = 'zones'; // TODO zones layer shouldn't just default like this
       const layer = {
         parallax: { X: 1, Y: 1 },
         alpha: getZoneAlpha(),
-        dimensions: {X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.height}
+        dimensions: { X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.height },
       };
 
       this.tilemapShader.use();
 
-      const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
-      gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-                Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
-                Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
-                this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
-                this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
-            );
+      const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x: 0, y: 0 };
+      gl.uniform4f(
+        this.tilemapShader.uniform('u_camera'),
+        Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) /
+          this.vspData[vsp].tilesize.width,
+        Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) /
+          this.vspData[vsp].tilesize.height,
+        this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
+        this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
+      );
 
-      gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
-                layer.dimensions.X,
-                layer.dimensions.Y,
-                this.vspData[vsp].tiles_per_row,
-                this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
-            );
+      gl.uniform4f(
+        this.tilemapShader.uniform('u_dimensions'),
+        layer.dimensions.X,
+        layer.dimensions.Y,
+        this.vspData[vsp].tiles_per_row,
+        this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
+      );
 
       gl.uniform1f(this.tilemapShader.uniform('u_opacity'), layer.alpha);
 
@@ -1380,8 +1579,15 @@ Map.prototype = {
       gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
       gl.texImage2D(
-        gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
-        gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.zoneData)
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        layer.dimensions.X,
+        layer.dimensions.Y,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        buildTileDataTexture(this.zoneData)
       );
 
       const a_position = this.tilemapShader.attribute('a_position');
@@ -1393,16 +1599,16 @@ Map.prototype = {
     }
   },
 
-  maybeRenderObstructions (gl) {
+  maybeRenderObstructions(gl) {
     // OBSTRUCTIONS
     if (getObsVisibility() && this.legacyObsData) {
       const vsp = 'obstructions'; // TODO obstruction layer shouldn't just default like this
       const layer = {
         parallax: { X: 1, Y: 1 },
-        dimensions: {X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.height}
+        dimensions: { X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.height },
       };
 
-      if( this.mapData.obstructions_layer ) {
+      if (this.mapData.obstructions_layer) {
         layer.dimensions = this.mapData.obstructions_layer.dimensions;
       }
 
@@ -1410,15 +1616,19 @@ Map.prototype = {
 
       this.obstructionmapShader.use();
 
-      const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
-      gl.uniform4f(this.obstructionmapShader.uniform('u_camera'),
-        Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
-        Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
+      const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x: 0, y: 0 };
+      gl.uniform4f(
+        this.obstructionmapShader.uniform('u_camera'),
+        Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) /
+          this.vspData[vsp].tilesize.width,
+        Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) /
+          this.vspData[vsp].tilesize.height,
         this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
         this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
       );
 
-      gl.uniform4f(this.obstructionmapShader.uniform('u_dimensions'),
+      gl.uniform4f(
+        this.obstructionmapShader.uniform('u_dimensions'),
         layer.dimensions.X,
         layer.dimensions.Y,
         this.vspData[vsp].tiles_per_row,
@@ -1427,7 +1637,10 @@ Map.prototype = {
 
       gl.uniform4f(
         this.obstructionmapShader.uniform('u_color'),
-        __obsColor[0], __obsColor[1], __obsColor[2], __obsColor[3]
+        __obsColor[0],
+        __obsColor[1],
+        __obsColor[2],
+        __obsColor[3]
       );
 
       const u_tileLibrary = this.obstructionmapShader.uniform('u_tileLibrary');
@@ -1441,8 +1654,15 @@ Map.prototype = {
       gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
 
       gl.texImage2D(
-        gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
-        gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.legacyObsData)
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        layer.dimensions.X,
+        layer.dimensions.Y,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        buildTileDataTexture(this.legacyObsData)
       );
 
       const a_position = this.obstructionmapShader.attribute('a_position');
@@ -1454,11 +1674,16 @@ Map.prototype = {
     }
   },
 
-  renderTilesAndEntityLayers (gl, tick) {
+  renderTilesAndEntityLayers(gl, tick) {
     const tallEntities = [];
 
     // render each layer in turn
-    this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.SRC_ALPHA, this.gl.DST_ALPHA);
+    this.gl.blendFuncSeparate(
+      this.gl.SRC_ALPHA,
+      this.gl.ONE_MINUS_SRC_ALPHA,
+      this.gl.SRC_ALPHA,
+      this.gl.DST_ALPHA
+    );
     const len = this.layerRenderOrder.length;
     for (let i = 0; i < len; i++) {
       // something about optimization means this runs 2x faster if renderLayer is its own function
@@ -1467,7 +1692,7 @@ Map.prototype = {
     }
   },
 
-  renderLayer (gl, i, tallEntities, tick) {
+  renderLayer(gl, i, tallEntities, tick) {
     const layerIndex = parseInt(this.layerRenderOrder[i], 10) - 1;
     const layer = this.mapData.layers[layerIndex];
 
@@ -1481,7 +1706,7 @@ Map.prototype = {
 
     if (!layer) {
       console.warn('sub-tick escape for when youre making a new map. this is dumb and bad.');
-      return; 
+      return;
     }
 
     if (layer.MAPED_HIDDEN) {
@@ -1492,17 +1717,21 @@ Map.prototype = {
 
           if (entity.MAPED_HIGHLIGHTED) {
             this.renderEntity(
-              entity, layer,
+              entity,
+              layer,
               [HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B, animateAlpha(tick, 100)],
               this.entityData[entity.filename].regions.Tall_Redraw,
-              null, null
+              null,
+              null
             );
           } else {
             this.renderEntity(
-              entity, layer,
+              entity,
+              layer,
               [TALLENT_R, TALLENT_G, TALLENT_B, TALLENT_A],
               this.entityData[entity.filename].regions.Tall_Redraw,
-              null, null
+              null,
+              null
             );
           }
         }
@@ -1511,20 +1740,24 @@ Map.prototype = {
       return;
     }
 
-    const {vsp} = layer;
+    const { vsp } = layer;
 
     this.tilemapShader.use();
 
-    const appliedOffset = (layer.offset) ? layer.offset : {X:0, Y:0}; // If layer has an offset, use other, otherwise use default value
-    const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
-    gl.uniform4f(this.tilemapShader.uniform('u_camera'),
-      Math.floor(layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
-      Math.floor(layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
+    const appliedOffset = layer.offset ? layer.offset : { X: 0, Y: 0 }; // If layer has an offset, use other, otherwise use default value
+    const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x: 0, y: 0 };
+    gl.uniform4f(
+      this.tilemapShader.uniform('u_camera'),
+      Math.floor(layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x) /
+        this.vspData[vsp].tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y) /
+        this.vspData[vsp].tilesize.height,
       this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
       this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
     );
 
-    gl.uniform4f(this.tilemapShader.uniform('u_dimensions'),
+    gl.uniform4f(
+      this.tilemapShader.uniform('u_dimensions'),
       layer.dimensions.X,
       layer.dimensions.Y,
       this.vspData[vsp].tiles_per_row,
@@ -1544,8 +1777,18 @@ Map.prototype = {
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, this.tileLayoutTexture);
     gl.texImage2D(
-      gl.TEXTURE_2D, 0, gl.RGBA, layer.dimensions.X, layer.dimensions.Y, 0,
-      gl.RGBA, gl.UNSIGNED_BYTE, buildTileDataTexture(this.tileData[layerIndex], ANIMATE_TILES ? this.vspAnimations[vsp] : undefined)
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      layer.dimensions.X,
+      layer.dimensions.Y,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      buildTileDataTexture(
+        this.tileData[layerIndex],
+        ANIMATE_TILES ? this.vspAnimations[vsp] : undefined
+      )
     );
 
     const a_position = this.tilemapShader.attribute('a_position');
@@ -1558,74 +1801,92 @@ Map.prototype = {
 
     // / TODO: extract everything below this this into its own helper function?
     this.layerBorderShader.use();
-    
+
     const a_positionLayer = this.layerBorderShader.attribute('a_position');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.lineBuf);
     gl.enableVertexAttribArray(a_positionLayer);
     gl.vertexAttribPointer(a_positionLayer, 2, gl.FLOAT, false, 0, 0);
 
-    gl.uniform4f(this.layerBorderShader.uniform('u_camera'),
-      Math.floor(layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
-      Math.floor(layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
+    gl.uniform4f(
+      this.layerBorderShader.uniform('u_camera'),
+      Math.floor(layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x) /
+        this.vspData[vsp].tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y) /
+        this.vspData[vsp].tilesize.height,
       this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
       this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
     );
 
-    gl.uniform4f(this.layerBorderShader.uniform('u_dimensions'),
+    gl.uniform4f(
+      this.layerBorderShader.uniform('u_dimensions'),
       layer.dimensions.X,
       layer.dimensions.Y,
       this.vspData[vsp].tiles_per_row,
       this.vspImages[vsp].height / this.vspData[vsp].tilesize.height
     );
 
-    const r = layer.borderColor ? layer.borderColor.R: 0;
-    const g = layer.borderColor ? layer.borderColor.G: 0;
-    const b = layer.borderColor ? layer.borderColor.B: 0;
-    const a = layer.borderColor ? layer.borderColor.A: 0;
+    const r = layer.borderColor ? layer.borderColor.R : 0;
+    const g = layer.borderColor ? layer.borderColor.G : 0;
+    const b = layer.borderColor ? layer.borderColor.B : 0;
+    const a = layer.borderColor ? layer.borderColor.A : 0;
 
-    gl.uniform4f(
-      this.layerBorderShader.uniform('u_borderColor'),
-      r,g,b, a
-    );
+    gl.uniform4f(this.layerBorderShader.uniform('u_borderColor'), r, g, b, a);
 
-    gl.bindBuffer( gl.ARRAY_BUFFER, this.lineBuf );
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
-      0, 0,
-      layer.dimensions.X, 0,
-      layer.dimensions.X, 0,
-      layer.dimensions.X, -layer.dimensions.Y, 
-      layer.dimensions.X, -layer.dimensions.Y, 
-      0, -layer.dimensions.Y,
-      0, -layer.dimensions.Y,
-      0, 0,]),
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.lineBuf);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([
+        0,
+        0,
+        layer.dimensions.X,
+        0,
+        layer.dimensions.X,
+        0,
+        layer.dimensions.X,
+        -layer.dimensions.Y,
+        layer.dimensions.X,
+        -layer.dimensions.Y,
+        0,
+        -layer.dimensions.Y,
+        0,
+        -layer.dimensions.Y,
+        0,
+        0,
+      ]),
       this.gl.STATIC_DRAW
     );
 
-    gl.drawArrays( gl.LINES, 0, 8 );
+    gl.drawArrays(gl.LINES, 0, 8);
 
     this.drawEntities(i, this, layer, tallEntities, tick);
   },
 
-  maybeRenderMarchingAnts (gl, selection) {
+  maybeRenderMarchingAnts(gl, selection) {
     const vsp = 'default'; // TODO this is definitely wrong. Definitely if we allow vsp size mixing.
 
     // MARCHING ANTS
     if (selection.lines.length > 0 && typeof vsp !== 'undefined') {
       // TODO remove these fake layer shenanegans
       // TODO something smells about getSelectedLayer().layer
-      const layer = getSelectedLayer() ? getSelectedLayer().layer : {
-        parallax: { X: 1, Y: 1 },
-        offset: {X: 0, Y: 0},
-        dimensions: {X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.width}
-      };
-      const appliedOffset = (selection.map.mapData.isTileSelectorMap) ? {X:0, Y:0} : layer.offset; // If tileset selector, ignore offset
+      const layer = getSelectedLayer()
+        ? getSelectedLayer().layer
+        : {
+            parallax: { X: 1, Y: 1 },
+            offset: { X: 0, Y: 0 },
+            dimensions: { X: this.mapSizeInTiles.width, Y: this.mapSizeInTiles.width },
+          };
+      const appliedOffset = selection.map.mapData.isTileSelectorMap ? { X: 0, Y: 0 } : layer.offset; // If tileset selector, ignore offset
 
-      const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
+      const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x: 0, y: 0 };
       this.selectionShader.use();
       gl.uniform4f(
         this.selectionShader.uniform('u_camera'),
-        Math.floor(layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x) / this.vspData[vsp].tilesize.width,
-        Math.floor(layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y) / this.vspData[vsp].tilesize.height,
+        Math.floor(
+          layer.parallax.X * (this.camera[0] - appliedOffset.X + viewport.x) - viewport.x
+        ) / this.vspData[vsp].tilesize.width,
+        Math.floor(
+          layer.parallax.Y * (this.camera[1] - appliedOffset.Y + viewport.y) - viewport.y
+        ) / this.vspData[vsp].tilesize.height,
         this.renderContainerDimensions.w / this.vspData[vsp].tilesize.width / this.camera[2],
         this.renderContainerDimensions.h / this.vspData[vsp].tilesize.height / this.camera[2]
       );
@@ -1642,14 +1903,17 @@ Map.prototype = {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.selectionVertexBuffer);
       gl.enableVertexAttribArray(a_position);
       gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
-      this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(selection.lines), this.gl.STATIC_DRAW);
+      this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array(selection.lines),
+        this.gl.STATIC_DRAW
+      );
 
       gl.drawArrays(gl.LINES, 0, selection.lines.length / 2);
     }
   },
 
   maybeRenderScreenviewOverlay(gl, overlay) {
-
     /*
       overlay = {
         on: boolean,
@@ -1666,23 +1930,26 @@ Map.prototype = {
       }
     */
 
-    if( overlay.on ) {
+    if (overlay.on) {
       this.screenviewShader.use();
-      
+
       // uniforms...
-      gl.uniform4f(this.screenviewShader.uniform('u_camera'),
+      gl.uniform4f(
+        this.screenviewShader.uniform('u_camera'),
         Math.floor(this.camera[0]),
         Math.floor(this.camera[1]),
         this.renderContainerDimensions.w / this.camera[2],
         this.renderContainerDimensions.h / this.camera[2]
       );
-      gl.uniform4f(this.screenviewShader.uniform('u_viewport'),
+      gl.uniform4f(
+        this.screenviewShader.uniform('u_viewport'),
         Math.floor(overlay.viewport.x),
         Math.floor(overlay.viewport.y),
         Math.floor(overlay.viewport.width),
         Math.floor(overlay.viewport.height)
       );
-      gl.uniform4f(this.screenviewShader.uniform('u_color'),
+      gl.uniform4f(
+        this.screenviewShader.uniform('u_color'),
         overlay.shade.color[0],
         overlay.shade.color[1],
         overlay.shade.color[2],
@@ -1693,18 +1960,18 @@ Map.prototype = {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.screenviewVertexBuffer);
       gl.enableVertexAttribArray(a_position);
       gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
-  
+
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
   },
 
-  render () {
-    const {gl} = this;
+  render() {
+    const { gl } = this;
     const tick = Date.now();
 
     this.renderContainerDimensions = {
       w: this.renderContainer.width(),
-      h: this.renderContainer.height()
+      h: this.renderContainer.height(),
     };
 
     this.renderBackground(gl);
@@ -1726,7 +1993,7 @@ Map.prototype = {
     // LOG((tock-tick) + 'ms to render');
   },
 
-  renderBackground (gl) {
+  renderBackground(gl) {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     if (window.$$$SCREENSHOT) {
@@ -1741,23 +2008,39 @@ Map.prototype = {
 
     this.checkerShader.use();
 
-    const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
-    gl.uniform4f(this.checkerShader.uniform('u_camera'),
-      Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / this.vspData[layer.vsp].tilesize.width,
-      Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) / this.vspData[layer.vsp].tilesize.height,
+    const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x: 0, y: 0 };
+    gl.uniform4f(
+      this.checkerShader.uniform('u_camera'),
+      Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) /
+        this.vspData[layer.vsp].tilesize.width,
+      Math.floor(layer.parallax.Y * (this.camera[1] + viewport.y) - viewport.y) /
+        this.vspData[layer.vsp].tilesize.height,
       this.renderContainerDimensions.w / this.vspData[layer.vsp].tilesize.width / this.camera[2],
       this.renderContainerDimensions.h / this.vspData[layer.vsp].tilesize.height / this.camera[2]
     );
 
-    gl.uniform4f(this.checkerShader.uniform('u_dimensions'),
+    gl.uniform4f(
+      this.checkerShader.uniform('u_dimensions'),
       layer.dimensions.X,
       layer.dimensions.Y,
       this.vspData[layer.vsp].tiles_per_row,
       this.vspImages[layer.vsp].height / this.vspData[layer.vsp].tilesize.height
     );
 
-    gl.uniform4f(this.checkerShader.uniform('u_colorA'), this.checkerColorA[0], this.checkerColorA[1], this.checkerColorA[2], this.checkerColorA[3] );
-    gl.uniform4f(this.checkerShader.uniform('u_colorB'), this.checkerColorB[0], this.checkerColorB[1], this.checkerColorB[2], this.checkerColorB[3]);
+    gl.uniform4f(
+      this.checkerShader.uniform('u_colorA'),
+      this.checkerColorA[0],
+      this.checkerColorA[1],
+      this.checkerColorA[2],
+      this.checkerColorA[3]
+    );
+    gl.uniform4f(
+      this.checkerShader.uniform('u_colorB'),
+      this.checkerColorB[0],
+      this.checkerColorB[1],
+      this.checkerColorB[2],
+      this.checkerColorB[3]
+    );
 
     const a_position = this.checkerShader.attribute('a_position');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
@@ -1767,8 +2050,10 @@ Map.prototype = {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   },
 
-  _getEntityData (entity) {
-    const e = entity.MAPED_USEDEFAULT ? this.entityData.__default__ : this.entityData[entity.filename];
+  _getEntityData(entity) {
+    const e = entity.MAPED_USEDEFAULT
+      ? this.entityData.__default__
+      : this.entityData[entity.filename];
 
     if (!entity.MAPED_USEDEFAULT && e === this.entityData.__default__) {
       debugger;
@@ -1778,39 +2063,41 @@ Map.prototype = {
   },
 
   _getAnimationSafe(entity, entityData) {
-    if(entityData.animations[entity.animation]) {
+    if (entityData.animations[entity.animation]) {
       return entityData.animations[entity.animation][0][0][0];
     }
 
-    if( Object.keys(entityData.animations).length ) {
+    if (Object.keys(entityData.animations).length) {
       return entityData.animations[Object.keys(entityData.animations)[0]][0][0][0];
     }
 
     ERROR("Entity didnt have any animations.  THAT'S ILLEGAL.");
-    debugger;      
+    debugger;
   },
 
-  renderEntity (entity, layer, tint, clip, mask, isTallRedraw) {
+  renderEntity(entity, layer, tint, clip, mask, isTallRedraw) {
     this.spriteShader.use();
 
-    const {gl} = this;
-    const {tilesize} = this.vspData[layer.vsp];
+    const { gl } = this;
+    const { tilesize } = this.vspData[layer.vsp];
 
     let layerOffsetTx = 0;
     let layerOffsetTy = 0;
 
-    if(layer.offset) {
+    if (layer.offset) {
       layerOffsetTx = layer.offset.X / tilesize.width;
       layerOffsetTy = layer.offset.Y / tilesize.height;
     }
 
     const entityData = this._getEntityData(entity);
-    const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
+    const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
     if (!entityTexture) {
-      alert(`Entity '${  entity.name  }' at (${  entity.location.tx  },${  entity.location.ty  }) with image path \`${  entityData.image  }\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`);
+      alert(
+        `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
+      );
     }
 
-    clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
+    clip = !clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip;
 
     const a_vertices = this.spriteShader.attribute('a_vertices');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.entityVertexBuffer);
@@ -1830,8 +2117,8 @@ Map.prototype = {
     }
 
     // apply hitbox xform
-    tx -= (entityData.hitbox[0] / tilesize.width);
-    ty -= (entityData.hitbox[1] / tilesize.height);
+    tx -= entityData.hitbox[0] / tilesize.width;
+    ty -= entityData.hitbox[1] / tilesize.height;
 
     // apply layer offset xform
     tx += layerOffsetTx;
@@ -1843,11 +2130,15 @@ Map.prototype = {
     let fx = (entityData.outer_pad + clip[0]) / entityTexture.img.width;
     let fy = (entityData.outer_pad + clip[1]) / entityTexture.img.height;
     const fw = clip[2] / entityTexture.img.width;
-    const fh = clip[3] / entityTexture.img.height;    
+    const fh = clip[3] / entityTexture.img.height;
 
     const f = this._getAnimationSafe(entity, entityData);
-    fx += ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) * (f % entityData.per_row);
-    fy += ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) * Math.floor(f / entityData.per_row);
+    fx +=
+      ((entityData.dims[0] + entityData.inner_pad) / entityTexture.img.width) *
+      (f % entityData.per_row);
+    fy +=
+      ((entityData.dims[1] + entityData.inner_pad) / entityTexture.img.height) *
+      Math.floor(f / entityData.per_row);
 
     const verts = [];
     if (!mask) {
@@ -1858,54 +2149,54 @@ Map.prototype = {
       verts.push(tx, -ty - th, fx, fy + fh);
       verts.push(tx + tw, -ty, fx + fw, fy);
     } else {
-        const tm = [
-          mask[0] / tilesize.width,
-          mask[1] / tilesize.height,
-          mask[2] / tilesize.width,
-          mask[3] / tilesize.height
-        ];
-        const fm = [
-          mask[0] / entityTexture.img.width,
-          mask[1] / entityTexture.img.height,
-          mask[2] / entityTexture.img.width,
-          mask[3] / entityTexture.img.height,
-        ]
+      const tm = [
+        mask[0] / tilesize.width,
+        mask[1] / tilesize.height,
+        mask[2] / tilesize.width,
+        mask[3] / tilesize.height,
+      ];
+      const fm = [
+        mask[0] / entityTexture.img.width,
+        mask[1] / entityTexture.img.height,
+        mask[2] / entityTexture.img.width,
+        mask[3] / entityTexture.img.height,
+      ];
 
-        if (mask[1] > 0) {
-          verts.push(tx, -ty, fx, fy);
-          verts.push(tx + tw, -ty, fx + fw, fy);
-          verts.push(tx, -ty - tm[1], fx, fy + fm[1]);
-          verts.push(tx + tw, -ty - tm[1], fx + fw, fy + fm[1]);
-          verts.push(tx, -ty - tm[1], fx, fy + fm[1]);
-          verts.push(tx + tw, -ty, fx + fw, fy);
-        }
-        if (mask[0] > 0) {
-          verts.push(tx, -ty, fx, fy);
-          verts.push(tx + tm[0], -ty, fx + fm[0], fy);
-          verts.push(tx, -ty - th, fx, fy + fh);
-          verts.push(tx + tm[0], -ty - th, fx + fm[0], fy + fh);
-          verts.push(tx, -ty - th, fx, fy + fh);
-          verts.push(tx + tm[0], -ty, fx + fm[0], fy);
-        }
-        if (mask[0] + mask[2] < entityData.dims[0]) {
-          verts.push(tx + tm[0] + tm[2], -ty, fx + fm[0] + fm[2], fy);
-          verts.push(tx + tw, -ty, fx + fw, fy);
-          verts.push(tx + tm[0] + tm[2], -ty - th, fx + fm[0] + fm[2], fy + fh);
-          verts.push(tx + tw, -ty - th, fx + fw, fy + fh);
-          verts.push(tx + tm[0] + tm[2], -ty - th, fx + fm[0] + fm[2], fy + fh);
-          verts.push(tx + tw, -ty, fx + fw, fy);
-        }
-        // assume we at least have the "below the mask" part of the entity to draw
-        verts.push(tx, -ty - tm[1] - tm[3], fx, fy + fm[1] + fm[3]);
-        verts.push(tx + tw, -ty - tm[1] - tm[3], fx + fw, fy + fm[1] + fm[3]);
+      if (mask[1] > 0) {
+        verts.push(tx, -ty, fx, fy);
+        verts.push(tx + tw, -ty, fx + fw, fy);
+        verts.push(tx, -ty - tm[1], fx, fy + fm[1]);
+        verts.push(tx + tw, -ty - tm[1], fx + fw, fy + fm[1]);
+        verts.push(tx, -ty - tm[1], fx, fy + fm[1]);
+        verts.push(tx + tw, -ty, fx + fw, fy);
+      }
+      if (mask[0] > 0) {
+        verts.push(tx, -ty, fx, fy);
+        verts.push(tx + tm[0], -ty, fx + fm[0], fy);
         verts.push(tx, -ty - th, fx, fy + fh);
+        verts.push(tx + tm[0], -ty - th, fx + fm[0], fy + fh);
+        verts.push(tx, -ty - th, fx, fy + fh);
+        verts.push(tx + tm[0], -ty, fx + fm[0], fy);
+      }
+      if (mask[0] + mask[2] < entityData.dims[0]) {
+        verts.push(tx + tm[0] + tm[2], -ty, fx + fm[0] + fm[2], fy);
+        verts.push(tx + tw, -ty, fx + fw, fy);
+        verts.push(tx + tm[0] + tm[2], -ty - th, fx + fm[0] + fm[2], fy + fh);
         verts.push(tx + tw, -ty - th, fx + fw, fy + fh);
-        verts.push(tx, -ty - th, fx, fy + fh);
-        verts.push(tx + tw, -ty - tm[1] - tm[3], fx + fw, fy + fm[1] + fm[3]);
+        verts.push(tx + tm[0] + tm[2], -ty - th, fx + fm[0] + fm[2], fy + fh);
+        verts.push(tx + tw, -ty, fx + fw, fy);
+      }
+      // assume we at least have the "below the mask" part of the entity to draw
+      verts.push(tx, -ty - tm[1] - tm[3], fx, fy + fm[1] + fm[3]);
+      verts.push(tx + tw, -ty - tm[1] - tm[3], fx + fw, fy + fm[1] + fm[3]);
+      verts.push(tx, -ty - th, fx, fy + fh);
+      verts.push(tx + tw, -ty - th, fx + fw, fy + fh);
+      verts.push(tx, -ty - th, fx, fy + fh);
+      verts.push(tx + tw, -ty - tm[1] - tm[3], fx + fw, fy + fm[1] + fm[3]);
     }
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(verts), this.gl.STATIC_DRAW);
 
-    const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x:0, y:0 };
+    const viewport = this.windowOverlay.on ? this.windowOverlay.viewport : { x: 0, y: 0 };
     gl.uniform4f(
       this.spriteShader.uniform('u_camera'),
       Math.floor(layer.parallax.X * (this.camera[0] + viewport.x) - viewport.x) / tilesize.width,
@@ -1924,42 +2215,54 @@ Map.prototype = {
     gl.drawArrays(gl.TRIANGLES, 0, verts.length / 4);
 
     // if A is 0, it's not being drawn anyway.
-    if( this.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING && this.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING.A ) {
+    if (
+      this.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING &&
+      this.mapData.MAPED_GLOBAL_ENTITY_BOUNDS_DRAWING.A
+    ) {
       this.renderEntityBounds(entity, layer, tint, clip, mask, verts, viewport);
     }
 
     // if A is 0, it's not being drawn anyway.
-    if( this.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING && this.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING.A ) {
+    if (
+      this.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING &&
+      this.mapData.MAPED_GLOBAL_ENTITY_HITBOX_BOUNDS_DRAWING.A
+    ) {
       this.renderEntityHitBoxBounds(entity, layer, tint, clip, mask, verts, viewport);
     }
 
     // if A is 0, it's not being drawn anyway.
-    if( isTallRedraw && this.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING && this.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING.A ) {
+    if (
+      isTallRedraw &&
+      this.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING &&
+      this.mapData.MAPED_GLOBAL_ENTITY_TALLREDRAW_BOUNDS_DRAWING.A
+    ) {
       this.renderEntityTallRedrawBoundsBounds(entity, layer, tint, clip, mask, verts, viewport);
     }
   },
 
   renderEntityTallRedrawBoundsBounds(entity, layer, tint, clip, mask, verts, viewport) {
     this.entityBoundsShader.use();
-    
-    const {gl} = this;
-    const {tilesize} = this.vspData[layer.vsp];
+
+    const { gl } = this;
+    const { tilesize } = this.vspData[layer.vsp];
 
     let layerOffsetTx = 0;
     let layerOffsetTy = 0;
 
-    if(layer.offset) {
+    if (layer.offset) {
       layerOffsetTx = layer.offset.X / tilesize.width;
       layerOffsetTy = layer.offset.Y / tilesize.height;
     }
 
     const entityData = this._getEntityData(entity);
-    const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
+    const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
     if (!entityTexture) {
-      alert(`Entity '${  entity.name  }' at (${  entity.location.tx  },${  entity.location.ty  }) with image path \`${  entityData.image  }\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`);
+      alert(
+        `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
+      );
     }
 
-    clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
+    clip = !clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip;
 
     const a_vertices = this.spriteShader.attribute('a_vertices');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.lineBuf);
@@ -1983,15 +2286,26 @@ Map.prototype = {
     const w = clip[2] / tilesize.width;
     const h = clip[3] / tilesize.height;
 
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
-      x, -y,
-      x+w, -y,
-      x+w, -y,
-      x+w, -(y+h), 
-      x+w, -(y+h), 
-      x, -(y+h),
-      x, -(y+h),
-      x, -y,]),
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([
+        x,
+        -y,
+        x + w,
+        -y,
+        x + w,
+        -y,
+        x + w,
+        -(y + h),
+        x + w,
+        -(y + h),
+        x,
+        -(y + h),
+        x,
+        -(y + h),
+        x,
+        -y,
+      ]),
       this.gl.STATIC_DRAW
     );
 
@@ -2009,34 +2323,36 @@ Map.prototype = {
       this.entityBoundsShader.uniform('u_entBoundsColor'),
       borderColor.R,
       borderColor.G,
-      borderColor.B, 
+      borderColor.B,
       borderColor.A
     );
-    
-    gl.drawArrays( gl.LINES, 0, 8 );
+
+    gl.drawArrays(gl.LINES, 0, 8);
   },
 
   renderEntityBounds(entity, layer, tint, clip, mask, verts, viewport) {
     this.entityBoundsShader.use();
-    
-    const {gl} = this;
-    const {tilesize} = this.vspData[layer.vsp];
+
+    const { gl } = this;
+    const { tilesize } = this.vspData[layer.vsp];
 
     let layerOffsetTx = 0;
     let layerOffsetTy = 0;
 
-    if(layer.offset) {
+    if (layer.offset) {
       layerOffsetTx = layer.offset.X / tilesize.width;
       layerOffsetTy = layer.offset.Y / tilesize.height;
     }
 
     const entityData = this._getEntityData(entity);
-    const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
+    const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
     if (!entityTexture) {
-      alert(`Entity '${  entity.name  }' at (${  entity.location.tx  },${  entity.location.ty  }) with image path \`${  entityData.image  }\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`);
+      alert(
+        `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
+      );
     }
 
-    clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
+    clip = !clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip;
 
     const a_vertices = this.spriteShader.attribute('a_vertices');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.lineBuf);
@@ -2050,22 +2366,33 @@ Map.prototype = {
 
     let x = entity.location.px / tilesize.width || entity.location.tx;
     let y = entity.location.py / tilesize.height || entity.location.ty;
-    x -= hitbox_x / tilesize.width;;
+    x -= hitbox_x / tilesize.width;
     y -= hitbox_y / tilesize.height;
-    x+= layerOffsetTx;
-    y+= layerOffsetTy;
+    x += layerOffsetTx;
+    y += layerOffsetTy;
     const w = entityData.dims[0] / tilesize.width;
     const h = entityData.dims[1] / tilesize.height;
 
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
-      x, -y,
-      x+w, -y,
-      x+w, -y,
-      x+w, -(y+h), 
-      x+w, -(y+h), 
-      x, -(y+h),
-      x, -(y+h),
-      x, -y,]),
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([
+        x,
+        -y,
+        x + w,
+        -y,
+        x + w,
+        -y,
+        x + w,
+        -(y + h),
+        x + w,
+        -(y + h),
+        x,
+        -(y + h),
+        x,
+        -(y + h),
+        x,
+        -y,
+      ]),
       this.gl.STATIC_DRAW
     );
 
@@ -2083,32 +2410,34 @@ Map.prototype = {
       this.entityBoundsShader.uniform('u_entBoundsColor'),
       borderColor.R,
       borderColor.G,
-      borderColor.B, 
+      borderColor.B,
       borderColor.A
     );
-    
-    gl.drawArrays( gl.LINES, 0, 8 );
+
+    gl.drawArrays(gl.LINES, 0, 8);
   },
 
   renderEntityHitBoxBounds(entity, layer, tint, clip, mask, verts, viewport) {
     this.entityBoundsShader.use();
-    
-    const {gl} = this;
-    const {tilesize} = this.vspData[layer.vsp];
+
+    const { gl } = this;
+    const { tilesize } = this.vspData[layer.vsp];
     let layerOffsetTx = 0;
     let layerOffsetTy = 0;
 
-    if(layer.offset) {
+    if (layer.offset) {
       layerOffsetTx = layer.offset.X / tilesize.width;
       layerOffsetTy = layer.offset.Y / tilesize.height;
     }
     const entityData = this._getEntityData(entity);
-    const entityTexture = this.entityTextures[entityData.image];// || this.entityTextures["__default__"];
+    const entityTexture = this.entityTextures[entityData.image]; // || this.entityTextures["__default__"];
     if (!entityTexture) {
-      alert(`Entity '${  entity.name  }' at (${  entity.location.tx  },${  entity.location.ty  }) with image path \`${  entityData.image  }\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`);
+      alert(
+        `Entity '${entity.name}' at (${entity.location.tx},${entity.location.ty}) with image path \`${entityData.image}\` tried to render without an assigned asset! Make sure the appropriate asset (png?) exists.`
+      );
     }
 
-    clip = (!clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip);
+    clip = !clip ? [0, 0, entityData.dims[0], entityData.dims[1]] : clip;
 
     const a_vertices = this.spriteShader.attribute('a_vertices');
     gl.bindBuffer(gl.ARRAY_BUFFER, this.lineBuf);
@@ -2117,34 +2446,42 @@ Map.prototype = {
 
     let x = entity.location.px / tilesize.width || entity.location.tx;
     let y = entity.location.py / tilesize.height || entity.location.ty;
-    x+=layerOffsetTx;
-    y+=layerOffsetTy;
+    x += layerOffsetTx;
+    y += layerOffsetTy;
     const w = entityData.hitbox[2] / tilesize.width;
     const h = entityData.hitbox[3] / tilesize.height;
 
     let x1 = x;
-    let x2 = x+w;
+    let x2 = x + w;
 
     let y1 = y;
-    let y2 = y+h;
+    let y2 = y + h;
 
-    if( x2 < x1 ) {
+    if (x2 < x1) {
       [x1, x2] = [x2, x1];
     }
 
-    if( y2 < y1 ) {
+    if (y2 < y1) {
       [y1, y2] = [y2, y1];
     }
 
     const arLines = [
-      x, -y,
-      x+w, -y,
-      x+w, -y,
-      x+w, -(y+h), 
-      x+w, -(y+h), 
-      x, -(y+h),
-      x, -(y+h),
-      x, -y,
+      x,
+      -y,
+      x + w,
+      -y,
+      x + w,
+      -y,
+      x + w,
+      -(y + h),
+      x + w,
+      -(y + h),
+      x,
+      -(y + h),
+      x,
+      -(y + h),
+      x,
+      -y,
     ];
 
     /* Playing around with "architectural" shading but I think I need some trig to do it how I thought I could :(
@@ -2162,9 +2499,7 @@ Map.prototype = {
     
     */
 
-    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(arLines),
-      this.gl.STATIC_DRAW
-    );
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(arLines), this.gl.STATIC_DRAW);
 
     gl.uniform4f(
       this.entityBoundsShader.uniform('u_camera'),
@@ -2180,19 +2515,21 @@ Map.prototype = {
       this.entityBoundsShader.uniform('u_entBoundsColor'),
       borderColor.R,
       borderColor.G,
-      borderColor.B, 
+      borderColor.B,
       borderColor.A
     );
-    
-    gl.drawArrays( gl.LINES, 0, arLines.length/2 );
+
+    gl.drawArrays(gl.LINES, 0, arLines.length / 2);
   },
 
-  cleanUpCallbacks () {
+  cleanUpCallbacks() {
     this.renderContainer.off(undefined, undefined, this);
   },
 
-  resize () {
-    if (!this.renderContainer || !this.gl) { return; }
+  resize() {
+    if (!this.renderContainer || !this.gl) {
+      return;
+    }
     const w = this.renderContainer.width();
     const h = this.renderContainer.height();
     this.renderContainer.attr('width', w);
@@ -2200,8 +2537,8 @@ Map.prototype = {
     this.gl.viewport(0, 0, w, h);
   },
 
-  resetCamera (x,y,z) {
-    if(typeof x === 'undefined') {
+  resetCamera(x, y, z) {
+    if (typeof x === 'undefined') {
       x = 0;
       y = 0;
       z = 1;
@@ -2210,5 +2547,5 @@ Map.prototype = {
     this.camera[0] = x;
     this.camera[1] = y;
     this.camera[2] = z;
-  }
+  },
 };

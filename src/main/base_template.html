@@ -13,8 +13,9 @@
     <script type="text/javascript">
       console.error("Did you remember to prevent scolling on spacebar presses yet, Ben?");    
       global = globalThis; //<- this should be enough    
-      debugger;
-      // require = alert;
+
+      window.$ = window.jQuery = require('jquery');
+      require('jquery-ui-dist/jquery-ui');
     </script>
 
     <img src='assets/images/defaultsprite.png' id='default_sprite' style="display: none;">

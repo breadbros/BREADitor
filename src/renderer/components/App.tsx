@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore
-import Dockable from 'react-dockable';
+import Dockable from '../../../node_modules/react-dockable';
 import './css/App.css';
 import { oldBootstrap } from '../../old_bootstrap.js';
 import initialState from './initialState.js';
@@ -185,8 +185,6 @@ Object.keys(map.mapData.vsp).forEach( (keyName) => {
 function App() {
   const hiddenRef = React.useRef<HTMLDivElement>(null);
   const [state, setState] = React.useState(initialState);
-
-  debugger;
 
   return (
     <div
