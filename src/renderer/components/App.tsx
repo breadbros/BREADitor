@@ -1,11 +1,12 @@
 import * as React from 'react';
-import Dockable from '../../../../react-dockable/src';
+// @ts-ignore
+import Dockable from 'react-dockable';
 import './css/App.css';
 import { oldBootstrap } from '../../old_bootstrap.js';
 import initialState from './initialState.js';
 import { getSelectedTileInfo } from '../../TileSelector';
 
-import {ipcRenderer} from 'electron';
+import { ipcRenderer } from 'electron';
 
 import * as EventBus from '../../EventBus';
 
@@ -14,32 +15,28 @@ const path = require('path');
 
 oldBootstrap();
 
-let activeDocument:any = null;
+let activeDocument: any = null;
 
-export const setActiveDocument = (doc:any) => {
+export const setActiveDocument = (doc: any) => {
   activeDocument = doc;
 };
 
-
-const LineItem = (props:any) => {
-
-  const {id, labelName, value} : any = props;
+const LineItem = (props: any) => {
+  const { id, labelName, value }: any = props;
 
   return (
     <div className="line-item">
       <label htmlFor={id}>{labelName}</label>
       <span id={id}>{value}</span>
     </div>
-  )
-}
+  );
+};
 
-
-function InfoPalette({map} : any ) {
-
-  if(!map) {
-    return <h1>uninitialized!</h1>
+function InfoPalette({ map }: any) {
+  if (!map) {
+    return <h1>uninitialized!</h1>;
   }
-  
+
   debugger;
   ipcRenderer.send('testContextMenu');
 
@@ -55,16 +52,15 @@ function InfoPalette({map} : any ) {
   const displayPath = pathParts[pathParts.length - 1];
 
   const vspList: any = {};
-  Object.keys(map.mapData.vsp).forEach( (keyName) => { 
-      const vspPath = map.mapData.vsp[keyName];
-      // const fullpath = path.dirname(map.mapPath) + path.sep + vspPath;
-      vspList[keyName] = vspPath;
-    }
-  );
+  Object.keys(map.mapData.vsp).forEach((keyName) => {
+    const vspPath = map.mapData.vsp[keyName];
+    // const fullpath = path.dirname(map.mapPath) + path.sep + vspPath;
+    vspList[keyName] = vspPath;
+  });
 
   // const curTile = getCurrentHoverTile(map) || [0,0];
 
-/*
+  /*
 
 export const updateInfoDims = (map) => {
   $('#info-dims').text(`${map.mapSizeInTiles.width  }x${  map.mapSizeInTiles.height}`);
@@ -124,8 +120,7 @@ Object.keys(map.mapData.vsp).forEach( (keyName) => {
 } );
 */
 
-
-const selTile = getSelectedTileInfo();
+  const selTile = getSelectedTileInfo();
 
   return (
     <div className="info-palette">
@@ -152,44 +147,58 @@ const selTile = getSelectedTileInfo();
         }
 
       `}</style>
-      <LineItem id="info-map-name" labelName="Map" value={displayPath}  />
+      <LineItem id="info-map-name" labelName="Map" value={displayPath} />
 
-      { Object.keys(vspList).map( (key) => {
-
+      {Object.keys(vspList).map((key) => {
         const val = vspList[key];
 
-        return (
-          <LineItem id="info-vsp-list" labelName={`VSP [${key}]`} value={val}  />
-        );
-      } )}
-    
-      <LineItem id="info-current-hover" labelName="Current Hover" value={map.getCurrentHoverTile().join(',')}  />
-      <LineItem id="info-dimensions" labelName="Dimensions" value={`${map.mapSizeInTiles.width  }x${  map.mapSizeInTiles.height}`}  />
-      <LineItem id="info-location" labelName="Location" value={`${map.camera[0]  },${  map.camera[1]}`}  />
-      <LineItem id="info-zoom" labelName="Zoom" value={`${100 / map.camera[2]  }%`}  />
-      <LineItem id="info-selected-tiles" labelName="Selected Tiles" value={`${selTile.left}, ${selTile.right} (${selTile.vsp}) `}  />
-      <LineItem id="info-rstring" labelName="Renderstring" value={map.layerRenderOrder.join(',')}  />
-      <LineItem id="info-current-tool" labelName="Current Tool" value={map.TOOLMODE}  />
+        return <LineItem id="info-vsp-list" labelName={`VSP [${key}]`} value={val} />;
+      })}
+
+      <LineItem
+        id="info-current-hover"
+        labelName="Current Hover"
+        value={map.getCurrentHoverTile().join(',')}
+      />
+      <LineItem
+        id="info-dimensions"
+        labelName="Dimensions"
+        value={`${map.mapSizeInTiles.width}x${map.mapSizeInTiles.height}`}
+      />
+      <LineItem
+        id="info-location"
+        labelName="Location"
+        value={`${map.camera[0]},${map.camera[1]}`}
+      />
+      <LineItem id="info-zoom" labelName="Zoom" value={`${100 / map.camera[2]}%`} />
+      <LineItem
+        id="info-selected-tiles"
+        labelName="Selected Tiles"
+        value={`${selTile.left}, ${selTile.right} (${selTile.vsp}) `}
+      />
+      <LineItem id="info-rstring" labelName="Renderstring" value={map.layerRenderOrder.join(',')} />
+      <LineItem id="info-current-tool" labelName="Current Tool" value={map.TOOLMODE} />
     </div>
   );
 }
-
 
 function App() {
   const hiddenRef = React.useRef<HTMLDivElement>(null);
   const [state, setState] = React.useState(initialState);
 
+  debugger;
+
   return (
     <div
       style={{
         width: '100vw',
-        height: '100vh'
+        height: '100vh',
       }}
     >
       <div style={{ display: 'none' }} ref={hiddenRef}></div>
       <Dockable
         initialState={state.panels}
-        onUpdate={ (workspace:any) => setState({ panels: workspace })}
+        onUpdate={(workspace: any) => setState({ panels: workspace })}
         spacing={3}
       >
         {[
@@ -201,7 +210,7 @@ function App() {
           // { id: 'info-palette', name: 'Info' },
           { id: 'screenview-indicator-palette', name: 'Screenview Indicator' },
           { id: 'tileset-selector-palette', name: 'Tileset Selector' },
-        ].map(el => (
+        ].map((el) => (
           <UIWrapper
             id={el.id}
             key={el.id}
