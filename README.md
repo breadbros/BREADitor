@@ -6,6 +6,7 @@ Homepage at: http://mcgrue.github.io/BREADitor/
 
 How to install:
 1. install node version 11.8.0
+1a. Usually this means installing `nvm` and then `nvm install 11.8.0` and then `nvm use 11.8.0`
 3. npm install
 4. npm start
 
