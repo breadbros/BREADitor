@@ -530,9 +530,15 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     };
 
     this.toLoad = 0;
-    this.doneLoading = function(name) {
+    this.doneLoading = function(name, imagePath) {
         this.toLoad--;
-        LOG(`done loading ${name}`);
+
+        if(name == "[object Event]")
+        {
+            debugger;
+        }
+
+        LOG(`done loading ${name} ${imagePath}`);
         LOG(`${this.toLoad} left...`);
         if (this.toLoad === 0) {
             this.promiseResolver(this);
@@ -553,7 +559,14 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         // just silently carry on when the image can't be loaded
         this.toLoad++;
         this.vspImages[k] = new window.Image();
-        this.vspImages[k].onload = this.doneLoading;
+
+        debugger;
+
+        const fn = this.doneLoading;
+        const src = this.vspImages[k].src;
+        this.vspImages[k].onload = function() {
+            fn(src, `vspImages[${k}]` );
+        };
 
         if (k !== 'zones') {
             // TODO: a better solution to map-relative assets versus app-relative assets.
@@ -591,7 +604,12 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
     this.entityTextures = {
         __default__: { img: new window.Image() }
     };
-    this.entityTextures.__default__.img.onload = this.doneLoading;
+    
+    const fn = this.doneLoading;
+    this.entityTextures.__default__.img.onload = function() {
+        fn(null, 'entityTextures.__default__');
+    };
+
     this.entityTextures.__default__.img.src = $('#default_sprite').src; // path.join(window.appPath, 'assets/images/defaultsprite.png');
 
     const defaultEntityLayer = this.fakeEntityLayer.name;
@@ -778,7 +796,7 @@ export function Map(mapfile, mapdatafile, updateLocationFunction) {
         );
     }
 
-    this.doneLoading();
+    this.doneLoading(null, 'manually called');
 }
 
 const has_unset_uuids = map => {
@@ -1025,7 +1043,7 @@ Map.prototype = {
                 this.entityTextures[textureKey].img = new window.Image();
                 const fn = this.doneLoading;
                 this.entityTextures[textureKey].img.onload = function() {
-                    fn(data.image);
+                    fn(data.image, imagePath);
                 };
                 this.entityTextures[textureKey].img.src = imagePath;
             }
