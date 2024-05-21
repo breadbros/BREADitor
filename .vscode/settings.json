@@ -1,7 +1,9 @@
 {
   "workbench.colorCustomizations": {
-    "activityBar.background": "#60090E",
-    "titleBar.activeBackground": "#860C14",
+    "activityBar.background": "#604a09",
+    "titleBar.activeBackground": "#604a09",
     "titleBar.activeForeground": "#FFFBFB"
-  }
+  },
+
+   "window.title": "OLD Reference Breaditor - working branch"
 }
