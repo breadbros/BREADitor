@@ -1,3 +1,10 @@
 {
-  "editor.fontFamily": "'Operator Mono', Consolas, 'Courier New', monospace"
+  "editor.fontFamily": "'Operator Mono', Consolas, 'Courier New', monospace",
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#d30f0f",
+        "titleBar.inactiveBackground": "#970c0c",
+        "titleBar.activeForeground": "#c2c2c2",
+        "titleBar.inactiveForeground": "#000000"
+    },
+    "window.title": "OLD Breaditor - bad branch"
 }
