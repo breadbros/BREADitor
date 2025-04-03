@@ -1,0 +1,37 @@
+name: \"Manual\" Deploy to GitHub Pages
+
+on:
+    # Allows manual trigger from Actions tab
+    workflow_dispatch:
+    # Optionally trigger on push to main/master
+    push:
+        branches: [main, master]
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '11.8.0' # Using the version specified in your README
+
+            - name: Install Dependencies
+              run: npm install
+
+            - name: Build Site
+              run: |
+                  # Copy README.md content to index.md if it doesn't exist
+                  if [ ! -f index.md ]; then
+                    cp README.md index.md
+                  fi
+
+            - name: Deploy to GitHub Pages
+              uses: JamesIves/github-pages-deploy-action@v4
+              with:
+                  folder: . # The folder containing your site content
+                  branch: gh-pages # The branch to deploy to
+                  clean: true # Automatically remove deleted files from the deployment
