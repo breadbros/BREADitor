@@ -166,7 +166,7 @@
     "spectrum-colorpicker": "^1.8.1",
     "sprintf-js": "^1.1.2",
     "style-loader": "^3.3.1",
-    "typescript-plugin-css-modules": "^3.4.0",
+    "typescript-plugin-css-modules": "^5.0.1",
     "ui-contextmenu": "^1.18.1",
     "uuid": "^9.0.0"
   }
